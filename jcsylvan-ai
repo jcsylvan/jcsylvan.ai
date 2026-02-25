@@ -1,0 +1,7 @@
+cd /path/to/index.html
+git init
+git add index.html
+git commit -m "Initial commit: landing page for jcsylvan.ai"
+git branch -M main
+git remote add origin git@github.com:YOURUSERNAME/jcsylvan.ai.git
+git push -u origin main
