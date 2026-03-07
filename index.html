@@ -82,6 +82,25 @@
     .prompt-submit:hover {
       color: #fff;
     }
+
+    .protected-btn {
+      margin-top: 2rem;
+      background: none;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #555;
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 0.5rem 1.25rem;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .protected-btn:hover {
+      color: #e0e0e0;
+      border-color: #888;
+    }
   </style>
 </head>
 <body>
@@ -97,5 +116,20 @@
     />
     <button type="submit" class="prompt-submit" aria-label="Submit">&#8594;</button>
   </form>
+  <button class="protected-btn" onclick="unlock()">&#128274; harps</button>
+  <script>
+    async function unlock() {
+      const pw = prompt("password:");
+      if (!pw) return;
+      const hash = Array.from(
+        new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw)))
+      ).map(b => b.toString(16).padStart(2, "0")).join("");
+      if (hash === "7b2e9f882fb00c76d3863ad4d12a8254bc146fdcf8934dfb20322f6598f03e0c") {
+        window.location.href = "https://jcsylvan.github.io/super-duper-funicular";
+      } else {
+        alert("access denied");
+      }
+    }
+  </script>
 </body>
 </html>
