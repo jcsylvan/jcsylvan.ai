@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arxiv Archive — jcsylvan.ai</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ---------- password gate ---------- */
+    #gate {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100%;
+    }
+
+    #gate h1 {
+      font-size: 1.2rem;
+      color: #888;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    #gate-btn {
+      background: none;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #555;
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    #gate-btn:hover {
+      color: #e0e0e0;
+      border-color: #888;
+    }
+
+    /* ---------- archive content ---------- */
+    #archive {
+      display: none;
+      width: 90%;
+      max-width: 720px;
+      padding: 3rem 0;
+    }
+
+    .archive-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #333;
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .archive-header h1 {
+      font-size: 1.1rem;
+      color: #ccc;
+      letter-spacing: 0.08em;
+    }
+
+    .archive-header a {
+      color: #555;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .archive-header a:hover {
+      color: #e0e0e0;
+    }
+
+    .paper-card {
+      border: 1px solid #222;
+      border-radius: 4px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      background: #111;
+      transition: border-color 0.2s;
+    }
+
+    .paper-card:hover {
+      border-color: #444;
+    }
+
+    .paper-date {
+      font-size: 0.75rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+
+    .paper-title {
+      font-size: 0.95rem;
+      color: #e0e0e0;
+      margin-bottom: 0.4rem;
+      line-height: 1.4;
+    }
+
+    .paper-title a {
+      color: #6af;
+      text-decoration: none;
+    }
+
+    .paper-title a:hover {
+      text-decoration: underline;
+    }
+
+    .paper-authors {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 0.6rem;
+    }
+
+    .paper-abstract {
+      font-size: 0.8rem;
+      color: #999;
+      line-height: 1.5;
+      margin-bottom: 0.6rem;
+    }
+
+    .paper-meta {
+      font-size: 0.75rem;
+      color: #555;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .paper-meta span {
+      white-space: nowrap;
+    }
+
+    .paper-links {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    .paper-links a {
+      color: #6af;
+      text-decoration: none;
+      margin-right: 1rem;
+    }
+
+    .paper-links a:hover {
+      text-decoration: underline;
+    }
+
+    .fallback-card {
+      border: 1px solid #222;
+      border-radius: 4px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      background: #111;
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .empty-state {
+      color: #555;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    .categories {
+      font-size: 0.7rem;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Password gate -->
+  <div id="gate">
+    <h1>&#128274; Arxiv archive</h1>
+    <button id="gate-btn" onclick="unlockArchive()">Enter password</button>
+  </div>
+
+  <!-- Archive content (hidden until authenticated) -->
+  <div id="archive">
+    <div class="archive-header">
+      <h1>&#128240; Arxiv Archive</h1>
+      <a href="index.html">&larr; back</a>
+    </div>
+    <div id="papers"></div>
+  </div>
+
+  <script>
+    // SHA-256 hash of the archive password
+    // To change the password, update this hash.
+    // Generate with: echo -n "yourpassword" | sha256sum
+    const ARCHIVE_HASH = "f1e62b1eed89cc49b2e8e0a16e7166e4b2fca05df59b0b97d1e4ee1e72313092";
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(str)
+      );
+      return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+    }
+
+    async function unlockArchive() {
+      const pw = prompt("password:");
+      if (!pw) return;
+
+      const hash = await sha256(pw);
+      if (hash !== ARCHIVE_HASH) {
+        alert("access denied");
+        return;
+      }
+
+      // Store in session so refreshes don't re-prompt
+      sessionStorage.setItem("arxiv_auth", "1");
+      showArchive();
+    }
+
+    function showArchive() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("archive").style.display = "block";
+      loadPapers();
+    }
+
+    async function loadPapers() {
+      const container = document.getElementById("papers");
+
+      try {
+        const resp = await fetch("arxiv-data.json");
+        if (!resp.ok) throw new Error("Failed to load data");
+        const data = await resp.json();
+
+        if (!data.length) {
+          container.innerHTML = '<p class="empty-state">No papers yet. The tracker runs daily at 3:30 AM ET.</p>';
+          return;
+        }
+
+        let html = "";
+        for (const entry of data) {
+          if (entry.paper) {
+            const p = entry.paper;
+            const authors = p.authors.join(", ");
+            html += `
+              <div class="paper-card">
+                <div class="paper-date">${entry.date}</div>
+                <div class="paper-title">
+                  <a href="${p.abs_url}" target="_blank" rel="noopener">${p.title}</a>
+                </div>
+                <div class="paper-authors">${authors}</div>
+                <div class="paper-abstract">${p.abstract}</div>
+                <div class="paper-meta">
+                  <span>score: ${p.engagement_score}</span>
+                  <span>mentions: ${p.mentions}</span>
+                  <span>retweets: ${p.retweets}</span>
+                  <span>likes: ${p.likes}</span>
+                </div>
+                <div class="paper-links">
+                  <a href="${p.pdf_url}" target="_blank" rel="noopener">PDF</a>
+                  <a href="${p.abs_url}" target="_blank" rel="noopener">Abstract</a>
+                </div>
+                <div class="categories">${(p.categories || []).join(", ")}</div>
+              </div>`;
+          } else {
+            html += `
+              <div class="fallback-card">
+                <div class="paper-date">${entry.date}</div>
+                <p>${entry.fallback_reason || "No standout popular papers today."}</p>
+              </div>`;
+          }
+        }
+        container.innerHTML = html;
+
+      } catch (err) {
+        container.innerHTML = '<p class="empty-state">Could not load archive data.</p>';
+        console.error(err);
+      }
+    }
+
+    // Auto-unlock if already authenticated this session
+    if (sessionStorage.getItem("arxiv_auth") === "1") {
+      showArchive();
+    }
+  </script>
+</body>
+</html>

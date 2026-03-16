@@ -117,7 +117,21 @@
     <button type="submit" class="prompt-submit" aria-label="Submit">&#8594;</button>
   </form>
   <button class="protected-btn" onclick="unlock()">&#128274; harps</button>
+  <button class="protected-btn" onclick="unlockArxiv()">&#128274; Arxiv archive</button>
   <script>
+    async function unlockArxiv() {
+      const pw = prompt("password:");
+      if (!pw) return;
+      const hash = Array.from(
+        new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw)))
+      ).map(b => b.toString(16).padStart(2, "0")).join("");
+      if (hash === "f1e62b1eed89cc49b2e8e0a16e7166e4b2fca05df59b0b97d1e4ee1e72313092") {
+        window.location.href = "arxiv-archive.html";
+      } else {
+        alert("access denied");
+      }
+    }
+
     async function unlock() {
       const pw = prompt("password:");
       if (!pw) return;
