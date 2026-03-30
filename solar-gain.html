@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solar Gain Measurement — West Kill, NY</title>
+  <title>Solar Gain — Parcel 160.00-1-46.1 — West Kill, NY</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -217,12 +217,114 @@
 
     .month-cell .mo { color: #888; display: block; margin-bottom: 0.15rem; }
     .month-cell .val { font-weight: 600; }
+
+    .parcel-header {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: baseline;
+    }
+
+    .parcel-header .ph-item {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .parcel-header .ph-item strong {
+      color: #e0e0e0;
+      font-weight: 600;
+    }
+
+    .parcel-header .ph-id {
+      font-size: 0.95rem;
+      color: #f0c040;
+      font-weight: 600;
+    }
+
+    .legend .l-rain::before { background: #4a90d9; }
+    .legend .l-snow::before { background: #8ab4f8; }
+
+    .soil-layer {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+      overflow: hidden;
+      font-size: 0.78rem;
+    }
+
+    .soil-layer:last-child { margin-bottom: 0; }
+
+    .soil-depth {
+      width: 60px;
+      min-width: 60px;
+      padding: 0.4rem 0.5rem;
+      text-align: center;
+      color: #aaa;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .soil-desc {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      line-height: 1.4;
+    }
+
+    .soil-desc strong { color: #e0e0e0; }
+
+    .soil-props {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .soil-prop {
+      font-size: 0.78rem;
+      color: #888;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid #1a1a1a;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .soil-prop:last-child { border-bottom: none; }
+    .soil-prop span:last-child { color: #e0e0e0; font-weight: 500; }
+
+    .section-title {
+      font-size: 1.1rem;
+      color: #f0c040;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #222;
+      grid-column: 1 / -1;
+    }
   </style>
 </head>
 <body>
   <a href="index.html" class="back-link">&larr; jcsylvan.ai</a>
-  <h1>Solar Gain Measurement Tool</h1>
-  <p class="subtitle">West Kill, NY &mdash; 42.21&deg;N, 74.28&deg;W &mdash; Elev. ~580 m (1,900 ft)</p>
+  <h1>Solar Gain &amp; Land Analysis</h1>
+  <p class="subtitle">West Kill, NY &mdash; 42.21&deg;N, 74.28&deg;W &mdash; Catskill Mountains</p>
+
+  <div class="parcel-header">
+    <span class="ph-id">Parcel 160.00-1-46.1</span>
+    <span class="ph-item">SWIS: <strong>194000</strong></span>
+    <span class="ph-item">Municipality: <strong>Lexington</strong></span>
+    <span class="ph-item">Full Market Value: <strong>$165,435</strong></span>
+    <span class="ph-item">Assessed: <strong>$125,400</strong></span>
+    <span class="ph-item">Uniform %: <strong>75.8</strong></span>
+  </div>
 
   <div class="grid">
 
@@ -366,6 +468,133 @@
         West Kill sits in the Catskill Mountains with moderate cloud cover.
         Winter months see reduced output from short days, snow cover, and
         lower sun angles. Snow albedo can partially offset losses on tilted surfaces.
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="section-title">Annual Rainfall &amp; Precipitation</div>
+
+    <!-- Rainfall Chart -->
+    <div class="card full-width">
+      <h2>Monthly Precipitation (inches)</h2>
+      <canvas id="chart-rainfall"></canvas>
+      <div class="legend">
+        <span class="l-rain">Rainfall</span>
+        <span class="l-snow">Snowfall (water equiv.)</span>
+      </div>
+    </div>
+
+    <!-- Rainfall Metrics -->
+    <div class="card">
+      <h2>Precipitation Summary</h2>
+      <div class="metric">
+        <span class="metric-label">Annual Rainfall</span>
+        <span class="metric-value">~50&ndash;55 in</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Annual Snowfall</span>
+        <span class="metric-value">~65&ndash;80 in</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Total Precip. (incl. snow water equiv.)</span>
+        <span class="metric-value">~56&ndash;62 in</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Wettest Month</span>
+        <span class="metric-value">Jun (5.2 in)</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Driest Month</span>
+        <span class="metric-value">Feb (2.8 in)</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Days w/ Precip. &ge; 0.01 in</span>
+        <span class="metric-value">~155/yr</span>
+      </div>
+      <p class="info-note">
+        Orographic lift from the Catskill escarpment increases precipitation
+        20&ndash;40% above Hudson Valley levels. West Kill valley receives among the
+        highest rainfall in New York State. Heavy summer thunderstorms and
+        nor&rsquo;easters contribute to peak months.
+      </p>
+    </div>
+
+    <!-- Rainfall Monthly Grid -->
+    <div class="card">
+      <h2>Monthly Breakdown (inches)</h2>
+      <div class="month-grid" id="rain-month-grid"></div>
+      <p class="info-note" style="margin-top:1rem;">
+        Data derived from NOAA 30-year normals (1991&ndash;2020) for the
+        Catskill Mountains region at ~1,900 ft elevation. Higher elevations
+        on this parcel may receive 5&ndash;10% more precipitation.
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="section-title">Soil Profile &amp; Characteristics</div>
+
+    <!-- Soil Profile Diagram -->
+    <div class="card">
+      <h2>Typical Soil Profile &mdash; Catskill Mountain Till</h2>
+      <div class="soil-layer" style="background:#3a2e1e;">
+        <span class="soil-depth">0&ndash;4 in</span>
+        <div class="soil-desc"><strong>O / A Horizon</strong> &mdash; Dark organic leaf litter and humus;
+        acidic forest duff from northern hardwoods (beech, maple, birch)</div>
+      </div>
+      <div class="soil-layer" style="background:#4a3a22;">
+        <span class="soil-depth">4&ndash;12 in</span>
+        <div class="soil-desc"><strong>B Horizon (Bw)</strong> &mdash; Channery silt loam; yellowish-brown;
+        moderate structure with sandstone/siltstone fragments (20&ndash;35% coarse)</div>
+      </div>
+      <div class="soil-layer" style="background:#55442a;">
+        <span class="soil-depth">12&ndash;28 in</span>
+        <div class="soil-desc"><strong>C Horizon</strong> &mdash; Very channery loam; dense glacial till matrix;
+        40&ndash;60% rock fragments; firm consistence</div>
+      </div>
+      <div class="soil-layer" style="background:#666;">
+        <span class="soil-depth">28&ndash;40 in</span>
+        <div class="soil-desc"><strong>R &mdash; Bedrock</strong> &mdash; Devonian sandstone &amp; siltstone (gray);
+        fractured to massive; depth varies 20&ndash;40 in across site</div>
+      </div>
+    </div>
+
+    <!-- Soil Types -->
+    <div class="card">
+      <h2>Dominant Soil Series (Greene County Survey)</h2>
+      <div class="metric">
+        <span class="metric-label">Primary</span>
+        <span class="metric-value" style="font-size:0.85rem;">Lordstown&ndash;Oquaga</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Secondary</span>
+        <span class="metric-value" style="font-size:0.85rem;">Arnot (shallow)</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Valley positions</span>
+        <span class="metric-value" style="font-size:0.85rem;">Willowemoc</span>
+      </div>
+
+      <div class="soil-props" style="margin-top:1rem;">
+        <div class="soil-prop"><span>Texture</span><span>Channery silt loam</span></div>
+        <div class="soil-prop"><span>Drainage Class</span><span>Well drained</span></div>
+        <div class="soil-prop"><span>Depth to Bedrock</span><span>20&ndash;40 in (mod. deep)</span></div>
+        <div class="soil-prop"><span>Hydrologic Group</span><span>C/D</span></div>
+        <div class="soil-prop"><span>Parent Material</span><span>Glacial till over sandstone</span></div>
+        <div class="soil-prop"><span>Slope Range</span><span>3&ndash;35%+ (variable)</span></div>
+        <div class="soil-prop"><span>Permeability</span><span>Moderate to moderately slow</span></div>
+        <div class="soil-prop"><span>AWC (Avail. Water Cap.)</span><span>Low&ndash;Moderate (3&ndash;6 in)</span></div>
+        <div class="soil-prop"><span>pH Range</span><span>4.5&ndash;5.5 (strongly acidic)</span></div>
+        <div class="soil-prop"><span>Frost-Free Period</span><span>~100&ndash;130 days</span></div>
+      </div>
+
+      <p class="info-note" style="margin-top:1rem;">
+        Soils formed in acid glacial till derived from Devonian sandstone and
+        siltstone. The Lordstown&ndash;Oquaga association dominates mid-slope positions
+        throughout the Catskill High Peaks. Rock outcrops and very stony phases are
+        common. Shallow Arnot soils occur where bedrock is within 20 inches.
+        Willowemoc soils (very deep, well-drained) may be present in lower colluvial
+        positions. Verify exact mapping units via
+        <a href="https://websoilsurvey.nrcs.usda.gov/app/" target="_blank" rel="noopener">USDA Web Soil Survey</a>.
       </p>
     </div>
 
@@ -780,6 +1009,97 @@
       }
     }
 
+    // ─── Rainfall data & chart ─────────────────────────────────────────
+    // Monthly avg precipitation in inches (Catskill Mtns, ~1900 ft, NOAA 30-yr normals)
+    const RAIN_MONTHLY  = [2.9, 2.8, 3.3, 3.5, 3.7, 5.2, 4.3, 4.3, 4.1, 5.6, 4.3, 3.7];
+    // Monthly avg snowfall water equivalent in inches
+    const SNOW_WE       = [1.8, 1.5, 1.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.5, 1.4];
+
+    function drawRainfallChart() {
+      const canvas = document.getElementById("chart-rainfall");
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(dpr, dpr);
+      const W = rect.width, H = rect.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const pad = { top: 20, right: 20, bottom: 30, left: 45 };
+      const cW = W - pad.left - pad.right;
+      const cH = H - pad.top - pad.bottom;
+
+      const totalMonthly = RAIN_MONTHLY.map((r, i) => r + SNOW_WE[i]);
+      const maxVal = Math.max(...totalMonthly) * 1.15;
+      const barW = cW / 12 * 0.65;
+      const gap = cW / 12;
+
+      // Y-axis grid
+      ctx.strokeStyle = "#333";
+      ctx.fillStyle = "#666";
+      ctx.font = "11px monospace";
+      ctx.textAlign = "right";
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.top + cH - (i / 4) * cH;
+        const val = (maxVal * i / 4).toFixed(1);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(W - pad.right, y);
+        ctx.stroke();
+        ctx.fillText(val, pad.left - 6, y + 4);
+      }
+
+      // Bars
+      for (let m = 0; m < 12; m++) {
+        const x = pad.left + gap * m + (gap - barW) / 2;
+
+        // Snow water equiv (bottom)
+        const snowH = (SNOW_WE[m] / maxVal) * cH;
+        if (snowH > 0) {
+          ctx.fillStyle = "#8ab4f8";
+          ctx.fillRect(x, pad.top + cH - snowH, barW, snowH);
+        }
+
+        // Rain (stacked on top)
+        const rainH = (RAIN_MONTHLY[m] / maxVal) * cH;
+        ctx.fillStyle = "#4a90d9";
+        ctx.fillRect(x, pad.top + cH - snowH - rainH, barW, rainH);
+
+        // Total label on top
+        const totY = pad.top + cH - ((RAIN_MONTHLY[m] + SNOW_WE[m]) / maxVal) * cH;
+        ctx.fillStyle = "#e0e0e0";
+        ctx.font = "9px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText(totalMonthly[m].toFixed(1), x + barW / 2, totY - 5);
+
+        // Month label
+        ctx.fillStyle = "#666";
+        ctx.font = "10px monospace";
+        ctx.fillText(MONTHS[m], x + barW / 2, pad.top + cH + 16);
+      }
+    }
+
+    function buildRainGrid() {
+      const grid = document.getElementById("rain-month-grid");
+      grid.innerHTML = "";
+      const totalMonthly = RAIN_MONTHLY.map((r, i) => r + SNOW_WE[i]);
+      const maxR = Math.max(...totalMonthly);
+      for (let m = 0; m < 12; m++) {
+        const cell = document.createElement("div");
+        cell.className = "month-cell";
+        const intensity = totalMonthly[m] / maxR;
+        const r = Math.round(20 + intensity * 15);
+        const g = Math.round(30 + intensity * 40);
+        const b = Math.round(50 + intensity * 60);
+        cell.style.background = `rgb(${r},${g},${b})`;
+        const rainStr = RAIN_MONTHLY[m].toFixed(1);
+        const snowStr = SNOW_WE[m] > 0 ? ` + ${SNOW_WE[m].toFixed(1)}s` : "";
+        cell.innerHTML = `<span class="mo">${MONTHS[m]}</span><span class="val" style="color:${intensity > 0.5 ? '#8ab4f8' : '#667'}">${rainStr}${snowStr}</span>`;
+        grid.appendChild(cell);
+      }
+    }
+
     // ─── Event binding ───────────────────────────────────────────────────
     const inputs = ["slope", "aspect", "tree-shade", "albedo", "panel-eff", "area"];
     inputs.forEach(id => {
@@ -791,10 +1111,12 @@
       });
     });
 
-    window.addEventListener("resize", calculate);
+    window.addEventListener("resize", () => { calculate(); drawRainfallChart(); });
 
     // Initial run
     calculate();
+    drawRainfallChart();
+    buildRainGrid();
   </script>
 </body>
 </html>
