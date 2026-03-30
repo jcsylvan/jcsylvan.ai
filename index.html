@@ -83,8 +83,15 @@
       color: #fff;
     }
 
-    .protected-btn {
+    .btn-row {
+      display: flex;
+      gap: 0.75rem;
       margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .protected-btn, .nav-btn {
       background: none;
       border: 1px solid #333;
       border-radius: 4px;
@@ -95,11 +102,21 @@
       cursor: pointer;
       transition: color 0.2s ease, border-color 0.2s ease;
       letter-spacing: 0.05em;
+      text-decoration: none;
     }
 
-    .protected-btn:hover {
+    .protected-btn:hover, .nav-btn:hover {
       color: #e0e0e0;
       border-color: #888;
+    }
+
+    .nav-btn {
+      color: #f0c040;
+      border-color: #4a3a10;
+    }
+
+    .nav-btn:hover {
+      border-color: #f0c040;
     }
   </style>
 </head>
@@ -116,7 +133,10 @@
     />
     <button type="submit" class="prompt-submit" aria-label="Submit">&#8594;</button>
   </form>
-  <button class="protected-btn" onclick="unlock()">&#128274; harps</button>
+  <div class="btn-row">
+    <a href="solar-gain.html" class="nav-btn">&#9788; solar gain tool</a>
+    <button class="protected-btn" onclick="unlock()">&#128274; harps</button>
+  </div>
   <script>
     async function unlock() {
       const pw = prompt("password:");
