@@ -310,6 +310,180 @@
       border-bottom: 1px solid #222;
       grid-column: 1 / -1;
     }
+
+    /* ── Native Species Planner ─────────────────────────────── */
+    .zone-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .zone-btn {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #888;
+      font-family: inherit;
+      font-size: 0.8rem;
+      padding: 0.5rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .zone-btn:hover { border-color: #666; color: #ccc; }
+    .zone-btn.active { border-color: #4caf50; color: #4caf50; background: #1a2a1a; }
+
+    .species-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-chip {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      color: #888;
+      font-family: inherit;
+      font-size: 0.72rem;
+      padding: 0.3rem 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-chip:hover { border-color: #555; color: #bbb; }
+    .filter-chip.active { border-color: #5588cc; color: #5588cc; background: #1a1a2a; }
+
+    .species-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .species-item {
+      background: #151515;
+      border: 1px solid #222;
+      border-radius: 4px;
+      padding: 0.65rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: border-color 0.2s;
+    }
+
+    .species-item:hover { border-color: #444; }
+
+    .species-name {
+      font-size: 0.85rem;
+      color: #e0e0e0;
+      font-weight: 600;
+    }
+
+    .species-latin {
+      font-size: 0.72rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    .species-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.2rem;
+    }
+
+    .species-tag {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      background: #1a1a1a;
+      color: #888;
+    }
+
+    .species-tag.tree { color: #6b8e4e; background: #1a221a; }
+    .species-tag.shrub { color: #8e6b4e; background: #221a1a; }
+    .species-tag.wildflower { color: #b06ebf; background: #1e1a22; }
+    .species-tag.fern { color: #4ea88e; background: #1a2220; }
+    .species-tag.grass { color: #a8a44e; background: #22221a; }
+    .species-tag.vine { color: #4e8ea8; background: #1a2022; }
+
+    .species-note {
+      font-size: 0.72rem;
+      color: #666;
+      line-height: 1.4;
+      margin-top: 0.15rem;
+    }
+
+    .bio-meter {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .bio-meter-label {
+      font-size: 0.8rem;
+      color: #888;
+      min-width: 140px;
+    }
+
+    .bio-meter-bar {
+      flex: 1;
+      height: 8px;
+      background: #1a1a1a;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bio-meter-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .bio-meter-val {
+      font-size: 0.8rem;
+      color: #e0e0e0;
+      min-width: 45px;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .zone-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .zone-stat {
+      text-align: center;
+      padding: 0.6rem 0.4rem;
+      background: #151515;
+      border-radius: 4px;
+      border: 1px solid #222;
+    }
+
+    .zone-stat-num {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #4caf50;
+    }
+
+    .zone-stat-label {
+      font-size: 0.7rem;
+      color: #888;
+      margin-top: 0.2rem;
+    }
+
+    .planner-desc {
+      font-size: 0.78rem;
+      color: #777;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -595,6 +769,47 @@
         Willowemoc soils (very deep, well-drained) may be present in lower colluvial
         positions. Verify exact mapping units via
         <a href="https://websoilsurvey.nrcs.usda.gov/app/" target="_blank" rel="noopener">USDA Web Soil Survey</a>.
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="section-title">Native Species Planner</div>
+
+    <!-- Zone Selector & Filters -->
+    <div class="card">
+      <h2>Parcel Zones</h2>
+      <p class="planner-desc">
+        Select one or more micro-habitat zones on the parcel. Species recommendations
+        are matched to each zone's light, moisture, and soil conditions for the Catskill
+        Mountains region (USDA Hardiness Zone 4b&ndash;5a, pH 4.5&ndash;5.5, elevation ~1,900 ft).
+      </p>
+      <div class="zone-selector" id="zone-selector"></div>
+
+      <h2 style="margin-top:1rem;">Filter by Type</h2>
+      <div class="species-filters" id="species-filters"></div>
+    </div>
+
+    <!-- Biodiversity Metrics -->
+    <div class="card">
+      <h2>Biodiversity Metrics</h2>
+      <div id="bio-metrics"></div>
+      <div class="zone-summary" id="zone-summary"></div>
+      <p class="info-note" style="margin-top:0.75rem;">
+        Shannon Diversity Index measures species diversity accounting for both richness
+        and evenness. Values above 3.0 indicate high biodiversity. Functional group
+        coverage tracks how many ecological roles (canopy, understory, ground cover,
+        pollinator support, erosion control) are filled.
+      </p>
+    </div>
+
+    <!-- Species Recommendations -->
+    <div class="card full-width">
+      <h2>Recommended Species (<span id="species-count">0</span>)</h2>
+      <div class="species-list" id="species-list"></div>
+      <p class="info-note" style="margin-top:1rem;" id="species-footer">
+        Select at least one zone above to see recommendations. All species listed are
+        native to the northern Catskill Mountains and adapted to the site conditions of
+        Parcel 160.00-1-46.1.
       </p>
     </div>
 
@@ -1100,6 +1315,290 @@
       }
     }
 
+    // ─── Native Species Planner ─────────────────────────────────────────
+
+    // Parcel micro-habitat zones
+    const ZONES = [
+      { id: "ridgetop",  label: "Ridgetop / Exposed",   light: "full",    moisture: "dry",    desc: "Windswept upper slopes, thin soil, full sun exposure" },
+      { id: "upslope",   label: "Upper Slope / Forest",  light: "partial", moisture: "dry-med", desc: "Northern hardwood forest canopy, dappled light" },
+      { id: "midslope",  label: "Mid-Slope",             light: "partial", moisture: "medium",  desc: "Mixed forest, moderate soil depth, sheltered" },
+      { id: "valley",    label: "Valley Floor",           light: "partial", moisture: "moist",   desc: "Deeper soils, colluvial deposits, sheltered from wind" },
+      { id: "riparian",  label: "Riparian / Stream Edge", light: "partial", moisture: "wet",     desc: "Along waterways, seasonally saturated soils" },
+      { id: "meadow",    label: "Open Meadow / Clearing", light: "full",    moisture: "medium",  desc: "Full sun, deeper soil, former pasture or clearing" },
+      { id: "wetland",   label: "Wet Seep / Bog",         light: "partial", moisture: "saturated", desc: "Perennially wet, organic soils, low pH" },
+      { id: "rocky",     label: "Rock Outcrop / Ledge",   light: "full",    moisture: "dry",     desc: "Thin soil pockets, exposed bedrock, xeric" },
+    ];
+
+    const TYPES = ["tree", "shrub", "wildflower", "fern", "grass", "vine"];
+
+    // Native species database — Catskill Mountains, NY
+    // Each species: common name, Latin, type, zones[], functional groups, note
+    const SPECIES = [
+      // ── Trees ──
+      { common: "Sugar Maple", latin: "Acer saccharum", type: "tree", zones: ["upslope","midslope","valley"], groups: ["canopy","wildlife-food"], note: "Dominant northern hardwood; deep roots stabilize slopes" },
+      { common: "Red Maple", latin: "Acer rubrum", type: "tree", zones: ["midslope","valley","riparian","wetland"], groups: ["canopy","wildlife-food"], note: "Tolerates wide moisture range; brilliant fall color" },
+      { common: "American Beech", latin: "Fagus grandifolia", type: "tree", zones: ["upslope","midslope","valley"], groups: ["canopy","wildlife-food"], note: "Beechnuts feed bears, turkeys, and songbirds" },
+      { common: "Yellow Birch", latin: "Betula alleghaniensis", type: "tree", zones: ["upslope","midslope","riparian"], groups: ["canopy","wildlife-food"], note: "Thrives in cool, moist acidic soils; nurse-log colonizer" },
+      { common: "Paper Birch", latin: "Betula papyrifera", type: "tree", zones: ["ridgetop","upslope","meadow"], groups: ["canopy","pioneer"], note: "Early colonizer of disturbed sites; short-lived canopy" },
+      { common: "Eastern Hemlock", latin: "Tsuga canadensis", type: "tree", zones: ["midslope","valley","riparian"], groups: ["canopy","erosion-control","wildlife-shelter"], note: "Evergreen; critical shade for cold-water streams; ravine specialist" },
+      { common: "Red Spruce", latin: "Picea rubens", type: "tree", zones: ["ridgetop","upslope"], groups: ["canopy","wildlife-shelter"], note: "High-elevation Catskill native; acidic soil indicator" },
+      { common: "Balsam Fir", latin: "Abies balsamea", type: "tree", zones: ["ridgetop","upslope","wetland"], groups: ["canopy","wildlife-shelter"], note: "Catskill summit species; tolerates wet, acidic, cold sites" },
+      { common: "White Pine", latin: "Pinus strobus", type: "tree", zones: ["ridgetop","midslope","meadow","rocky"], groups: ["canopy","pioneer","erosion-control"], note: "Fast-growing; excellent for reforestation on disturbed sites" },
+      { common: "Northern Red Oak", latin: "Quercus rubra", type: "tree", zones: ["midslope","valley","meadow"], groups: ["canopy","wildlife-food"], note: "Acorns are critical food for deer, bear, turkey, and jays" },
+      { common: "White Ash", latin: "Fraxinus americana", type: "tree", zones: ["midslope","valley"], groups: ["canopy","wildlife-food"], note: "Rich-site indicator; seeds feed finches (note: EAB risk)" },
+      { common: "Black Cherry", latin: "Prunus serotina", type: "tree", zones: ["midslope","valley","meadow"], groups: ["canopy","wildlife-food","pollinator"], note: "Fruit feeds 40+ bird species; early spring flowers for bees" },
+      { common: "American Basswood", latin: "Tilia americana", type: "tree", zones: ["valley","midslope"], groups: ["canopy","pollinator","wildlife-food"], note: "Fragrant flowers are premier nectar source for native bees" },
+      { common: "Quaking Aspen", latin: "Populus tremuloides", type: "tree", zones: ["ridgetop","meadow","rocky"], groups: ["canopy","pioneer","wildlife-food"], note: "Rapid colonizer; supports 100+ insect species; grouse habitat" },
+      { common: "Striped Maple", latin: "Acer pensylvanicum", type: "tree", zones: ["upslope","midslope"], groups: ["understory","wildlife-food"], note: "Understory tree; moose and deer browse; shade-tolerant" },
+      { common: "Eastern Hophornbeam", latin: "Ostrya virginiana", type: "tree", zones: ["midslope","rocky"], groups: ["understory","wildlife-food"], note: "Extremely hard wood; nutlets feed birds; drought-tolerant understory" },
+      { common: "Black Willow", latin: "Salix nigra", type: "tree", zones: ["riparian","wetland"], groups: ["canopy","erosion-control","pollinator"], note: "Streambank stabilizer; early pollen source for native bees" },
+
+      // ── Shrubs ──
+      { common: "Mountain Laurel", latin: "Kalmia latifolia", type: "shrub", zones: ["ridgetop","upslope","midslope","rocky"], groups: ["understory","pollinator","erosion-control"], note: "Evergreen; thrives in acidic, rocky soils; bumble bee pollinated" },
+      { common: "Rosebay Rhododendron", latin: "Rhododendron maximum", type: "shrub", zones: ["midslope","valley","riparian"], groups: ["understory","wildlife-shelter","erosion-control"], note: "Evergreen thickets along streams; dense winter cover for wildlife" },
+      { common: "Highbush Blueberry", latin: "Vaccinium corymbosum", type: "shrub", zones: ["upslope","midslope","wetland","meadow"], groups: ["understory","wildlife-food","pollinator"], note: "Fruit feeds birds and bears; requires acidic soil (pH 4.5–5.5)" },
+      { common: "Lowbush Blueberry", latin: "Vaccinium angustifolium", type: "shrub", zones: ["ridgetop","rocky","meadow"], groups: ["ground-cover","wildlife-food","pollinator"], note: "Excellent ground cover for thin, acidic soils; fire-adapted" },
+      { common: "Witch Hazel", latin: "Hamamelis virginiana", type: "shrub", zones: ["midslope","valley","upslope"], groups: ["understory","pollinator"], note: "Late-fall bloomer; only nectar source for late-season moths" },
+      { common: "Hobblebush", latin: "Viburnum lantanoides", type: "shrub", zones: ["upslope","midslope","valley"], groups: ["understory","wildlife-food"], note: "Catskill forest indicator; fruit eaten by thrushes and bears" },
+      { common: "Spicebush", latin: "Lindera benzoin", type: "shrub", zones: ["valley","riparian","midslope"], groups: ["understory","wildlife-food","pollinator"], note: "Host plant for spicebush swallowtail butterfly; aromatic" },
+      { common: "Elderberry", latin: "Sambucus canadensis", type: "shrub", zones: ["meadow","riparian","valley"], groups: ["understory","wildlife-food","pollinator"], note: "Berries feed 50+ bird species; rapid growth in moist sites" },
+      { common: "Red-Osier Dogwood", latin: "Cornus sericea", type: "shrub", zones: ["riparian","wetland","meadow"], groups: ["understory","erosion-control","wildlife-food"], note: "Streambank stabilizer; red stems; berries for migrating birds" },
+      { common: "Winterberry Holly", latin: "Ilex verticillata", type: "shrub", zones: ["wetland","riparian","valley"], groups: ["understory","wildlife-food"], note: "Persistent red berries; critical late-winter bird food" },
+      { common: "Beaked Hazelnut", latin: "Corylus cornuta", type: "shrub", zones: ["midslope","valley","meadow"], groups: ["understory","wildlife-food"], note: "Nuts for squirrels, jays, ruffed grouse; thicket-forming" },
+      { common: "Sheep Laurel", latin: "Kalmia angustifolia", type: "shrub", zones: ["ridgetop","wetland","rocky"], groups: ["ground-cover","pollinator"], note: "Low-growing; thrives in bogs and acidic barrens; native bee plant" },
+      { common: "Sweet Fern", latin: "Comptonia peregrina", type: "shrub", zones: ["ridgetop","meadow","rocky"], groups: ["ground-cover","erosion-control","pioneer"], note: "Nitrogen-fixer; aromatic; colonizes poor, sandy, acidic soils" },
+      { common: "Silky Willow", latin: "Salix sericea", type: "shrub", zones: ["riparian","wetland"], groups: ["erosion-control","pollinator","pioneer"], note: "Rapid streambank stabilization; early spring pollen" },
+      { common: "Steeplebush", latin: "Spiraea tomentosa", type: "shrub", zones: ["meadow","wetland","riparian"], groups: ["pollinator","ground-cover"], note: "Pink spires attract diverse pollinators; wet meadow colonizer" },
+
+      // ── Wildflowers ──
+      { common: "Wild Columbine", latin: "Aquilegia canadensis", type: "wildflower", zones: ["rocky","ridgetop","midslope"], groups: ["pollinator"], note: "Early nectar for hummingbirds; colonizes rock crevices and ledges" },
+      { common: "Trillium", latin: "Trillium erectum", type: "wildflower", zones: ["midslope","valley","upslope"], groups: ["pollinator","ground-cover"], note: "Spring ephemeral; rich forest floor indicator; ant-dispersed seeds" },
+      { common: "Trout Lily", latin: "Erythronium americanum", type: "wildflower", zones: ["midslope","valley","upslope"], groups: ["pollinator","ground-cover"], note: "Very early spring bloomer; mottled leaves carpet forest floor" },
+      { common: "Jack-in-the-Pulpit", latin: "Arisaema triphyllum", type: "wildflower", zones: ["midslope","valley","riparian"], groups: ["wildlife-food"], note: "Bright red berries eaten by thrushes; moist forest understory" },
+      { common: "Blue Cohosh", latin: "Caulophyllum thalictroides", type: "wildflower", zones: ["midslope","valley"], groups: ["ground-cover"], note: "Rich-woods indicator; early spring bloomer" },
+      { common: "Hepatica", latin: "Hepatica nobilis var. acuta", type: "wildflower", zones: ["midslope","upslope","rocky"], groups: ["pollinator"], note: "Among the earliest spring wildflowers; attracts early bees" },
+      { common: "Foam Flower", latin: "Tiarella cordifolia", type: "wildflower", zones: ["midslope","valley","riparian"], groups: ["ground-cover","pollinator"], note: "Excellent groundcover; white spring blooms; spreads by stolons" },
+      { common: "Wild Ginger", latin: "Asarum canadense", type: "wildflower", zones: ["midslope","valley"], groups: ["ground-cover"], note: "Dense groundcover; hidden flowers pollinated by ground beetles" },
+      { common: "Bee Balm", latin: "Monarda didyma", type: "wildflower", zones: ["meadow","riparian","valley"], groups: ["pollinator"], note: "Red tubular flowers attract hummingbirds and native bees" },
+      { common: "Joe-Pye Weed", latin: "Eutrochium maculatum", type: "wildflower", zones: ["meadow","riparian","wetland"], groups: ["pollinator"], note: "Tall; pink domes attract monarchs, swallowtails, and native bees" },
+      { common: "New England Aster", latin: "Symphyotrichum novae-angliae", type: "wildflower", zones: ["meadow","riparian"], groups: ["pollinator"], note: "Critical late-season nectar for migrating monarchs" },
+      { common: "Goldenrod", latin: "Solidago rugosa", type: "wildflower", zones: ["meadow","ridgetop","rocky"], groups: ["pollinator","pioneer"], note: "Supports 100+ insect species; late-season pollen powerhouse" },
+      { common: "Black-Eyed Susan", latin: "Rudbeckia hirta", type: "wildflower", zones: ["meadow","rocky"], groups: ["pollinator","pioneer"], note: "Cheerful native; goldfinch food; colonizes disturbed meadows" },
+      { common: "Cardinal Flower", latin: "Lobelia cardinalis", type: "wildflower", zones: ["riparian","wetland"], groups: ["pollinator"], note: "Brilliant red; primary hummingbird plant; streamside specialist" },
+      { common: "Blue Flag Iris", latin: "Iris versicolor", type: "wildflower", zones: ["wetland","riparian"], groups: ["pollinator","erosion-control"], note: "Wetland edges; native bee magnet; rhizomes stabilize banks" },
+      { common: "Marsh Marigold", latin: "Caltha palustris", type: "wildflower", zones: ["wetland","riparian"], groups: ["pollinator"], note: "Early spring yellow in wet areas; early pollen for native bees" },
+      { common: "Turtlehead", latin: "Chelone glabra", type: "wildflower", zones: ["riparian","wetland","valley"], groups: ["pollinator"], note: "Sole host plant for Baltimore checkerspot butterfly" },
+      { common: "Solomon's Seal", latin: "Polygonatum biflorum", type: "wildflower", zones: ["midslope","valley","upslope"], groups: ["ground-cover","wildlife-food"], note: "Arching stems; berries for thrushes; graceful woodland plant" },
+      { common: "Bloodroot", latin: "Sanguinaria canadensis", type: "wildflower", zones: ["midslope","valley"], groups: ["pollinator","ground-cover"], note: "Very early white flowers; ant-dispersed; rich woods indicator" },
+      { common: "Wild Bergamot", latin: "Monarda fistulosa", type: "wildflower", zones: ["meadow","rocky","ridgetop"], groups: ["pollinator"], note: "Lavender flowers; drought-tolerant; excellent native bee plant" },
+      { common: "Boneset", latin: "Eupatorium perfoliatum", type: "wildflower", zones: ["meadow","wetland","riparian"], groups: ["pollinator"], note: "White flower clusters attract diverse beneficial insects" },
+
+      // ── Ferns ──
+      { common: "Christmas Fern", latin: "Polystichum acrostichoides", type: "fern", zones: ["midslope","valley","upslope","rocky"], groups: ["ground-cover","erosion-control"], note: "Evergreen; excellent slope stabilizer; highly shade-tolerant" },
+      { common: "Maidenhair Fern", latin: "Adiantum pedatum", type: "fern", zones: ["midslope","valley","riparian"], groups: ["ground-cover"], note: "Delicate; indicates moist, rich, sheltered microhabitats" },
+      { common: "Interrupted Fern", latin: "Claytosmunda claytoniana", type: "fern", zones: ["midslope","valley","upslope"], groups: ["ground-cover"], note: "Large; forms impressive clumps on moist forest slopes" },
+      { common: "Cinnamon Fern", latin: "Osmundastrum cinnamomeum", type: "fern", zones: ["wetland","riparian","valley"], groups: ["ground-cover","erosion-control"], note: "Wet soil specialist; large clumps stabilize streambanks" },
+      { common: "Hay-Scented Fern", latin: "Dennstaedtia punctilobula", type: "fern", zones: ["upslope","midslope","meadow"], groups: ["ground-cover","pioneer"], note: "Aggressive colonizer of forest openings; fragrant when crushed" },
+      { common: "Royal Fern", latin: "Osmunda regalis", type: "fern", zones: ["wetland","riparian"], groups: ["ground-cover","erosion-control"], note: "Largest native fern; wet soil indicator; stunning form" },
+      { common: "Sensitive Fern", latin: "Onoclea sensibilis", type: "fern", zones: ["wetland","riparian","valley"], groups: ["ground-cover"], note: "Rapid colonizer of wet, open areas; first killed by frost" },
+      { common: "Rock Polypody", latin: "Polypodium virginianum", type: "fern", zones: ["rocky","ridgetop"], groups: ["ground-cover","erosion-control"], note: "Evergreen; grows directly on boulders and rock faces" },
+      { common: "Marginal Wood Fern", latin: "Dryopteris marginalis", type: "fern", zones: ["midslope","upslope","rocky"], groups: ["ground-cover","erosion-control"], note: "Evergreen; rocky slope specialist; very cold-hardy" },
+
+      // ── Grasses & Sedges ──
+      { common: "Pennsylvania Sedge", latin: "Carex pensylvanica", type: "grass", zones: ["upslope","midslope","meadow","rocky"], groups: ["ground-cover","erosion-control"], note: "Excellent lawn alternative for dry shade; forms dense mats" },
+      { common: "Tussock Sedge", latin: "Carex stricta", type: "grass", zones: ["wetland","riparian"], groups: ["ground-cover","erosion-control","wildlife-shelter"], note: "Creates tussock micro-habitat; nesting substrate for waterfowl" },
+      { common: "Fox Sedge", latin: "Carex vulpinoidea", type: "grass", zones: ["wetland","riparian","meadow"], groups: ["ground-cover","erosion-control"], note: "Robust wetland sedge; rapid establishment for restoration" },
+      { common: "Big Bluestem", latin: "Andropogon gerardii", type: "grass", zones: ["meadow"], groups: ["ground-cover","erosion-control","wildlife-shelter"], note: "Tall warm-season grass; deep roots (6+ ft); monarch habitat" },
+      { common: "Little Bluestem", latin: "Schizachyrium scoparium", type: "grass", zones: ["meadow","ridgetop","rocky"], groups: ["ground-cover","erosion-control","wildlife-shelter"], note: "Bronze fall/winter color; bird nesting cover; drought-tolerant" },
+      { common: "Switchgrass", latin: "Panicum virgatum", type: "grass", zones: ["meadow","riparian"], groups: ["ground-cover","erosion-control","wildlife-shelter"], note: "Tall; deep-rooted; sparrow and bunting winter cover" },
+      { common: "Deer Tongue Grass", latin: "Dichanthelium clandestinum", type: "grass", zones: ["meadow","midslope","riparian"], groups: ["ground-cover","erosion-control"], note: "Woodland-edge grass; tolerates partial shade; native to Catskills" },
+      { common: "Woolgrass", latin: "Scirpus cyperinus", type: "grass", zones: ["wetland","riparian"], groups: ["ground-cover","erosion-control","wildlife-food"], note: "Robust wetland bulrush; seeds feed waterfowl; rapid colonizer" },
+
+      // ── Vines ──
+      { common: "Virginia Creeper", latin: "Parthenocissus quinquefolia", type: "vine", zones: ["midslope","valley","rocky","meadow"], groups: ["wildlife-food","ground-cover"], note: "Berries critical for fall migrants; brilliant fall color" },
+      { common: "American Bittersweet", latin: "Celastrus scandens", type: "vine", zones: ["midslope","valley","meadow"], groups: ["wildlife-food"], note: "Native vine (not invasive oriental); orange berries for birds" },
+      { common: "Wild Grape", latin: "Vitis labrusca", type: "vine", zones: ["meadow","valley","riparian"], groups: ["wildlife-food","pollinator"], note: "Fox grape; fruit feeds 50+ bird species and mammals" },
+    ];
+
+    // Functional group labels
+    const GROUP_LABELS = {
+      "canopy": "Canopy Structure",
+      "understory": "Understory Layer",
+      "ground-cover": "Ground Cover",
+      "pollinator": "Pollinator Support",
+      "wildlife-food": "Wildlife Food",
+      "wildlife-shelter": "Wildlife Shelter",
+      "erosion-control": "Erosion Control",
+      "pioneer": "Pioneer / Colonizer",
+    };
+
+    // ─── Planner State ────────────────────────────────────────────────
+    let activeZones = new Set();
+    let activeTypes = new Set(TYPES);
+
+    function buildZoneSelector() {
+      const container = document.getElementById("zone-selector");
+      ZONES.forEach(z => {
+        const btn = document.createElement("button");
+        btn.className = "zone-btn";
+        btn.textContent = z.label;
+        btn.title = z.desc;
+        btn.addEventListener("click", () => {
+          if (activeZones.has(z.id)) activeZones.delete(z.id);
+          else activeZones.add(z.id);
+          btn.classList.toggle("active");
+          updatePlanner();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function buildTypeFilters() {
+      const container = document.getElementById("species-filters");
+      TYPES.forEach(t => {
+        const chip = document.createElement("button");
+        chip.className = "filter-chip active";
+        chip.textContent = t;
+        chip.addEventListener("click", () => {
+          if (activeTypes.has(t)) activeTypes.delete(t);
+          else activeTypes.add(t);
+          chip.classList.toggle("active");
+          updatePlanner();
+        });
+        container.appendChild(chip);
+      });
+    }
+
+    function getFilteredSpecies() {
+      if (activeZones.size === 0) return [];
+      return SPECIES.filter(sp => {
+        if (!activeTypes.has(sp.type)) return false;
+        return sp.zones.some(z => activeZones.has(z));
+      });
+    }
+
+    function shannonIndex(species) {
+      if (species.length <= 1) return 0;
+      // Approximate: treat each species as equally abundant, grouped by type
+      const typeCounts = {};
+      species.forEach(sp => { typeCounts[sp.type] = (typeCounts[sp.type] || 0) + 1; });
+      const n = species.length;
+      let H = 0;
+      Object.values(typeCounts).forEach(count => {
+        const p = count / n;
+        if (p > 0) H -= p * Math.log(p);
+      });
+      return H;
+    }
+
+    function updatePlanner() {
+      const species = getFilteredSpecies();
+      const allForZones = SPECIES.filter(sp => sp.zones.some(z => activeZones.has(z)));
+
+      // ── Render species list ──
+      const listEl = document.getElementById("species-list");
+      const countEl = document.getElementById("species-count");
+      const footerEl = document.getElementById("species-footer");
+      listEl.innerHTML = "";
+      countEl.textContent = species.length;
+
+      if (activeZones.size === 0) {
+        footerEl.textContent = "Select at least one zone above to see recommendations.";
+      } else if (species.length === 0) {
+        footerEl.textContent = "No species match the current zone and type filters. Try enabling more types.";
+      } else {
+        footerEl.textContent = "All species listed are native to the northern Catskill Mountains and adapted to the site conditions of Parcel 160.00-1-46.1.";
+      }
+
+      // Sort: trees first, then shrubs, wildflowers, ferns, grasses, vines
+      const typeOrder = { tree: 0, shrub: 1, wildflower: 2, fern: 3, grass: 4, vine: 5 };
+      species.sort((a, b) => (typeOrder[a.type] || 9) - (typeOrder[b.type] || 9));
+
+      species.forEach(sp => {
+        const item = document.createElement("div");
+        item.className = "species-item";
+
+        const matchingZones = sp.zones.filter(z => activeZones.has(z))
+          .map(z => ZONES.find(zone => zone.id === z).label);
+
+        item.innerHTML = `
+          <span class="species-name">${sp.common}</span>
+          <span class="species-latin">${sp.latin}</span>
+          <div class="species-tags">
+            <span class="species-tag ${sp.type}">${sp.type}</span>
+            ${matchingZones.map(z => `<span class="species-tag">${z}</span>`).join("")}
+            ${sp.groups.map(g => `<span class="species-tag">${GROUP_LABELS[g] || g}</span>`).join("")}
+          </div>
+          <span class="species-note">${sp.note}</span>
+        `;
+        listEl.appendChild(item);
+      });
+
+      // ── Biodiversity metrics ──
+      const metricsEl = document.getElementById("bio-metrics");
+      const summaryEl = document.getElementById("zone-summary");
+
+      if (activeZones.size === 0) {
+        metricsEl.innerHTML = '<p style="color:#555;font-size:0.8rem;">Select zones to calculate biodiversity metrics.</p>';
+        summaryEl.innerHTML = "";
+        return;
+      }
+
+      const richness = allForZones.length;
+      const H = shannonIndex(allForZones);
+      const maxH = Math.log(TYPES.length); // max possible Shannon index
+      const evenness = maxH > 0 ? H / maxH : 0;
+
+      // Functional group coverage
+      const allGroups = new Set();
+      allForZones.forEach(sp => sp.groups.forEach(g => allGroups.add(g)));
+      const totalGroups = Object.keys(GROUP_LABELS).length;
+      const groupCoverage = allGroups.size / totalGroups;
+
+      // Type breakdown
+      const typeCounts = {};
+      allForZones.forEach(sp => { typeCounts[sp.type] = (typeCounts[sp.type] || 0) + 1; });
+
+      metricsEl.innerHTML = `
+        <div class="bio-meter">
+          <span class="bio-meter-label">Species Richness</span>
+          <div class="bio-meter-bar"><div class="bio-meter-fill" style="width:${Math.min(100, richness / SPECIES.length * 100)}%;background:#4caf50;"></div></div>
+          <span class="bio-meter-val">${richness}</span>
+        </div>
+        <div class="bio-meter">
+          <span class="bio-meter-label">Shannon Index</span>
+          <div class="bio-meter-bar"><div class="bio-meter-fill" style="width:${Math.min(100, H / maxH * 100)}%;background:#5588cc;"></div></div>
+          <span class="bio-meter-val">${H.toFixed(2)}</span>
+        </div>
+        <div class="bio-meter">
+          <span class="bio-meter-label">Evenness</span>
+          <div class="bio-meter-bar"><div class="bio-meter-fill" style="width:${evenness * 100}%;background:#b06ebf;"></div></div>
+          <span class="bio-meter-val">${(evenness * 100).toFixed(0)}%</span>
+        </div>
+        <div class="bio-meter">
+          <span class="bio-meter-label">Functional Coverage</span>
+          <div class="bio-meter-bar"><div class="bio-meter-fill" style="width:${groupCoverage * 100}%;background:#f0c040;"></div></div>
+          <span class="bio-meter-val">${allGroups.size}/${totalGroups}</span>
+        </div>
+      `;
+
+      summaryEl.innerHTML = TYPES.map(t => `
+        <div class="zone-stat">
+          <div class="zone-stat-num">${typeCounts[t] || 0}</div>
+          <div class="zone-stat-label">${t}${(typeCounts[t] || 0) !== 1 ? "s" : ""}</div>
+        </div>
+      `).join("") + `
+        <div class="zone-stat">
+          <div class="zone-stat-num" style="color:#5588cc;">${activeZones.size}</div>
+          <div class="zone-stat-label">zones selected</div>
+        </div>
+        <div class="zone-stat">
+          <div class="zone-stat-num" style="color:#f0c040;">${allGroups.size}</div>
+          <div class="zone-stat-label">eco. functions</div>
+        </div>
+      `;
+    }
+
     // ─── Event binding ───────────────────────────────────────────────────
     const inputs = ["slope", "aspect", "tree-shade", "albedo", "panel-eff", "area"];
     inputs.forEach(id => {
@@ -1117,6 +1616,9 @@
     calculate();
     drawRainfallChart();
     buildRainGrid();
+    buildZoneSelector();
+    buildTypeFilters();
+    updatePlanner();
   </script>
 </body>
 </html>
