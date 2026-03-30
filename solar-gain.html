@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solar Gain — Parcel 160.00-1-46.1 — West Kill, NY</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    a { color: #f0c040; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .back-link:hover { color: #e0e0e0; }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+      color: #f0c040;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1.25rem;
+    }
+
+    .card h2 {
+      font-size: 0.9rem;
+      color: #999;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    .card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      color: #888;
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+      margin-top: 0.75rem;
+    }
+
+    label:first-of-type { margin-top: 0; }
+
+    select, input[type="number"], input[type="range"] {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 0.5rem 0.6rem;
+      outline: none;
+    }
+
+    select:focus, input[type="number"]:focus {
+      border-color: #f0c040;
+    }
+
+    input[type="range"] {
+      padding: 0;
+      border: none;
+      background: none;
+      margin-top: 0.25rem;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .range-row input[type="range"] { flex: 1; }
+    .range-val {
+      color: #f0c040;
+      font-size: 0.85rem;
+      min-width: 3.5rem;
+      text-align: right;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .metric:last-child { border-bottom: none; }
+
+    .metric-label {
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    .metric-value {
+      color: #f0c040;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .metric-value.good { color: #4caf50; }
+    .metric-value.moderate { color: #f0c040; }
+    .metric-value.poor { color: #e05050; }
+
+    canvas {
+      width: 100%;
+      height: 260px;
+      display: block;
+      margin-top: 0.5rem;
+    }
+
+    .sun-path-canvas {
+      height: 300px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    .legend span::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      margin-right: 0.4rem;
+      vertical-align: middle;
+    }
+
+    .legend .l-direct::before { background: #f0c040; }
+    .legend .l-diffuse::before { background: #5588cc; }
+    .legend .l-total::before { background: #e0e0e0; }
+    .legend .l-summer::before { background: #f0c040; }
+    .legend .l-equinox::before { background: #5588cc; }
+    .legend .l-winter::before { background: #cc5555; }
+
+    .info-note {
+      color: #555;
+      font-size: 0.75rem;
+      margin-top: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .rating-bar {
+      width: 100%;
+      height: 8px;
+      background: #1a1a1a;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .rating-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease, background 0.4s ease;
+    }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .month-cell {
+      text-align: center;
+      padding: 0.4rem 0.25rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+
+    .month-cell .mo { color: #888; display: block; margin-bottom: 0.15rem; }
+    .month-cell .val { font-weight: 600; }
+
+    .parcel-header {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: baseline;
+    }
+
+    .parcel-header .ph-item {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .parcel-header .ph-item strong {
+      color: #e0e0e0;
+      font-weight: 600;
+    }
+
+    .parcel-header .ph-id {
+      font-size: 0.95rem;
+      color: #f0c040;
+      font-weight: 600;
+    }
+
+    .legend .l-rain::before { background: #4a90d9; }
+    .legend .l-snow::before { background: #8ab4f8; }
+
+    .soil-layer {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+      overflow: hidden;
+      font-size: 0.78rem;
+    }
+
+    .soil-layer:last-child { margin-bottom: 0; }
+
+    .soil-depth {
+      width: 60px;
+      min-width: 60px;
+      padding: 0.4rem 0.5rem;
+      text-align: center;
+      color: #aaa;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .soil-desc {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      line-height: 1.4;
+    }
+
+    .soil-desc strong { color: #e0e0e0; }
+
+    .soil-props {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .soil-prop {
+      font-size: 0.78rem;
+      color: #888;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid #1a1a1a;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .soil-prop:last-child { border-bottom: none; }
+    .soil-prop span:last-child { color: #e0e0e0; font-weight: 500; }
+
+    .section-title {
+      font-size: 1.1rem;
+      color: #f0c040;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #222;
+      grid-column: 1 / -1;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">&larr; jcsylvan.ai</a>
+  <h1>Solar Gain &amp; Land Analysis</h1>
+  <p class="subtitle">West Kill, NY &mdash; 42.21&deg;N, 74.28&deg;W &mdash; Catskill Mountains</p>
+
+  <div class="parcel-header">
+    <span class="ph-id">Parcel 160.00-1-46.1</span>
+    <span class="ph-item">SWIS: <strong>194000</strong></span>
+    <span class="ph-item">Municipality: <strong>Lexington</strong></span>
+    <span class="ph-item">Full Market Value: <strong>$165,435</strong></span>
+    <span class="ph-item">Assessed: <strong>$125,400</strong></span>
+    <span class="ph-item">Uniform %: <strong>75.8</strong></span>
+  </div>
+
+  <div class="grid">
+
+    <!-- Configuration Card -->
+    <div class="card">
+      <h2>Site Parameters</h2>
+
+      <label for="slope">Ground Slope Angle</label>
+      <div class="range-row">
+        <input type="range" id="slope" min="0" max="45" value="10" step="1">
+        <span class="range-val" id="slope-val">10&deg;</span>
+      </div>
+
+      <label for="aspect">Slope Aspect (Facing)</label>
+      <select id="aspect">
+        <option value="180" selected>South</option>
+        <option value="135">South-East</option>
+        <option value="225">South-West</option>
+        <option value="90">East</option>
+        <option value="270">West</option>
+        <option value="0">North</option>
+        <option value="45">North-East</option>
+        <option value="315">North-West</option>
+      </select>
+
+      <label for="tree-shade">Tree / Horizon Shade Factor</label>
+      <div class="range-row">
+        <input type="range" id="tree-shade" min="0" max="80" value="15" step="1">
+        <span class="range-val" id="tree-shade-val">15%</span>
+      </div>
+
+      <label for="albedo">Ground Albedo (Reflectance)</label>
+      <select id="albedo">
+        <option value="0.25" selected>Grass / Meadow (0.25)</option>
+        <option value="0.15">Dark soil (0.15)</option>
+        <option value="0.20">Forest floor (0.20)</option>
+        <option value="0.60">Fresh snow (0.60)</option>
+        <option value="0.35">Aged snow (0.35)</option>
+        <option value="0.12">Asphalt (0.12)</option>
+      </select>
+
+      <label for="panel-eff">Panel Efficiency (if applicable)</label>
+      <div class="range-row">
+        <input type="range" id="panel-eff" min="10" max="25" value="20" step="0.5">
+        <span class="range-val" id="panel-eff-val">20%</span>
+      </div>
+
+      <label for="area">Collection Area (m&sup2;)</label>
+      <input type="number" id="area" value="100" min="1" max="100000" step="1">
+    </div>
+
+    <!-- Key Metrics Card -->
+    <div class="card">
+      <h2>Annual Solar Metrics</h2>
+      <div class="metric">
+        <span class="metric-label">Peak Sun Hours (avg/day)</span>
+        <span class="metric-value" id="m-psh">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Annual GHI (kWh/m&sup2;)</span>
+        <span class="metric-value" id="m-ghi">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Annual POA Irradiance (kWh/m&sup2;)</span>
+        <span class="metric-value" id="m-poa">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Effective Solar Gain (kWh/m&sup2;)</span>
+        <span class="metric-value" id="m-eff">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Total Energy Yield (kWh/yr)</span>
+        <span class="metric-value" id="m-yield">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Solar Access Rating</span>
+        <span class="metric-value" id="m-rating">—</span>
+      </div>
+      <div class="rating-bar">
+        <div class="rating-bar-fill" id="rating-bar-fill"></div>
+      </div>
+      <p class="info-note" id="rating-note"></p>
+    </div>
+
+    <!-- Monthly Irradiance Chart -->
+    <div class="card full-width">
+      <h2>Monthly Irradiance (kWh/m&sup2;/day)</h2>
+      <canvas id="chart-monthly"></canvas>
+      <div class="legend">
+        <span class="l-direct">Direct beam</span>
+        <span class="l-diffuse">Diffuse</span>
+        <span class="l-total">Total POA</span>
+      </div>
+    </div>
+
+    <!-- Sun Path Diagram -->
+    <div class="card full-width">
+      <h2>Sun Path Diagram — West Kill, NY</h2>
+      <canvas id="chart-sunpath" class="sun-path-canvas"></canvas>
+      <div class="legend">
+        <span class="l-summer">Summer Solstice (Jun 21)</span>
+        <span class="l-equinox">Equinox (Mar/Sep 20)</span>
+        <span class="l-winter">Winter Solstice (Dec 21)</span>
+      </div>
+    </div>
+
+    <!-- Monthly Breakdown -->
+    <div class="card">
+      <h2>Monthly Solar Gain (kWh/m&sup2;)</h2>
+      <div class="month-grid" id="month-grid"></div>
+    </div>
+
+    <!-- Seasonal Summary -->
+    <div class="card">
+      <h2>Seasonal Summary</h2>
+      <div class="metric">
+        <span class="metric-label">Winter (Dec–Feb)</span>
+        <span class="metric-value" id="s-winter">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Spring (Mar–May)</span>
+        <span class="metric-value" id="s-spring">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Summer (Jun–Aug)</span>
+        <span class="metric-value" id="s-summer">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Fall (Sep–Nov)</span>
+        <span class="metric-value" id="s-fall">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Best Month</span>
+        <span class="metric-value" id="s-best">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Worst Month</span>
+        <span class="metric-value" id="s-worst">—</span>
+      </div>
+      <p class="info-note">
+        West Kill sits in the Catskill Mountains with moderate cloud cover.
+        Winter months see reduced output from short days, snow cover, and
+        lower sun angles. Snow albedo can partially offset losses on tilted surfaces.
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="section-title">Annual Rainfall &amp; Precipitation</div>
+
+    <!-- Rainfall Chart -->
+    <div class="card full-width">
+      <h2>Monthly Precipitation (inches)</h2>
+      <canvas id="chart-rainfall"></canvas>
+      <div class="legend">
+        <span class="l-rain">Rainfall</span>
+        <span class="l-snow">Snowfall (water equiv.)</span>
+      </div>
+    </div>
+
+    <!-- Rainfall Metrics -->
+    <div class="card">
+      <h2>Precipitation Summary</h2>
+      <div class="metric">
+        <span class="metric-label">Annual Rainfall</span>
+        <span class="metric-value">~50&ndash;55 in</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Annual Snowfall</span>
+        <span class="metric-value">~65&ndash;80 in</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Total Precip. (incl. snow water equiv.)</span>
+        <span class="metric-value">~56&ndash;62 in</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Wettest Month</span>
+        <span class="metric-value">Jun (5.2 in)</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Driest Month</span>
+        <span class="metric-value">Feb (2.8 in)</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Days w/ Precip. &ge; 0.01 in</span>
+        <span class="metric-value">~155/yr</span>
+      </div>
+      <p class="info-note">
+        Orographic lift from the Catskill escarpment increases precipitation
+        20&ndash;40% above Hudson Valley levels. West Kill valley receives among the
+        highest rainfall in New York State. Heavy summer thunderstorms and
+        nor&rsquo;easters contribute to peak months.
+      </p>
+    </div>
+
+    <!-- Rainfall Monthly Grid -->
+    <div class="card">
+      <h2>Monthly Breakdown (inches)</h2>
+      <div class="month-grid" id="rain-month-grid"></div>
+      <p class="info-note" style="margin-top:1rem;">
+        Data derived from NOAA 30-year normals (1991&ndash;2020) for the
+        Catskill Mountains region at ~1,900 ft elevation. Higher elevations
+        on this parcel may receive 5&ndash;10% more precipitation.
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="section-title">Soil Profile &amp; Characteristics</div>
+
+    <!-- Soil Profile Diagram -->
+    <div class="card">
+      <h2>Typical Soil Profile &mdash; Catskill Mountain Till</h2>
+      <div class="soil-layer" style="background:#3a2e1e;">
+        <span class="soil-depth">0&ndash;4 in</span>
+        <div class="soil-desc"><strong>O / A Horizon</strong> &mdash; Dark organic leaf litter and humus;
+        acidic forest duff from northern hardwoods (beech, maple, birch)</div>
+      </div>
+      <div class="soil-layer" style="background:#4a3a22;">
+        <span class="soil-depth">4&ndash;12 in</span>
+        <div class="soil-desc"><strong>B Horizon (Bw)</strong> &mdash; Channery silt loam; yellowish-brown;
+        moderate structure with sandstone/siltstone fragments (20&ndash;35% coarse)</div>
+      </div>
+      <div class="soil-layer" style="background:#55442a;">
+        <span class="soil-depth">12&ndash;28 in</span>
+        <div class="soil-desc"><strong>C Horizon</strong> &mdash; Very channery loam; dense glacial till matrix;
+        40&ndash;60% rock fragments; firm consistence</div>
+      </div>
+      <div class="soil-layer" style="background:#666;">
+        <span class="soil-depth">28&ndash;40 in</span>
+        <div class="soil-desc"><strong>R &mdash; Bedrock</strong> &mdash; Devonian sandstone &amp; siltstone (gray);
+        fractured to massive; depth varies 20&ndash;40 in across site</div>
+      </div>
+    </div>
+
+    <!-- Soil Types -->
+    <div class="card">
+      <h2>Dominant Soil Series (Greene County Survey)</h2>
+      <div class="metric">
+        <span class="metric-label">Primary</span>
+        <span class="metric-value" style="font-size:0.85rem;">Lordstown&ndash;Oquaga</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Secondary</span>
+        <span class="metric-value" style="font-size:0.85rem;">Arnot (shallow)</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Valley positions</span>
+        <span class="metric-value" style="font-size:0.85rem;">Willowemoc</span>
+      </div>
+
+      <div class="soil-props" style="margin-top:1rem;">
+        <div class="soil-prop"><span>Texture</span><span>Channery silt loam</span></div>
+        <div class="soil-prop"><span>Drainage Class</span><span>Well drained</span></div>
+        <div class="soil-prop"><span>Depth to Bedrock</span><span>20&ndash;40 in (mod. deep)</span></div>
+        <div class="soil-prop"><span>Hydrologic Group</span><span>C/D</span></div>
+        <div class="soil-prop"><span>Parent Material</span><span>Glacial till over sandstone</span></div>
+        <div class="soil-prop"><span>Slope Range</span><span>3&ndash;35%+ (variable)</span></div>
+        <div class="soil-prop"><span>Permeability</span><span>Moderate to moderately slow</span></div>
+        <div class="soil-prop"><span>AWC (Avail. Water Cap.)</span><span>Low&ndash;Moderate (3&ndash;6 in)</span></div>
+        <div class="soil-prop"><span>pH Range</span><span>4.5&ndash;5.5 (strongly acidic)</span></div>
+        <div class="soil-prop"><span>Frost-Free Period</span><span>~100&ndash;130 days</span></div>
+      </div>
+
+      <p class="info-note" style="margin-top:1rem;">
+        Soils formed in acid glacial till derived from Devonian sandstone and
+        siltstone. The Lordstown&ndash;Oquaga association dominates mid-slope positions
+        throughout the Catskill High Peaks. Rock outcrops and very stony phases are
+        common. Shallow Arnot soils occur where bedrock is within 20 inches.
+        Willowemoc soils (very deep, well-drained) may be present in lower colluvial
+        positions. Verify exact mapping units via
+        <a href="https://websoilsurvey.nrcs.usda.gov/app/" target="_blank" rel="noopener">USDA Web Soil Survey</a>.
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    // ─── Constants ───────────────────────────────────────────────────────
+    const LAT = 42.21;          // degrees N
+    const LON = -74.28;         // degrees W
+    const ELEV = 580;           // meters
+    const DEG = Math.PI / 180;
+    const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const DAYS_IN_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
+
+    // TMY-based monthly average GHI for the West Kill / Catskills region (kWh/m²/day)
+    // Derived from NREL NSRDB typical data for 42.2°N, 74.3°W
+    const GHI_DAILY = [1.8, 2.5, 3.5, 4.4, 5.2, 5.7, 5.6, 5.0, 4.0, 2.9, 1.9, 1.5];
+
+    // Clearness index Kt (monthly average) for this location
+    const KT = [0.38, 0.40, 0.42, 0.43, 0.45, 0.47, 0.47, 0.46, 0.44, 0.41, 0.37, 0.35];
+
+    // Fraction of GHI that is diffuse (estimated from Kt via Erbs correlation, pre-computed)
+    const DIFFUSE_FRAC = [0.58, 0.55, 0.52, 0.50, 0.48, 0.46, 0.46, 0.47, 0.50, 0.54, 0.59, 0.61];
+
+    // ─── Solar geometry helpers ──────────────────────────────────────────
+    function dayOfYear(month, day) {
+      let doy = day;
+      for (let m = 0; m < month; m++) doy += DAYS_IN_MONTH[m];
+      return doy;
+    }
+
+    function solarDeclination(doy) {
+      return 23.45 * Math.sin(DEG * (360 / 365) * (doy - 81));
+    }
+
+    function equationOfTime(doy) {
+      const B = (360 / 365) * (doy - 81) * DEG;
+      return 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+    }
+
+    function solarAltitude(decl, hourAngle) {
+      const lat = LAT * DEG;
+      const d = decl * DEG;
+      const h = hourAngle * DEG;
+      return Math.asin(Math.sin(lat) * Math.sin(d) + Math.cos(lat) * Math.cos(d) * Math.cos(h)) / DEG;
+    }
+
+    function solarAzimuth(decl, hourAngle, altitude) {
+      const lat = LAT * DEG;
+      const d = decl * DEG;
+      const alt = altitude * DEG;
+      let cosAz = (Math.sin(d) - Math.sin(lat) * Math.sin(alt)) / (Math.cos(lat) * Math.cos(alt));
+      cosAz = Math.max(-1, Math.min(1, cosAz));
+      let az = Math.acos(cosAz) / DEG;
+      if (hourAngle > 0) az = 360 - az;
+      return az;
+    }
+
+    function sunriseHourAngle(decl) {
+      const lat = LAT * DEG;
+      const d = decl * DEG;
+      const cosH = -Math.tan(lat) * Math.tan(d);
+      if (cosH < -1) return 180; // midnight sun
+      if (cosH > 1) return 0;   // polar night
+      return Math.acos(cosH) / DEG;
+    }
+
+    // ─── POA irradiance on a tilted surface (isotropic sky model) ───────
+    function poaFactor(month, slopeDeg, aspectDeg, albedo) {
+      const doy = dayOfYear(month, 15);
+      const decl = solarDeclination(doy);
+      const wsHA = sunriseHourAngle(decl);
+      const slopeRad = slopeDeg * DEG;
+      const aspectRad = aspectDeg * DEG;
+      const latRad = LAT * DEG;
+
+      let totalBeamH = 0;
+      let totalBeamT = 0;
+      let steps = 0;
+
+      for (let ha = -wsHA + 1; ha < wsHA; ha += 2) {
+        const alt = solarAltitude(decl, ha);
+        if (alt <= 1) continue;
+
+        const az = solarAzimuth(decl, ha, alt);
+        const altRad = alt * DEG;
+        const azRad = az * DEG;
+
+        // Incidence angle on tilted surface
+        const cosInc = Math.sin(altRad) * Math.cos(slopeRad) +
+                        Math.cos(altRad) * Math.sin(slopeRad) * Math.cos(azRad - aspectRad);
+
+        const beamH = Math.sin(altRad); // proportional to beam on horizontal
+        const beamT = Math.max(0, cosInc);
+
+        totalBeamH += beamH;
+        totalBeamT += beamT;
+        steps++;
+      }
+
+      if (totalBeamH === 0) return { beam: 0, diffuse: 1, ground: 0 };
+
+      const Rb = totalBeamT / totalBeamH;
+      const Rd = (1 + Math.cos(slopeRad)) / 2;   // isotropic diffuse
+      const Rg = albedo * (1 - Math.cos(slopeRad)) / 2; // ground reflected
+
+      return { beam: Rb, diffuse: Rd, ground: Rg };
+    }
+
+    // ─── Main calculation ────────────────────────────────────────────────
+    function calculate() {
+      const slope = parseFloat(document.getElementById("slope").value);
+      const aspect = parseFloat(document.getElementById("aspect").value);
+      const shade = parseFloat(document.getElementById("tree-shade").value) / 100;
+      const albedo = parseFloat(document.getElementById("albedo").value);
+      const eff = parseFloat(document.getElementById("panel-eff").value) / 100;
+      const area = parseFloat(document.getElementById("area").value) || 100;
+
+      const shadeFactor = 1 - shade;
+      const monthlyPOA = [];
+      const monthlyDirect = [];
+      const monthlyDiffuse = [];
+
+      for (let m = 0; m < 12; m++) {
+        const ghi = GHI_DAILY[m];
+        const df = DIFFUSE_FRAC[m];
+        const directH = ghi * (1 - df);
+        const diffuseH = ghi * df;
+
+        const factors = poaFactor(m, slope, aspect, albedo);
+
+        const directT = directH * factors.beam;
+        const diffuseT = diffuseH * factors.diffuse;
+        const groundT = ghi * factors.ground;
+
+        const totalPOA = (directT + diffuseT + groundT) * shadeFactor;
+
+        monthlyDirect.push(directT * shadeFactor);
+        monthlyDiffuse.push((diffuseT + groundT) * shadeFactor);
+        monthlyPOA.push(totalPOA);
+      }
+
+      // Compute annual totals
+      let annualGHI = 0;
+      let annualPOA = 0;
+      const monthlyKwh = [];
+
+      for (let m = 0; m < 12; m++) {
+        annualGHI += GHI_DAILY[m] * DAYS_IN_MONTH[m];
+        const mKwh = monthlyPOA[m] * DAYS_IN_MONTH[m];
+        annualPOA += mKwh;
+        monthlyKwh.push(mKwh);
+      }
+
+      const annualEffective = annualPOA;
+      const annualYield = annualPOA * eff * area;
+      const psh = annualPOA / 365;
+
+      // Solar access rating (% of ideal flat-plate GHI at this latitude ~1400 kWh/m²)
+      const idealGHI = 1400;
+      const accessPct = Math.min(100, (annualPOA / idealGHI) * 100);
+
+      // Update metrics
+      document.getElementById("m-psh").textContent = psh.toFixed(2);
+      document.getElementById("m-ghi").textContent = annualGHI.toFixed(0);
+      document.getElementById("m-poa").textContent = annualPOA.toFixed(0);
+      document.getElementById("m-eff").textContent = annualEffective.toFixed(0);
+      document.getElementById("m-yield").textContent = annualYield.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+      const ratingEl = document.getElementById("m-rating");
+      const barEl = document.getElementById("rating-bar-fill");
+      const noteEl = document.getElementById("rating-note");
+
+      let ratingLabel, ratingClass, barColor;
+      if (accessPct >= 80) {
+        ratingLabel = "Excellent"; ratingClass = "good"; barColor = "#4caf50";
+      } else if (accessPct >= 60) {
+        ratingLabel = "Good"; ratingClass = "good"; barColor = "#8bc34a";
+      } else if (accessPct >= 40) {
+        ratingLabel = "Moderate"; ratingClass = "moderate"; barColor = "#f0c040";
+      } else {
+        ratingLabel = "Poor"; ratingClass = "poor"; barColor = "#e05050";
+      }
+
+      ratingEl.textContent = `${ratingLabel} (${accessPct.toFixed(0)}%)`;
+      ratingEl.className = "metric-value " + ratingClass;
+      barEl.style.width = accessPct + "%";
+      barEl.style.background = barColor;
+      noteEl.textContent = accessPct >= 60
+        ? "This site has favorable solar exposure for energy collection or passive solar gain."
+        : accessPct >= 40
+        ? "Moderate solar access — consider clearing obstructions or adjusting tilt for better performance."
+        : "Limited solar access — significant shading or unfavorable orientation reduces usable gain.";
+
+      // Seasonal
+      const seasonal = {
+        winter: monthlyKwh[11] + monthlyKwh[0] + monthlyKwh[1],
+        spring: monthlyKwh[2] + monthlyKwh[3] + monthlyKwh[4],
+        summer: monthlyKwh[5] + monthlyKwh[6] + monthlyKwh[7],
+        fall: monthlyKwh[8] + monthlyKwh[9] + monthlyKwh[10]
+      };
+
+      document.getElementById("s-winter").textContent = seasonal.winter.toFixed(0) + " kWh/m²";
+      document.getElementById("s-spring").textContent = seasonal.spring.toFixed(0) + " kWh/m²";
+      document.getElementById("s-summer").textContent = seasonal.summer.toFixed(0) + " kWh/m²";
+      document.getElementById("s-fall").textContent = seasonal.fall.toFixed(0) + " kWh/m²";
+
+      let bestM = 0, worstM = 0;
+      for (let m = 1; m < 12; m++) {
+        if (monthlyPOA[m] > monthlyPOA[bestM]) bestM = m;
+        if (monthlyPOA[m] < monthlyPOA[worstM]) worstM = m;
+      }
+      document.getElementById("s-best").textContent = `${MONTHS[bestM]} (${monthlyPOA[bestM].toFixed(2)} kWh/m²/day)`;
+      document.getElementById("s-worst").textContent = `${MONTHS[worstM]} (${monthlyPOA[worstM].toFixed(2)} kWh/m²/day)`;
+
+      // Month grid
+      const grid = document.getElementById("month-grid");
+      grid.innerHTML = "";
+      const maxKwh = Math.max(...monthlyKwh);
+      for (let m = 0; m < 12; m++) {
+        const cell = document.createElement("div");
+        cell.className = "month-cell";
+        const intensity = monthlyKwh[m] / maxKwh;
+        const r = Math.round(30 + intensity * 30);
+        const g = Math.round(30 + intensity * 60);
+        const b = Math.round(30 + intensity * 10);
+        cell.style.background = `rgb(${r},${g},${b})`;
+        cell.innerHTML = `<span class="mo">${MONTHS[m]}</span><span class="val" style="color:${intensity > 0.5 ? '#f0c040' : '#888'}">${monthlyKwh[m].toFixed(0)}</span>`;
+        grid.appendChild(cell);
+      }
+
+      drawMonthlyChart(monthlyDirect, monthlyDiffuse, monthlyPOA);
+      drawSunPath();
+    }
+
+    // ─── Monthly bar chart ───────────────────────────────────────────────
+    function drawMonthlyChart(direct, diffuse, total) {
+      const canvas = document.getElementById("chart-monthly");
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(dpr, dpr);
+      const W = rect.width, H = rect.height;
+
+      ctx.clearRect(0, 0, W, H);
+
+      const pad = { top: 20, right: 20, bottom: 30, left: 45 };
+      const cW = W - pad.left - pad.right;
+      const cH = H - pad.top - pad.bottom;
+
+      const maxVal = Math.max(...total) * 1.15;
+      const barW = cW / 12 * 0.65;
+      const gap = cW / 12;
+
+      // Y-axis
+      ctx.strokeStyle = "#333";
+      ctx.fillStyle = "#666";
+      ctx.font = "11px monospace";
+      ctx.textAlign = "right";
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.top + cH - (i / 4) * cH;
+        const val = (maxVal * i / 4).toFixed(1);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(W - pad.right, y);
+        ctx.stroke();
+        ctx.fillText(val, pad.left - 6, y + 4);
+      }
+
+      // Bars
+      for (let m = 0; m < 12; m++) {
+        const x = pad.left + gap * m + (gap - barW) / 2;
+
+        // Diffuse
+        const diffH = (diffuse[m] / maxVal) * cH;
+        ctx.fillStyle = "#5588cc";
+        ctx.fillRect(x, pad.top + cH - diffH, barW, diffH);
+
+        // Direct (stacked)
+        const dirH = (direct[m] / maxVal) * cH;
+        ctx.fillStyle = "#f0c040";
+        ctx.fillRect(x, pad.top + cH - diffH - dirH, barW, dirH);
+
+        // Total line marker
+        const totY = pad.top + cH - (total[m] / maxVal) * cH;
+        ctx.fillStyle = "#e0e0e0";
+        ctx.beginPath();
+        ctx.arc(x + barW / 2, totY, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Month label
+        ctx.fillStyle = "#666";
+        ctx.textAlign = "center";
+        ctx.font = "10px monospace";
+        ctx.fillText(MONTHS[m], x + barW / 2, pad.top + cH + 16);
+      }
+
+      // Total line
+      ctx.strokeStyle = "#e0e0e0";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let m = 0; m < 12; m++) {
+        const x = pad.left + gap * m + gap / 2;
+        const y = pad.top + cH - (total[m] / maxVal) * cH;
+        if (m === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    // ─── Sun path diagram ────────────────────────────────────────────────
+    function drawSunPath() {
+      const canvas = document.getElementById("chart-sunpath");
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(dpr, dpr);
+      const W = rect.width, H = rect.height;
+
+      ctx.clearRect(0, 0, W, H);
+
+      const pad = { top: 15, right: 30, bottom: 30, left: 45 };
+      const cW = W - pad.left - pad.right;
+      const cH = H - pad.top - pad.bottom;
+
+      // Axes: x = azimuth (60° to 300°), y = altitude (0° to 80°)
+      const azMin = 50, azMax = 310;
+      const altMax = 75;
+
+      function toX(az) { return pad.left + ((az - azMin) / (azMax - azMin)) * cW; }
+      function toY(alt) { return pad.top + cH - (alt / altMax) * cH; }
+
+      // Grid
+      ctx.strokeStyle = "#222";
+      ctx.fillStyle = "#555";
+      ctx.font = "10px monospace";
+      ctx.textAlign = "center";
+
+      for (let az = 60; az <= 300; az += 30) {
+        const x = toX(az);
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top);
+        ctx.lineTo(x, pad.top + cH);
+        ctx.stroke();
+        let lbl;
+        if (az === 90) lbl = "E";
+        else if (az === 180) lbl = "S";
+        else if (az === 270) lbl = "W";
+        else if (az === 120) lbl = "ESE";
+        else if (az === 150) lbl = "SSE";
+        else if (az === 210) lbl = "SSW";
+        else if (az === 240) lbl = "WSW";
+        else lbl = az + "°";
+        ctx.fillText(lbl, x, pad.top + cH + 16);
+      }
+
+      ctx.textAlign = "right";
+      for (let alt = 0; alt <= altMax; alt += 15) {
+        const y = toY(alt);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(W - pad.right, y);
+        ctx.stroke();
+        ctx.fillText(alt + "°", pad.left - 6, y + 4);
+      }
+
+      // Draw paths for 3 key dates
+      const dates = [
+        { doy: 172, color: "#f0c040", width: 2 },   // Jun 21
+        { doy: 80, color: "#5588cc", width: 1.5 },   // Mar 21
+        { doy: 355, color: "#cc5555", width: 1.5 },   // Dec 21
+      ];
+
+      for (const { doy, color, width } of dates) {
+        const decl = solarDeclination(doy);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.beginPath();
+
+        let started = false;
+        for (let ha = -180; ha <= 180; ha += 1) {
+          const alt = solarAltitude(decl, ha);
+          if (alt <= 0) { started = false; continue; }
+          const az = solarAzimuth(decl, ha, alt);
+          const x = toX(az);
+          const y = toY(alt);
+          if (!started) { ctx.moveTo(x, y); started = true; }
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Hour markers
+        ctx.fillStyle = color;
+        for (let hr = 6; hr <= 18; hr++) {
+          const ha = (hr - 12) * 15;
+          const alt = solarAltitude(decl, ha);
+          if (alt <= 0) continue;
+          const az = solarAzimuth(decl, ha, alt);
+          ctx.beginPath();
+          ctx.arc(toX(az), toY(alt), 3, 0, Math.PI * 2);
+          ctx.fill();
+          if (hr % 2 === 0) {
+            ctx.font = "9px monospace";
+            ctx.textAlign = "center";
+            ctx.fillText(hr + "h", toX(az), toY(alt) - 8);
+          }
+        }
+      }
+    }
+
+    // ─── Rainfall data & chart ─────────────────────────────────────────
+    // Monthly avg precipitation in inches (Catskill Mtns, ~1900 ft, NOAA 30-yr normals)
+    const RAIN_MONTHLY  = [2.9, 2.8, 3.3, 3.5, 3.7, 5.2, 4.3, 4.3, 4.1, 5.6, 4.3, 3.7];
+    // Monthly avg snowfall water equivalent in inches
+    const SNOW_WE       = [1.8, 1.5, 1.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.5, 1.4];
+
+    function drawRainfallChart() {
+      const canvas = document.getElementById("chart-rainfall");
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(dpr, dpr);
+      const W = rect.width, H = rect.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const pad = { top: 20, right: 20, bottom: 30, left: 45 };
+      const cW = W - pad.left - pad.right;
+      const cH = H - pad.top - pad.bottom;
+
+      const totalMonthly = RAIN_MONTHLY.map((r, i) => r + SNOW_WE[i]);
+      const maxVal = Math.max(...totalMonthly) * 1.15;
+      const barW = cW / 12 * 0.65;
+      const gap = cW / 12;
+
+      // Y-axis grid
+      ctx.strokeStyle = "#333";
+      ctx.fillStyle = "#666";
+      ctx.font = "11px monospace";
+      ctx.textAlign = "right";
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.top + cH - (i / 4) * cH;
+        const val = (maxVal * i / 4).toFixed(1);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(W - pad.right, y);
+        ctx.stroke();
+        ctx.fillText(val, pad.left - 6, y + 4);
+      }
+
+      // Bars
+      for (let m = 0; m < 12; m++) {
+        const x = pad.left + gap * m + (gap - barW) / 2;
+
+        // Snow water equiv (bottom)
+        const snowH = (SNOW_WE[m] / maxVal) * cH;
+        if (snowH > 0) {
+          ctx.fillStyle = "#8ab4f8";
+          ctx.fillRect(x, pad.top + cH - snowH, barW, snowH);
+        }
+
+        // Rain (stacked on top)
+        const rainH = (RAIN_MONTHLY[m] / maxVal) * cH;
+        ctx.fillStyle = "#4a90d9";
+        ctx.fillRect(x, pad.top + cH - snowH - rainH, barW, rainH);
+
+        // Total label on top
+        const totY = pad.top + cH - ((RAIN_MONTHLY[m] + SNOW_WE[m]) / maxVal) * cH;
+        ctx.fillStyle = "#e0e0e0";
+        ctx.font = "9px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText(totalMonthly[m].toFixed(1), x + barW / 2, totY - 5);
+
+        // Month label
+        ctx.fillStyle = "#666";
+        ctx.font = "10px monospace";
+        ctx.fillText(MONTHS[m], x + barW / 2, pad.top + cH + 16);
+      }
+    }
+
+    function buildRainGrid() {
+      const grid = document.getElementById("rain-month-grid");
+      grid.innerHTML = "";
+      const totalMonthly = RAIN_MONTHLY.map((r, i) => r + SNOW_WE[i]);
+      const maxR = Math.max(...totalMonthly);
+      for (let m = 0; m < 12; m++) {
+        const cell = document.createElement("div");
+        cell.className = "month-cell";
+        const intensity = totalMonthly[m] / maxR;
+        const r = Math.round(20 + intensity * 15);
+        const g = Math.round(30 + intensity * 40);
+        const b = Math.round(50 + intensity * 60);
+        cell.style.background = `rgb(${r},${g},${b})`;
+        const rainStr = RAIN_MONTHLY[m].toFixed(1);
+        const snowStr = SNOW_WE[m] > 0 ? ` + ${SNOW_WE[m].toFixed(1)}s` : "";
+        cell.innerHTML = `<span class="mo">${MONTHS[m]}</span><span class="val" style="color:${intensity > 0.5 ? '#8ab4f8' : '#667'}">${rainStr}${snowStr}</span>`;
+        grid.appendChild(cell);
+      }
+    }
+
+    // ─── Event binding ───────────────────────────────────────────────────
+    const inputs = ["slope", "aspect", "tree-shade", "albedo", "panel-eff", "area"];
+    inputs.forEach(id => {
+      document.getElementById(id).addEventListener("input", () => {
+        document.getElementById("slope-val").innerHTML = document.getElementById("slope").value + "&deg;";
+        document.getElementById("tree-shade-val").textContent = document.getElementById("tree-shade").value + "%";
+        document.getElementById("panel-eff-val").textContent = document.getElementById("panel-eff").value + "%";
+        calculate();
+      });
+    });
+
+    window.addEventListener("resize", () => { calculate(); drawRainfallChart(); });
+
+    // Initial run
+    calculate();
+    drawRainfallChart();
+    buildRainGrid();
+  </script>
+</body>
+</html>
