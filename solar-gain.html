@@ -3,956 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solar Gain â Parcel 160.00-1-46.1 â West Kill, NY</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
-      background-color: #0a0a0a;
-      color: #e0e0e0;
-      min-height: 100vh;
-      padding: 2rem;
-    }
-
-    a { color: #f0c040; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    .back-link {
-      display: inline-block;
-      margin-bottom: 1.5rem;
-      color: #666;
-      font-size: 0.85rem;
-    }
-    .back-link:hover { color: #e0e0e0; }
-
-    h1 {
-      font-size: 1.4rem;
-      margin-bottom: 0.25rem;
-      color: #f0c040;
-      font-weight: 600;
-    }
-
-    .subtitle {
-      color: #666;
-      font-size: 0.85rem;
-      margin-bottom: 2rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-    }
-
-    .card {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 6px;
-      padding: 1.25rem;
-    }
-
-    .card h2 {
-      font-size: 0.9rem;
-      color: #999;
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 500;
-    }
-
-    .card.full-width {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      display: block;
-      color: #888;
-      font-size: 0.8rem;
-      margin-bottom: 0.25rem;
-      margin-top: 0.75rem;
-    }
-
-    label:first-of-type { margin-top: 0; }
-
-    select, input[type="number"], input[type="range"] {
-      width: 100%;
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 4px;
-      color: #e0e0e0;
-      font-family: inherit;
-      font-size: 0.85rem;
-      padding: 0.5rem 0.6rem;
-      outline: none;
-    }
-
-    select:focus, input[type="number"]:focus {
-      border-color: #f0c040;
-    }
-
-    input[type="range"] {
-      padding: 0;
-      border: none;
-      background: none;
-      margin-top: 0.25rem;
-    }
-
-    .range-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .range-row input[type="range"] { flex: 1; }
-    .range-val {
-      color: #f0c040;
-      font-size: 0.85rem;
-      min-width: 3.5rem;
-      text-align: right;
-    }
-
-    .metric {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #1a1a1a;
-    }
-
-    .metric:last-child { border-bottom: none; }
-
-    .metric-label {
-      color: #888;
-      font-size: 0.8rem;
-    }
-
-    .metric-value {
-      color: #f0c040;
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .metric-value.good { color: #4caf50; }
-    .metric-value.moderate { color: #f0c040; }
-    .metric-value.poor { color: #e05050; }
-
-    canvas {
-      width: 100%;
-      height: 260px;
-      display: block;
-      margin-top: 0.5rem;
-    }
-
-    .sun-path-canvas {
-      height: 300px;
-    }
-
-    .legend {
-      display: flex;
-      gap: 1.25rem;
-      flex-wrap: wrap;
-      margin-top: 0.75rem;
-      font-size: 0.75rem;
-      color: #888;
-    }
-
-    .legend span::before {
-      content: "";
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      margin-right: 0.4rem;
-      vertical-align: middle;
-    }
-
-    .legend .l-direct::before { background: #f0c040; }
-    .legend .l-diffuse::before { background: #5588cc; }
-    .legend .l-total::before { background: #e0e0e0; }
-    .legend .l-summer::before { background: #f0c040; }
-    .legend .l-equinox::before { background: #5588cc; }
-    .legend .l-winter::before { background: #cc5555; }
-
-    .info-note {
-      color: #555;
-      font-size: 0.75rem;
-      margin-top: 0.75rem;
-      line-height: 1.5;
-    }
-
-    .rating-bar {
-      width: 100%;
-      height: 8px;
-      background: #1a1a1a;
-      border-radius: 4px;
-      margin-top: 0.5rem;
-      overflow: hidden;
-    }
-
-    .rating-bar-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.4s ease, background 0.4s ease;
-    }
-
-    .month-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
-    .month-cell {
-      text-align: center;
-      padding: 0.4rem 0.25rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-    }
-
-    .month-cell .mo { color: #888; display: block; margin-bottom: 0.15rem; }
-    .month-cell .val { font-weight: 600; }
-
-    .parcel-header {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 6px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      align-items: baseline;
-    }
-
-    .parcel-header .ph-item {
-      font-size: 0.8rem;
-      color: #888;
-    }
-
-    .parcel-header .ph-item strong {
-      color: #e0e0e0;
-      font-weight: 600;
-    }
-
-    .parcel-header .ph-id {
-      font-size: 0.95rem;
-      color: #f0c040;
-      font-weight: 600;
-    }
-
-    .legend .l-rain::before { background: #4a90d9; }
-    .legend .l-snow::before { background: #8ab4f8; }
-
-    .soil-layer {
-      display: flex;
-      align-items: stretch;
-      margin-bottom: 0.5rem;
-      border-radius: 4px;
-      overflow: hidden;
-      font-size: 0.78rem;
-    }
-
-    .soil-layer:last-child { margin-bottom: 0; }
-
-    .soil-depth {
-      width: 60px;
-      min-width: 60px;
-      padding: 0.4rem 0.5rem;
-      text-align: center;
-      color: #aaa;
-      font-size: 0.7rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .soil-desc {
-      flex: 1;
-      padding: 0.5rem 0.75rem;
-      line-height: 1.4;
-    }
-
-    .soil-desc strong { color: #e0e0e0; }
-
-    .soil-props {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 0.75rem;
-    }
-
-    .soil-prop {
-      font-size: 0.78rem;
-      color: #888;
-      padding: 0.35rem 0;
-      border-bottom: 1px solid #1a1a1a;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .soil-prop:last-child { border-bottom: none; }
-    .soil-prop span:last-child { color: #e0e0e0; font-weight: 500; }
-
-    .section-title {
-      font-size: 1.1rem;
-      color: #f0c040;
-      font-weight: 600;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid #222;
-      grid-column: 1 / -1;
-    }
-
-    /* ââ Native Species Planner âââââââââââââââââââââââââââââââ */
-    .zone-selector {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .zone-btn {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 4px;
-      color: #888;
-      font-family: inherit;
-      font-size: 0.8rem;
-      padding: 0.5rem 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .zone-btn:hover { border-color: #666; color: #ccc; }
-    .zone-btn.active { border-color: #4caf50; color: #4caf50; background: #1a2a1a; }
-
-    .species-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .filter-chip {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 12px;
-      color: #888;
-      font-family: inherit;
-      font-size: 0.72rem;
-      padding: 0.3rem 0.7rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .filter-chip:hover { border-color: #555; color: #bbb; }
-    .filter-chip.active { border-color: #5588cc; color: #5588cc; background: #1a1a2a; }
-
-    .species-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-    }
-
-    .species-item {
-      background: #151515;
-      border: 1px solid #222;
-      border-radius: 4px;
-      padding: 0.65rem 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      transition: border-color 0.2s;
-    }
-
-    .species-item:hover { border-color: #444; }
-
-    .species-name {
-      font-size: 0.85rem;
-      color: #e0e0e0;
-      font-weight: 600;
-    }
-
-    .species-latin {
-      font-size: 0.72rem;
-      color: #666;
-      font-style: italic;
-    }
-
-    .species-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      margin-top: 0.2rem;
-    }
-
-    .species-tag {
-      font-size: 0.65rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 3px;
-      background: #1a1a1a;
-      color: #888;
-    }
-
-    .species-tag.tree { color: #6b8e4e; background: #1a221a; }
-    .species-tag.shrub { color: #8e6b4e; background: #221a1a; }
-    .species-tag.wildflower { color: #b06ebf; background: #1e1a22; }
-    .species-tag.fern { color: #4ea88e; background: #1a2220; }
-    .species-tag.grass { color: #a8a44e; background: #22221a; }
-    .species-tag.vine { color: #4e8ea8; background: #1a2022; }
-
-    .species-note {
-      font-size: 0.72rem;
-      color: #666;
-      line-height: 1.4;
-      margin-top: 0.15rem;
-    }
-
-    .bio-meter {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .bio-meter-label {
-      font-size: 0.8rem;
-      color: #888;
-      min-width: 140px;
-    }
-
-    .bio-meter-bar {
-      flex: 1;
-      height: 8px;
-      background: #1a1a1a;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .bio-meter-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.4s ease;
-    }
-
-    .bio-meter-val {
-      font-size: 0.8rem;
-      color: #e0e0e0;
-      min-width: 45px;
-      text-align: right;
-      font-weight: 600;
-    }
-
-    .zone-summary {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 0.5rem;
-      margin-top: 0.75rem;
-    }
-
-    .zone-stat {
-      text-align: center;
-      padding: 0.6rem 0.4rem;
-      background: #151515;
-      border-radius: 4px;
-      border: 1px solid #222;
-    }
-
-    .zone-stat-num {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #4caf50;
-    }
-
-    .zone-stat-label {
-      font-size: 0.7rem;
-      color: #888;
-      margin-top: 0.2rem;
-    }
-
-    .planner-desc {
-      font-size: 0.78rem;
-      color: #777;
-      line-height: 1.5;
-      margin-bottom: 1rem;
-    }
-  </style>
-</head>
-<body>
-  <a href="index.html" class="back-link">&larr; jcsylvan.ai</a>
-  <h1>Solar Gain &amp; Land Analysis</h1>
-  <p class="subtitle">West Kill, NY &mdash; 42.21&deg;N, 74.28&deg;W &mdash; Catskill Mountains</p>
-
-  <div class="parcel-header">
-    <span class="ph-id">Parcel 160.00-1-46.1</span>
-    <span class="ph-item">SWIS: <strong>194000</strong></span>
-    <span class="ph-item">Municipality: <strong>Lexington</strong></span>
-    <span class="ph-item">Full Market Value: <strong>$165,435</strong></span>
-    <span class="ph-item">Assessed: <strong>$125,400</strong></span>
-    <span class="ph-item">Uniform %: <strong>75.8</strong></span>
-  </div>
-
-  <div class="grid">
-
-    <!-- Configuration Card -->
-    <div class="card">
-      <h2>Site Parameters</h2>
-
-      <label for="slope">Ground Slope Angle</label>
-      <div class="range-row">
-        <input type="range" id="slope" min="0" max="45" value="10" step="1">
-        <span class="range-val" id="slope-val">10&deg;</span>
-      </div>
-
-      <label for="aspect">Slope Aspect (Facing)</label>
-      <select id="aspect">
-        <option value="180" selected>South</option>
-        <option value="135">South-East</option>
-        <option value="225">South-West</option>
-        <option value="90">East</option>
-        <option value="270">West</option>
-        <option value="0">North</option>
-        <option value="45">North-East</option>
-        <option value="315">North-West</option>
-      </select>
-
-      <label for="tree-shade">Tree / Horizon Shade Factor</label>
-      <div class="range-row">
-        <input type="range" id="tree-shade" min="0" max="80" value="15" step="1">
-        <span class="range-val" id="tree-shade-val">15%</span>
-      </div>
-
-      <label for="albedo">Ground Albedo (Reflectance)</label>
-      <select id="albedo">
-        <option value="0.25" selected>Grass / Meadow (0.25)</option>
-        <option value="0.15">Dark soil (0.15)</option>
-        <option value="0.20">Forest floor (0.20)</option>
-        <option value="0.60">Fresh snow (0.60)</option>
-        <option value="0.35">Aged snow (0.35)</option>
-        <option value="0.12">Asphalt (0.12)</option>
-      </select>
-
-      <label for="panel-eff">Panel Efficiency (if applicable)</label>
-      <div class="range-row">
-        <input type="range" id="panel-eff" min="10" max="25" value="20" step="0.5">
-        <span class="range-val" id="panel-eff-val">20%</span>
-      </div>
-
-      <label for="area">Collection Area (m&sup2;)</label>
-      <input type="number" id="area" value="100" min="1" max="100000" step="1">
-    </div>
-
-    <!-- Key Metrics Card -->
-    <div class="card">
-      <h2>Annual Solar Metrics</h2>
-      <div class="metric">
-        <span class="metric-label">Peak Sun Hours (avg/day)</span>
-        <span class="metric-value" id="m-psh">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Annual GHI (kWh/m&sup2;)</span>
-        <span class="metric-value" id="m-ghi">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Annual POA Irradiance (kWh/m&sup2;)</span>
-        <span class="metric-value" id="m-poa">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Effective Solar Gain (kWh/m&sup2;)</span>
-        <span class="metric-value" id="m-eff">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Total Energy Yield (kWh/yr)</span>
-        <span class="metric-value" id="m-yield">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Solar Access Rating</span>
-        <span class="metric-value" id="m-rating">â</span>
-      </div>
-      <div class="rating-bar">
-        <div class="rating-bar-fill" id="rating-bar-fill"></div>
-      </div>
-      <p class="info-note" id="rating-note"></p>
-    </div>
-
-    <!-- Monthly Irradiance Chart -->
-    <div class="card full-width">
-      <h2>Monthly Irradiance (kWh/m&sup2;/day)</h2>
-      <canvas id="chart-monthly"></canvas>
-      <div class="legend">
-        <span class="l-direct">Direct beam</span>
-        <span class="l-diffuse">Diffuse</span>
-        <span class="l-total">Total POA</span>
-      </div>
-    </div>
-
-    <!-- Sun Path Diagram -->
-    <div class="card full-width">
-      <h2>Sun Path Diagram â West Kill, NY</h2>
-      <canvas id="chart-sunpath" class="sun-path-canvas"></canvas>
-      <div class="legend">
-        <span class="l-summer">Summer Solstice (Jun 21)</span>
-        <span class="l-equinox">Equinox (Mar/Sep 20)</span>
-        <span class="l-winter">Winter Solstice (Dec 21)</span>
-      </div>
-    </div>
-
-    <!-- Monthly Breakdown -->
-    <div class="card">
-      <h2>Monthly Solar Gain (kWh/m&sup2;)</h2>
-      <div class="month-grid" id="month-grid"></div>
-    </div>
-
-    <!-- Seasonal Summary -->
-    <div class="card">
-      <h2>Seasonal Summary</h2>
-      <div class="metric">
-        <span class="metric-label">Winter (DecâFeb)</span>
-        <span class="metric-value" id="s-winter">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Spring (MarâMay)</span>
-        <span class="metric-value" id="s-spring">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Summer (JunâAug)</span>
-        <span class="metric-value" id="s-summer">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Fall (SepâNov)</span>
-        <span class="metric-value" id="s-fall">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Best Month</span>
-        <span class="metric-value" id="s-best">â</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Worst Month</span>
-        <span class="metric-value" id="s-worst">â</span>
-      </div>
-      <p class="info-note">
-        West Kill sits in the Catskill Mountains with moderate cloud cover.
-        Winter months see reduced output from short days, snow cover, and
-        lower sun angles. Snow albedo can partially offset losses on tilted surfaces.
-      </p>
-    </div>
-
-    <!-- ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ -->
-    <div class="section-title">Annual Rainfall &amp; Precipitation</div>
-
-    <!-- Rainfall Chart -->
-    <div class="card full-width">
-      <h2>Monthly Precipitation (inches)</h2>
-      <canvas id="chart-rainfall"></canvas>
-      <div class="legend">
-        <span class="l-rain">Rainfall</span>
-        <span class="l-snow">Snowfall (water equiv.)</span>
-      </div>
-    </div>
-
-    <!-- Rainfall Metrics -->
-    <div class="card">
-      <h2>Precipitation Summary</h2>
-      <div class="metric">
-        <span class="metric-label">Annual Rainfall</span>
-        <span class="metric-value">~50&ndash;55 in</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Annual Snowfall</span>
-        <span class="metric-value">~65&ndash;80 in</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Total Precip. (incl. snow water equiv.)</span>
-        <span class="metric-value">~56&ndash;62 in</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Wettest Month</span>
-        <span class="metric-value">Jun (5.2 in)</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Driest Month</span>
-        <span class="metric-value">Feb (2.8 in)</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Days w/ Precip. &ge; 0.01 in</span>
-        <span class="metric-value">~155/yr</span>
-      </div>
-      <p class="info-note">
-        Orographic lift from the Catskill escarpment increases precipitation
-        20&ndash;40% above Hudson Valley levels. West Kill valley receives among the
-        highest rainfall in New York State. Heavy summer thunderstorms and
-        nor&rsquo;easters contribute to peak months.
-      </p>
-    </div>
-
-    <!-- Rainfall Monthly Grid -->
-    <div class="card">
-      <h2>Monthly Breakdown (inches)</h2>
-      <div class="month-grid" id="rain-month-grid"></div>
-      <p class="info-note" style="margin-top:1rem;">
-        Data derived from NOAA 30-year normals (1991&ndash;2020) for the
-        Catskill Mountains region at ~1,900 ft elevation. Higher elevations
-        on this parcel may receive 5&ndash;10% more precipitation.
-      </p>
-    </div>
-
-    <!-- ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ -->
-    <div class="section-title">Soil Profile &amp; Characteristics</div>
-
-    <!-- Soil Profile Diagram -->
-    <div class="card">
-      <h2>Typical Soil Profile &mdash; Catskill Mountain Till</h2>
-      <div class="soil-layer" style="background:#3a2e1e;">
-        <span class="soil-depth">0&ndash;4 in</span>
-        <div class="soil-desc"><strong>O / A Horizon</strong> &mdash; Dark organic leaf litter and humus;
-        acidic forest duff from northern hardwoods (beech, maple, birch)</div>
-      </div>
-      <div class="soil-layer" style="background:#4a3a22;">
-        <span class="soil-depth">4&ndash;12 in</span>
-        <div class="soil-desc"><strong>B Horizon (Bw)</strong> &mdash; Channery silt loam; yellowish-brown;
-        moderate structure with sandstone/siltstone fragments (20&ndash;35% coarse)</div>
-      </div>
-      <div class="soil-layer" style="background:#55442a;">
-        <span class="soil-depth">12&ndash;28 in</span>
-        <div class="soil-desc"><strong>C Horizon</strong> &mdash; Very channery loam; dense glacial till matrix;
-        40&ndash;60% rock fragments; firm consistence</div>
-      </div>
-      <div class="soil-layer" style="background:#666;">
-        <span class="soil-depth">28&ndash;40 in</span>
-        <div class="soil-desc"><strong>R &mdash; Bedrock</strong> &mdash; Devonian sandstone &amp; siltstone (gray);
-        fractured to massive; depth varies 20&ndash;40 in across site</div>
-      </div>
-    </div>
-
-    <!-- Soil Types -->
-    <div class="card">
-      <h2>Dominant Soil Series (Greene County Survey)</h2>
-      <div class="metric">
-        <span class="metric-label">Primary</span>
-        <span class="metric-value" style="font-size:0.85rem;">Lordstown&ndash;Oquaga</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Secondary</span>
-        <span class="metric-value" style="font-size:0.85rem;">Arnot (shallow)</span>
-      </div>
-      <div class="metric">
-        <span class="metric-label">Valley positions</span>
-        <span class="metric-value" style="font-size:0.85rem;">Willowemoc</span>
-      </div>
-
-      <div class="soil-props" style="margin-top:1rem;">
-        <div class="soil-prop"><span>Texture</span><span>Channery silt loam</span></div>
-        <div class="soil-prop"><span>Drainage Class</span><span>Well drained</span></div>
-        <div class="soil-prop"><span>Depth to Bedrock</span><span>20&ndash;40 in (mod. deep)</span></div>
-        <div class="soil-prop"><span>Hydrologic Group</span><span>C/D</span></div>
-        <div class="soil-prop"><span>Parent Material</span><span>Glacial till over sandstone</span></div>
-        <div class="soil-prop"><span>Slope Range</span><span>3&ndash;35%+ (variable)</span></div>
-        <div class="soil-prop"><span>Permeability</span><span>Moderate to moderately slow</span></div>
-        <div class="soil-prop"><span>AWC (Avail. Water Cap.)</span><span>Low&ndash;Moderate (3&ndash;6 in)</span></div>
-        <div class="soil-prop"><span>pH Range</span><span>4.5&ndash;5.5 (strongly acidic)</span></div>
-        <div class="soil-prop"><span>Frost-Free Period</span><span>~100&ndash;130 days</span></div>
-      </div>
-
-      <p class="info-note" style="margin-top:1rem;">
-        Soils formed in acid glacial till derived from Devonian sandstone and
-        siltstone. The Lordstown&ndash;Oquaga association dominates mid-slope positions
-        throughout the Catskill High Peaks. Rock outcrops and very stony phases are
-        common. Shallow Arnot soils occur where bedrock is within 20 inches.
-        Willowemoc soils (very deep, well-drained) may be present in lower colluvial
-        positions. Verify exact mapping units via
-        <a href="https://websoilsurvey.nrcs.usda.gov/app/" target="_blank" rel="noopener">USDA Web Soil Survey</a>.
-      </p>
-    </div>
-
-    <!-- ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ -->
-    <div class="section-title">Native Species Planner</div>
-
-    <!-- Zone Selector & Filters -->
-    <div class="card">
-      <h2>Parcel Zones</h2>
-      <p class="planner-desc">
-        Select one or more micro-habitat zones on the parcel. Species recommendations
-        are matched to each zone's light, moisture, and soil conditions for the Catskill
-        Mountains region (USDA Hardiness Zone 4b&ndash;5a, pH 4.5&ndash;5.5, elevation ~1,900 ft).
-      </p>
-      <div class="zone-selector" id="zone-selector"></div>
-
-      <h2 style="margin-top:1rem;">Filter by Type</h2>
-      <div class="species-filters" id="species-filters"></div>
-    </div>
-
-    <!-- Biodiversity Metrics -->
-    <div class="card">
-      <h2>Biodiversity Metrics</h2>
-      <div id="bio-metrics"></div>
-      <div class="zone-summary" id="zone-summary"></div>
-      <p class="info-note" style="margin-top:0.75rem;">
-        Shannon Diversity Index measures species diversity accounting for both richness
-        and evenness. Values above 3.0 indicate high biodiversity. Functional group
-        coverage tracks how many ecological roles (canopy, understory, ground cover,
-        pollinator support, erosion control) are filled.
-      </p>
-    </div>
-
-    <!-- Species Recommendations -->
-    <div class="card full-width">
-      <h2>Recommended Species (<span id="species-count">0</span>)</h2>
-      <div class="species-list" id="species-list"></div>
-      <p class="info-note" style="margin-top:1rem;" id="species-footer">
-        Select at least one zone above to see recommendations. All species listed are
-        native to the northern Catskill Mountains and adapted to the site conditions of
-        Parcel 160.00-1-46.1.
-      </p>
-    </div>
-
-
-      <!-- Farm Activity Log -->
-      <div class="card full-width">
-        <h2>Farm Activity Log</h2>
-        <p class="info-note">Track daily tasks across all 12 acres. Filter by field zone, activity type, or date range.</p>
-        <div id="activity-log">
-          <div class="metric">
-            <span class="metric-label">Recent Activities</span>
-          </div>
-          <table style="width:100%; border-collapse:collapse; margin-top:0.75rem; font-size:0.8rem;">
-            <thead>
-              <tr style="border-bottom:1px solid #333; color:#999; text-align:left;">
-                <th style="padding:0.4rem;">Date</th>
-                <th style="padding:0.4rem;">Zone</th>
-                <th style="padding:0.4rem;">Activity</th>
-                <th style="padding:0.4rem;">Notes</th>
-              </tr>
-            </thead>
-            <tbody id="activity-tbody">
-              <tr style="border-bottom:1px solid #1a1a1a;">
-                <td style="padding:0.4rem; color:#888;">2026-03-30</td>
-                <td style="padding:0.4rem; color:#f0c040;">Zone A</td>
-                <td style="padding:0.4rem;">Soil amendment</td>
-                <td style="padding:0.4rem; color:#666;">Lime applied &mdash; 2 tons/acre</td>
-              </tr>
-              <tr style="border-bottom:1px solid #1a1a1a;">
-                <td style="padding:0.4rem; color:#888;">2026-03-28</td>
-                <td style="padding:0.4rem; color:#4ca36e;">Zone B</td>
-                <td style="padding:0.4rem;">Fence repair</td>
-                <td style="padding:0.4rem; color:#666;">Replaced 40ft section, NW corner</td>
-              </tr>
-              <tr style="border-bottom:1px solid #1a1a1a;">
-                <td style="padding:0.4rem; color:#888;">2026-03-25</td>
-                <td style="padding:0.4rem; color:#5b8dd9;">Zone C</td>
-                <td style="padding:0.4rem;">Cover crop seeding</td>
-                <td style="padding:0.4rem; color:#666;">Winter rye &amp; crimson clover mix</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Crop & Planting Tracker -->
-      <div class="card full-width">
-        <h2>Crop &amp; Planting Tracker</h2>
-        <p class="info-note">Planting windows, expected harvest dates, and yield tracking for the current growing season. Dates based on USDA Zone 4b frost calendar (last frost ~May 15, first frost ~Sep 25).</p>
-        <div id="crop-tracker">
-          <table style="width:100%; border-collapse:collapse; margin-top:0.75rem; font-size:0.8rem;">
-            <thead>
-              <tr style="border-bottom:1px solid #333; color:#999; text-align:left;">
-                <th style="padding:0.4rem;">Crop</th>
-                <th style="padding:0.4rem;">Zone</th>
-                <th style="padding:0.4rem;">Planted</th>
-                <th style="padding:0.4rem;">Est. Harvest</th>
-                <th style="padding:0.4rem;">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom:1px solid #1a1a1a;">
-                <td style="padding:0.4rem;">Garlic (hardneck)</td>
-                <td style="padding:0.4rem; color:#f0c040;">Zone A</td>
-                <td style="padding:0.4rem; color:#888;">Oct 2025</td>
-                <td style="padding:0.4rem; color:#888;">Jul 2026</td>
-                <td style="padding:0.4rem;"><span style="color:#4ca36e;">&bull;</span> Overwintering</td>
-              </tr>
-              <tr style="border-bottom:1px solid #1a1a1a;">
-                <td style="padding:0.4rem;">Sugar snap peas</td>
-                <td style="padding:0.4rem; color:#4ca36e;">Zone B</td>
-                <td style="padding:0.4rem; color:#888;">Apr 2026</td>
-                <td style="padding:0.4rem; color:#888;">Jun 2026</td>
-                <td style="padding:0.4rem;"><span style="color:#f0c040;">&bull;</span> Planned</td>
-              </tr>
-              <tr style="border-bottom:1px solid #1a1a1a;">
-                <td style="padding:0.4rem;">Potatoes (Yukon Gold)</td>
-                <td style="padding:0.4rem; color:#5b8dd9;">Zone C</td>
-                <td style="padding:0.4rem; color:#888;">May 2026</td>
-                <td style="padding:0.4rem; color:#888;">Sep 2026</td>
-                <td style="padding:0.4rem;"><span style="color:#f0c040;">&bull;</span> Planned</td>
-              </tr>
-              <tr style="border-bottom:1px solid #1a1a1a;">
-                <td style="padding:0.4rem;">Winter rye (cover)</td>
-                <td style="padding:0.4rem; color:#5b8dd9;">Zone C</td>
-                <td style="padding:0.4rem; color:#888;">Mar 2026</td>
-                <td style="padding:0.4rem; color:#888;">May 2026</td>
-                <td style="padding:0.4rem;"><span style="color:#4ca36e;">&bull;</span> Growing</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Inventory & Supplies -->
-      <div class="card">
-        <h2>Inventory &amp; Supplies</h2>
-        <div class="metric">
-          <span class="metric-label">Seed stock</span>
-          <span class="metric-value good">Adequate</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Fertilizer (10-10-10)</span>
-          <span class="metric-value moderate">~200 lbs</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Lime</span>
-          <span class="metric-value poor">Low &mdash; reorder</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Fencing supplies</span>
-          <span class="metric-value good">Stocked</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Fuel (diesel)</span>
-          <span class="metric-value moderate">~30 gal</span>
-        </div>
-        <p class="info-note" style="margin-top:0.75rem;">
-          Track consumables to avoid mid-season shortages. Items marked in red need restocking.
-        </p>
-      </div>
-
-      <!-- Financial Snapshot -->
-      <div class="card">
-        <h2>Financial Snapshot</h2>
-        <div class="metric">
-          <span class="metric-label">Season-to-date expenses</span>
-          <span class="metric-value" style="color:#e05050;">$2,840</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Seed &amp; starts</span>
-          <span class="metric-value" style="color:#888;">$620</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Soil amendments</span>
-          <span class="metric-value" style="color:#888;">$1,180</span>
-        </div>
-        <div class="metric">
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solar Gain — Parcel 160.00-1-46.1 — West Kill, NY</title>
+  <title>Solar Gain &mdash; Parcel 160.00-1-46.1 &mdash; West Kill, NY</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -1504,27 +555,27 @@
       <h2>Annual Solar Metrics</h2>
       <div class="metric">
         <span class="metric-label">Peak Sun Hours (avg/day)</span>
-        <span class="metric-value" id="m-psh">—</span>
+        <span class="metric-value" id="m-psh">&mdash;</span>
       </div>
       <div class="metric">
         <span class="metric-label">Annual GHI (kWh/m&sup2;)</span>
-        <span class="metric-value" id="m-ghi">—</span>
+        <span class="metric-value" id="m-ghi">&mdash;</span>
       </div>
       <div class="metric">
         <span class="metric-label">Annual POA Irradiance (kWh/m&sup2;)</span>
-        <span class="metric-value" id="m-poa">—</span>
+        <span class="metric-value" id="m-poa">&mdash;</span>
       </div>
       <div class="metric">
         <span class="metric-label">Effective Solar Gain (kWh/m&sup2;)</span>
-        <span class="metric-value" id="m-eff">—</span>
+        <span class="metric-value" id="m-eff">&mdash;</span>
       </div>
       <div class="metric">
         <span class="metric-label">Total Energy Yield (kWh/yr)</span>
-        <span class="metric-value" id="m-yield">—</span>
+        <span class="metric-value" id="m-yield">&mdash;</span>
       </div>
       <div class="metric">
         <span class="metric-label">Solar Access Rating</span>
-        <span class="metric-value" id="m-rating">—</span>
+        <span class="metric-value" id="m-rating">&mdash;</span>
       </div>
       <div class="rating-bar">
         <div class="rating-bar-fill" id="rating-bar-fill"></div>
@@ -1545,7 +596,7 @@
 
     <!-- Sun Path Diagram -->
     <div class="card full-width">
-      <h2>Sun Path Diagram — West Kill, NY</h2>
+      <h2>Sun Path Diagram &mdash; West Kill, NY</h2>
       <canvas id="chart-sunpath" class="sun-path-canvas"></canvas>
       <div class="legend">
         <span class="l-summer">Summer Solstice (Jun 21)</span>
@@ -1564,28 +615,28 @@
     <div class="card">
       <h2>Seasonal Summary</h2>
       <div class="metric">
-        <span class="metric-label">Winter (Dec–Feb)</span>
-        <span class="metric-value" id="s-winter">—</span>
+        <span class="metric-label">Winter (Dec&ndash;Feb)</span>
+        <span class="metric-value" id="s-winter">&mdash;</span>
       </div>
       <div class="metric">
-        <span class="metric-label">Spring (Mar–May)</span>
-        <span class="metric-value" id="s-spring">—</span>
+        <span class="metric-label">Spring (Mar&ndash;May)</span>
+        <span class="metric-value" id="s-spring">&mdash;</span>
       </div>
       <div class="metric">
-        <span class="metric-label">Summer (Jun–Aug)</span>
-        <span class="metric-value" id="s-summer">—</span>
+        <span class="metric-label">Summer (Jun&ndash;Aug)</span>
+        <span class="metric-value" id="s-summer">&mdash;</span>
       </div>
       <div class="metric">
-        <span class="metric-label">Fall (Sep–Nov)</span>
-        <span class="metric-value" id="s-fall">—</span>
+        <span class="metric-label">Fall (Sep&ndash;Nov)</span>
+        <span class="metric-value" id="s-fall">&mdash;</span>
       </div>
       <div class="metric">
         <span class="metric-label">Best Month</span>
-        <span class="metric-value" id="s-best">—</span>
+        <span class="metric-value" id="s-best">&mdash;</span>
       </div>
       <div class="metric">
         <span class="metric-label">Worst Month</span>
-        <span class="metric-value" id="s-worst">—</span>
+        <span class="metric-value" id="s-worst">&mdash;</span>
       </div>
       <p class="info-note">
         West Kill sits in the Catskill Mountains with moderate cloud cover.
@@ -1804,7 +855,7 @@
         </div>
       </div>
 
-      <!-- Crop & Planting Tracker -->
+      <!-- Crop &amp; Planting Tracker -->
       <div class="card full-width">
         <h2>Crop &amp; Planting Tracker</h2>
         <p class="info-note">Planting windows, expected harvest dates, and yield tracking for the current growing season. Dates based on USDA Zone 4b frost calendar (last frost ~May 15, first frost ~Sep 25).</p>
@@ -1853,123 +904,49 @@
         </div>
       </div>
 
-      <!-- Inventory & Supplies -->
+      <!-- Inventory &amp; Supplies -->
       <div class="card">
         <h2>Inventory &amp; Supplies</h2>
-        <div class="metric">
-          <span class="metric-label">Seed stock</span>
-          <span class="metric-value good">Adequate</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Fertilizer (10-10-10)</span>
-          <span class="metric-value moderate">~200 lbs</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Lime</span>
-          <span class="metric-value poor">Low &mdash; reorder</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Fencing supplies</span>
-          <span class="metric-value good">Stocked</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Fuel (diesel)</span>
-          <span class="metric-value moderate">~30 gal</span>
-        </div>
-        <p class="info-note" style="margin-top:0.75rem;">
-          Track consumables to avoid mid-season shortages. Items marked in red need restocking.
-        </p>
+        <div class="metric"><span class="metric-label">Seed stock</span><span class="metric-value good">Adequate</span></div>
+        <div class="metric"><span class="metric-label">Fertilizer (10-10-10)</span><span class="metric-value moderate">~200 lbs</span></div>
+        <div class="metric"><span class="metric-label">Lime</span><span class="metric-value poor">Low &mdash; reorder</span></div>
+        <div class="metric"><span class="metric-label">Fencing supplies</span><span class="metric-value good">Stocked</span></div>
+        <div class="metric"><span class="metric-label">Fuel (diesel)</span><span class="metric-value moderate">~30 gal</span></div>
+        <p class="info-note" style="margin-top:0.75rem;">Track consumables to avoid mid-season shortages. Items marked in red need restocking.</p>
       </div>
 
       <!-- Financial Snapshot -->
       <div class="card">
         <h2>Financial Snapshot</h2>
-        <div class="metric">
-          <span class="metric-label">Season-to-date expenses</span>
-          <span class="metric-value" style="color:#e05050;">$2,840</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Seed &amp; starts</span>
-          <span class="metric-value" style="color:#888;">$620</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Soil amendments</span>
-          <span class="metric-value" style="color:#888;">$1,180</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Fuel &amp; equipment</span>
-          <span class="metric-value" style="color:#888;">$540</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Labor</span>
-          <span class="metric-value" style="color:#888;">$500</span>
-        </div>
-        <div class="metric" style="border-top:1px solid #333; padding-top:0.5rem; margin-top:0.5rem;">
-          <span class="metric-label">Projected revenue</span>
-          <span class="metric-value good">$6,200</span>
-        </div>
-        <p class="info-note" style="margin-top:0.75rem;">
-          Input costs vs. projected yield revenue. Updates as harvest actuals come in.
-        </p>
+        <div class="metric"><span class="metric-label">Season-to-date expenses</span><span class="metric-value" style="color:#e05050;">$2,840</span></div>
+        <div class="metric"><span class="metric-label">Seed &amp; starts</span><span class="metric-value" style="color:#888;">$620</span></div>
+        <div class="metric"><span class="metric-label">Soil amendments</span><span class="metric-value" style="color:#888;">$1,180</span></div>
+        <div class="metric"><span class="metric-label">Fuel &amp; equipment</span><span class="metric-value" style="color:#888;">$540</span></div>
+        <div class="metric"><span class="metric-label">Labor</span><span class="metric-value" style="color:#888;">$500</span></div>
+        <div class="metric" style="border-top:1px solid #333; padding-top:0.5rem; margin-top:0.5rem;"><span class="metric-label">Projected revenue</span><span class="metric-value good">$6,200</span></div>
+        <p class="info-note" style="margin-top:0.75rem;">Input costs vs. projected yield revenue. Updates as harvest actuals come in.</p>
       </div>
 
-      <!-- Irrigation & Water Usage -->
+      <!-- Irrigation &amp; Water Usage -->
       <div class="card">
         <h2>Irrigation &amp; Water Usage</h2>
-        <div class="metric">
-          <span class="metric-label">Water source</span>
-          <span class="metric-value" style="color:#5b8dd9;">Spring-fed + rain collection</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Collection capacity</span>
-          <span class="metric-value">1,200 gal</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Current reserve</span>
-          <span class="metric-value moderate">~680 gal</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">March usage (est.)</span>
-          <span class="metric-value">320 gal</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Last irrigation</span>
-          <span class="metric-value" style="color:#888;">N/A &mdash; dormant season</span>
-        </div>
-        <p class="info-note" style="margin-top:0.75rem;">
-          Paired with rainfall data above. At ~52 in/yr natural precipitation, supplemental irrigation is primarily needed Jul&ndash;Aug.
-        </p>
+        <div class="metric"><span class="metric-label">Water source</span><span class="metric-value" style="color:#5b8dd9;">Spring-fed + rain collection</span></div>
+        <div class="metric"><span class="metric-label">Collection capacity</span><span class="metric-value">1,200 gal</span></div>
+        <div class="metric"><span class="metric-label">Current reserve</span><span class="metric-value moderate">~680 gal</span></div>
+        <div class="metric"><span class="metric-label">March usage (est.)</span><span class="metric-value">320 gal</span></div>
+        <div class="metric"><span class="metric-label">Last irrigation</span><span class="metric-value" style="color:#888;">N/A &mdash; dormant season</span></div>
+        <p class="info-note" style="margin-top:0.75rem;">Paired with rainfall data above. At ~52 in/yr natural precipitation, supplemental irrigation is primarily needed Jul&ndash;Aug.</p>
       </div>
 
-      <!-- Alerts & Reminders -->
+      <!-- Alerts &amp; Reminders -->
       <div class="card">
         <h2>Alerts &amp; Reminders</h2>
         <div style="font-size:0.8rem;">
-          <div style="padding:0.5rem 0; border-bottom:1px solid #1a1a1a;">
-            <span style="color:#e05050;">&#9888;</span>
-            <span style="color:#e05050; font-weight:500;">Frost advisory</span>
-            <span style="color:#666;"> &mdash; Overnight low 28&deg;F forecast Apr 2. Cover tender starts.</span>
-          </div>
-          <div style="padding:0.5rem 0; border-bottom:1px solid #1a1a1a;">
-            <span style="color:#f0c040;">&#9670;</span>
-            <span style="color:#f0c040; font-weight:500;">Lime restock</span>
-            <span style="color:#666;"> &mdash; Current supply below threshold. Reorder before May application.</span>
-          </div>
-          <div style="padding:0.5rem 0; border-bottom:1px solid #1a1a1a;">
-            <span style="color:#f0c040;">&#9670;</span>
-            <span style="color:#f0c040; font-weight:500;">Soil test due</span>
-            <span style="color:#666;"> &mdash; Last tested Nov 2025. Schedule spring pH &amp; nutrient panel.</span>
-          </div>
-          <div style="padding:0.5rem 0; border-bottom:1px solid #1a1a1a;">
-            <span style="color:#5b8dd9;">&#9679;</span>
-            <span style="color:#5b8dd9; font-weight:500;">Pea inoculant</span>
-            <span style="color:#666;"> &mdash; Apply rhizobium inoculant at planting (mid-April).</span>
-          </div>
-          <div style="padding:0.5rem 0;">
-            <span style="color:#5b8dd9;">&#9679;</span>
-            <span style="color:#5b8dd9; font-weight:500;">Equipment maintenance</span>
-            <span style="color:#666;"> &mdash; Tractor oil change &amp; blade sharpening before spring tilling.</span>
-          </div>
+          <div style="padding:0.5rem 0; border-bottom:1px solid #1a1a1a;"><span style="color:#e05050;">&#9888;</span> <span style="color:#e05050; font-weight:500;">Frost advisory</span> <span style="color:#666;"> &mdash; Overnight low 28&deg;F forecast Apr 2. Cover tender starts.</span></div>
+          <div style="padding:0.5rem 0; border-bottom:1px solid #1a1a1a;"><span style="color:#f0c040;">&#9670;</span> <span style="color:#f0c040; font-weight:500;">Lime restock</span> <span style="color:#666;"> &mdash; Current supply below threshold. Reorder before May application.</span></div>
+          <div style="padding:0.5rem 0; border-bottom:1px solid #1a1a1a;"><span style="color:#f0c040;">&#9670;</span> <span style="color:#f0c040; font-weight:500;">Soil test due</span> <span style="color:#666;"> &mdash; Last tested Nov 2025. Schedule spring pH &amp; nutrient panel.</span></div>
+          <div style="padding:0.5rem 0; border-bottom:1px solid #1a1a1a;"><span style="color:#5b8dd9;">&#9679;</span> <span style="color:#5b8dd9; font-weight:500;">Pea inoculant</span> <span style="color:#666;"> &mdash; Apply rhizobium inoculant at planting (mid-April).</span></div>
+          <div style="padding:0.5rem 0;"><span style="color:#5b8dd9;">&#9679;</span> <span style="color:#5b8dd9; font-weight:500;">Equipment maintenance</span> <span style="color:#666;"> &mdash; Tractor oil change &amp; blade sharpening before spring tilling.</span></div>
         </div>
       </div>
   </div>
@@ -1983,8 +960,8 @@
     const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const DAYS_IN_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 
-    // TMY-based monthly average GHI for the West Kill / Catskills region (kWh/m²/day)
-    // Derived from NREL NSRDB typical data for 42.2°N, 74.3°W
+    // TMY-based monthly average GHI for the West Kill / Catskills region (kWh/m&sup2;/day)
+    // Derived from NREL NSRDB typical data for 42.2&deg;N, 74.3&deg;W
     const GHI_DAILY = [1.8, 2.5, 3.5, 4.4, 5.2, 5.7, 5.6, 5.0, 4.0, 2.9, 1.9, 1.5];
 
     // Clearness index Kt (monthly average) for this location
@@ -2127,7 +1104,7 @@
       const annualYield = annualPOA * eff * area;
       const psh = annualPOA / 365;
 
-      // Solar access rating (% of ideal flat-plate GHI at this latitude ~1400 kWh/m²)
+      // Solar access rating (% of ideal flat-plate GHI at this latitude ~1400 kWh/m&sup2;)
       const idealGHI = 1400;
       const accessPct = Math.min(100, (annualPOA / idealGHI) * 100);
 
@@ -2160,8 +1137,8 @@
       noteEl.textContent = accessPct >= 60
         ? "This site has favorable solar exposure for energy collection or passive solar gain."
         : accessPct >= 40
-        ? "Moderate solar access — consider clearing obstructions or adjusting tilt for better performance."
-        : "Limited solar access — significant shading or unfavorable orientation reduces usable gain.";
+        ? "Moderate solar access &mdash; consider clearing obstructions or adjusting tilt for better performance."
+        : "Limited solar access &mdash; significant shading or unfavorable orientation reduces usable gain.";
 
       // Seasonal
       const seasonal = {
@@ -2171,18 +1148,18 @@
         fall: monthlyKwh[8] + monthlyKwh[9] + monthlyKwh[10]
       };
 
-      document.getElementById("s-winter").textContent = seasonal.winter.toFixed(0) + " kWh/m²";
-      document.getElementById("s-spring").textContent = seasonal.spring.toFixed(0) + " kWh/m²";
-      document.getElementById("s-summer").textContent = seasonal.summer.toFixed(0) + " kWh/m²";
-      document.getElementById("s-fall").textContent = seasonal.fall.toFixed(0) + " kWh/m²";
+      document.getElementById("s-winter").textContent = seasonal.winter.toFixed(0) + " kWh/m&sup2;";
+      document.getElementById("s-spring").textContent = seasonal.spring.toFixed(0) + " kWh/m&sup2;";
+      document.getElementById("s-summer").textContent = seasonal.summer.toFixed(0) + " kWh/m&sup2;";
+      document.getElementById("s-fall").textContent = seasonal.fall.toFixed(0) + " kWh/m&sup2;";
 
       let bestM = 0, worstM = 0;
       for (let m = 1; m < 12; m++) {
         if (monthlyPOA[m] > monthlyPOA[bestM]) bestM = m;
         if (monthlyPOA[m] < monthlyPOA[worstM]) worstM = m;
       }
-      document.getElementById("s-best").textContent = `${MONTHS[bestM]} (${monthlyPOA[bestM].toFixed(2)} kWh/m²/day)`;
-      document.getElementById("s-worst").textContent = `${MONTHS[worstM]} (${monthlyPOA[worstM].toFixed(2)} kWh/m²/day)`;
+      document.getElementById("s-best").textContent = `${MONTHS[bestM]} (${monthlyPOA[bestM].toFixed(2)} kWh/m&sup2;/day)`;
+      document.getElementById("s-worst").textContent = `${MONTHS[worstM]} (${monthlyPOA[worstM].toFixed(2)} kWh/m&sup2;/day)`;
 
       // Month grid
       const grid = document.getElementById("month-grid");
@@ -2298,7 +1275,7 @@
       const cW = W - pad.left - pad.right;
       const cH = H - pad.top - pad.bottom;
 
-      // Axes: x = azimuth (60° to 300°), y = altitude (0° to 80°)
+      // Axes: x = azimuth (60&deg; to 300&deg;), y = altitude (0&deg; to 80&deg;)
       const azMin = 50, azMax = 310;
       const altMax = 75;
 
@@ -2325,7 +1302,7 @@
         else if (az === 150) lbl = "SSE";
         else if (az === 210) lbl = "SSW";
         else if (az === 240) lbl = "WSW";
-        else lbl = az + "°";
+        else lbl = az + "&deg;";
         ctx.fillText(lbl, x, pad.top + cH + 16);
       }
 
@@ -2336,7 +1313,7 @@
         ctx.moveTo(pad.left, y);
         ctx.lineTo(W - pad.right, y);
         ctx.stroke();
-        ctx.fillText(alt + "°", pad.left - 6, y + 4);
+        ctx.fillText(alt + "&deg;", pad.left - 6, y + 4);
       }
 
       // Draw paths for 3 key dates
@@ -2490,7 +1467,7 @@
 
     const TYPES = ["tree", "shrub", "wildflower", "fern", "grass", "vine"];
 
-    // Native species database — Catskill Mountains, NY
+    // Native species database &mdash; Catskill Mountains, NY
     // Each species: common name, Latin, type, zones[], functional groups, note
     const SPECIES = [
       // ── Trees ──
@@ -2515,7 +1492,7 @@
       // ── Shrubs ──
       { common: "Mountain Laurel", latin: "Kalmia latifolia", type: "shrub", zones: ["ridgetop","upslope","midslope","rocky"], groups: ["understory","pollinator","erosion-control"], note: "Evergreen; thrives in acidic, rocky soils; bumble bee pollinated" },
       { common: "Rosebay Rhododendron", latin: "Rhododendron maximum", type: "shrub", zones: ["midslope","valley","riparian"], groups: ["understory","wildlife-shelter","erosion-control"], note: "Evergreen thickets along streams; dense winter cover for wildlife" },
-      { common: "Highbush Blueberry", latin: "Vaccinium corymbosum", type: "shrub", zones: ["upslope","midslope","wetland","meadow"], groups: ["understory","wildlife-food","pollinator"], note: "Fruit feeds birds and bears; requires acidic soil (pH 4.5–5.5)" },
+      { common: "Highbush Blueberry", latin: "Vaccinium corymbosum", type: "shrub", zones: ["upslope","midslope","wetland","meadow"], groups: ["understory","wildlife-food","pollinator"], note: "Fruit feeds birds and bears; requires acidic soil (pH 4.5&ndash;5.5)" },
       { common: "Lowbush Blueberry", latin: "Vaccinium angustifolium", type: "shrub", zones: ["ridgetop","rocky","meadow"], groups: ["ground-cover","wildlife-food","pollinator"], note: "Excellent ground cover for thin, acidic soils; fire-adapted" },
       { common: "Witch Hazel", latin: "Hamamelis virginiana", type: "shrub", zones: ["midslope","valley","upslope"], groups: ["understory","pollinator"], note: "Late-fall bloomer; only nectar source for late-season moths" },
       { common: "Hobblebush", latin: "Viburnum lantanoides", type: "shrub", zones: ["upslope","midslope","valley"], groups: ["understory","wildlife-food"], note: "Catskill forest indicator; fruit eaten by thrushes and bears" },
