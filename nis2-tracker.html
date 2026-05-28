@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NIS2 Requirement Tracker &mdash; jcsylvan.ai</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    a { color: #f0c040; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .back-link:hover { color: #e0e0e0; }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+      color: #f0c040;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+      max-width: 720px;
+      line-height: 1.5;
+    }
+
+    .wrap { max-width: 920px; margin: 0 auto; }
+
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card h2 {
+      font-size: 0.9rem;
+      color: #999;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    label {
+      display: block;
+      color: #888;
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+      margin-top: 0.75rem;
+    }
+    label:first-of-type { margin-top: 0; }
+
+    input[type="text"], select {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 0.55rem 0.65rem;
+      outline: none;
+    }
+    input[type="text"]:focus, select:focus { border-color: #f0c040; }
+    input::placeholder { color: #444; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .btn {
+      margin-top: 1.25rem;
+      background: none;
+      border: 1px solid #4a3a10;
+      border-radius: 4px;
+      color: #f0c040;
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 0.55rem 1.5rem;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover { border-color: #f0c040; background: #1a1505; }
+
+    .hint { color: #555; font-size: 0.75rem; margin-top: 0.5rem; }
+
+    /* results */
+    #results { display: none; }
+
+    .result-head {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .result-head .flag { font-size: 1.6rem; }
+    .result-head .country { font-size: 1.15rem; color: #f0c040; font-weight: 600; }
+    .result-head .supplier { color: #888; font-size: 0.85rem; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .badge.in { background: #14331a; color: #6fd17f; border: 1px solid #2a5e36; }
+    .badge.out { background: #331414; color: #d17f7f; border: 1px solid #5e2a2a; }
+    .badge.partial { background: #332a14; color: #d1bf7f; border: 1px solid #5e4f2a; }
+
+    .field { margin-bottom: 1rem; }
+    .field .k {
+      color: #888; font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.06em; margin-bottom: 0.2rem;
+    }
+    .field .v { color: #e0e0e0; font-size: 0.9rem; line-height: 1.5; }
+    .field .v a { word-break: break-word; }
+
+    .timeline { list-style: none; margin: 0.25rem 0 0; }
+    .timeline li {
+      position: relative;
+      padding: 0.55rem 0 0.55rem 1.5rem;
+      border-left: 1px solid #333;
+      margin-left: 0.4rem;
+    }
+    .timeline li:before {
+      content: "";
+      position: absolute;
+      left: -0.32rem; top: 0.85rem;
+      width: 0.55rem; height: 0.55rem;
+      background: #f0c040; border-radius: 50%;
+    }
+    .timeline .t { color: #f0c040; font-size: 0.8rem; font-weight: 600; }
+    .timeline .d { color: #ccc; font-size: 0.85rem; line-height: 1.4; }
+
+    ul.checklist { list-style: none; margin: 0.25rem 0 0; }
+    ul.checklist li {
+      padding: 0.35rem 0 0.35rem 1.4rem;
+      position: relative;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: #ccc;
+    }
+    ul.checklist li:before {
+      content: "\2713";
+      position: absolute; left: 0; color: #6fd17f;
+    }
+
+    .disclaimer {
+      color: #666; font-size: 0.72rem; line-height: 1.5;
+      border-top: 1px solid #222; padding-top: 1rem; margin-top: 0.5rem;
+    }
+
+    .error { color: #d17f7f; font-size: 0.85rem; margin-top: 0.75rem; }
+
+    /* password gate */
+    #gate {
+      position: fixed; inset: 0;
+      background: #0a0a0a;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 100; padding: 2rem;
+    }
+    #gate .lock { font-size: 2rem; margin-bottom: 1.5rem; }
+    #gate .gate-box {
+      display: flex; align-items: center;
+      border: 1px solid #333; border-radius: 4px;
+      padding: 0.75rem 1rem; width: 100%; max-width: 360px;
+      background: #111;
+    }
+    #gate .gate-box:focus-within { border-color: #888; }
+    #gate input {
+      flex: 1; background: none; border: none; outline: none;
+      color: #e0e0e0; font-family: inherit; font-size: 0.95rem;
+    }
+    #gate .gate-go {
+      background: none; border: none; color: #555; cursor: pointer;
+      font-size: 1.1rem; transition: color 0.2s ease;
+    }
+    #gate .gate-go:hover { color: #fff; }
+    #gate .gate-err { color: #d17f7f; font-size: 0.8rem; margin-top: 1rem; min-height: 1rem; }
+    #gate .gate-label { color: #555; font-size: 0.8rem; margin-bottom: 1rem; letter-spacing: 0.05em; }
+    #app { display: none; }
+  </style>
+</head>
+<body>
+  <!-- Password gate -->
+  <div id="gate">
+    <div class="lock">&#128274;</div>
+    <div class="gate-label">NIS2 Requirement Tracker &mdash; restricted</div>
+    <form class="gate-box" onsubmit="return checkGate(event)">
+      <input id="gate-pw" type="password" placeholder="password" autofocus autocomplete="off" />
+      <button type="submit" class="gate-go" aria-label="Unlock">&#8594;</button>
+    </form>
+    <div class="gate-err" id="gate-err"></div>
+  </div>
+
+  <!-- App -->
+  <div id="app">
+    <div class="wrap">
+      <a href="index.html" class="back-link">&larr; back</a>
+      <h1>NIS2 Requirement Tracker</h1>
+      <p class="subtitle">
+        For prime contractors managing subcontractors and suppliers across the EU/EEA.
+        Enter a supplier and its location to surface the applicable NIS2 (Directive (EU) 2022/2555)
+        incident-reporting obligations, the national competent authority / CSIRT to notify, and the
+        supply-chain duties to flow down. Reporting deadlines are the harmonised EU baseline;
+        national transpositions may add specifics &mdash; always verify against local law.
+      </p>
+
+      <div class="card">
+        <h2>Supplier &amp; jurisdiction</h2>
+        <div class="form-grid">
+          <div>
+            <label for="supplier">Subcontractor / supplier name</label>
+            <input type="text" id="supplier" placeholder="e.g. Helios Components GmbH" autocomplete="off" />
+          </div>
+          <div>
+            <label for="location">Location / jurisdiction</label>
+            <input type="text" id="location" placeholder="e.g. Germany, Munich, DE" autocomplete="off"
+                   list="country-list" onkeydown="if(event.key==='Enter')lookup()" />
+            <datalist id="country-list"></datalist>
+          </div>
+        </div>
+        <button class="btn" onclick="lookup()">Show NIS2 requirements</button>
+        <div class="error" id="lookup-err"></div>
+        <p class="hint">Tip: you can type a country name, common alias, ISO code (DE, FR&hellip;), or a city in a member state.</p>
+      </div>
+
+      <div class="card" id="results"></div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- Password gate ---------- */
+    const GATE_HASH = "438a94e7ba86187e15644c61874992fe9a8e7891371cb898314d2a7b593980d5";
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function checkGate(e) {
+      e.preventDefault();
+      const pw = document.getElementById("gate-pw").value;
+      const err = document.getElementById("gate-err");
+      if (!pw) return false;
+      const hash = await sha256(pw);
+      if (hash === GATE_HASH) {
+        sessionStorage.setItem("nis2_unlocked", "1");
+        revealApp();
+      } else {
+        err.textContent = "access denied";
+        document.getElementById("gate-pw").value = "";
+      }
+      return false;
+    }
+
+    function revealApp() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("app").style.display = "block";
+    }
+
+    if (sessionStorage.getItem("nis2_unlocked") === "1") revealApp();
+
+    /* ---------- NIS2 EU baseline (uniform across member states) ---------- */
+    const EU_TIMELINE = [
+      { t: "Without undue delay — 24 hours", d: "Early warning to the CSIRT / competent authority: flag a significant incident, note if it may be caused by unlawful/malicious acts or could have cross-border impact." },
+      { t: "Without undue delay — 72 hours", d: "Incident notification: update the early warning with an initial assessment of the incident, its severity and impact, and indicators of compromise where available." },
+      { t: "On request", d: "Intermediate report: provide status updates if requested by the CSIRT / competent authority." },
+      { t: "1 month", d: "Final report: detailed description, severity and impact, threat type / root cause, mitigation measures applied, and (where relevant) cross-border impact — due within one month of the 72-hour notification." }
+    ];
+
+    const EU_SUPPLY_CHAIN = [
+      "Art. 21 risk-management measures include supply-chain security — assess the security of your own suppliers and service providers.",
+      "Flow down NIS2-aligned security requirements into subcontracts (incident notification SLAs, vulnerability handling, secure development).",
+      "Require the supplier to notify you of significant incidents fast enough for you to meet your own 24h / 72h clocks.",
+      "Track whether the supplier is itself an 'essential' or 'important' entity directly in scope of NIS2.",
+      "Consider EU coordinated security risk assessments of critical supply chains (Art. 22) for ICT products/services."
+    ];
+
+    const FLOW_DOWN = [
+      "Contractual duty to report incidents to you within an agreed window (e.g. ≤ 24h of detection).",
+      "Right to audit / evidence of the supplier's cybersecurity risk-management measures (Art. 21).",
+      "Vulnerability disclosure and patching obligations with defined timelines.",
+      "Sub-tier (4th-party) transparency — the supplier must flow the same terms to its own suppliers.",
+      "Cooperation clause for joint handling of cross-border or shared incidents.",
+      "Notification of any change in the supplier's NIS2 classification or registration status."
+    ];
+
+    /* ---------- Per-jurisdiction data ----------
+       status: in (EU/EEA, NIS2 applies), partial (EEA / transposition nuance), out (non-EU)
+    */
+    const J = {
+      AT: { name: "Austria", flag: "\u{1F1E6}\u{1F1F9}", status: "in",
+            law: "Netz- und Informationssystemsicherheitsgesetz (NISG 2024 / NIS2 transposition)",
+            authority: "Bundesministerium für Inneres / nis.gv.at",
+            csirt: "CERT.at / GovCERT Austria", portal: "https://www.cert.at" },
+      BE: { name: "Belgium", flag: "\u{1F1E7}\u{1F1EA}", status: "in",
+            law: "NIS2 Law of 26 April 2024 (in force 18 Oct 2024)",
+            authority: "Centre for Cybersecurity Belgium (CCB)",
+            csirt: "CERT.be (operated by CCB)", portal: "https://ccb.belgium.be",
+            note: "Early adopter — registration via the CCB platform; conformity assessment (CyberFundamentals/ISO 27001) options available." },
+      BG: { name: "Bulgaria", flag: "\u{1F1E7}\u{1F1EC}", status: "in",
+            law: "Cybersecurity Act amendments (NIS2 transposition)",
+            authority: "Ministry of e-Government",
+            csirt: "CERT Bulgaria (govcert.bg)", portal: "https://www.govcert.bg" },
+      HR: { name: "Croatia", flag: "\u{1F1ED}\u{1F1F7}", status: "in",
+            law: "Cybersecurity Act (Zakon o kibernetičkoj sigurnosti, 2024)",
+            authority: "SOA / national cybersecurity authority",
+            csirt: "CERT.hr / NCERT", portal: "https://www.cert.hr" },
+      CY: { name: "Cyprus", flag: "\u{1F1E8}\u{1F1FE}", status: "in",
+            law: "Securing of Networks & Information Systems Law (NIS2 transposition)",
+            authority: "Digital Security Authority (DSA)",
+            csirt: "CSIRT-CY", portal: "https://csirt.cy" },
+      CZ: { name: "Czechia", flag: "\u{1F1E8}\u{1F1FF}", status: "in",
+            law: "New Act on Cybersecurity (Zákon o kybernetické bezpečnosti, NIS2)",
+            authority: "NÚKIB (National Cyber and Information Security Agency)",
+            csirt: "GovCERT.CZ (NÚKIB) / CSIRT.CZ", portal: "https://nukib.gov.cz" },
+      DK: { name: "Denmark", flag: "\u{1F1E9}\u{1F1F0}", status: "in",
+            law: "NIS2 implementing act (sector-specific transposition)",
+            authority: "Centre for Cybersecurity (CFCS)",
+            csirt: "CFCS / sector CSIRTs", portal: "https://www.cfcs.dk",
+            note: "Sectoral authorities supervise individual sectors; check the relevant sector regulator." },
+      EE: { name: "Estonia", flag: "\u{1F1EA}\u{1F1EA}", status: "in",
+            law: "Cybersecurity Act amendments (NIS2)",
+            authority: "Estonian Information System Authority (RIA)",
+            csirt: "CERT-EE (RIA)", portal: "https://www.ria.ee" },
+      FI: { name: "Finland", flag: "\u{1F1EB}\u{1F1EE}", status: "in",
+            law: "Act on Cybersecurity Risk Management (NIS2 transposition, 2025)",
+            authority: "Traficom / sector authorities",
+            csirt: "NCSC-FI (Traficom)", portal: "https://www.kyberturvallisuuskeskus.fi" },
+      FR: { name: "France", flag: "\u{1F1EB}\u{1F1F7}", status: "in",
+            law: "Loi relative à la résilience (NIS2 transposition)",
+            authority: "ANSSI (Agence nationale de la sécurité des systèmes d'information)",
+            csirt: "CERT-FR (ANSSI)", portal: "https://cyber.gouv.fr",
+            note: "Reporting through ANSSI MonServiceSécurisé; entities self-register." },
+      DE: { name: "Germany", flag: "\u{1F1E9}\u{1F1EA}", status: "in",
+            law: "NIS2-Umsetzungs- und Cybersicherheitsstärkungsgesetz (NIS2UmsuCG)",
+            authority: "BSI (Bundesamt für Sicherheit in der Informationstechnik)",
+            csirt: "CERT-Bund (BSI)", portal: "https://www.bsi.bund.de",
+            note: "Reporting via the BSI Meldeportal; registration obligation for in-scope entities." },
+      GR: { name: "Greece", flag: "\u{1F1EC}\u{1F1F7}", status: "in",
+            law: "NIS2 transposition law (2024/2025)",
+            authority: "National Cybersecurity Authority (NCSA)",
+            csirt: "National CSIRT (GR)", portal: "https://mindigital.gr" },
+      HU: { name: "Hungary", flag: "\u{1F1ED}\u{1F1FA}", status: "in",
+            law: "Act on Cybersecurity Certification & Supervision (NIS2)",
+            authority: "SZTFH (Supervisory Authority for Regulated Activities)",
+            csirt: "National Cyber Defence Institute (NB SZ)", portal: "https://nki.gov.hu",
+            note: "Mandatory registration and biennial cybersecurity audit regime." },
+      IE: { name: "Ireland", flag: "\u{1F1EE}\u{1F1EA}", status: "in",
+            law: "National Cyber Security Bill (NIS2 transposition)",
+            authority: "National Cyber Security Centre (NCSC Ireland)",
+            csirt: "CSIRT-IE (NCSC)", portal: "https://www.ncsc.gov.ie" },
+      IT: { name: "Italy", flag: "\u{1F1EE}\u{1F1F9}", status: "in",
+            law: "Decreto Legislativo 138/2024 (NIS2 transposition)",
+            authority: "ACN (Agenzia per la Cybersicurezza Nazionale)",
+            csirt: "CSIRT Italia (ACN)", portal: "https://www.acn.gov.it",
+            note: "Registration on the ACN portal; staggered notification deadlines (24h pre-notice / 72h notification)." },
+      LV: { name: "Latvia", flag: "\u{1F1F1}\u{1F1FB}", status: "in",
+            law: "National Cybersecurity Law (NIS2)",
+            authority: "CERT.LV / national authority",
+            csirt: "CERT.LV", portal: "https://cert.lv" },
+      LT: { name: "Lithuania", flag: "\u{1F1F1}\u{1F1F9}", status: "in",
+            law: "Law on Cybersecurity amendments (NIS2)",
+            authority: "National Cyber Security Centre (NKSC)",
+            csirt: "CERT-LT / NKSC", portal: "https://www.nksc.lt" },
+      LU: { name: "Luxembourg", flag: "\u{1F1F1}\u{1F1FA}", status: "in",
+            law: "NIS2 transposition law",
+            authority: "ILR / High Commission for National Protection (HCPN)",
+            csirt: "GOVCERT.LU / CIRCL", portal: "https://www.govcert.lu" },
+      MT: { name: "Malta", flag: "\u{1F1F2}\u{1F1F9}", status: "in",
+            law: "NIS2 transposition measures",
+            authority: "Malta Communications Authority / national authority",
+            csirt: "CSIRTMalta", portal: "https://csirt.gov.mt" },
+      NL: { name: "Netherlands", flag: "\u{1F1F3}\u{1F1F1}", status: "in",
+            law: "Cyberbeveiligingswet (Cbw — NIS2 transposition)",
+            authority: "RDI (Rijksinspectie Digitale Infrastructuur) / sector authorities",
+            csirt: "NCSC-NL", portal: "https://www.ncsc.nl",
+            note: "From 2026, NCSC-NL, CSIRT-DSP and DTC merge under NCSC; check current registration channel." },
+      PL: { name: "Poland", flag: "\u{1F1F5}\u{1F1F1}", status: "in",
+            law: "Amendment to the Act on the National Cybersecurity System (KSC / NIS2)",
+            authority: "Ministry of Digital Affairs",
+            csirt: "CSIRT NASK / CSIRT GOV / CSIRT MON", portal: "https://www.gov.pl/web/baza-wiedzy/cyberbezpieczenstwo" },
+      PT: { name: "Portugal", flag: "\u{1F1F5}\u{1F1F9}", status: "in",
+            law: "NIS2 transposition (Regime Jurídico da Segurança do Ciberespaço)",
+            authority: "CNCS (Centro Nacional de Cibersegurança)",
+            csirt: "CERT.PT (CNCS)", portal: "https://www.cncs.gov.pt" },
+      RO: { name: "Romania", flag: "\u{1F1F7}\u{1F1F4}", status: "in",
+            law: "NIS2 transposition law (2024)",
+            authority: "DNSC (Directoratul Național de Securitate Cibernetică)",
+            csirt: "DNSC / CSIRT-RO", portal: "https://dnsc.ro" },
+      SK: { name: "Slovakia", flag: "\u{1F1F8}\u{1F1F0}", status: "in",
+            law: "Act on Cybersecurity amendments (NIS2)",
+            authority: "NÚKIB SK (National Security Authority – NÚkib)",
+            csirt: "SK-CERT", portal: "https://www.sk-cert.sk" },
+      SI: { name: "Slovenia", flag: "\u{1F1F8}\u{1F1EE}", status: "in",
+            law: "Information Security Act (ZInfV-1 — NIS2)",
+            authority: "Information Security Administration (URSIV)",
+            csirt: "SI-CERT", portal: "https://www.cert.si" },
+      ES: { name: "Spain", flag: "\u{1F1EA}\u{1F1F8}", status: "in",
+            law: "Anteproyecto de Ley de Coordinación y Gobernanza de Ciberseguridad (NIS2)",
+            authority: "INCIBE / CCN / sector authorities",
+            csirt: "INCIBE-CERT (private) & CCN-CERT (public)", portal: "https://www.incibe.es",
+            note: "CSIRT depends on entity type: CCN-CERT for public sector, INCIBE-CERT for private, ESPDEF-CERT for defence." },
+      SE: { name: "Sweden", flag: "\u{1F1F8}\u{1F1EA}", status: "in",
+            law: "Cybersäkerhetslag (NIS2 transposition)",
+            authority: "MSB (Swedish Civil Contingencies Agency) / sector authorities",
+            csirt: "CERT-SE (MSB)", portal: "https://www.cert.se" },
+
+      /* EEA — NIS2 expected via EEA mechanism / national equivalents */
+      NO: { name: "Norway", flag: "\u{1F1F3}\u{1F1F4}", status: "partial",
+            law: "EEA member — national security/CER & forthcoming NIS2-equivalent rules",
+            authority: "NSM (Norwegian National Security Authority)",
+            csirt: "NorCERT (NSM)", portal: "https://nsm.no",
+            note: "NIS2 is EEA-relevant but not yet formally incorporated; Norway applies equivalent national rules. Treat as in-scope-aligned and verify." },
+      IS: { name: "Iceland", flag: "\u{1F1EE}\u{1F1F8}", status: "partial",
+            law: "EEA member — NIS2 incorporation pending",
+            authority: "Electronic Communications Office (PFS)",
+            csirt: "CERT-IS", portal: "https://www.cert.is",
+            note: "EEA-relevant; incorporation pending. Apply equivalent national rules and verify." },
+      LI: { name: "Liechtenstein", flag: "\u{1F1F1}\u{1F1EE}", status: "partial",
+            law: "EEA member — NIS2 incorporation pending",
+            authority: "Office for Communications (AK)",
+            csirt: "National contact via AK", portal: "https://www.llv.li",
+            note: "EEA-relevant; incorporation pending. Verify current national rules." },
+
+      /* Non-EU — out of NIS2 scope (informational) */
+      UK: { name: "United Kingdom", flag: "\u{1F1EC}\u{1F1E7}", status: "out",
+            law: "Outside NIS2. UK NIS Regulations 2018 + forthcoming Cyber Security & Resilience Bill apply.",
+            authority: "NCSC UK / sector competent authorities",
+            csirt: "NCSC UK", portal: "https://www.ncsc.gov.uk",
+            note: "Not subject to NIS2, but if the supplier serves EU in-scope entities, flow-down NIS2 supply-chain terms still apply contractually." },
+      CH: { name: "Switzerland", flag: "\u{1F1E8}\u{1F1ED}", status: "out",
+            law: "Outside NIS2. Swiss reporting duty for critical infrastructure (ISG) via NCSC since 2025.",
+            authority: "NCSC Switzerland (BACS)",
+            csirt: "GovCERT.ch (NCSC)", portal: "https://www.ncsc.admin.ch",
+            note: "Not in NIS2 scope. EU customers should still impose NIS2-aligned supply-chain obligations contractually." },
+      US: { name: "United States", flag: "\u{1F1FA}\u{1F1F8}", status: "out",
+            law: "Outside NIS2. CISA / CIRCIA, sectoral rules (e.g. SEC, FTC) apply.",
+            authority: "CISA",
+            csirt: "US-CERT / CISA", portal: "https://www.cisa.gov",
+            note: "Not in NIS2 scope. If supplying EU in-scope entities, flow-down NIS2 supply-chain and incident-notification terms by contract." }
+    };
+
+    /* Aliases / cities -> ISO code */
+    const ALIASES = {
+      // ISO-3 and common names
+      austria: "AT", oesterreich: "AT", vienna: "AT", wien: "AT", aut: "AT",
+      belgium: "BE", belgie: "BE", belgique: "BE", brussels: "BE", bruxelles: "BE", antwerp: "BE", bel: "BE",
+      bulgaria: "BG", sofia: "BG", bgr: "BG",
+      croatia: "HR", hrvatska: "HR", zagreb: "HR", hrv: "HR",
+      cyprus: "CY", nicosia: "CY", cyp: "CY",
+      czechia: "CZ", "czech republic": "CZ", cesko: "CZ", prague: "CZ", praha: "CZ", cze: "CZ",
+      denmark: "DK", danmark: "DK", copenhagen: "DK", kobenhavn: "DK", dnk: "DK",
+      estonia: "EE", eesti: "EE", tallinn: "EE", est: "EE",
+      finland: "FI", suomi: "FI", helsinki: "FI", fin: "FI",
+      france: "FR", paris: "FR", lyon: "FR", marseille: "FR", fra: "FR",
+      germany: "DE", deutschland: "DE", munich: "DE", muenchen: "DE", berlin: "DE", hamburg: "DE", frankfurt: "DE", cologne: "DE", deu: "DE", ger: "DE",
+      greece: "GR", hellas: "GR", athens: "GR", grc: "GR",
+      hungary: "HU", magyarorszag: "HU", budapest: "HU", hun: "HU",
+      ireland: "IE", eire: "IE", dublin: "IE", irl: "IE",
+      italy: "IT", italia: "IT", rome: "IT", roma: "IT", milan: "IT", milano: "IT", ita: "IT",
+      latvia: "LV", latvija: "LV", riga: "LV", lva: "LV",
+      lithuania: "LT", lietuva: "LT", vilnius: "LT", ltu: "LT",
+      luxembourg: "LU", luxemburg: "LU", lux: "LU",
+      malta: "MT", valletta: "MT", mlt: "MT",
+      netherlands: "NL", nederland: "NL", holland: "NL", amsterdam: "NL", rotterdam: "NL", "the hague": "NL", nld: "NL",
+      poland: "PL", polska: "PL", warsaw: "PL", warszawa: "PL", krakow: "PL", pol: "PL",
+      portugal: "PT", lisbon: "PT", lisboa: "PT", porto: "PT", prt: "PT",
+      romania: "RO", bucharest: "RO", bucuresti: "RO", rou: "RO", rom: "RO",
+      slovakia: "SK", slovensko: "SK", bratislava: "SK", svk: "SK",
+      slovenia: "SI", slovenija: "SI", ljubljana: "SI", svn: "SI",
+      spain: "ES", espana: "ES", madrid: "ES", barcelona: "ES", esp: "ES",
+      sweden: "SE", sverige: "SE", stockholm: "SE", gothenburg: "SE", swe: "SE",
+      norway: "NO", norge: "NO", oslo: "NO", nor: "NO",
+      iceland: "IS", island: "IS", reykjavik: "IS", isl: "IS",
+      liechtenstein: "LI", vaduz: "LI", lie: "LI",
+      "united kingdom": "UK", uk: "UK", "great britain": "UK", britain: "UK", england: "UK", scotland: "UK", wales: "UK", "northern ireland": "UK", london: "UK", gb: "UK", gbr: "UK",
+      switzerland: "CH", schweiz: "CH", suisse: "CH", svizzera: "CH", zurich: "CH", geneva: "CH", che: "CH",
+      "united states": "US", usa: "US", "united states of america": "US", america: "US", us: "US", "new york": "US", washington: "US", california: "US", usa1: "US"
+    };
+
+    /* Populate datalist with member-state names */
+    (function () {
+      const dl = document.getElementById("country-list");
+      Object.keys(J).forEach(code => {
+        const o = document.createElement("option");
+        o.value = J[code].name;
+        dl.appendChild(o);
+      });
+    })();
+
+    function resolveJurisdiction(raw) {
+      const q = raw.trim().toLowerCase().replace(/\.,/g, "");
+      if (!q) return null;
+      // direct ISO-2 code
+      const up = raw.trim().toUpperCase();
+      if (J[up]) return up;
+      // exact name match
+      for (const code in J) {
+        if (J[code].name.toLowerCase() === q) return code;
+      }
+      // alias / city map
+      if (ALIASES[q]) return ALIASES[q];
+      // token scan (handles "Munich, Germany" or "DE - Bavaria")
+      const tokens = q.split(/[\s,;\/\-–]+/).filter(Boolean);
+      for (const tk of tokens) {
+        const u = tk.toUpperCase();
+        if (J[u]) return u;
+        if (ALIASES[tk]) return ALIASES[tk];
+        for (const code in J) {
+          if (J[code].name.toLowerCase() === tk) return code;
+        }
+      }
+      // substring fallback on country names
+      for (const code in J) {
+        if (q.includes(J[code].name.toLowerCase())) return code;
+      }
+      return null;
+    }
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, c =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    function lookup() {
+      const supplier = document.getElementById("supplier").value.trim();
+      const location = document.getElementById("location").value.trim();
+      const err = document.getElementById("lookup-err");
+      const res = document.getElementById("results");
+      err.textContent = "";
+
+      if (!location) {
+        err.textContent = "Enter a location / jurisdiction to look up requirements.";
+        res.style.display = "none";
+        return;
+      }
+
+      const code = resolveJurisdiction(location);
+      if (!code) {
+        err.textContent = 'Could not match "' + location + '" to a jurisdiction. Try a country name or ISO code (e.g. Germany / DE).';
+        res.style.display = "none";
+        return;
+      }
+
+      const j = J[code];
+      const supLabel = supplier ? esc(supplier) : "Supplier";
+
+      const badge = j.status === "in"
+        ? '<span class="badge in">NIS2 applies</span>'
+        : j.status === "partial"
+          ? '<span class="badge partial">EEA — verify</span>'
+          : '<span class="badge out">Outside NIS2</span>';
+
+      const showTimeline = j.status !== "out";
+
+      let html = "";
+      html += '<div class="result-head">';
+      html += '<span class="flag">' + j.flag + '</span>';
+      html += '<span class="country">' + esc(j.name) + '</span>';
+      html += badge;
+      html += '<span class="supplier">' + supLabel + (supplier ? "" : " &mdash; (name not entered)") + '</span>';
+      html += '</div>';
+
+      // applicability summary
+      let summary;
+      if (j.status === "in") {
+        summary = esc(supLabel) + " operates in <strong>" + esc(j.name) + "</strong>, an EU member state where NIS2 is transposed. " +
+          "If the supplier is an <em>essential</em> or <em>important</em> entity in a covered sector (or you are, and it serves you), the obligations below apply.";
+      } else if (j.status === "partial") {
+        summary = esc(supLabel) + " operates in <strong>" + esc(j.name) + "</strong> (EEA). NIS2 is EEA-relevant but may not yet be formally incorporated &mdash; equivalent national rules apply. Treat as aligned and verify locally.";
+      } else {
+        summary = esc(supLabel) + " operates in <strong>" + esc(j.name) + "</strong>, which is <strong>outside</strong> the NIS2 regime. NIS2 does not bind this supplier directly, but if it serves EU in-scope entities you should impose equivalent supply-chain and incident-notification duties by contract.";
+      }
+      html += '<div class="field"><div class="k">Applicability</div><div class="v">' + summary + '</div></div>';
+
+      // national framework
+      html += '<div class="field"><div class="k">National framework</div><div class="v">' + esc(j.law) + '</div></div>';
+
+      // authority + csirt
+      html += '<div class="field"><div class="k">Competent authority</div><div class="v">' + esc(j.authority) + '</div></div>';
+      html += '<div class="field"><div class="k">CSIRT / where to notify</div><div class="v">' + esc(j.csirt) +
+              ' &middot; <a href="' + esc(j.portal) + '" target="_blank" rel="noopener">' + esc(j.portal) + '</a></div></div>';
+
+      if (j.note) {
+        html += '<div class="field"><div class="k">Jurisdiction note</div><div class="v">' + esc(j.note) + '</div></div>';
+      }
+
+      // timeline
+      if (showTimeline) {
+        html += '<div class="field"><div class="k">Incident reporting timeline (EU baseline)</div><ul class="timeline">';
+        EU_TIMELINE.forEach(s => {
+          html += '<li><div class="t">' + s.t + '</div><div class="d">' + s.d + '</div></li>';
+        });
+        html += '</ul></div>';
+      }
+
+      // supply chain duties
+      html += '<div class="field"><div class="k">Supply-chain duties (Art. 21 / 22)</div><ul class="checklist">';
+      EU_SUPPLY_CHAIN.forEach(s => { html += '<li>' + s + '</li>'; });
+      html += '</ul></div>';
+
+      // flow-down checklist for the prime
+      html += '<div class="field"><div class="k">Flow-down to put in the subcontract</div><ul class="checklist">';
+      FLOW_DOWN.forEach(s => { html += '<li>' + s + '</li>'; });
+      html += '</ul></div>';
+
+      html += '<div class="disclaimer">Informational only — not legal advice. NIS2 (Directive (EU) 2022/2555) is transposed differently by each member state; ' +
+              'deadlines shown are the harmonised EU baseline (24h early warning / 72h notification / 1-month final report). ' +
+              'Confirm scope classification, registration duties and exact channels with the named national authority and qualified counsel before relying on this.</div>';
+
+      res.innerHTML = html;
+      res.style.display = "block";
+      res.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  </script>
+</body>
+</html>
