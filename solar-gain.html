@@ -408,6 +408,7 @@
     .species-tag.fern { color: #4ea88e; background: #1a2220; }
     .species-tag.grass { color: #a8a44e; background: #22221a; }
     .species-tag.vine { color: #4e8ea8; background: #1a2022; }
+    .species-tag.herb { color: #c4a84e; background: #22201a; }
 
     .species-note {
       font-size: 0.72rem;
@@ -800,6 +801,34 @@
         coverage tracks how many ecological roles (canopy, understory, ground cover,
         pollinator support, erosion control) are filled.
       </p>
+    </div>
+
+    <!-- Near-House Planting Guide -->
+    <div class="card full-width" id="house-guide" style="display:none;">
+      <h2>Near-House Planting Guide</h2>
+      <p class="planner-desc">
+        Species below are selected for the areas around the house: foundation beds,
+        gravel patio edges, stone step crevices, fire pit borders, and privacy screen
+        plantings. Edible herbs are included for kitchen-garden use within steps of the door.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;">
+        <div style="padding:0.6rem;background:#151515;border:1px solid #222;border-radius:4px;">
+          <div style="color:#888;font-size:0.72rem;margin-bottom:0.3rem;">FOUNDATION BEDS</div>
+          <div style="color:#e0e0e0;font-size:0.78rem;line-height:1.5;">Serviceberry, inkberry holly, chokeberry, bearberry as groundcover</div>
+        </div>
+        <div style="padding:0.6rem;background:#151515;border:1px solid #222;border-radius:4px;">
+          <div style="color:#888;font-size:0.72rem;margin-bottom:0.3rem;">GRAVEL &amp; STONE EDGES</div>
+          <div style="color:#e0e0e0;font-size:0.78rem;line-height:1.5;">Wild strawberry, creeping juniper, wintergreen, fragrant sumac</div>
+        </div>
+        <div style="padding:0.6rem;background:#151515;border:1px solid #222;border-radius:4px;">
+          <div style="color:#888;font-size:0.72rem;margin-bottom:0.3rem;">FIRE PIT &amp; PATIO</div>
+          <div style="color:#e0e0e0;font-size:0.78rem;line-height:1.5;">Bee balm, anise hyssop, wild bergamot, evening primrose for fragrance</div>
+        </div>
+        <div style="padding:0.6rem;background:#151515;border:1px solid #222;border-radius:4px;">
+          <div style="color:#888;font-size:0.72rem;margin-bottom:0.3rem;">SHADED SIDE / NORTH WALL</div>
+          <div style="color:#e0e0e0;font-size:0.78rem;line-height:1.5;">Ostrich fern, wild ginger, ramps, wood sorrel, violets</div>
+        </div>
+      </div>
     </div>
 
     <!-- Species Recommendations -->
@@ -1463,9 +1492,10 @@
       { id: "meadow",    label: "Open Meadow / Clearing", light: "full",    moisture: "medium",  desc: "Full sun, deeper soil, former pasture or clearing" },
       { id: "wetland",   label: "Wet Seep / Bog",         light: "partial", moisture: "saturated", desc: "Perennially wet, organic soils, low pH" },
       { id: "rocky",     label: "Rock Outcrop / Ledge",   light: "full",    moisture: "dry",     desc: "Thin soil pockets, exposed bedrock, xeric" },
+      { id: "house",     label: "Near House / Patio",      light: "partial", moisture: "medium",  desc: "Foundation beds, gravel patio edges, stone steps, fire pit area — partial shade from mature trees" },
     ];
 
-    const TYPES = ["tree", "shrub", "wildflower", "fern", "grass", "vine"];
+    const TYPES = ["tree", "shrub", "wildflower", "fern", "grass", "vine", "herb"];
 
     // Native species database &mdash; Catskill Mountains, NY
     // Each species: common name, Latin, type, zones[], functional groups, note
@@ -1514,8 +1544,8 @@
       { common: "Blue Cohosh", latin: "Caulophyllum thalictroides", type: "wildflower", zones: ["midslope","valley"], groups: ["ground-cover"], note: "Rich-woods indicator; early spring bloomer" },
       { common: "Hepatica", latin: "Hepatica nobilis var. acuta", type: "wildflower", zones: ["midslope","upslope","rocky"], groups: ["pollinator"], note: "Among the earliest spring wildflowers; attracts early bees" },
       { common: "Foam Flower", latin: "Tiarella cordifolia", type: "wildflower", zones: ["midslope","valley","riparian"], groups: ["ground-cover","pollinator"], note: "Excellent groundcover; white spring blooms; spreads by stolons" },
-      { common: "Wild Ginger", latin: "Asarum canadense", type: "wildflower", zones: ["midslope","valley"], groups: ["ground-cover"], note: "Dense groundcover; hidden flowers pollinated by ground beetles" },
-      { common: "Bee Balm", latin: "Monarda didyma", type: "wildflower", zones: ["meadow","riparian","valley"], groups: ["pollinator"], note: "Red tubular flowers attract hummingbirds and native bees" },
+      { common: "Wild Ginger", latin: "Asarum canadense", type: "wildflower", zones: ["midslope","valley","house"], groups: ["ground-cover","edible"], note: "Rhizome used as ginger substitute; heart-shaped leaves; dense shade groundcover" },
+      { common: "Bee Balm", latin: "Monarda didyma", type: "wildflower", zones: ["meadow","riparian","valley","house"], groups: ["pollinator","edible"], note: "Scarlet flowers; leaves for Oswego tea; hummingbird magnet near patios" },
       { common: "Joe-Pye Weed", latin: "Eutrochium maculatum", type: "wildflower", zones: ["meadow","riparian","wetland"], groups: ["pollinator"], note: "Tall; pink domes attract monarchs, swallowtails, and native bees" },
       { common: "New England Aster", latin: "Symphyotrichum novae-angliae", type: "wildflower", zones: ["meadow","riparian"], groups: ["pollinator"], note: "Critical late-season nectar for migrating monarchs" },
       { common: "Goldenrod", latin: "Solidago rugosa", type: "wildflower", zones: ["meadow","ridgetop","rocky"], groups: ["pollinator","pioneer"], note: "Supports 100+ insect species; late-season pollen powerhouse" },
@@ -1526,7 +1556,7 @@
       { common: "Turtlehead", latin: "Chelone glabra", type: "wildflower", zones: ["riparian","wetland","valley"], groups: ["pollinator"], note: "Sole host plant for Baltimore checkerspot butterfly" },
       { common: "Solomon's Seal", latin: "Polygonatum biflorum", type: "wildflower", zones: ["midslope","valley","upslope"], groups: ["ground-cover","wildlife-food"], note: "Arching stems; berries for thrushes; graceful woodland plant" },
       { common: "Bloodroot", latin: "Sanguinaria canadensis", type: "wildflower", zones: ["midslope","valley"], groups: ["pollinator","ground-cover"], note: "Very early white flowers; ant-dispersed; rich woods indicator" },
-      { common: "Wild Bergamot", latin: "Monarda fistulosa", type: "wildflower", zones: ["meadow","rocky","ridgetop"], groups: ["pollinator"], note: "Lavender flowers; drought-tolerant; excellent native bee plant" },
+      { common: "Wild Bergamot", latin: "Monarda fistulosa", type: "wildflower", zones: ["meadow","rocky","ridgetop","house"], groups: ["pollinator","edible"], note: "Leaves for tea with oregano-like flavor; lavender blooms; drought-tolerant native bee plant" },
       { common: "Boneset", latin: "Eupatorium perfoliatum", type: "wildflower", zones: ["meadow","wetland","riparian"], groups: ["pollinator"], note: "White flower clusters attract diverse beneficial insects" },
 
       // ── Ferns ──
@@ -1554,6 +1584,34 @@
       { common: "Virginia Creeper", latin: "Parthenocissus quinquefolia", type: "vine", zones: ["midslope","valley","rocky","meadow"], groups: ["wildlife-food","ground-cover"], note: "Berries critical for fall migrants; brilliant fall color" },
       { common: "American Bittersweet", latin: "Celastrus scandens", type: "vine", zones: ["midslope","valley","meadow"], groups: ["wildlife-food"], note: "Native vine (not invasive oriental); orange berries for birds" },
       { common: "Wild Grape", latin: "Vitis labrusca", type: "vine", zones: ["meadow","valley","riparian"], groups: ["wildlife-food","pollinator"], note: "Fox grape; fruit feeds 50+ bird species and mammals" },
+
+      // ── Near-House Native Species & Edible Herbs ──
+      // Ornamental natives suited to foundation beds, patio edges, gravel borders, stone steps
+      { common: "Serviceberry", latin: "Amelanchier laevis", type: "tree", zones: ["house","meadow","midslope"], groups: ["understory","wildlife-food","pollinator","edible"], note: "Small ornamental tree; sweet edible berries in June; white spring bloom; songbird magnet" },
+      { common: "Pagoda Dogwood", latin: "Cornus alternifolia", type: "tree", zones: ["house","midslope","valley"], groups: ["understory","wildlife-food","pollinator"], note: "Elegant horizontal branching; blue-black fruit for 40+ bird species; great near patios" },
+      { common: "Eastern Redbud", latin: "Cercis canadensis", type: "tree", zones: ["house","valley","meadow"], groups: ["understory","pollinator"], note: "Magenta spring flowers on bare branches; early bee forage; small patio tree" },
+      { common: "American Hazelnut", latin: "Corylus americana", type: "shrub", zones: ["house","midslope","meadow"], groups: ["understory","wildlife-food","edible"], note: "Edible nuts in fall; attractive multi-stem form; screening near patios" },
+      { common: "Inkberry Holly", latin: "Ilex glabra", type: "shrub", zones: ["house","wetland","valley"], groups: ["understory","wildlife-food"], note: "Compact evergreen native; clean foundation plant; tolerates acidic soil" },
+      { common: "New Jersey Tea", latin: "Ceanothus americanus", type: "shrub", zones: ["house","meadow","rocky"], groups: ["pollinator","edible","pioneer"], note: "Leaves brewed as caffeine-free tea since colonial era; nitrogen-fixer; white flower clusters" },
+      { common: "Black Chokeberry", latin: "Aronia melanocarpa", type: "shrub", zones: ["house","meadow","wetland"], groups: ["wildlife-food","pollinator","edible"], note: "Superfruit high in antioxidants; compact ornamental; brilliant fall color" },
+      { common: "Fragrant Sumac", latin: "Rhus aromatica", type: "shrub", zones: ["house","rocky","ridgetop"], groups: ["ground-cover","wildlife-food","erosion-control"], note: "Low-growing groundcover shrub; aromatic leaves; red fall color along walls and steps" },
+      { common: "Sweetfern", latin: "Comptonia peregrina", type: "shrub", zones: ["house","rocky","ridgetop","meadow"], groups: ["ground-cover","erosion-control","edible"], note: "Aromatic leaves for tea; thrives in poor soil; excellent along gravel patio borders" },
+      { common: "Bearberry", latin: "Arctostaphylos uva-ursi", type: "shrub", zones: ["house","rocky","ridgetop"], groups: ["ground-cover","erosion-control","wildlife-food"], note: "Evergreen mat; trails over stone steps and walls; red berries persist through winter" },
+      { common: "Creeping Juniper", latin: "Juniperus horizontalis", type: "shrub", zones: ["house","rocky","ridgetop"], groups: ["ground-cover","erosion-control","wildlife-shelter"], note: "Low evergreen mat; excellent between stepping stones and along gravel edges" },
+
+      // ── Edible Herbs (native or naturalized pre-colonial, Catskills-hardy) ──
+      { common: "Anise Hyssop", latin: "Agastache foeniculum", type: "herb", zones: ["house","meadow"], groups: ["pollinator","edible"], note: "Licorice-mint leaves for tea and salads; blue flower spikes; top native bee plant" },
+      { common: "Wild Mint", latin: "Mentha arvensis", type: "herb", zones: ["house","riparian","valley"], groups: ["pollinator","edible","ground-cover"], note: "Native mint for teas and cooking; spreads readily — best in contained bed or gravel edge" },
+      { common: "Sweetflag", latin: "Acorus americanus", type: "herb", zones: ["house","riparian","wetland"], groups: ["edible","ground-cover"], note: "Aromatic rhizome used in teas; iris-like foliage; moist spots near downspouts" },
+      { common: "Wild Leek (Ramps)", latin: "Allium tricoccum", type: "herb", zones: ["house","midslope","valley"], groups: ["edible","ground-cover"], note: "Prized Catskill spring ephemeral; garlic-onion flavor; shaded foundation beds" },
+      { common: "Ostrich Fern (Fiddleheads)", latin: "Matteuccia struthiopteris", type: "herb", zones: ["house","riparian","valley"], groups: ["edible","ground-cover","erosion-control"], note: "Spring fiddleheads are a delicacy; dramatic 4-ft fronds; shady side of house" },
+      { common: "Common Blue Violet", latin: "Viola sororia", type: "herb", zones: ["house","midslope","valley","meadow"], groups: ["edible","pollinator","ground-cover"], note: "Edible flowers and leaves for salads; naturalizes in lawn; early spring bee food" },
+      { common: "Wood Sorrel", latin: "Oxalis montana", type: "herb", zones: ["house","midslope","upslope"], groups: ["edible","ground-cover"], note: "Tart clover-like leaves; lemon flavor in salads; delicate white flowers; shade-loving" },
+      { common: "Wintergreen", latin: "Gaultheria procumbens", type: "herb", zones: ["house","upslope","midslope","rocky"], groups: ["edible","ground-cover","wildlife-food"], note: "Evergreen groundcover; minty leaves for tea; red berries; thrives in acidic soil under trees" },
+      { common: "Wild Strawberry", latin: "Fragaria virginiana", type: "herb", zones: ["house","meadow","rocky"], groups: ["edible","ground-cover","pollinator","wildlife-food"], note: "Tiny intensely sweet berries; excellent between stepping stones and along gravel paths" },
+      { common: "Common Milkweed", latin: "Asclepias syriaca", type: "herb", zones: ["house","meadow"], groups: ["pollinator","edible"], note: "Young shoots, buds, and flowers are edible; sole monarch butterfly host; fragrant blooms near patio" },
+      { common: "Evening Primrose", latin: "Oenothera biennis", type: "herb", zones: ["house","meadow","rocky"], groups: ["pollinator","edible"], note: "Roots, leaves, and flowers all edible; yellow blooms open at dusk; lovely near fire pit seating" },
+      { common: "Stinging Nettle", latin: "Urtica dioica ssp. gracilis", type: "herb", zones: ["house","valley","riparian"], groups: ["edible","wildlife-food"], note: "Nutrient-rich cooked greens and tea; host plant for butterflies; plant away from paths in a back bed" },
     ];
 
     // Functional group labels
@@ -1566,6 +1624,7 @@
       "wildlife-shelter": "Wildlife Shelter",
       "erosion-control": "Erosion Control",
       "pioneer": "Pioneer / Colonizer",
+      "edible": "Edible / Culinary",
     };
 
     // ─── Planner State ────────────────────────────────────────────────
@@ -1630,6 +1689,9 @@
     function updatePlanner() {
       const species = getFilteredSpecies();
       const allForZones = SPECIES.filter(sp => sp.zones.some(z => activeZones.has(z)));
+
+      // Show/hide near-house guide
+      document.getElementById("house-guide").style.display = activeZones.has("house") ? "block" : "none";
 
       // ── Render species list ──
       const listEl = document.getElementById("species-list");
