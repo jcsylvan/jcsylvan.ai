@@ -408,6 +408,7 @@
     .species-tag.fern { color: #4ea88e; background: #1a2220; }
     .species-tag.grass { color: #a8a44e; background: #22221a; }
     .species-tag.vine { color: #4e8ea8; background: #1a2022; }
+    .species-tag.herb { color: #c4a84e; background: #22201a; }
 
     .species-note {
       font-size: 0.72rem;
@@ -800,6 +801,17 @@
         coverage tracks how many ecological roles (canopy, understory, ground cover,
         pollinator support, erosion control) are filled.
       </p>
+    </div>
+
+    <!-- Near-House Planting Schematic -->
+    <div class="card full-width" id="house-guide" style="display:none;">
+      <h2>Near-House Planting Schematic</h2>
+      <p class="planner-desc">
+        Bird's-eye view of the house surroundings. Click a planting zone to see
+        recommended native species and edible herbs for that area.
+      </p>
+      <canvas id="chart-house-schematic" style="width:100%;height:520px;cursor:pointer;"></canvas>
+      <div id="schematic-detail" style="margin-top:1rem;"></div>
     </div>
 
     <!-- Species Recommendations -->
@@ -1463,9 +1475,10 @@
       { id: "meadow",    label: "Open Meadow / Clearing", light: "full",    moisture: "medium",  desc: "Full sun, deeper soil, former pasture or clearing" },
       { id: "wetland",   label: "Wet Seep / Bog",         light: "partial", moisture: "saturated", desc: "Perennially wet, organic soils, low pH" },
       { id: "rocky",     label: "Rock Outcrop / Ledge",   light: "full",    moisture: "dry",     desc: "Thin soil pockets, exposed bedrock, xeric" },
+      { id: "house",     label: "Near House / Patio",      light: "partial", moisture: "medium",  desc: "Foundation beds, gravel patio edges, stone steps, fire pit area — partial shade from mature trees" },
     ];
 
-    const TYPES = ["tree", "shrub", "wildflower", "fern", "grass", "vine"];
+    const TYPES = ["tree", "shrub", "wildflower", "fern", "grass", "vine", "herb"];
 
     // Native species database &mdash; Catskill Mountains, NY
     // Each species: common name, Latin, type, zones[], functional groups, note
@@ -1514,8 +1527,8 @@
       { common: "Blue Cohosh", latin: "Caulophyllum thalictroides", type: "wildflower", zones: ["midslope","valley"], groups: ["ground-cover"], note: "Rich-woods indicator; early spring bloomer" },
       { common: "Hepatica", latin: "Hepatica nobilis var. acuta", type: "wildflower", zones: ["midslope","upslope","rocky"], groups: ["pollinator"], note: "Among the earliest spring wildflowers; attracts early bees" },
       { common: "Foam Flower", latin: "Tiarella cordifolia", type: "wildflower", zones: ["midslope","valley","riparian"], groups: ["ground-cover","pollinator"], note: "Excellent groundcover; white spring blooms; spreads by stolons" },
-      { common: "Wild Ginger", latin: "Asarum canadense", type: "wildflower", zones: ["midslope","valley"], groups: ["ground-cover"], note: "Dense groundcover; hidden flowers pollinated by ground beetles" },
-      { common: "Bee Balm", latin: "Monarda didyma", type: "wildflower", zones: ["meadow","riparian","valley"], groups: ["pollinator"], note: "Red tubular flowers attract hummingbirds and native bees" },
+      { common: "Wild Ginger", latin: "Asarum canadense", type: "wildflower", zones: ["midslope","valley","house"], groups: ["ground-cover","edible"], note: "Rhizome used as ginger substitute; heart-shaped leaves; dense shade groundcover" },
+      { common: "Bee Balm", latin: "Monarda didyma", type: "wildflower", zones: ["meadow","riparian","valley","house"], groups: ["pollinator","edible"], note: "Scarlet flowers; leaves for Oswego tea; hummingbird magnet near patios" },
       { common: "Joe-Pye Weed", latin: "Eutrochium maculatum", type: "wildflower", zones: ["meadow","riparian","wetland"], groups: ["pollinator"], note: "Tall; pink domes attract monarchs, swallowtails, and native bees" },
       { common: "New England Aster", latin: "Symphyotrichum novae-angliae", type: "wildflower", zones: ["meadow","riparian"], groups: ["pollinator"], note: "Critical late-season nectar for migrating monarchs" },
       { common: "Goldenrod", latin: "Solidago rugosa", type: "wildflower", zones: ["meadow","ridgetop","rocky"], groups: ["pollinator","pioneer"], note: "Supports 100+ insect species; late-season pollen powerhouse" },
@@ -1526,7 +1539,7 @@
       { common: "Turtlehead", latin: "Chelone glabra", type: "wildflower", zones: ["riparian","wetland","valley"], groups: ["pollinator"], note: "Sole host plant for Baltimore checkerspot butterfly" },
       { common: "Solomon's Seal", latin: "Polygonatum biflorum", type: "wildflower", zones: ["midslope","valley","upslope"], groups: ["ground-cover","wildlife-food"], note: "Arching stems; berries for thrushes; graceful woodland plant" },
       { common: "Bloodroot", latin: "Sanguinaria canadensis", type: "wildflower", zones: ["midslope","valley"], groups: ["pollinator","ground-cover"], note: "Very early white flowers; ant-dispersed; rich woods indicator" },
-      { common: "Wild Bergamot", latin: "Monarda fistulosa", type: "wildflower", zones: ["meadow","rocky","ridgetop"], groups: ["pollinator"], note: "Lavender flowers; drought-tolerant; excellent native bee plant" },
+      { common: "Wild Bergamot", latin: "Monarda fistulosa", type: "wildflower", zones: ["meadow","rocky","ridgetop","house"], groups: ["pollinator","edible"], note: "Leaves for tea with oregano-like flavor; lavender blooms; drought-tolerant native bee plant" },
       { common: "Boneset", latin: "Eupatorium perfoliatum", type: "wildflower", zones: ["meadow","wetland","riparian"], groups: ["pollinator"], note: "White flower clusters attract diverse beneficial insects" },
 
       // ── Ferns ──
@@ -1554,6 +1567,34 @@
       { common: "Virginia Creeper", latin: "Parthenocissus quinquefolia", type: "vine", zones: ["midslope","valley","rocky","meadow"], groups: ["wildlife-food","ground-cover"], note: "Berries critical for fall migrants; brilliant fall color" },
       { common: "American Bittersweet", latin: "Celastrus scandens", type: "vine", zones: ["midslope","valley","meadow"], groups: ["wildlife-food"], note: "Native vine (not invasive oriental); orange berries for birds" },
       { common: "Wild Grape", latin: "Vitis labrusca", type: "vine", zones: ["meadow","valley","riparian"], groups: ["wildlife-food","pollinator"], note: "Fox grape; fruit feeds 50+ bird species and mammals" },
+
+      // ── Near-House Native Species & Edible Herbs ──
+      // Ornamental natives suited to foundation beds, patio edges, gravel borders, stone steps
+      { common: "Serviceberry", latin: "Amelanchier laevis", type: "tree", zones: ["house","meadow","midslope"], groups: ["understory","wildlife-food","pollinator","edible"], note: "Small ornamental tree; sweet edible berries in June; white spring bloom; songbird magnet" },
+      { common: "Pagoda Dogwood", latin: "Cornus alternifolia", type: "tree", zones: ["house","midslope","valley"], groups: ["understory","wildlife-food","pollinator"], note: "Elegant horizontal branching; blue-black fruit for 40+ bird species; great near patios" },
+      { common: "Eastern Redbud", latin: "Cercis canadensis", type: "tree", zones: ["house","valley","meadow"], groups: ["understory","pollinator"], note: "Magenta spring flowers on bare branches; early bee forage; small patio tree" },
+      { common: "American Hazelnut", latin: "Corylus americana", type: "shrub", zones: ["house","midslope","meadow"], groups: ["understory","wildlife-food","edible"], note: "Edible nuts in fall; attractive multi-stem form; screening near patios" },
+      { common: "Inkberry Holly", latin: "Ilex glabra", type: "shrub", zones: ["house","wetland","valley"], groups: ["understory","wildlife-food"], note: "Compact evergreen native; clean foundation plant; tolerates acidic soil" },
+      { common: "New Jersey Tea", latin: "Ceanothus americanus", type: "shrub", zones: ["house","meadow","rocky"], groups: ["pollinator","edible","pioneer"], note: "Leaves brewed as caffeine-free tea since colonial era; nitrogen-fixer; white flower clusters" },
+      { common: "Black Chokeberry", latin: "Aronia melanocarpa", type: "shrub", zones: ["house","meadow","wetland"], groups: ["wildlife-food","pollinator","edible"], note: "Superfruit high in antioxidants; compact ornamental; brilliant fall color" },
+      { common: "Fragrant Sumac", latin: "Rhus aromatica", type: "shrub", zones: ["house","rocky","ridgetop"], groups: ["ground-cover","wildlife-food","erosion-control"], note: "Low-growing groundcover shrub; aromatic leaves; red fall color along walls and steps" },
+      { common: "Sweetfern", latin: "Comptonia peregrina", type: "shrub", zones: ["house","rocky","ridgetop","meadow"], groups: ["ground-cover","erosion-control","edible"], note: "Aromatic leaves for tea; thrives in poor soil; excellent along gravel patio borders" },
+      { common: "Bearberry", latin: "Arctostaphylos uva-ursi", type: "shrub", zones: ["house","rocky","ridgetop"], groups: ["ground-cover","erosion-control","wildlife-food"], note: "Evergreen mat; trails over stone steps and walls; red berries persist through winter" },
+      { common: "Creeping Juniper", latin: "Juniperus horizontalis", type: "shrub", zones: ["house","rocky","ridgetop"], groups: ["ground-cover","erosion-control","wildlife-shelter"], note: "Low evergreen mat; excellent between stepping stones and along gravel edges" },
+
+      // ── Edible Herbs (native or naturalized pre-colonial, Catskills-hardy) ──
+      { common: "Anise Hyssop", latin: "Agastache foeniculum", type: "herb", zones: ["house","meadow"], groups: ["pollinator","edible"], note: "Licorice-mint leaves for tea and salads; blue flower spikes; top native bee plant" },
+      { common: "Wild Mint", latin: "Mentha arvensis", type: "herb", zones: ["house","riparian","valley"], groups: ["pollinator","edible","ground-cover"], note: "Native mint for teas and cooking; spreads readily — best in contained bed or gravel edge" },
+      { common: "Sweetflag", latin: "Acorus americanus", type: "herb", zones: ["house","riparian","wetland"], groups: ["edible","ground-cover"], note: "Aromatic rhizome used in teas; iris-like foliage; moist spots near downspouts" },
+      { common: "Wild Leek (Ramps)", latin: "Allium tricoccum", type: "herb", zones: ["house","midslope","valley"], groups: ["edible","ground-cover"], note: "Prized Catskill spring ephemeral; garlic-onion flavor; shaded foundation beds" },
+      { common: "Ostrich Fern (Fiddleheads)", latin: "Matteuccia struthiopteris", type: "herb", zones: ["house","riparian","valley"], groups: ["edible","ground-cover","erosion-control"], note: "Spring fiddleheads are a delicacy; dramatic 4-ft fronds; shady side of house" },
+      { common: "Common Blue Violet", latin: "Viola sororia", type: "herb", zones: ["house","midslope","valley","meadow"], groups: ["edible","pollinator","ground-cover"], note: "Edible flowers and leaves for salads; naturalizes in lawn; early spring bee food" },
+      { common: "Wood Sorrel", latin: "Oxalis montana", type: "herb", zones: ["house","midslope","upslope"], groups: ["edible","ground-cover"], note: "Tart clover-like leaves; lemon flavor in salads; delicate white flowers; shade-loving" },
+      { common: "Wintergreen", latin: "Gaultheria procumbens", type: "herb", zones: ["house","upslope","midslope","rocky"], groups: ["edible","ground-cover","wildlife-food"], note: "Evergreen groundcover; minty leaves for tea; red berries; thrives in acidic soil under trees" },
+      { common: "Wild Strawberry", latin: "Fragaria virginiana", type: "herb", zones: ["house","meadow","rocky"], groups: ["edible","ground-cover","pollinator","wildlife-food"], note: "Tiny intensely sweet berries; excellent between stepping stones and along gravel paths" },
+      { common: "Common Milkweed", latin: "Asclepias syriaca", type: "herb", zones: ["house","meadow"], groups: ["pollinator","edible"], note: "Young shoots, buds, and flowers are edible; sole monarch butterfly host; fragrant blooms near patio" },
+      { common: "Evening Primrose", latin: "Oenothera biennis", type: "herb", zones: ["house","meadow","rocky"], groups: ["pollinator","edible"], note: "Roots, leaves, and flowers all edible; yellow blooms open at dusk; lovely near fire pit seating" },
+      { common: "Stinging Nettle", latin: "Urtica dioica ssp. gracilis", type: "herb", zones: ["house","valley","riparian"], groups: ["edible","wildlife-food"], note: "Nutrient-rich cooked greens and tea; host plant for butterflies; plant away from paths in a back bed" },
     ];
 
     // Functional group labels
@@ -1566,6 +1607,7 @@
       "wildlife-shelter": "Wildlife Shelter",
       "erosion-control": "Erosion Control",
       "pioneer": "Pioneer / Colonizer",
+      "edible": "Edible / Culinary",
     };
 
     // ─── Planner State ────────────────────────────────────────────────
@@ -1627,9 +1669,488 @@
       return H;
     }
 
+    // ─── House Schematic ─────────────────────────────────────────────
+    const HOUSE_ZONES = [
+      {
+        id: "foundation-front",
+        label: "Foundation Beds (Front)",
+        color: "rgba(76,175,80,0.25)",
+        border: "#4caf50",
+        species: ["Serviceberry", "Inkberry Holly", "Black Chokeberry", "Pagoda Dogwood", "Bearberry"],
+        desc: "South-facing beds along the house front. Mix understory trees with evergreen shrubs and groundcover.",
+      },
+      {
+        id: "foundation-side",
+        label: "Foundation (East Side)",
+        color: "rgba(85,136,204,0.25)",
+        border: "#5588cc",
+        species: ["Ostrich Fern (Fiddleheads)", "Wild Ginger", "Wild Leek (Ramps)", "Christmas Fern", "Foam Flower"],
+        desc: "Shaded east wall with overhead tree canopy. Ideal for shade-loving edible natives and ferns.",
+      },
+      {
+        id: "stone-steps",
+        label: "Stone Steps & Retaining Wall",
+        color: "rgba(176,110,191,0.25)",
+        border: "#b06ebf",
+        species: ["Wild Strawberry", "Wintergreen", "Rock Polypody", "Common Blue Violet", "Wood Sorrel"],
+        desc: "Low creeping species between stone treads and along retaining wall crevices.",
+      },
+      {
+        id: "porch",
+        label: "Porch & Picnic Area",
+        color: "rgba(136,180,100,0.25)",
+        border: "#88b464",
+        species: ["Wild Mint", "Anise Hyssop", "Common Blue Violet", "Pennsylvania Sedge"],
+        desc: "Herbs within arm's reach of the dining table. Fragrant species for casual grazing.",
+      },
+      {
+        id: "firepit",
+        label: "Fire Pit & Seating",
+        color: "rgba(240,192,64,0.25)",
+        border: "#f0c040",
+        species: ["Wild Bergamot", "Bee Balm", "Evening Primrose", "Anise Hyssop", "Little Bluestem"],
+        desc: "Fragrant and evening-blooming species around the seating area. Evening primrose opens at dusk.",
+      },
+      {
+        id: "gravel-patio",
+        label: "Gravel Patio Borders",
+        color: "rgba(168,164,78,0.25)",
+        border: "#a8a44e",
+        species: ["Creeping Juniper", "Fragrant Sumac", "Wild Strawberry", "Bearberry", "Pennsylvania Sedge"],
+        desc: "Low mat-forming species that soften gravel edges without encroaching on walkways.",
+      },
+      {
+        id: "hottub-screen",
+        label: "Hot Tub & Privacy Screen",
+        color: "rgba(78,142,168,0.25)",
+        border: "#4e8ea8",
+        species: ["American Hazelnut", "Inkberry Holly", "Rosebay Rhododendron", "Winterberry Holly", "Creeping Juniper"],
+        desc: "Dense evergreen and multi-stem shrubs to reinforce the wooden privacy fence year-round.",
+      },
+      {
+        id: "string-lights",
+        label: "Perimeter Plantings",
+        color: "rgba(107,142,78,0.25)",
+        border: "#6b8e4e",
+        species: ["Serviceberry", "Eastern Redbud", "Witch Hazel", "Highbush Blueberry", "Spicebush", "Virginia Creeper"],
+        desc: "Small ornamental trees and fruiting shrubs along the outer yard edge under the string lights.",
+      },
+      {
+        id: "mature-trees",
+        label: "Under Mature Trees",
+        color: "rgba(100,80,60,0.25)",
+        border: "#6e5038",
+        species: ["Wild Leek (Ramps)", "Trillium", "Solomon's Seal", "Maidenhair Fern", "Bloodroot", "Hepatica"],
+        desc: "Shade-tolerant spring ephemerals and woodland herbs under the existing canopy.",
+      },
+    ];
+
+    let activeSchematicZone = null;
+
+    function drawHouseSchematic() {
+      const canvas = document.getElementById("chart-house-schematic");
+      if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(dpr, dpr);
+      const W = rect.width, H = rect.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const pad = 20;
+      const aW = W - pad * 2;
+      const aH = H - pad * 2;
+
+      // Scale helper — all coordinates in a 1000x700 virtual space
+      const sx = (x) => pad + (x / 1000) * aW;
+      const sy = (y) => pad + (y / 700) * aH;
+      const sw = (w) => (w / 1000) * aW;
+      const sh = (h) => (h / 700) * aH;
+
+      // ── Ground base ──
+      ctx.fillStyle = "#1a1a1a";
+      ctx.fillRect(0, 0, W, H);
+
+      // Grass/yard
+      ctx.fillStyle = "#151e15";
+      roundRect(ctx, sx(0), sy(0), sw(1000), sh(700), 8);
+      ctx.fill();
+
+      // ── Gravel patio area ──
+      ctx.fillStyle = "#1e1c18";
+      ctx.beginPath();
+      ctx.moveTo(sx(200), sy(350));
+      ctx.lineTo(sx(800), sy(350));
+      ctx.lineTo(sx(820), sy(650));
+      ctx.lineTo(sx(180), sy(650));
+      ctx.closePath();
+      ctx.fill();
+      // Gravel texture hint
+      ctx.strokeStyle = "#2a2820";
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < 60; i++) {
+        const gx = sx(200 + Math.random() * 600);
+        const gy = sy(360 + Math.random() * 280);
+        ctx.beginPath();
+        ctx.arc(gx, gy, 1.5, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // ── House footprint ──
+      ctx.fillStyle = "#2a2a2a";
+      ctx.strokeStyle = "#555";
+      ctx.lineWidth = 2;
+      roundRect(ctx, sx(200), sy(40), sw(550), sh(280), 4);
+      ctx.fill();
+      ctx.stroke();
+      // Roof line
+      ctx.strokeStyle = "#444";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(sx(475), sy(25));
+      ctx.lineTo(sx(200), sy(105));
+      ctx.moveTo(sx(475), sy(25));
+      ctx.lineTo(sx(750), sy(105));
+      ctx.stroke();
+      // House label
+      ctx.fillStyle = "#666";
+      ctx.font = `${Math.max(11, sw(14))}px monospace`;
+      ctx.textAlign = "center";
+      ctx.fillText("HOUSE", sx(475), sy(190));
+      // Windows
+      ctx.fillStyle = "#3a3520";
+      for (let i = 0; i < 5; i++) {
+        ctx.fillRect(sx(260 + i * 90), sy(135), sw(25), sh(40));
+      }
+      // Door
+      ctx.fillStyle = "#3a3520";
+      ctx.fillRect(sx(370), sy(285), sw(30), sh(35));
+      ctx.fillRect(sx(540), sy(285), sw(30), sh(35));
+
+      // ── Porch / Deck (left) ──
+      ctx.fillStyle = "#222018";
+      ctx.strokeStyle = "#3a3520";
+      ctx.lineWidth = 1;
+      roundRect(ctx, sx(130), sy(120), sw(80), sh(160), 3);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#555";
+      ctx.font = `${Math.max(8, sw(9))}px monospace`;
+      ctx.textAlign = "center";
+      ctx.fillText("PORCH", sx(170), sy(200));
+
+      // ── Stone steps (left of house) ──
+      ctx.fillStyle = "#2a2622";
+      for (let i = 0; i < 4; i++) {
+        ctx.fillRect(sx(160 + i * 12), sy(290 + i * 18), sw(55 - i * 5), sh(14));
+        ctx.strokeStyle = "#444";
+        ctx.strokeRect(sx(160 + i * 12), sy(290 + i * 18), sw(55 - i * 5), sh(14));
+      }
+
+      // ── Stepping stones (center path) ──
+      ctx.fillStyle = "#2a2822";
+      const stonePositions = [[450,340],[440,380],[460,420],[445,460],[455,500]];
+      stonePositions.forEach(([px,py]) => {
+        ctx.beginPath();
+        ctx.ellipse(sx(px), sy(py), sw(22), sh(10), 0.1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#3a3830";
+        ctx.stroke();
+      });
+
+      // ── Fire pit ──
+      ctx.beginPath();
+      ctx.arc(sx(520), sy(510), sw(22), 0, Math.PI * 2);
+      ctx.fillStyle = "#2a1a0a";
+      ctx.fill();
+      ctx.strokeStyle = "#664422";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      // Fire glow
+      ctx.beginPath();
+      ctx.arc(sx(520), sy(510), sw(10), 0, Math.PI * 2);
+      ctx.fillStyle = "#4a2a0a";
+      ctx.fill();
+      // Chairs
+      ctx.fillStyle = "#222";
+      ctx.strokeStyle = "#444";
+      ctx.lineWidth = 1;
+      const chairAngles = [0.3, 1.2, 2.8, 4.0, 5.2];
+      chairAngles.forEach(a => {
+        const cx = sx(520) + Math.cos(a) * sw(42);
+        const cy = sy(510) + Math.sin(a) * sh(42);
+        ctx.fillRect(cx - sw(8), cy - sh(6), sw(16), sh(12));
+      });
+      ctx.fillStyle = "#555";
+      ctx.font = `${Math.max(8, sw(9))}px monospace`;
+      ctx.textAlign = "center";
+      ctx.fillText("FIRE PIT", sx(520), sy(560));
+
+      // ── Hot tub ──
+      ctx.fillStyle = "#1e2228";
+      ctx.strokeStyle = "#445566";
+      ctx.lineWidth = 2;
+      roundRect(ctx, sx(760), sy(430), sw(100), sh(90), 6);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#555";
+      ctx.font = `${Math.max(8, sw(9))}px monospace`;
+      ctx.fillText("HOT TUB", sx(810), sy(480));
+      // Privacy fence
+      ctx.strokeStyle = "#5a4a2a";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(sx(870), sy(380));
+      ctx.lineTo(sx(870), sy(560));
+      ctx.stroke();
+      // Fence slats
+      ctx.strokeStyle = "#4a3a20";
+      ctx.lineWidth = 1;
+      for (let fy = 385; fy < 555; fy += 12) {
+        ctx.beginPath();
+        ctx.moveTo(sx(865), sy(fy));
+        ctx.lineTo(sx(875), sy(fy));
+        ctx.stroke();
+      }
+
+      // ── Mature trees ──
+      drawTree(ctx, sx(120), sy(80), sw(50), "#1a2a1a", "#2a3a2a");
+      drawTree(ctx, sx(880), sy(100), sw(40), "#1a2218", "#1e2a1a");
+      drawTree(ctx, sx(920), sy(200), sw(35), "#1a2218", "#1e2a1a");
+
+      // ── String light poles ──
+      ctx.fillStyle = "#555";
+      [[310,380],[680,380]].forEach(([px,py]) => {
+        ctx.beginPath();
+        ctx.arc(sx(px), sy(py), sw(4), 0, Math.PI * 2);
+        ctx.fill();
+      });
+      // String lights (catenary)
+      ctx.strokeStyle = "#3a3520";
+      ctx.lineWidth = 0.8;
+      ctx.setLineDash([3, 4]);
+      ctx.beginPath();
+      ctx.moveTo(sx(310), sy(378));
+      ctx.quadraticCurveTo(sx(495), sy(400), sx(680), sy(378));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Light dots
+      ctx.fillStyle = "#f0c040";
+      for (let t = 0; t <= 1; t += 0.08) {
+        const lx = sx(310) + (sx(680) - sx(310)) * t;
+        const sag = Math.sin(t * Math.PI) * sh(22);
+        ctx.beginPath();
+        ctx.arc(lx, sy(378) + sag, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // ── Compass ──
+      ctx.fillStyle = "#555";
+      ctx.font = `${Math.max(9, sw(10))}px monospace`;
+      ctx.textAlign = "center";
+      ctx.fillText("N", sx(50), sy(30));
+      ctx.strokeStyle = "#555";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(sx(50), sy(35));
+      ctx.lineTo(sx(50), sy(65));
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(sx(50), sy(35));
+      ctx.lineTo(sx(45), sy(42));
+      ctx.moveTo(sx(50), sy(35));
+      ctx.lineTo(sx(55), sy(42));
+      ctx.stroke();
+
+      // ── Planting zones (interactive) ──
+      const zoneBounds = getSchematicZoneBounds();
+      zoneBounds.forEach(zb => {
+        const z = HOUSE_ZONES.find(hz => hz.id === zb.id);
+        const isActive = activeSchematicZone === zb.id;
+
+        ctx.fillStyle = isActive ? z.color.replace("0.25", "0.45") : z.color;
+        ctx.strokeStyle = isActive ? z.border : z.border + "88";
+        ctx.lineWidth = isActive ? 2.5 : 1.5;
+
+        if (zb.shape === "rect") {
+          roundRect(ctx, sx(zb.x), sy(zb.y), sw(zb.w), sh(zb.h), 4);
+          ctx.fill();
+          ctx.stroke();
+        } else if (zb.shape === "circle") {
+          ctx.beginPath();
+          ctx.arc(sx(zb.cx), sy(zb.cy), sw(zb.r), 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        } else if (zb.shape === "poly") {
+          ctx.beginPath();
+          zb.points.forEach(([px,py], i) => {
+            if (i === 0) ctx.moveTo(sx(px), sy(py));
+            else ctx.lineTo(sx(px), sy(py));
+          });
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        }
+
+        // Zone label
+        ctx.fillStyle = isActive ? z.border : "#888";
+        ctx.font = `${isActive ? 'bold ' : ''}${Math.max(7, sw(8))}px monospace`;
+        ctx.textAlign = "center";
+        const lx = zb.labelX || (zb.x !== undefined ? zb.x + zb.w / 2 : zb.cx);
+        const ly = zb.labelY || (zb.y !== undefined ? zb.y + zb.h / 2 : zb.cy);
+        ctx.fillText(z.label, sx(lx), sy(ly));
+      });
+
+      // ── Scale bar ──
+      ctx.strokeStyle = "#444";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(sx(800), sy(670));
+      ctx.lineTo(sx(950), sy(670));
+      ctx.stroke();
+      ctx.fillStyle = "#555";
+      ctx.font = `${Math.max(8, sw(8))}px monospace`;
+      ctx.textAlign = "center";
+      ctx.fillText("~30 ft", sx(875), sy(685));
+    }
+
+    function getSchematicZoneBounds() {
+      return [
+        { id: "foundation-front", shape: "rect", x: 210, y: 290, w: 540, h: 45, labelX: 475, labelY: 315 },
+        { id: "foundation-side", shape: "rect", x: 745, y: 80, w: 50, h: 230, labelX: 770, labelY: 200 },
+        { id: "stone-steps", shape: "rect", x: 130, y: 280, w: 75, h: 110, labelX: 167, labelY: 350 },
+        { id: "porch", shape: "rect", x: 115, y: 105, w: 100, h: 175, labelX: 165, labelY: 240 },
+        { id: "firepit", shape: "circle", cx: 520, cy: 510, r: 80, labelX: 520, labelY: 580 },
+        { id: "gravel-patio", shape: "poly", points: [[200,350],[800,350],[820,420],[750,420],[750,430],[650,430],[650,600],[400,600],[400,430],[200,420]], labelX: 350, labelY: 400 },
+        { id: "hottub-screen", shape: "rect", x: 740, y: 390, w: 150, h: 200, labelX: 815, labelY: 555 },
+        { id: "string-lights", shape: "poly", points: [[30,250],[130,250],[180,650],[880,650],[920,250],[980,250],[980,700],[30,700]], labelX: 500, labelY: 670 },
+        { id: "mature-trees", shape: "circle", cx: 120, cy: 80, r: 65, labelX: 120, labelY: 60 },
+      ];
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function drawTree(ctx, x, y, size, fill, stroke) {
+      ctx.fillStyle = fill;
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      // Inner detail
+      ctx.beginPath();
+      ctx.arc(x - size * 0.2, y - size * 0.15, size * 0.55, 0, Math.PI * 2);
+      ctx.fillStyle = stroke;
+      ctx.fill();
+    }
+
+    function hitTestSchematic(mx, my) {
+      const canvas = document.getElementById("chart-house-schematic");
+      const rect = canvas.getBoundingClientRect();
+      const px = ((mx - rect.left) / rect.width) * 1000;
+      const py = ((my - rect.top) / rect.height) * 700;
+
+      const zones = getSchematicZoneBounds();
+      // Reverse so frontmost (last drawn) is tested first
+      for (let i = zones.length - 1; i >= 0; i--) {
+        const zb = zones[i];
+        if (zb.shape === "rect") {
+          if (px >= zb.x && px <= zb.x + zb.w && py >= zb.y && py <= zb.y + zb.h) return zb.id;
+        } else if (zb.shape === "circle") {
+          const dx = px - zb.cx, dy = py - zb.cy;
+          if (dx * dx + dy * dy <= zb.r * zb.r) return zb.id;
+        } else if (zb.shape === "poly") {
+          if (pointInPoly(px, py, zb.points)) return zb.id;
+        }
+      }
+      return null;
+    }
+
+    function pointInPoly(x, y, pts) {
+      let inside = false;
+      for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+        const [xi, yi] = pts[i], [xj, yj] = pts[j];
+        if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) {
+          inside = !inside;
+        }
+      }
+      return inside;
+    }
+
+    function updateSchematicDetail() {
+      const el = document.getElementById("schematic-detail");
+      if (!activeSchematicZone) {
+        el.innerHTML = '<p style="color:#555;font-size:0.8rem;">Click a zone on the map to see planting details.</p>';
+        return;
+      }
+      const z = HOUSE_ZONES.find(hz => hz.id === activeSchematicZone);
+      if (!z) return;
+
+      el.innerHTML = `
+        <div style="border:1px solid ${z.border};border-radius:6px;padding:1rem;background:#111;">
+          <div style="font-size:0.9rem;font-weight:600;color:${z.border};margin-bottom:0.4rem;">${z.label}</div>
+          <div style="font-size:0.78rem;color:#888;line-height:1.5;margin-bottom:0.75rem;">${z.desc}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
+            ${z.species.map(name => {
+              const sp = SPECIES.find(s => s.common === name);
+              const typeClass = sp ? sp.type : "";
+              const latin = sp ? sp.latin : "";
+              const note = sp ? sp.note : "";
+              const edible = sp && sp.groups.includes("edible");
+              return `<div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:4px;padding:0.5rem 0.7rem;flex:1 1 180px;min-width:160px;">
+                <div style="font-size:0.82rem;color:#e0e0e0;font-weight:600;">${edible ? "&#9733; " : ""}${name}</div>
+                <div style="font-size:0.68rem;color:#666;font-style:italic;">${latin}</div>
+                <div style="font-size:0.68rem;color:#777;margin-top:0.2rem;line-height:1.4;">${note}</div>
+                <div style="margin-top:0.3rem;"><span class="species-tag ${typeClass}">${typeClass}</span>${edible ? '<span class="species-tag herb">edible</span>' : ''}</div>
+              </div>`;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    // Attach schematic click handler
+    (function() {
+      const canvas = document.getElementById("chart-house-schematic");
+      if (!canvas) return;
+      canvas.addEventListener("click", (e) => {
+        const hit = hitTestSchematic(e.clientX, e.clientY);
+        if (hit === activeSchematicZone) {
+          activeSchematicZone = null;
+        } else {
+          activeSchematicZone = hit;
+        }
+        drawHouseSchematic();
+        updateSchematicDetail();
+      });
+    })();
+
     function updatePlanner() {
       const species = getFilteredSpecies();
       const allForZones = SPECIES.filter(sp => sp.zones.some(z => activeZones.has(z)));
+
+      // Show/hide near-house guide and draw schematic
+      const showHouse = activeZones.has("house");
+      document.getElementById("house-guide").style.display = showHouse ? "block" : "none";
+      if (showHouse) {
+        setTimeout(drawHouseSchematic, 50);
+        updateSchematicDetail();
+      }
 
       // ── Render species list ──
       const listEl = document.getElementById("species-list");
@@ -1746,7 +2267,7 @@
       });
     });
 
-    window.addEventListener("resize", () => { calculate(); drawRainfallChart(); });
+    window.addEventListener("resize", () => { calculate(); drawRainfallChart(); if (activeZones.has("house")) drawHouseSchematic(); });
 
     // Initial run
     calculate();
