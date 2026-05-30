@@ -1,0 +1,155 @@
+{
+  "updated": "2026-05-30",
+  "framework": [
+    {
+      "step": "Name the moat",
+      "detail": "State precisely what advantage the incumbent relies on. Vague answers (\"brand\", \"scale\") hide the real mechanism. Force it to one sentence: what specific thing makes a customer stay or a rival fail?"
+    },
+    {
+      "step": "Classify the power",
+      "detail": "Map it to a known type &mdash; network effects, switching costs, scale economies, regulatory capture, proprietary data/IP, brand, or distribution control. Each type fails in a different, predictable way."
+    },
+    {
+      "step": "Find the load-bearing assumption",
+      "detail": "Every moat depends on a condition staying true (high switching friction, a closed standard, a captive channel). Identify the one assumption that, if reversed, drains the water."
+    },
+    {
+      "step": "Attack the assumption, not the incumbent",
+      "detail": "Do not fight the incumbent on their strongest ground. Change the rule that makes the moat valuable &mdash; lower the switching cost to zero, open the standard, route around the channel, commoditize the scarce input."
+    },
+    {
+      "step": "Sequence the deletion",
+      "detail": "Pick a wedge segment the incumbent cannot defend without breaking their own model, win it, then expand along the line of least resistance. Moats are drained from the edge inward, not breached head-on."
+    }
+  ],
+  "moats": [
+    {
+      "id": "crm-switching",
+      "sector": "Enterprise Software",
+      "business": "Legacy CRM / ERP incumbents",
+      "type": "Switching costs",
+      "claimedMoat": "Years of customer data, custom workflows, deep integrations, and trained staff are locked into the suite. Ripping it out means re-implementation projects measured in quarters and millions.",
+      "whyItHolds": "The cost and risk of migration are borne entirely by the customer, while the value of leaving is uncertain. CIOs are fired for failed migrations, not for overpaying incumbents.",
+      "weakness": "Switching cost is mostly migration friction, not product superiority. It collapses the moment migration is automated and the buyer is no longer the user.",
+      "playbook": [
+        "Build a one-click importer that ingests the incumbent's data model and reproduces its core objects on day one &mdash; turn a 9-month migration into a weekend.",
+        "Offer to run in parallel (read-only sync) so the customer never faces a cut-over risk moment.",
+        "Win the new team / new division / new geography first &mdash; greenfield buyers have zero switching cost.",
+        "Undercut the seat-based pricing the incumbent depends on; price per outcome, not per user.",
+        "Publish migration playbooks and absorb the switching cost yourself (free implementation) to shift the risk back onto the incumbent."
+      ]
+    },
+    {
+      "id": "payments-network",
+      "sector": "Financial Infrastructure",
+      "business": "Card networks (Visa / Mastercard)",
+      "type": "Network effects",
+      "claimedMoat": "Every merchant accepts the cards because every consumer holds them, and vice versa. A two-sided network 60 years deep with interchange economics no one can replicate.",
+      "whyItHolds": "Neither side will move without the other. The chicken-and-egg problem has defeated every direct challenger for decades.",
+      "weakness": "The network is valuable only while the rails are the cheapest, fastest way to move value. Real-time bank rails and account-to-account payments route around the network entirely.",
+      "playbook": [
+        "Do not rebuild the network &mdash; bypass it. Use account-to-account / real-time rails (Pix, UPI, FedNow, open banking) that never touch the card.",
+        "Subsidize the merchant side first with dramatically lower fees; merchants have the strongest incentive to defect from interchange.",
+        "Bundle the payment into a context the consumer already opens daily (a super-app, a checkout, a wallet) so the card is never reached for.",
+        "Use regulation as a lever &mdash; push for interchange caps and mandated interoperability that erode the economics, not just the usage.",
+        "Make A2A the default in one high-frequency vertical (bills, P2P, payroll) and let habit migrate the rest."
+      ]
+    },
+    {
+      "id": "telecom-spectrum",
+      "sector": "Telecommunications",
+      "business": "Mobile network operators",
+      "type": "Regulatory / scarce-asset capture",
+      "claimedMoat": "Billions sunk into licensed spectrum and physical towers. You literally cannot operate without government-auctioned spectrum, and the buildout is a decade and tens of billions deep.",
+      "whyItHolds": "The scarce input (spectrum, sites, rights-of-way) is government-gated and capital-gated. New entrants face an impossible cold start.",
+      "weakness": "The moat is the asset, not the customer relationship. MVNO regulation, network-sharing mandates, and cloud-native networks let a challenger rent the asset and compete on everything above it.",
+      "playbook": [
+        "Operate as an MVNO &mdash; rent the incumbent's spectrum and towers at wholesale, compete on brand, service, and bundling.",
+        "Lobby for and exploit wholesale-access and roaming mandates that force the incumbent to sell you capacity.",
+        "Move the value above the network: messaging, identity, and services where the carrier is just a dumb pipe.",
+        "Use new shared / unlicensed regimes (CBRS, private 5G, satellite direct-to-device) to bypass the auction entirely in target niches.",
+        "Target the incumbent's worst-served segment (rural, prepaid, enterprise IoT) where their scale advantage is weakest."
+      ]
+    },
+    {
+      "id": "pharma-patents",
+      "sector": "Pharmaceuticals",
+      "business": "Branded drug makers",
+      "type": "Proprietary IP / regulatory exclusivity",
+      "claimedMoat": "Patents plus regulatory data exclusivity grant a legal monopoly on a molecule for years, defended by patent thickets and pay-for-delay tactics.",
+      "whyItHolds": "The state enforces the monopoly directly. Until exclusivity lapses, no one may legally make the molecule.",
+      "weakness": "The monopoly is time-boxed and molecule-specific. It says nothing about the indication, the delivery, or adjacent molecules &mdash; and patent thickets are litigable.",
+      "playbook": [
+        "Map the exact expiry and the secondary-patent thicket; challenge weak follow-on patents (formulation, dosing) to clear the path early.",
+        "Stage generic / biosimilar manufacturing and approval to launch on day one of expiry (Paragraph IV strategy).",
+        "Attack the indication, not the molecule &mdash; a different, cheaper compound for the same outcome sidesteps the patent.",
+        "Compete on delivery and adherence (different formulation, longer-acting, at-home) the original patent never claimed.",
+        "Pre-build payer relationships so formulary switching is instant the moment a substitute is approved."
+      ]
+    },
+    {
+      "id": "banking-trust",
+      "sector": "Retail Banking",
+      "business": "Incumbent deposit banks",
+      "type": "Regulatory + switching costs + trust",
+      "claimedMoat": "A banking charter, decades of trust, direct-deposit lock-in, and a maze of regulatory capital requirements that keep newcomers out.",
+      "whyItHolds": "The charter is hard to get, deposits are sticky because they anchor every other product, and customers fear moving money.",
+      "weakness": "The charter can be rented (banking-as-a-service), and the deposit anchor breaks once direct-deposit switching and account aggregation become frictionless.",
+      "playbook": [
+        "Rent the charter via Banking-as-a-Service instead of acquiring one &mdash; compete on experience, not license.",
+        "Win the direct-deposit relationship for an underserved segment (gig workers, immigrants, teens) the incumbent ignores.",
+        "Use open-banking / aggregation APIs to make moving and consolidating accounts a one-tap action.",
+        "Strip a single profitable product (FX, overdraft-free checking, high-yield savings) and offer it free to detach the anchor.",
+        "Build trust through radical transparency on fees &mdash; turn the incumbent's hidden-fee model into their liability."
+      ]
+    },
+    {
+      "id": "marketplace-listings",
+      "sector": "Online Marketplaces",
+      "business": "Listings portals (real estate, jobs, autos)",
+      "type": "Network effects + data",
+      "claimedMoat": "Every seller lists here because every buyer searches here. The aggregated inventory and historical pricing data are a self-reinforcing flywheel.",
+      "whyItHolds": "Liquidity begets liquidity. A thin marketplace is useless, so no one wants to be the first to leave.",
+      "weakness": "The network is national but demand is local, and the supply side resents the monopoly tax. Liquidity can be rebuilt one dense local cluster at a time.",
+      "playbook": [
+        "Go hyper-local &mdash; saturate one city/category to liquidity before expanding; you only need to beat the incumbent in one ZIP code at a time.",
+        "Win the resentful supply side first with free or radically cheaper listings; sellers hate the incumbent's take rate.",
+        "Use single-player utility (best search, best valuation tool, best CRM for agents) so the product is useful before the network exists.",
+        "Syndicate inventory outward and aggregate the incumbent's public listings so buyers lose nothing by switching.",
+        "Disintermediate the monetized step (lead-gen fees) with a flat-fee or transaction model that aligns with the seller."
+      ]
+    },
+    {
+      "id": "defense-primes",
+      "sector": "Defense & Government",
+      "business": "Prime contractors",
+      "type": "Regulatory + relationship + certification",
+      "claimedMoat": "Decades of cleared personnel, accreditations, past-performance records, and procurement relationships that the acquisition system is built around.",
+      "whyItHolds": "Procurement rules reward incumbency and past performance, raising an institutional wall around anyone without a track record.",
+      "weakness": "The moat is the procurement process itself, not the technology &mdash; and the technology gap is now so large that mission urgency overrides process.",
+      "playbook": [
+        "Enter through fast-track / OTA / SBIR pathways designed to bypass the traditional acquisition wall.",
+        "Build past-performance via small, fast, demonstrable wins (one program office, one capability) rather than bidding primes head-on.",
+        "Sell a 10x capability gap where buyers are forced to route around process for mission reasons.",
+        "Use commercial dual-use tech (already certified at scale) to leapfrog bespoke accreditation timelines.",
+        "Partner as a sub to get inside the wall, then displace the prime on the next recompete with proven performance."
+      ]
+    },
+    {
+      "id": "media-distribution",
+      "sector": "Media & Distribution",
+      "business": "Cable / pay-TV bundlers",
+      "type": "Distribution control",
+      "claimedMoat": "Control of the pipe into the home plus exclusive content-carriage deals. To reach the audience, you had to go through the bundle.",
+      "whyItHolds": "The bundler sits between content and viewer and taxes both. Owning the last mile meant owning the relationship.",
+      "weakness": "Once an open pipe (broadband) reaches the home, the bundler's distribution monopoly is gone &mdash; content can address the viewer directly.",
+      "playbook": [
+        "Go direct-to-consumer over the open internet &mdash; the broadband pipe the bundler also sells is the weapon against them.",
+        "Unbundle the one piece of content the viewer actually pays for; let them drop the rest.",
+        "Win on measurement and personalization the linear bundle cannot offer advertisers.",
+        "Price below the blended bundle for the targeted viewer so the math of staying never works.",
+        "Make discovery and habit live in your app, not the cable guide, so the channel position becomes irrelevant."
+      ]
+    }
+  ]
+}
