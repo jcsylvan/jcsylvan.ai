@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moat Deleter &mdash; jcsylvan.ai</title>
+  <meta name="description" content="Find the moat a sector relies on, then the step-by-step playbook to drain it.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    a { color: #f0c040; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 920px; margin: 0 auto; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .back-link:hover { color: #e0e0e0; }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+      color: #f0c040;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      max-width: 740px;
+      line-height: 1.5;
+    }
+    .updated { color: #444; font-size: 0.72rem; margin-bottom: 2rem; }
+
+    /* methodology */
+    .method {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .method h2 {
+      font-size: 0.7rem;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .method .lede {
+      color: #888;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      margin-bottom: 1.1rem;
+      max-width: 700px;
+    }
+    .steps { display: grid; gap: 0.75rem; }
+    .step { display: flex; gap: 0.75rem; align-items: flex-start; }
+    .step .n {
+      flex-shrink: 0;
+      width: 1.5rem; height: 1.5rem;
+      border-radius: 50%;
+      border: 1px solid #4a3a10;
+      color: #f0c040;
+      font-size: 0.72rem;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 0.1rem;
+    }
+    .step b { display: block; font-size: 0.85rem; color: #e0e0e0; font-weight: 600; }
+    .step span { font-size: 0.8rem; color: #777; line-height: 1.45; }
+
+    /* filters */
+    .toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 1.25rem; align-items: center;
+    }
+    .chip {
+      background: none;
+      border: 1px solid #333;
+      border-radius: 999px;
+      color: #888;
+      font-family: inherit;
+      font-size: 0.72rem;
+      padding: 0.35rem 0.85rem;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .chip:hover { color: #e0e0e0; border-color: #888; }
+    .chip.active { color: #0a0a0a; background: #f0c040; border-color: #f0c040; }
+    .stats { margin-left: auto; color: #555; font-size: 0.72rem; }
+
+    /* cards */
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .card[open] { border-color: #333; }
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 1.1rem 1.25rem;
+      display: flex; flex-direction: column; gap: 0.45rem;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover { background: #151515; }
+    .sector { font-size: 0.68rem; color: #555; text-transform: uppercase; letter-spacing: 0.08em; }
+    .row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .biz { font-size: 1rem; color: #e0e0e0; font-weight: 600; }
+    .type {
+      font-size: 0.66rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      border: 1px solid #4a3a10;
+      color: #f0c040;
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+    }
+    .claim { font-size: 0.82rem; color: #888; line-height: 1.5; font-style: italic; }
+    .marker { font-size: 0.72rem; color: #f0c040; }
+    .card[open] .marker { color: #ff8c6f; }
+
+    .body { padding: 0 1.25rem 1.35rem; border-top: 1px solid #1c1c1c; margin-top: 0.2rem; }
+    .block { margin-top: 1.1rem; }
+    .block .h {
+      font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: #f0c040; margin-bottom: 0.35rem; font-weight: 500;
+    }
+    .block.weak .h { color: #ff8c6f; }
+    .block p { font-size: 0.85rem; line-height: 1.55; color: #cfcfcf; }
+
+    .play { display: grid; gap: 0.6rem; margin-top: 0.35rem; }
+    .pstep { display: flex; gap: 0.7rem; align-items: flex-start; }
+    .pstep .n {
+      flex-shrink: 0;
+      width: 1.35rem; height: 1.35rem;
+      border-radius: 50%;
+      border: 1px solid #333;
+      color: #f0c040;
+      font-size: 0.68rem;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 0.05rem;
+    }
+    .pstep span { font-size: 0.83rem; line-height: 1.45; color: #cfcfcf; }
+
+    .empty, .loading { padding: 2.5rem 1rem; text-align: center; color: #555; font-size: 0.85rem; }
+    .footnote { color: #444; font-size: 0.72rem; margin-top: 1rem; line-height: 1.6; }
+
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .stats { margin-left: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="tools.html" class="back-link">&larr; tools</a>
+    <h1>Moat Deleter</h1>
+    <p class="subtitle">
+      Every sector defends itself with something it treats as a moat &mdash; a structural
+      advantage that keeps challengers out. A moat is not magic; it is a mechanism resting on
+      one load-bearing assumption. Name the mechanism, find the assumption, reverse it.
+      Find the moat, then drain it.
+    </p>
+    <p class="updated">updated <span id="updated">&mdash;</span></p>
+
+    <section class="method">
+      <h2>the method</h2>
+      <p class="lede">A repeatable, five-step process for deleting a moat. The case studies below
+        each follow it.</p>
+      <div class="steps" id="steps"></div>
+    </section>
+
+    <div class="toolbar" id="filters"></div>
+    <div id="list">
+      <div class="loading">loading&hellip;</div>
+    </div>
+
+    <p class="footnote">
+      A working library of moats and how to drain them &mdash; analysis, not investment or legal advice.
+      Edit <code>moat-deleter.json</code> to add cases.
+    </p>
+  </div>
+
+  <script>
+    let data = { framework: [], moats: [] };
+    let activeType = "all";
+
+    function escapeAttr(s) {
+      return String(s).replace(/[&<>"']/g, c =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    function renderSteps() {
+      const el = document.getElementById("steps");
+      el.innerHTML = "";
+      data.framework.forEach((f, i) => {
+        const d = document.createElement("div");
+        d.className = "step";
+        d.innerHTML = `<div class="n">${i + 1}</div><div><b>${f.step}</b><span>${f.detail}</span></div>`;
+        el.appendChild(d);
+      });
+    }
+
+    function renderFilters() {
+      const el = document.getElementById("filters");
+      el.innerHTML = "";
+      const types = ["all", ...Array.from(new Set(data.moats.map(m => m.type)))];
+      types.forEach(t => {
+        const b = document.createElement("button");
+        b.className = "chip" + (t === activeType ? " active" : "");
+        b.textContent = t;
+        b.onclick = () => { activeType = t; renderFilters(); renderList(); };
+        el.appendChild(b);
+      });
+      const stats = document.createElement("span");
+      stats.className = "stats";
+      stats.textContent = data.moats.length + " moats";
+      el.appendChild(stats);
+    }
+
+    function renderList() {
+      const list = document.getElementById("list");
+      let moats = data.moats.slice();
+      if (activeType !== "all") moats = moats.filter(m => m.type === activeType);
+      if (!moats.length) { list.innerHTML = '<div class="empty">No moats here.</div>'; return; }
+
+      list.innerHTML = "";
+      moats.forEach(m => {
+        const c = document.createElement("details");
+        c.className = "card";
+        const steps = m.playbook
+          .map(s => `<div class="pstep"><div class="n"></div><span>${s}</span></div>`)
+          .join("");
+        c.innerHTML = `
+          <summary>
+            <span class="sector">${m.sector}</span>
+            <span class="row">
+              <span class="biz">${m.business}</span>
+              <span class="type">${m.type}</span>
+            </span>
+            <span class="claim">&ldquo;${m.claimedMoat}&rdquo;</span>
+            <span class="marker">read the deletion playbook &darr;</span>
+          </summary>
+          <div class="body">
+            <div class="block">
+              <div class="h">why it holds</div>
+              <p>${m.whyItHolds}</p>
+            </div>
+            <div class="block weak">
+              <div class="h">the load-bearing weakness</div>
+              <p>${m.weakness}</p>
+            </div>
+            <div class="block">
+              <div class="h">deletion playbook</div>
+              <div class="play">${steps}</div>
+            </div>
+          </div>`;
+        // number the playbook steps
+        c.querySelectorAll(".play .n").forEach((n, i) => { n.textContent = i + 1; });
+        list.appendChild(c);
+      });
+    }
+
+    fetch("moat-deleter.json", { cache: "no-store" })
+      .then(r => r.json())
+      .then(d => {
+        data = d;
+        document.getElementById("updated").textContent = d.updated || "—";
+        renderSteps();
+        renderFilters();
+        renderList();
+      })
+      .catch(() => {
+        document.getElementById("list").innerHTML =
+          '<div class="empty">Could not load moat-deleter.json.</div>';
+      });
+  </script>
+</body>
+</html>
