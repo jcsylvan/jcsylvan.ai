@@ -4,141 +4,113 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>jcsylvan.ai</title>
+  <meta name="description" content="jcsylvan.ai — personal site of jcsylvan.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --bg: #0a0a0a;
+      --fg: #e0e0e0;
+      --muted: #666;
+      --line: #2a2a2a;
+      --accent: #f0c040;
+
+      /* spacing scale */
+      --s1: 0.5rem;
+      --s2: 1rem;
+      --s3: 2rem;
+      --s4: 3rem;
     }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
-      background-color: #0a0a0a;
-      color: #e0e0e0;
-      height: 100vh;
+      background-color: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: var(--s3);
+      text-align: center;
     }
 
     .logo {
-      width: 150px;
-      height: 150px;
-      margin-bottom: 3rem;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
+      display: block;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .logo:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 0 1px rgba(240, 192, 64, 0.35);
     }
 
-    .prompt-container {
-      display: flex;
-      align-items: center;
-      border: 1px solid #333;
-      border-radius: 4px;
-      padding: 0.75rem 1rem;
-      width: 90%;
-      max-width: 560px;
-      background-color: #111;
-      transition: border-color 0.2s ease;
+    .wordmark {
+      margin-top: var(--s3);
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      color: var(--fg);
     }
 
-    .prompt-container:focus-within {
-      border-color: #888;
-    }
-
-    .prompt-caret {
-      color: #666;
-      margin-right: 0.75rem;
-      font-size: 1rem;
-      user-select: none;
-    }
-
-    .prompt-input {
-      flex: 1;
-      background: none;
-      border: none;
-      outline: none;
-      color: #e0e0e0;
-      font-family: inherit;
-      font-size: 0.95rem;
+    .tagline {
+      margin-top: var(--s1);
+      font-size: 0.8rem;
+      color: var(--muted);
       letter-spacing: 0.03em;
     }
 
-    .prompt-input::placeholder {
-      color: #444;
-    }
-
-    .prompt-submit {
-      background: none;
-      border: none;
-      color: #555;
-      cursor: pointer;
-      font-size: 1.1rem;
-      padding: 0 0.25rem;
-      transition: color 0.2s ease;
+    nav {
+      margin-top: var(--s4);
       display: flex;
-      align-items: center;
-    }
-
-    .prompt-submit:hover {
-      color: #fff;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 2rem;
+      gap: var(--s2);
       flex-wrap: wrap;
       justify-content: center;
     }
 
-    .protected-btn, .nav-btn {
+    .link {
       background: none;
-      border: 1px solid #333;
+      border: 1px solid var(--line);
       border-radius: 4px;
-      color: #555;
+      color: var(--muted);
       font-family: inherit;
       font-size: 0.85rem;
       padding: 0.5rem 1.25rem;
       cursor: pointer;
-      transition: color 0.2s ease, border-color 0.2s ease;
       letter-spacing: 0.05em;
       text-decoration: none;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .link:hover,
+    .link:focus-visible {
+      color: var(--accent);
+      border-color: var(--accent);
+      outline: none;
     }
 
-    .protected-btn:hover, .nav-btn:hover {
-      color: #e0e0e0;
-      border-color: #888;
-    }
-
-    .nav-btn {
-      color: #f0c040;
-      border-color: #4a3a10;
-    }
-
-    .nav-btn:hover {
-      border-color: #f0c040;
+    @media (prefers-reduced-motion: reduce) {
+      .logo { transition: none; }
+      .logo:hover { transform: none; }
     }
   </style>
 </head>
 <body>
-  <img src="logo.png" alt="jcsylvan.ai" class="logo" />
-  <form class="prompt-container" onsubmit="return false;">
-    <span class="prompt-caret">&gt;</span>
-    <input
-      type="text"
-      class="prompt-input"
-      placeholder="hello world..."
-      autofocus
-      spellcheck="false"
-    />
-    <button type="submit" class="prompt-submit" aria-label="Submit">&#8594;</button>
-  </form>
-  <div class="btn-row">
-    <a href="solar-gain.html" class="nav-btn">&#9788; farm</a>
-    <a href="nis2-tracker.html" class="nav-btn">&#128736; tools</a>
-    <a href="reads.html" class="nav-btn">&#128214; puck is here</a>
-    <button class="protected-btn" onclick="unlock()">&#128274; harps</button>
-  </div>
+  <img src="logo.png" alt="jcsylvan.ai fox logo" class="logo" />
+
+  <div class="wordmark">jcsylvan.ai</div>
+  <p class="tagline">notes, tools &amp; experiments</p>
+
+  <nav>
+    <a href="solar-gain.html" class="link">farm</a>
+    <a href="nis2-tracker.html" class="link">tools</a>
+    <a href="reads.html" class="link">puck is here</a>
+    <button class="link" onclick="unlock()">harps</button>
+  </nav>
+
   <script>
     async function unlock() {
       const pw = prompt("password:");
