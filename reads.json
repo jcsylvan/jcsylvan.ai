@@ -5,41 +5,57 @@
       "id": "2026-05-30-ai",
       "date": "2026-05-30",
       "category": "AI",
-      "title": "6 AI breakthroughs that will define 2026",
-      "source": "InfoWorld",
-      "url": "https://www.infoworld.com/article/4108092/6-ai-breakthroughs-that-will-define-2026.html"
+      "title": "Agentic Reasoning for Large Language Models",
+      "source": "arXiv · 2601.12538",
+      "url": "https://arxiv.org/abs/2601.12538"
     },
     {
       "id": "2026-05-30-semiconductors",
       "date": "2026-05-30",
       "category": "Semiconductors",
-      "title": "Semiconductor industry heads for $1tn in 2026",
-      "source": "eeNews Europe",
-      "url": "https://www.eenewseurope.com/en/semiconductor-industry-heads-for-1tn-in-2026/"
+      "title": "Gate-Drain Leakage Enhanced by Drain-Induced Dielectric Barrier Lowering in Gate-All-Around FETs",
+      "source": "arXiv · 2603.21015",
+      "url": "https://arxiv.org/abs/2603.21015"
     },
     {
       "id": "2026-05-30-biotechnology",
       "date": "2026-05-30",
       "category": "Biotechnology",
-      "title": "A grad student's wild idea sparks a major aging breakthrough",
-      "source": "ScienceDaily",
-      "url": "https://www.sciencedaily.com/releases/2026/05/260515001733.htm"
+      "title": "EnzyPGM: Pocket-conditioned Generative Model for Substrate-specific Enzyme Design",
+      "source": "arXiv · 2601.19205",
+      "url": "https://arxiv.org/abs/2601.19205"
     },
     {
       "id": "2026-05-30-sustainable-energy",
       "date": "2026-05-30",
       "category": "Sustainable Energy",
-      "title": "Scientists \"bottle the sun\" with a liquid battery that stores solar energy",
-      "source": "ScienceDaily",
-      "url": "https://www.sciencedaily.com/releases/2026/05/260513221821.htm"
+      "title": "SAGE: Synthetic Aging for a Grid Environment",
+      "source": "arXiv · 2603.13976",
+      "url": "https://arxiv.org/abs/2603.13976"
     },
     {
       "id": "2026-05-30-defense-tech",
       "date": "2026-05-30",
       "category": "Defense Tech",
-      "title": "Petraeus says drone swarms are the next danger — and growth opportunity",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/05/28/petraeus-unmanned-systems-autonomous-drones-defense-investment.html"
+      "title": "The Future of Warfare: National Positions on the Governance of Lethal Autonomous Weapons Systems",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5135494"
+    },
+    {
+      "id": "2026-05-30-quantum-computing",
+      "date": "2026-05-30",
+      "category": "Quantum Computing",
+      "title": "Fault-Tolerant Quantum Computing with Trapped Ions: The Walking Cat Architecture",
+      "source": "arXiv · 2604.19481",
+      "url": "https://arxiv.org/abs/2604.19481"
+    },
+    {
+      "id": "2026-05-30-materials-science",
+      "date": "2026-05-30",
+      "category": "Materials Science",
+      "title": "AI-Guided Computational Design of a Room-Temperature, Ambient-Pressure Superconductor Candidate: Grokene",
+      "source": "arXiv · 2601.00931",
+      "url": "https://arxiv.org/abs/2601.00931"
     }
   ]
 }

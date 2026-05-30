@@ -122,6 +122,8 @@
     .cat-biotechnology { color: #5fd38a; border-color: #245a3a; }
     .cat-sustainable-energy { color: #f0c040; border-color: #4a3a10; }
     .cat-defense-tech  { color: #ff8c6f; border-color: #6b3423; }
+    .cat-quantum-computing { color: #4fd6c8; border-color: #1f5a52; }
+    .cat-materials-science { color: #ff7fb0; border-color: #6b2342; }
 
     .article-title { color: #e0e0e0; }
     .article-title:hover { color: #f0c040; }
@@ -180,7 +182,8 @@
     <h1>reads</h1>
     <p class="subtitle">
       A daily feed of one interesting article each across AI, semiconductors, biotechnology,
-      sustainable energy and defense tech. Tick a box when you've read something and jot down notes &mdash;
+      sustainable energy, defense tech, quantum computing and materials science. Tick a box
+      when you've read something and jot down notes &mdash;
       your read status and comments are saved in this browser.
     </p>
 
@@ -211,7 +214,7 @@
 
   <script>
     const STORAGE_KEY = "reads-tracker-state";
-    const CATEGORIES = ["AI", "Semiconductors", "Biotechnology", "Sustainable Energy", "Defense Tech"];
+    const CATEGORIES = ["AI", "Semiconductors", "Biotechnology", "Sustainable Energy", "Defense Tech", "Quantum Computing", "Materials Science"];
 
     let state = loadState();
     let activeFilter = "All";
