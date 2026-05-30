@@ -40,6 +40,22 @@
       "title": "Petraeus says drone swarms are the next danger — and growth opportunity",
       "source": "CNBC",
       "url": "https://www.cnbc.com/2026/05/28/petraeus-unmanned-systems-autonomous-drones-defense-investment.html"
+    },
+    {
+      "id": "2026-05-30-quantum-computing",
+      "date": "2026-05-30",
+      "category": "Quantum Computing",
+      "title": "Quantum breakthrough could revolutionize teleportation and computing",
+      "source": "ScienceDaily",
+      "url": "https://www.sciencedaily.com/releases/2026/05/260513034640.htm"
+    },
+    {
+      "id": "2026-05-30-materials-science",
+      "date": "2026-05-30",
+      "category": "Materials Science",
+      "title": "MIT scientists finally reveal the hidden structure of a mysterious high-tech material",
+      "source": "ScienceDaily",
+      "url": "https://www.sciencedaily.com/releases/2026/05/260504023831.htm"
     }
   ]
 }

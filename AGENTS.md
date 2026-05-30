@@ -6,13 +6,15 @@ main page is reached via the **📖 reads** button on `index.html`.
 ## Daily job
 
 Once per day, add **one genuinely interesting, recent article for each of these
-five categories**:
+seven categories**:
 
 - `AI`
 - `Semiconductors`
 - `Biotechnology`
 - `Sustainable Energy`
 - `Defense Tech`
+- `Quantum Computing`
+- `Materials Science`
 
 ### How to do it
 
@@ -40,7 +42,7 @@ Notes:
   (e.g. `2026-05-30-sustainable-energy`). The site keys read-status and
   comments off `id`, so never reuse or change an existing `id`.
 - Category slugs used by the styling: `ai`, `semiconductors`, `biotechnology`,
-  `sustainable-energy`, `defense-tech`.
+  `sustainable-energy`, `defense-tech`, `quantum-computing`, `materials-science`.
 - Don't remove old entries — the list is meant to accumulate.
 - Avoid duplicating a URL that's already in the file.
 
