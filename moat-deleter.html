@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MoteDeleter &mdash; jcsylvan.ai</title>
+  <title>Moat Deleter &mdash; jcsylvan.ai</title>
   <meta name="description" content="Find the moat a sector relies on, then the step-by-step playbook to drain it.">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="icon" href="logo.png">
@@ -175,7 +175,7 @@
 <body>
   <div class="wrap">
     <a href="tools.html" class="back-link">&larr; tools</a>
-    <h1>MoteDeleter</h1>
+    <h1>Moat Deleter</h1>
     <p class="subtitle">
       Every sector defends itself with something it treats as a moat &mdash; a structural
       advantage that keeps challengers out. A moat is not magic; it is a mechanism resting on
@@ -198,7 +198,7 @@
 
     <p class="footnote">
       A working library of moats and how to drain them &mdash; analysis, not investment or legal advice.
-      Edit <code>mote-deleter.json</code> to add cases.
+      Edit <code>moat-deleter.json</code> to add cases.
     </p>
   </div>
 
@@ -282,7 +282,7 @@
       });
     }
 
-    fetch("mote-deleter.json", { cache: "no-store" })
+    fetch("moat-deleter.json", { cache: "no-store" })
       .then(r => r.json())
       .then(d => {
         data = d;
@@ -293,7 +293,7 @@
       })
       .catch(() => {
         document.getElementById("list").innerHTML =
-          '<div class="empty">Could not load mote-deleter.json.</div>';
+          '<div class="empty">Could not load moat-deleter.json.</div>';
       });
   </script>
 </body>
