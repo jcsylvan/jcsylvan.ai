@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Export License Screener &mdash; jcsylvan.ai</title>
+  <meta name="description" content="Preliminary screen of whether a part number or piece of equipment is likely to need an export license.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    a { color: #f0c040; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 820px; margin: 0 auto; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .back-link:hover { color: #e0e0e0; }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+      color: #f0c040;
+      font-weight: 600;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      max-width: 720px;
+      line-height: 1.5;
+    }
+    .updated { color: #444; font-size: 0.72rem; margin-bottom: 2rem; }
+
+    /* form */
+    .panel {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #777;
+      margin-bottom: 0.45rem;
+      font-weight: 500;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 5px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 0.75rem 0.85rem;
+      resize: vertical;
+    }
+    textarea { min-height: 90px; }
+    textarea:focus, input[type="text"]:focus { outline: none; border-color: #f0c040; }
+
+    .field + .field { margin-top: 1rem; }
+
+    .row2 { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: flex-end; }
+    .row2 .field { flex: 1; min-width: 200px; margin-top: 0; }
+
+    button.go {
+      background: #f0c040;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.7rem 1.4rem;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: background 0.15s ease;
+      white-space: nowrap;
+    }
+    button.go:hover { background: #ffd35a; }
+
+    .examples { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .examples .lbl { color: #555; font-size: 0.72rem; }
+    .chip {
+      background: none;
+      border: 1px solid #333;
+      border-radius: 999px;
+      color: #888;
+      font-family: inherit;
+      font-size: 0.72rem;
+      padding: 0.3rem 0.7rem;
+      cursor: pointer;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .chip:hover { color: #e0e0e0; border-color: #888; }
+
+    /* result */
+    .verdict {
+      border-radius: 6px;
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid;
+    }
+    .verdict .tag {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .verdict .headline { font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
+    .verdict .sub { font-size: 0.82rem; line-height: 1.55; margin-top: 0.5rem; }
+
+    .v-likely   { border-color: #5a2424; background: #1a0f0f; }
+    .v-likely .tag, .v-likely .headline { color: #ff7a6f; }
+    .v-maybe    { border-color: #5a4a18; background: #16130b; }
+    .v-maybe .tag, .v-maybe .headline { color: #f0c040; }
+    .v-unlikely { border-color: #285a28; background: #0d160d; }
+    .v-unlikely .tag, .v-unlikely .headline { color: #79d479; }
+    .v-likely .sub, .v-maybe .sub, .v-unlikely .sub { color: #bdbdbd; }
+
+    /* destination flag */
+    .destflag {
+      border-radius: 6px;
+      padding: 0.85rem 1.05rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid #5a2424;
+      background: #1a0f0f;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #ffb3a8;
+    }
+    .destflag b { color: #ff7a6f; }
+
+    .sec-h {
+      font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: #777; margin: 1.5rem 0 0.75rem; font-weight: 500;
+    }
+
+    .match {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1rem 1.15rem;
+      margin-bottom: 0.8rem;
+    }
+    .match .top { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.45rem; }
+    .match .nm { font-size: 0.92rem; color: #e0e0e0; font-weight: 600; }
+    .match .eccn {
+      font-size: 0.66rem; padding: 0.18rem 0.5rem; border-radius: 4px;
+      border: 1px solid #4a3a10; color: #f0c040; white-space: nowrap;
+    }
+    .match .ccl { font-size: 0.7rem; color: #666; }
+    .match .summary { font-size: 0.82rem; color: #aaa; line-height: 1.55; }
+    .match .reasons { margin-top: 0.55rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .match .reason {
+      font-size: 0.64rem; padding: 0.16rem 0.45rem; border-radius: 3px;
+      border: 1px solid #333; color: #999;
+    }
+    .match .hits { margin-top: 0.55rem; font-size: 0.72rem; color: #666; }
+    .match .hits b { color: #888; font-weight: 600; }
+
+    .empty { color: #888; font-size: 0.85rem; line-height: 1.6; }
+
+    .disclaimer {
+      margin-top: 2rem;
+      border-top: 1px solid #1c1c1c;
+      padding-top: 1rem;
+      color: #555;
+      font-size: 0.72rem;
+      line-height: 1.65;
+    }
+    .disclaimer b { color: #777; }
+
+    .steps2 { margin: 0.5rem 0 0 1.1rem; padding: 0; }
+    .steps2 li { font-size: 0.8rem; color: #999; line-height: 1.55; margin-bottom: 0.3rem; }
+
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="tools.html" class="back-link">&larr; tools</a>
+    <h1>Export License Screener</h1>
+    <p class="subtitle">
+      Enter a part number or a plain-language description of a piece of equipment to get a
+      quick, first-pass read on whether it is likely to need a US export license &mdash; which
+      Commerce Control List category and ECCN it tends to fall under, and why. This is a triage
+      aid, not a classification.
+    </p>
+    <p class="updated">knowledge base updated <span id="updated">&mdash;</span></p>
+
+    <div class="panel">
+      <div class="field">
+        <label for="desc">Part number or description</label>
+        <textarea id="desc" placeholder="e.g. 5-axis CNC milling machine, 100W fiber laser, FPGA with high-speed ADC, encrypted radio module&hellip;"></textarea>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="dest">Destination country (optional)</label>
+          <input type="text" id="dest" placeholder="e.g. Germany, China, Iran" />
+        </div>
+        <button class="go" id="go">Screen item</button>
+      </div>
+      <div class="examples">
+        <span class="lbl">try:</span>
+        <button class="chip" data-ex="5-axis CNC milling machine with 0.001mm positioning">5-axis CNC</button>
+        <button class="chip" data-ex="Uncooled thermal imaging infrared camera, 640x480, 9Hz">thermal camera</button>
+        <button class="chip" data-ex="VPN appliance using AES-256 encryption for network traffic">encrypted VPN</button>
+        <button class="chip" data-ex="Fiber-optic gyroscope inertial measurement unit for UAV navigation">IMU / gyro</button>
+        <button class="chip" data-ex="Stainless steel M6 socket-head cap screw, hardware fastener">plain hardware</button>
+      </div>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="disclaimer">
+      <b>Not legal or compliance advice.</b> This tool does a keyword screen against a small,
+      illustrative knowledge base of common dual-use categories. It cannot and does not produce
+      an official classification. The real export-control outcome depends on the precise technical
+      parameters of the item, its <b>jurisdiction</b> (EAR vs. ITAR vs. NRC/DOE), the
+      <b>destination</b>, the <b>end-user</b> and the <b>end-use</b> &mdash; and on the current
+      regulations, which change frequently. Always confirm with the EAR Commerce Control List,
+      a self-classification or CCATS, and a licensed export-compliance professional before
+      shipping. Edit <code>export-license.json</code> to expand the rules.
+    </div>
+  </div>
+
+  <script>
+    let data = { categories: [], reasonCodes: {}, highRiskDestinations: [] };
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, c =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    // score each category by how many of its keywords appear in the query text
+    function screen(text) {
+      const q = " " + text.toLowerCase().replace(/[^a-z0-9]+/g, " ") + " ";
+      const results = [];
+      data.categories.forEach(cat => {
+        const hits = [];
+        cat.keywords.forEach(kw => {
+          const k = kw.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+          if (!k) return;
+          if (q.indexOf(" " + k + " ") !== -1) hits.push(kw);
+        });
+        if (hits.length) {
+          // longer multi-word matches are stronger signal
+          const score = hits.reduce((s, h) => s + (h.indexOf(" ") !== -1 ? 2 : 1), 0);
+          results.push({ cat, hits, score });
+        }
+      });
+      results.sort((a, b) => b.score - a.score);
+      return results;
+    }
+
+    function checkDestination(text) {
+      const d = text.toLowerCase();
+      if (!d.trim()) return null;
+      for (const rule of data.highRiskDestinations) {
+        if (rule.match.some(m => d.indexOf(m) !== -1)) return rule;
+      }
+      return null;
+    }
+
+    function verdictFor(results) {
+      if (!results.length) return { cls: "unlikely", tag: "likely no license — EAR99 candidate" };
+      const anyLikely = results.some(r => r.cat.license === "likely");
+      if (anyLikely) return { cls: "likely", tag: "license likely required" };
+      return { cls: "maybe", tag: "may be controlled — review needed" };
+    }
+
+    function render(text, dest) {
+      const el = document.getElementById("result");
+      if (!text.trim()) {
+        el.innerHTML = '<div class="match"><span class="empty">Enter a part number or description above, then press <b>Screen item</b>.</span></div>';
+        return;
+      }
+
+      const results = screen(text);
+      const v = verdictFor(results);
+      const destRule = checkDestination(dest);
+
+      let headline, sub;
+      if (v.cls === "likely") {
+        headline = "This item matches one or more strictly controlled categories.";
+        sub = "A specific ECCN very likely applies and a license is probably required for many destinations. Do a formal classification before quoting or shipping.";
+      } else if (v.cls === "maybe") {
+        headline = "This item may be export-controlled depending on its exact specs.";
+        sub = "It matches a controlled category, but whether it is actually caught usually turns on performance thresholds. Confirm the parameters against the ECCN, or a License Exception may apply.";
+      } else {
+        headline = "No controlled category matched — this looks like a possible EAR99 item.";
+        sub = "Most ordinary commercial goods are EAR99 (no license for most destinations). But a clean keyword screen is not a determination: verify the technical specs, and remember EAR99 items still need a license to embargoed destinations, denied parties, or prohibited end-uses.";
+      }
+
+      let html = "";
+
+      html += `<div class="verdict v-${v.cls}">
+        <div class="tag">${esc(v.tag)}</div>
+        <div class="headline">${esc(headline)}</div>
+        <div class="sub">${esc(sub)}</div>
+      </div>`;
+
+      if (destRule) {
+        html += `<div class="destflag"><b>Destination flag &mdash; ${esc(dest)}:</b> ${esc(destRule.note)}</div>`;
+      }
+
+      if (results.length) {
+        html += `<div class="sec-h">matched control categories (${results.length})</div>`;
+        results.forEach(r => {
+          const reasons = (r.cat.reasons || []).map(code => {
+            const label = data.reasonCodes[code] || code;
+            return `<span class="reason" title="${esc(label)}">${esc(code)} &middot; ${esc(label)}</span>`;
+          }).join("");
+          html += `<div class="match">
+            <div class="top">
+              <span class="nm">${esc(r.cat.name)}</span>
+              <span class="eccn">${esc(r.cat.eccn)}</span>
+            </div>
+            <div class="ccl">${esc(r.cat.ccl)}</div>
+            <p class="summary" style="margin-top:0.5rem">${esc(r.cat.summary)}</p>
+            <div class="reasons">${reasons}</div>
+            <div class="hits"><b>matched terms:</b> ${r.hits.map(esc).join(", ")}</div>
+          </div>`;
+        });
+      } else {
+        html += `<div class="sec-h">next steps</div>
+          <div class="match"><span class="empty">
+            <ul class="steps2">
+              <li>If you only entered a bare part number, look up the manufacturer's specifications or datasheet &mdash; opaque part numbers carry no signal on their own.</li>
+              <li>Confirm there is no military or "specially designed" defense application (which would push it to the ITAR / USML).</li>
+              <li>Screen the destination, end-user (denied/entity lists) and end-use even for EAR99 items.</li>
+            </ul>
+          </span></div>`;
+      }
+
+      el.innerHTML = html;
+    }
+
+    function run() {
+      render(document.getElementById("desc").value, document.getElementById("dest").value);
+    }
+
+    document.getElementById("go").addEventListener("click", run);
+    document.getElementById("desc").addEventListener("keydown", e => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run();
+    });
+    document.getElementById("dest").addEventListener("keydown", e => {
+      if (e.key === "Enter") run();
+    });
+    document.querySelectorAll(".chip[data-ex]").forEach(c => {
+      c.addEventListener("click", () => {
+        document.getElementById("desc").value = c.getAttribute("data-ex");
+        run();
+      });
+    });
+
+    fetch("export-license.json", { cache: "no-store" })
+      .then(r => r.json())
+      .then(d => {
+        data = d;
+        document.getElementById("updated").textContent = d.updated || "—";
+      })
+      .catch(() => {
+        document.getElementById("result").innerHTML =
+          '<div class="match"><span class="empty">Could not load export-license.json.</span></div>';
+      });
+  </script>
+</body>
+</html>
