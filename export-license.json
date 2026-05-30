@@ -1,0 +1,146 @@
+{
+  "updated": "2026-05-30",
+  "reasonCodes": {
+    "NS": "National Security",
+    "MT": "Missile Technology",
+    "NP": "Nuclear Nonproliferation",
+    "CB": "Chemical & Biological Weapons",
+    "RS": "Regional Stability",
+    "AT": "Anti-Terrorism",
+    "CC": "Crime Control",
+    "SI": "Significant Items",
+    "EI": "Encryption Items",
+    "SS": "Spacecraft",
+    "FC": "Firearms Convention",
+    "UN": "United Nations Embargo",
+    "ITAR": "Defense article (US Munitions List / ITAR)"
+  },
+  "categories": [
+    {
+      "id": "usml-defense",
+      "name": "Defense articles — military / munitions",
+      "ccl": "US Munitions List (USML)",
+      "eccn": "ITAR-controlled (see USML category)",
+      "reasons": ["ITAR"],
+      "license": "likely",
+      "summary": "Items specially designed for a military application are generally controlled under the ITAR, not the EAR. Export almost always requires State Department (DDTC) authorization regardless of destination.",
+      "keywords": ["weapon", "weapons", "firearm", "firearms", "gun", "rifle", "ammunition", "ammo", "cartridge", "warhead", "missile launcher", "munition", "munitions", "grenade", "torpedo", "military aircraft", "fighter jet", "tank", "armored vehicle", "armoured", "naval gun", "submarine", "fire control", "countermeasure", "flare dispenser", "chaff", "directed energy weapon", "military", "defense article", "defence article", "bomb", "artillery", "mortar", "body armor", "ballistic helmet", "night vision goggle"]
+    },
+    {
+      "id": "infosec-encryption",
+      "name": "Information Security — encryption / cybersecurity",
+      "ccl": "Category 5, Part 2",
+      "eccn": "5A002 / 5D002 / 5E002 (commodities, software, technology)",
+      "reasons": ["NS", "AT", "EI"],
+      "license": "maybe",
+      "summary": "Products that perform or use 'non-standard' cryptography for confidentiality can be controlled under 5A002/5D002. Most mass-market commercial encryption qualifies for License Exception ENC after a self-classification or CCATS, but it is still classified, not EAR99.",
+      "keywords": ["encryption", "encrypt", "cryptography", "cryptographic", "cipher", "aes", "rsa", "elliptic curve", "vpn", "tls", "ssl", "ipsec", "hsm", "hardware security module", "key management", "secure enclave", "ssh", "pgp", "intrusion", "deep packet inspection", "network surveillance", "ip network communications surveillance", "penetration testing", "exploit", "lawful intercept", "firewall", "quantum key distribution", "post-quantum"]
+    },
+    {
+      "id": "semiconductors",
+      "name": "Electronics — semiconductors, ICs & fabrication",
+      "ccl": "Category 3",
+      "eccn": "3A001 / 3B001 / 3B002 / 3C / 3D / 3E",
+      "reasons": ["NS", "MT", "AT"],
+      "license": "maybe",
+      "summary": "Advanced integrated circuits, RF/microwave components, FPGAs, ADCs/DACs above performance thresholds, and the equipment, materials and software to design or fabricate them are controlled in Category 3. Recent rules add tight controls on advanced-node logic, HBM and AI accelerators.",
+      "keywords": ["semiconductor", "integrated circuit", "microchip", "wafer", "fpga", "asic", "microcontroller", "microprocessor", "gpu", "ai accelerator", "tpu", "adc", "dac", "analog to digital", "digital to analog", "rf amplifier", "microwave transistor", "gan", "gallium nitride", "gallium arsenide", "silicon carbide", "photomask", "photolithography", "lithography", "euv", "etch", "deposition", "epitaxy", "ion implant", "cmp", "mask aligner", "die bonder", "high bandwidth memory", "hbm", "transceiver", "monolithic microwave"]
+    },
+    {
+      "id": "computers",
+      "name": "Computers — high-performance computing",
+      "ccl": "Category 4",
+      "eccn": "4A003 / 4A005 / 4D / 4E",
+      "reasons": ["NS", "AT"],
+      "license": "maybe",
+      "summary": "Digital computers and 'electronic assemblies' above an Adjusted Peak Performance threshold, plus interconnect and certain intrusion/cyber tools, are controlled in Category 4. Most laptops/servers are EAR99 but clusters, accelerator nodes and HPC interconnect may not be.",
+      "keywords": ["supercomputer", "high performance computing", "hpc", "compute cluster", "server cluster", "infiniband", "interconnect fabric", "accelerator card", "blade server", "rack server", "adjusted peak performance", "neural network processor", "datacenter gpu", "data center accelerator"]
+    },
+    {
+      "id": "sensors-lasers",
+      "name": "Sensors & Lasers — imaging, optics, lasers",
+      "ccl": "Category 6",
+      "eccn": "6A002 / 6A003 / 6A005 / 6A006 / 6A008",
+      "reasons": ["NS", "MT", "RS", "AT"],
+      "license": "maybe",
+      "summary": "Focal plane arrays, thermal/infrared cameras, image intensifiers, high-speed cameras, certain lasers, magnetometers, gravimeters and radar are controlled in Category 6. Thresholds turn on wavelength, frame rate, sensitivity and power.",
+      "keywords": ["thermal camera", "thermal imaging", "infrared camera", "ir camera", "focal plane array", "image intensifier", "night vision", "laser", "fiber laser", "nd:yag", "co2 laser", "diode laser", "lidar", "radar", "synthetic aperture", "magnetometer", "gravimeter", "hydrophone", "high speed camera", "framing camera", "photomultiplier", "optical sensor", "seismic", "acoustic array", "telescope", "spectrometer", "interferometer"]
+    },
+    {
+      "id": "navigation-avionics",
+      "name": "Navigation & Avionics — inertial, GNSS, flight control",
+      "ccl": "Category 7",
+      "eccn": "7A001 / 7A003 / 7A005 / 7A101 / 7D / 7E",
+      "reasons": ["NS", "MT", "AT"],
+      "license": "likely",
+      "summary": "Accelerometers, gyroscopes, inertial measurement/navigation units, certain GNSS receivers (high-altitude/high-velocity), and flight control systems are controlled in Category 7, frequently for Missile Technology reasons.",
+      "keywords": ["inertial measurement unit", "imu", "inertial navigation", "ins", "accelerometer", "gyroscope", "gyro", "fiber optic gyro", "ring laser gyro", "gnss", "gps receiver", "galileo receiver", "flight control", "autopilot", "attitude heading reference", "ahrs", "air data computer", "altimeter", "star tracker", "navigation system"]
+    },
+    {
+      "id": "aerospace-propulsion",
+      "name": "Aerospace & Propulsion — aircraft, UAV, engines, space",
+      "ccl": "Category 9",
+      "eccn": "9A001 / 9A004 / 9A010 / 9A012 / 9A515 / 9B / 9D / 9E",
+      "reasons": ["NS", "MT", "RS", "SS", "AT"],
+      "license": "likely",
+      "summary": "Gas turbine engines, UAVs/drones, rockets, launch vehicles, spacecraft, satellites and their components and production technology are controlled in Category 9, heavily for Missile Technology and Spacecraft reasons.",
+      "keywords": ["jet engine", "gas turbine", "turbofan", "turbojet", "turboprop", "rocket engine", "rocket motor", "propellant", "uav", "drone", "unmanned aerial", "unmanned aircraft", "satellite", "spacecraft", "launch vehicle", "reentry", "re-entry", "guidance", "thrust vector", "ramjet", "scramjet", "auxiliary power unit", "landing gear", "airframe", "fuselage", "propulsion", "reaction wheel", "thruster"]
+    },
+    {
+      "id": "marine",
+      "name": "Marine — submersibles, underwater systems",
+      "ccl": "Category 8",
+      "eccn": "8A001 / 8A002 / 8A002 / 8A992 / 8D / 8E",
+      "reasons": ["NS", "AT"],
+      "license": "maybe",
+      "summary": "Submersibles, underwater vehicles, marine propulsion, syntactic foam, closed-circuit diving systems and underwater sensors are controlled in Category 8.",
+      "keywords": ["submersible", "submarine", "rov", "remotely operated vehicle", "auv", "autonomous underwater", "underwater vehicle", "diving system", "rebreather", "closed circuit diving", "syntactic foam", "marine propulsion", "underwater camera", "sonar", "buoyancy", "pressure hull"]
+    },
+    {
+      "id": "materials-processing",
+      "name": "Materials Processing — machine tools, robots, bearings",
+      "ccl": "Category 2",
+      "eccn": "2A001 / 2B001 / 2B003 / 2B006 / 2B201 / 2D / 2E",
+      "reasons": ["NS", "NP", "MT", "AT"],
+      "license": "maybe",
+      "summary": "Multi-axis CNC machine tools, precision bearings, isostatic presses, spin/flow-forming machines, robots for hazardous environments and dimensional inspection systems are controlled in Category 2, often for nuclear/missile reasons.",
+      "keywords": ["cnc", "machine tool", "5 axis", "five axis", "multi-axis", "milling machine", "lathe", "grinding machine", "spin forming", "flow forming", "isostatic press", "hot isostatic", "bearing", "ball bearing", "roller bearing", "vibration test", "shaker table", "coordinate measuring", "cmm", "robot", "robotic arm", "filament winding", "vacuum furnace", "electron beam welding", "additive manufacturing", "metal 3d printer", "powder bed fusion"]
+    },
+    {
+      "id": "advanced-materials",
+      "name": "Advanced Materials & Chemicals",
+      "ccl": "Category 1",
+      "eccn": "1C001 / 1C010 / 1C107 / 1C350 / 1C351 / 1A / 1D / 1E",
+      "reasons": ["NS", "MT", "NP", "CB", "AT"],
+      "license": "likely",
+      "summary": "High-strength fibers and composites, specialty alloys, energetic materials, precursor chemicals, biological agents and protective equipment are controlled in Category 1, including for chemical/biological and missile reasons.",
+      "keywords": ["carbon fiber", "carbon fibre", "aramid", "kevlar", "composite", "prepreg", "maraging steel", "titanium alloy", "tungsten", "beryllium", "energetic material", "explosive", "rdx", "hmx", "propellant", "oxidizer", "ammonium perchlorate", "precursor chemical", "toxin", "pathogen", "biological agent", "select agent", "nerve agent", "ceramic matrix", "boron", "metal powder", "superalloy"]
+    },
+    {
+      "id": "nuclear",
+      "name": "Nuclear — materials, reactors & enrichment",
+      "ccl": "Category 0 (and NRC/DOE jurisdiction)",
+      "eccn": "0A / 0B / 0C / 0D / 0E (and 10 CFR Part 110 / 810)",
+      "reasons": ["NP", "NS", "AT"],
+      "license": "likely",
+      "summary": "Nuclear materials, reactors, centrifuges, heavy water, tritium and related production equipment are tightly controlled. Some items fall under NRC (Part 110) or DOE (Part 810) jurisdiction rather than the EAR.",
+      "keywords": ["uranium", "plutonium", "enrichment", "centrifuge", "gas centrifuge", "heavy water", "deuterium", "tritium", "nuclear reactor", "fuel rod", "zirconium tube", "fissile", "isotope separation", "reprocessing", "neutron", "radioactive source", "yellowcake", "hexafluoride"]
+    },
+    {
+      "id": "telecom",
+      "name": "Telecommunications — RF & networking",
+      "ccl": "Category 5, Part 1",
+      "eccn": "5A001 / 5B001 / 5D001 / 5E001",
+      "reasons": ["NS", "AT", "SI"],
+      "license": "maybe",
+      "summary": "Certain radios, jamming/anti-jam equipment, phased arrays, mobile communication interception and high-speed/undersea transmission gear are controlled in Category 5 Part 1. Ordinary commercial networking is usually EAR99.",
+      "keywords": ["jammer", "jamming", "anti-jam", "phased array antenna", "software defined radio", "sdr", "frequency hopping", "spread spectrum", "imsi catcher", "mobile interception", "telemetry", "undersea cable", "optical amplifier", "edfa", "millimeter wave", "tropospheric scatter", "satcom terminal", "tactical radio"]
+    }
+  ],
+  "highRiskDestinations": [
+    { "match": ["cuba", "iran", "north korea", "dprk", "syria", "crimea", "donetsk", "luhansk"], "level": "embargo", "note": "Comprehensively sanctioned / embargoed destination — nearly all exports require a license and most are prohibited. Treat any shipment as license-required pending OFAC/BIS review." },
+    { "match": ["russia", "belarus"], "level": "heightened", "note": "Subject to broad Russia/Belarus industry-sector controls and an expanded license requirement / denial policy. Most items beyond basic consumer goods require a license." },
+    { "match": ["china", "prc", "macau", "hong kong"], "level": "heightened", "note": "Subject to expanded controls for advanced computing, semiconductors and military end-use/end-user (MEU) rules. Screen end-use and end-user carefully." },
+    { "match": ["venezuela", "myanmar", "burma", "afghanistan", "cambodia", "nicaragua", "zimbabwe", "central african republic", "congo", "libya", "somalia", "south sudan", "sudan", "yemen", "iraq", "lebanon"], "level": "arms", "note": "Subject to a US arms embargo or partial sanctions — defense and many dual-use items face a license requirement and a policy of denial." }
+  ]
+}
