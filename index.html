@@ -13,8 +13,8 @@
       --bg: #0a0a0a;
       --fg: #e0e0e0;
       --muted: #666;
-      --line: #2a2a2a;
       --accent: #f0c040;
+      --print-ring: #3a3320;
 
       /* spacing scale */
       --s1: 0.5rem;
@@ -67,34 +67,56 @@
     nav {
       margin-top: var(--s4);
       display: flex;
-      gap: var(--s2);
+      gap: var(--s3);
       flex-wrap: wrap;
       justify-content: center;
     }
 
-    .link {
+    .tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
       background: none;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      color: var(--muted);
-      font-family: inherit;
-      font-size: 0.85rem;
-      padding: 0.5rem 1.25rem;
+      border: none;
+      padding: 0;
       cursor: pointer;
-      letter-spacing: 0.05em;
       text-decoration: none;
-      transition: color 0.2s ease, border-color 0.2s ease;
-    }
-    .link:hover,
-    .link:focus-visible {
-      color: var(--accent);
-      border-color: var(--accent);
-      outline: none;
+      font-family: inherit;
     }
 
+    .print {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid var(--print-ring);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: block;
+    }
+    .print svg { width: 100%; height: 100%; display: block; }
+
+    .tile:hover .print,
+    .tile:focus-visible .print {
+      transform: scale(1.06);
+      box-shadow: 0 0 0 2px rgba(240, 192, 64, 0.55), 0 2px 12px rgba(0, 0, 0, 0.5);
+    }
+    .tile:focus-visible { outline: none; }
+
+    .caption {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      max-width: 6rem;
+      transition: color 0.2s ease;
+    }
+    .tile:hover .caption,
+    .tile:focus-visible .caption { color: var(--accent); }
+
     @media (prefers-reduced-motion: reduce) {
-      .logo { transition: none; }
-      .logo:hover { transform: none; }
+      .logo, .print { transition: none; }
+      .logo:hover, .tile:hover .print, .tile:focus-visible .print { transform: none; }
     }
   </style>
 </head>
@@ -105,10 +127,96 @@
   <p class="tagline">notes, tools &amp; experiments</p>
 
   <nav>
-    <a href="solar-gain.html" class="link">farm</a>
-    <a href="nis2-tracker.html" class="link">tools</a>
-    <a href="reads.html" class="link">puck is here</a>
-    <button class="link" onclick="unlock()">harps</button>
+    <!-- farm — Mount Fuji, rising sun, seigaiha waves -->
+    <a href="solar-gain.html" class="tile" aria-label="farm">
+      <span class="print">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="100" height="100" fill="#ece3cf"/>
+          <circle cx="68" cy="35" r="15" fill="#c0432c"/>
+          <polygon points="50,24 16,82 84,82" fill="#2f5d86" stroke="#20242b" stroke-width="2.5" stroke-linejoin="round"/>
+          <polygon points="50,24 40,44 60,44" fill="#ece3cf" stroke="#20242b" stroke-width="1.6" stroke-linejoin="round"/>
+          <g fill="none" stroke="#1c3a5e" stroke-width="2.6" stroke-linecap="round">
+            <path d="M4 84 q11 -13 22 0 q11 -13 22 0 q11 -13 22 0 q11 -13 22 0"/>
+            <path d="M4 91 q11 -13 22 0 q11 -13 22 0 q11 -13 22 0 q11 -13 22 0"/>
+          </g>
+        </svg>
+      </span>
+      <span class="caption">farm</span>
+    </a>
+
+    <!-- tools — crossed mallet &amp; chisel -->
+    <a href="nis2-tracker.html" class="tile" aria-label="tools">
+      <span class="print">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="100" height="100" fill="#ece3cf"/>
+          <g transform="rotate(34 50 50)">
+            <polygon points="46,14 54,14 50,8" fill="#8a939c" stroke="#20242b" stroke-width="2" stroke-linejoin="round"/>
+            <rect x="45" y="14" width="10" height="40" fill="#8a939c" stroke="#20242b" stroke-width="2"/>
+            <rect x="43" y="52" width="14" height="32" rx="3" fill="#d9a441" stroke="#20242b" stroke-width="2"/>
+          </g>
+          <g transform="rotate(-34 50 50)">
+            <rect x="45" y="40" width="10" height="48" rx="3" fill="#b9822f" stroke="#20242b" stroke-width="2"/>
+            <rect x="29" y="18" width="42" height="24" rx="6" fill="#d9a441" stroke="#20242b" stroke-width="2.4"/>
+            <line x1="42" y1="21" x2="42" y2="39" stroke="#20242b" stroke-width="1.4" opacity="0.45"/>
+            <line x1="58" y1="21" x2="58" y2="39" stroke="#20242b" stroke-width="1.4" opacity="0.45"/>
+          </g>
+        </svg>
+      </span>
+      <span class="caption">tools</span>
+    </a>
+
+    <!-- reads — open book with bookmark -->
+    <a href="reads.html" class="tile" aria-label="reads — puck is here">
+      <span class="print">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="100" height="100" fill="#ece3cf"/>
+          <path d="M50 30 C38 23 24 23 15 28 L15 74 C24 69 38 69 50 76 Z" fill="#f6f1e4" stroke="#20242b" stroke-width="2.6" stroke-linejoin="round"/>
+          <path d="M50 30 C62 23 76 23 85 28 L85 74 C76 69 62 69 50 76 Z" fill="#f6f1e4" stroke="#20242b" stroke-width="2.6" stroke-linejoin="round"/>
+          <line x1="50" y1="30" x2="50" y2="76" stroke="#20242b" stroke-width="2.6"/>
+          <g stroke="#2f5d86" stroke-width="2" stroke-linecap="round">
+            <line x1="23" y1="39" x2="43" y2="42"/>
+            <line x1="23" y1="47" x2="43" y2="50"/>
+            <line x1="23" y1="55" x2="43" y2="58"/>
+            <line x1="57" y1="42" x2="77" y2="39"/>
+            <line x1="57" y1="50" x2="77" y2="47"/>
+            <line x1="57" y1="58" x2="77" y2="55"/>
+          </g>
+          <polygon points="64,24 72,24 72,42 68,37 64,42" fill="#c0432c" stroke="#20242b" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="caption">puck is here</span>
+    </a>
+
+    <!-- harps — koto (locked) -->
+    <button class="tile" onclick="unlock()" aria-label="harps — locked" title="harps — locked">
+      <span class="print">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="100" height="100" fill="#ece3cf"/>
+          <rect x="12" y="40" width="76" height="20" rx="6" fill="#b9822f" stroke="#20242b" stroke-width="2.5"/>
+          <rect x="12" y="40" width="76" height="7" rx="6" fill="#d9a441"/>
+          <rect x="12" y="40" width="11" height="20" rx="6" fill="#9a6a26" stroke="#20242b" stroke-width="2"/>
+          <rect x="77" y="40" width="11" height="20" rx="6" fill="#9a6a26" stroke="#20242b" stroke-width="2"/>
+          <g stroke="#2a2317" stroke-width="1" opacity="0.85">
+            <line x1="23" y1="44" x2="77" y2="44"/>
+            <line x1="23" y1="47" x2="77" y2="47"/>
+            <line x1="23" y1="50" x2="77" y2="50"/>
+            <line x1="23" y1="53" x2="77" y2="53"/>
+            <line x1="23" y1="56" x2="77" y2="56"/>
+          </g>
+          <g fill="#ece3cf" stroke="#20242b" stroke-width="1.4" stroke-linejoin="round">
+            <polygon points="34,60 31,43 37,43"/>
+            <polygon points="50,60 47,43 53,43"/>
+            <polygon points="66,60 63,43 69,43"/>
+          </g>
+          <g transform="translate(43,70)">
+            <rect x="0" y="7" width="14" height="11" rx="2" fill="#1c3a5e" stroke="#20242b" stroke-width="1.5"/>
+            <path d="M2.5 7 V4 a4.5 4.5 0 0 1 9 0 V7" fill="none" stroke="#20242b" stroke-width="2"/>
+            <circle cx="7" cy="12.5" r="1.6" fill="#ece3cf"/>
+          </g>
+        </svg>
+      </span>
+      <span class="caption">harps</span>
+    </button>
   </nav>
 
   <script>
