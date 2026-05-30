@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>reads &mdash; jcsylvan.ai</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    a { color: #f0c040; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 1100px; margin: 0 auto; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .back-link:hover { color: #e0e0e0; }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+      color: #f0c040;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+      line-height: 1.5;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .chip {
+      background: none;
+      border: 1px solid #333;
+      border-radius: 999px;
+      color: #888;
+      font-family: inherit;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.85rem;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .chip:hover { color: #e0e0e0; border-color: #888; }
+    .chip.active { color: #0a0a0a; background: #f0c040; border-color: #f0c040; }
+
+    .stats {
+      margin-left: auto;
+      color: #555;
+      font-size: 0.75rem;
+    }
+
+    .table-wrap {
+      border: 1px solid #222;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #111;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead th {
+      text-align: left;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #777;
+      font-weight: 500;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #222;
+      background: #141414;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #1c1c1c;
+      vertical-align: top;
+      font-size: 0.85rem;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr.read { opacity: 0.55; }
+    tbody tr:hover { background: #151515; }
+
+    .col-date  { white-space: nowrap; color: #999; width: 1%; }
+    .col-cat   { white-space: nowrap; width: 1%; }
+    .col-read  { text-align: center; width: 1%; }
+
+    .cat-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      border: 1px solid #333;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .cat-ai            { color: #6fb3ff; border-color: #234a6b; }
+    .cat-semiconductors{ color: #c08cff; border-color: #4a3068; }
+    .cat-biotechnology { color: #5fd38a; border-color: #245a3a; }
+    .cat-sustainable-energy { color: #f0c040; border-color: #4a3a10; }
+    .cat-defense-tech  { color: #ff8c6f; border-color: #6b3423; }
+
+    .article-title { color: #e0e0e0; }
+    .article-title:hover { color: #f0c040; }
+    .article-source { color: #555; font-size: 0.72rem; margin-top: 0.2rem; }
+
+    input[type="checkbox"] {
+      width: 1.05rem;
+      height: 1.05rem;
+      accent-color: #f0c040;
+      cursor: pointer;
+    }
+
+    .comment-input {
+      width: 100%;
+      min-width: 180px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 0.8rem;
+      padding: 0.45rem 0.55rem;
+      outline: none;
+      resize: vertical;
+      min-height: 2.1rem;
+      line-height: 1.4;
+    }
+    .comment-input:focus { border-color: #f0c040; }
+    .comment-input::placeholder { color: #444; }
+
+    .empty, .loading {
+      padding: 2.5rem 1rem;
+      text-align: center;
+      color: #555;
+      font-size: 0.85rem;
+    }
+
+    .footnote { color: #444; font-size: 0.72rem; margin-top: 1rem; line-height: 1.6; }
+
+    @media (max-width: 720px) {
+      body { padding: 1rem; }
+      .article-source { display: none; }
+      thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      tbody tr { border-bottom: 1px solid #222; padding: 0.5rem 0; }
+      tbody td { border: none; padding: 0.3rem 1rem; }
+      .col-date::before { content: "date · "; color: #555; }
+      .col-read { text-align: left; }
+      .col-read::before { content: "read · "; color: #555; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="index.html" class="back-link">&larr; back</a>
+    <h1>reads</h1>
+    <p class="subtitle">
+      A daily feed of one interesting article each across AI, semiconductors, biotechnology,
+      sustainable energy and defense tech. Tick a box when you've read something and jot down notes &mdash;
+      your read status and comments are saved in this browser.
+    </p>
+
+    <div class="toolbar" id="filters"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-date">Date</th>
+            <th class="col-cat">Category</th>
+            <th>Article</th>
+            <th class="col-read">Read</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <tr><td colspan="5" class="loading">loading&hellip;</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="footnote">
+      New articles are added daily by an agent. Read-status and comments live in your browser's
+      local storage, so they stay on this device. Last updated: <span id="updated">&mdash;</span>.
+    </p>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "reads-tracker-state";
+    const CATEGORIES = ["AI", "Semiconductors", "Biotechnology", "Sustainable Energy", "Defense Tech"];
+
+    let state = loadState();
+    let activeFilter = "All";
+    let articles = [];
+
+    function loadState() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+      catch { return {}; }
+    }
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    function entryFor(id) {
+      if (!state[id]) state[id] = { read: false, comment: "" };
+      return state[id];
+    }
+    function catClass(cat) {
+      return "cat-" + cat.toLowerCase().replace(/\s+/g, "-");
+    }
+    function fmtDate(iso) {
+      const d = new Date(iso + "T00:00:00");
+      if (isNaN(d)) return iso;
+      return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+    }
+
+    function renderFilters() {
+      const el = document.getElementById("filters");
+      el.innerHTML = "";
+      ["All", ...CATEGORIES].forEach(cat => {
+        const b = document.createElement("button");
+        b.className = "chip" + (cat === activeFilter ? " active" : "");
+        b.textContent = cat;
+        b.onclick = () => { activeFilter = cat; renderFilters(); renderRows(); };
+        el.appendChild(b);
+      });
+      const stats = document.createElement("span");
+      stats.className = "stats";
+      const total = articles.length;
+      const read = articles.filter(a => entryFor(a.id).read).length;
+      stats.textContent = read + " / " + total + " read";
+      el.appendChild(stats);
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("rows");
+      const list = articles
+        .filter(a => activeFilter === "All" || a.category === activeFilter)
+        .slice()
+        .sort((a, b) => b.date.localeCompare(a.date) || a.category.localeCompare(b.category));
+
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty">No articles yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = "";
+      list.forEach(a => {
+        const e = entryFor(a.id);
+        const tr = document.createElement("tr");
+        if (e.read) tr.classList.add("read");
+
+        tr.innerHTML = `
+          <td class="col-date">${fmtDate(a.date)}</td>
+          <td class="col-cat"><span class="cat-tag ${catClass(a.category)}">${a.category}</span></td>
+          <td>
+            <a class="article-title" href="${a.url}" target="_blank" rel="noopener">${escapeHtml(a.title)}</a>
+            ${a.source ? `<div class="article-source">${escapeHtml(a.source)}</div>` : ""}
+          </td>
+          <td class="col-read"></td>
+          <td></td>`;
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = !!e.read;
+        checkbox.setAttribute("aria-label", "Mark as read");
+        checkbox.onchange = () => {
+          entryFor(a.id).read = checkbox.checked;
+          saveState();
+          tr.classList.toggle("read", checkbox.checked);
+          renderFilters();
+        };
+        tr.querySelector(".col-read").appendChild(checkbox);
+
+        const comment = document.createElement("textarea");
+        comment.className = "comment-input";
+        comment.rows = 1;
+        comment.placeholder = "add a note…";
+        comment.value = e.comment || "";
+        comment.oninput = () => { entryFor(a.id).comment = comment.value; saveState(); };
+        tr.lastElementChild.appendChild(comment);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    fetch("reads.json", { cache: "no-store" })
+      .then(r => r.json())
+      .then(data => {
+        articles = Array.isArray(data) ? data : (data.articles || []);
+        document.getElementById("updated").textContent = (data && data.updated) || "—";
+        renderFilters();
+        renderRows();
+      })
+      .catch(() => {
+        document.getElementById("rows").innerHTML =
+          '<tr><td colspan="5" class="empty">Could not load reads.json.</td></tr>';
+      });
+  </script>
+</body>
+</html>
