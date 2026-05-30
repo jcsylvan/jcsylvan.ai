@@ -1,0 +1,45 @@
+{
+  "updated": "2026-05-30",
+  "articles": [
+    {
+      "id": "2026-05-30-ai",
+      "date": "2026-05-30",
+      "category": "AI",
+      "title": "6 AI breakthroughs that will define 2026",
+      "source": "InfoWorld",
+      "url": "https://www.infoworld.com/article/4108092/6-ai-breakthroughs-that-will-define-2026.html"
+    },
+    {
+      "id": "2026-05-30-semiconductors",
+      "date": "2026-05-30",
+      "category": "Semiconductors",
+      "title": "Semiconductor industry heads for $1tn in 2026",
+      "source": "eeNews Europe",
+      "url": "https://www.eenewseurope.com/en/semiconductor-industry-heads-for-1tn-in-2026/"
+    },
+    {
+      "id": "2026-05-30-biotechnology",
+      "date": "2026-05-30",
+      "category": "Biotechnology",
+      "title": "A grad student's wild idea sparks a major aging breakthrough",
+      "source": "ScienceDaily",
+      "url": "https://www.sciencedaily.com/releases/2026/05/260515001733.htm"
+    },
+    {
+      "id": "2026-05-30-sustainable-energy",
+      "date": "2026-05-30",
+      "category": "Sustainable Energy",
+      "title": "Scientists \"bottle the sun\" with a liquid battery that stores solar energy",
+      "source": "ScienceDaily",
+      "url": "https://www.sciencedaily.com/releases/2026/05/260513221821.htm"
+    },
+    {
+      "id": "2026-05-30-defense-tech",
+      "date": "2026-05-30",
+      "category": "Defense Tech",
+      "title": "Petraeus says drone swarms are the next danger — and growth opportunity",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/05/28/petraeus-unmanned-systems-autonomous-drones-defense-investment.html"
+    }
+  ]
+}
