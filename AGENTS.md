@@ -48,11 +48,13 @@ Suggested source per category (a guide, not a hard rule):
 
 1. For each category, search arXiv/SSRN as above (prefer recent, reputable, a
    real working URL); use a news article only as a fallback.
-2. Append one object per category to the `articles` array in `reads.json`.
-3. Set `"source"` to the origin — e.g. `"arXiv · 2601.12538"`, `"SSRN"`, or the
+2. **Write a short AI summary** of each article (see below) — read the abstract
+   or article and condense it.
+3. Append one object per category to the `articles` array in `reads.json`.
+4. Set `"source"` to the origin — e.g. `"arXiv · 2601.12538"`, `"SSRN"`, or the
    publication name when using a news fallback.
-4. Set the top-level `"updated"` field to today's date.
-5. Commit and push.
+5. Set the top-level `"updated"` field to today's date.
+6. Commit and push.
 
 ### Article schema
 
@@ -63,11 +65,18 @@ Suggested source per category (a guide, not a hard rule):
   "category": "AI",
   "title": "Exact article headline",
   "source": "Publication name",
-  "url": "https://…"
+  "url": "https://…",
+  "summary": "2–3 sentence plain-language summary of the article."
 }
 ```
 
 Notes:
+- `summary` is **required**: 2–3 sentences (~40–70 words), plain language, no
+  hype. Capture what the work does and why it matters. It's pre-generated here
+  and stored in `reads.json` — the page just renders it behind an expandable
+  "AI summary" toggle. (The site is a static page with no backend, so summaries
+  are written at update time, not in the browser, and never expose an API key.)
+  If a summary is omitted, the row simply shows no toggle.
 - `id` must be unique and stable — `date` + lowercase, hyphenated category
   (e.g. `2026-05-30-sustainable-energy`). The site keys read-status and
   comments off `id`, so never reuse or change an existing `id`.
