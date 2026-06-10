@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-30",
+  "updated": "2026-06-10",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -63,6 +63,69 @@
       "source": "arXiv · 2601.00931",
       "url": "https://arxiv.org/abs/2601.00931",
       "summary": "Uses an LLM-guided discovery workflow, paired with first-principles many-body calculations, to propose Grokene, a graphene-derived 2D superlattice with a predicted mean-field critical temperature near 310-325 K at ambient pressure. Its strictly 2D nature introduces phase fluctuations that cap the observable monolayer transition near 120 K, which stacking, gating, or doping might raise."
+    },
+    {
+      "id": "2026-06-10-ai",
+      "date": "2026-06-10",
+      "category": "AI",
+      "title": "Multilinguality of Large Language Models From a Structural Perspective",
+      "source": "arXiv · 2606.01800",
+      "url": "https://arxiv.org/abs/2606.01800",
+      "summary": "Uses representational structural analysis to probe how LLMs internally organize different languages. The authors find that low-resource languages sit structurally farther from English than high- and mid-resource ones, and that language-specific post-training reshapes a language's internal structure while largely preserving its relationships to other languages."
+    },
+    {
+      "id": "2026-06-10-semiconductors",
+      "date": "2026-06-10",
+      "category": "Semiconductors",
+      "title": "Chips in the Flatland: 2D Semiconductors for Future Computing Electronics",
+      "source": "arXiv · 2605.26555",
+      "url": "https://arxiv.org/abs/2605.26555",
+      "summary": "A review arguing that as silicon transistor scaling nears its physical limits in the Angstrom era, atomically thin 2D semiconductors have emerged as leading candidate channel materials. It connects material- and device-level breakthroughs to circuit- and chip-level design, mapping what is still needed to move 2D electronics from lab demonstrations toward manufacturable computing hardware."
+    },
+    {
+      "id": "2026-06-10-biotechnology",
+      "date": "2026-06-10",
+      "category": "Biotechnology",
+      "title": "An accurate nucleic acid-small molecule docking framework via geometric deep learning with large-scale pretraining",
+      "source": "arXiv · 2606.05198",
+      "url": "https://arxiv.org/abs/2606.05198",
+      "summary": "Introduces a geometric deep-learning model, pretrained at large scale, that predicts how small molecules bind to nucleic acids such as RNA and DNA rather than the usual protein targets. On an external benchmark of 125 nucleic acid-ligand complexes it reached a 56% docking success rate, pointing toward drug discovery against RNA targets that are difficult to drug by conventional means."
+    },
+    {
+      "id": "2026-06-10-sustainable-energy",
+      "date": "2026-06-10",
+      "category": "Sustainable Energy",
+      "title": "Dynamic resource coordination can increase grid hosting capacity to support more renewables, storage, and electrified load growth",
+      "source": "arXiv · 2604.02170",
+      "url": "https://arxiv.org/abs/2604.02170",
+      "summary": "Models how coordinating distributed energy resources in real time, instead of relying on static interconnection limits, changes how much clean technology a distribution grid can absorb. The authors find dynamic coordination can support up to 200% solar, 100% battery, and 90% heat-pump penetration while cutting solar curtailment, easing a key bottleneck to electrification."
+    },
+    {
+      "id": "2026-06-10-defense-tech",
+      "date": "2026-06-10",
+      "category": "Defense Tech",
+      "title": "Algorethics and Neuro-Symbolic Military AI: Ontologies, \"Hellscapes,\" Just War, and Silicon Valley",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6434818",
+      "summary": "A policy and ethics paper examining how neuro-symbolic AI is being applied to military command and autonomous weapons, and the governance gaps this creates. It weighs the technology against just-war principles and the expanding role of commercial technology firms in defense, arguing for explicit ethical constraints—'algorethics'—designed into such systems."
+    },
+    {
+      "id": "2026-06-10-quantum-computing",
+      "date": "2026-06-10",
+      "category": "Quantum Computing",
+      "title": "Quantum error correction with the toric code",
+      "source": "arXiv · 2606.04079",
+      "url": "https://arxiv.org/abs/2606.04079",
+      "summary": "Demonstrates many repeated rounds of error correction on a neutral-atom processor running the toric code, using mid-circuit measurement and replacement of lost atoms with freshly initialized qubits. Logical information survived up to 90 correction cycles, and a companion repetition-code memory preserved encoded data for about a minute—far longer than any single atom—showing error correction that scales to arbitrary depth."
+    },
+    {
+      "id": "2026-06-10-materials-science",
+      "date": "2026-06-10",
+      "category": "Materials Science",
+      "title": "Superheating field of clean superconductors near the type-I--type-II boundary: the low-temperature Meissner stability limit of niobium",
+      "source": "arXiv · 2606.10420",
+      "url": "https://arxiv.org/abs/2606.10420",
+      "summary": "Uses self-consistent Eilenberger theory and a linear stability analysis to calculate the maximum field a clean superconductor can sustain in its Meissner state, focusing on niobium near the type-I/type-II boundary. For niobium-like parameters it predicts a superheating field near 290 mT at low temperature, setting a fundamental limit relevant to the performance of superconducting radio-frequency accelerator cavities."
     }
   ]
 }
