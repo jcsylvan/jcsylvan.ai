@@ -128,6 +128,45 @@
     .article-title { color: #e0e0e0; }
     .article-title:hover { color: #f0c040; }
     .article-source { color: #555; font-size: 0.72rem; margin-top: 0.2rem; }
+    .article-cell { max-width: 460px; }
+
+    .summary-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.45rem;
+      background: none;
+      border: none;
+      padding: 0;
+      color: #6fb3ff;
+      font-family: inherit;
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+    }
+    .summary-toggle:hover { color: #9cccff; }
+    .summary-toggle .caret { transition: transform 0.15s ease; font-size: 0.6rem; }
+    .summary-toggle[aria-expanded="true"] .caret { transform: rotate(90deg); }
+
+    .summary {
+      margin-top: 0.5rem;
+      padding: 0.6rem 0.7rem;
+      border-left: 2px solid #2b3a4a;
+      background: #141a20;
+      border-radius: 0 4px 4px 0;
+      color: #aab4bd;
+      font-size: 0.78rem;
+      line-height: 1.55;
+    }
+    .summary[hidden] { display: none; }
+    .summary .ai-tag {
+      display: block;
+      color: #5f7180;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
 
     input[type="checkbox"] {
       width: 1.05rem;
@@ -182,8 +221,8 @@
     <h1>reads</h1>
     <p class="subtitle">
       A daily feed of one interesting article each across AI, semiconductors, biotechnology,
-      sustainable energy, defense tech, quantum computing and materials science. Tick a box
-      when you've read something and jot down notes &mdash;
+      sustainable energy, defense tech, quantum computing and materials science. Expand the
+      AI summary to preview each one, tick a box when you've read it, and jot down notes &mdash;
       your read status and comments are saved in this browser.
     </p>
 
@@ -279,12 +318,39 @@
         tr.innerHTML = `
           <td class="col-date">${fmtDate(a.date)}</td>
           <td class="col-cat"><span class="cat-tag ${catClass(a.category)}">${a.category}</span></td>
-          <td>
+          <td class="article-cell">
             <a class="article-title" href="${a.url}" target="_blank" rel="noopener">${escapeHtml(a.title)}</a>
             ${a.source ? `<div class="article-source">${escapeHtml(a.source)}</div>` : ""}
           </td>
           <td class="col-read"></td>
           <td></td>`;
+
+        if (a.summary) {
+          const cell = tr.querySelector(".article-cell");
+          const panelId = "summary-" + a.id;
+
+          const toggle = document.createElement("button");
+          toggle.className = "summary-toggle";
+          toggle.type = "button";
+          toggle.setAttribute("aria-expanded", "false");
+          toggle.setAttribute("aria-controls", panelId);
+          toggle.innerHTML = '<span class="caret">▶</span><span>AI summary</span>';
+
+          const panel = document.createElement("div");
+          panel.className = "summary";
+          panel.id = panelId;
+          panel.hidden = true;
+          panel.innerHTML = '<span class="ai-tag">AI summary</span>' + escapeHtml(a.summary);
+
+          toggle.onclick = () => {
+            const open = toggle.getAttribute("aria-expanded") === "true";
+            toggle.setAttribute("aria-expanded", String(!open));
+            panel.hidden = open;
+          };
+
+          cell.appendChild(toggle);
+          cell.appendChild(panel);
+        }
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";

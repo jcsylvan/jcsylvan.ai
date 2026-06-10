@@ -7,7 +7,8 @@
       "category": "AI",
       "title": "Agentic Reasoning for Large Language Models",
       "source": "arXiv · 2601.12538",
-      "url": "https://arxiv.org/abs/2601.12538"
+      "url": "https://arxiv.org/abs/2601.12538",
+      "summary": "A survey arguing that LLMs reason well in closed settings but struggle in open-ended, dynamic ones, motivating a shift to treating them as agents that plan, act, and learn through interaction. It organizes the field into three layers: foundational single-agent reasoning, self-evolving agents that refine via feedback and memory, and collective multi-agent collaboration."
     },
     {
       "id": "2026-05-30-semiconductors",
@@ -15,7 +16,8 @@
       "category": "Semiconductors",
       "title": "Gate-Drain Leakage Enhanced by Drain-Induced Dielectric Barrier Lowering in Gate-All-Around FETs",
       "source": "arXiv · 2603.21015",
-      "url": "https://arxiv.org/abs/2603.21015"
+      "url": "https://arxiv.org/abs/2603.21015",
+      "summary": "Sandia researchers use first-principles simulations to trace the off-state leakage in gate-all-around FETs at negative gate voltage to gate-to-drain tunneling, significantly enhanced by drain-induced dielectric barrier lowering. Pinning down this mechanism matters for the scaling limits and off-state current of the GAA nodes now entering high-volume production."
     },
     {
       "id": "2026-05-30-biotechnology",
@@ -23,7 +25,8 @@
       "category": "Biotechnology",
       "title": "EnzyPGM: Pocket-conditioned Generative Model for Substrate-specific Enzyme Design",
       "source": "arXiv · 2601.19205",
-      "url": "https://arxiv.org/abs/2601.19205"
+      "url": "https://arxiv.org/abs/2601.19205",
+      "summary": "Proposes EnzyPGM, a generative model that jointly designs an enzyme and its substrate-binding pocket, conditioned on the target substrate and functional priors, with attention modules that model fine-grained pocket-residue-to-substrate-atom interactions earlier methods captured poorly. The authors also curate EnzyPock, a dataset of 83,062 enzyme-substrate pairs across 1,036 enzyme families."
     },
     {
       "id": "2026-05-30-sustainable-energy",
@@ -31,7 +34,8 @@
       "category": "Sustainable Energy",
       "title": "SAGE: Synthetic Aging for a Grid Environment",
       "source": "arXiv · 2603.13976",
-      "url": "https://arxiv.org/abs/2603.13976"
+      "url": "https://arxiv.org/abs/2603.13976",
+      "summary": "Introduces SAGE, an open-source, physics-informed framework that generates hour-resolved, multi-decade operating and degradation histories for heterogeneous grid-battery fleets under realistic market dispatch, coupling electro-thermal behavior with calendar and cycle aging. It gives degradation-aware algorithms and digital twins the long-horizon, physically consistent ground truth that lab cycling and proprietary field data lack."
     },
     {
       "id": "2026-05-30-defense-tech",
@@ -39,7 +43,8 @@
       "category": "Defense Tech",
       "title": "The Future of Warfare: National Positions on the Governance of Lethal Autonomous Weapons Systems",
       "source": "SSRN",
-      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5135494"
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5135494",
+      "summary": "Analyzes recent international diplomacy on lethal autonomous weapons, now reaching the battlefield, and sorts national positions into three camps: traditionalists who rely on existing international law, prohibitionists who seek a ban, and dualists who want a new treaty banning some uses while regulating others. It then identifies potential next steps for governance."
     },
     {
       "id": "2026-05-30-quantum-computing",
@@ -47,7 +52,8 @@
       "category": "Quantum Computing",
       "title": "Fault-Tolerant Quantum Computing with Trapped Ions: The Walking Cat Architecture",
       "source": "arXiv · 2604.19481",
-      "url": "https://arxiv.org/abs/2604.19481"
+      "url": "https://arxiv.org/abs/2604.19481",
+      "summary": "Presents the 'walking cat' fault-tolerant architecture for trapped ions, built entirely on quantum low-density parity-check (LDPC) codes, with a full stack: compiler, error-correction protocols, micro-architecture, a fast decoder, and detailed simulations. Its backbone is a 'cat factory' that produces cat states distributed across the machine and consumes them to perform logical operations."
     },
     {
       "id": "2026-05-30-materials-science",
@@ -55,7 +61,8 @@
       "category": "Materials Science",
       "title": "AI-Guided Computational Design of a Room-Temperature, Ambient-Pressure Superconductor Candidate: Grokene",
       "source": "arXiv · 2601.00931",
-      "url": "https://arxiv.org/abs/2601.00931"
+      "url": "https://arxiv.org/abs/2601.00931",
+      "summary": "Uses an LLM-guided discovery workflow, paired with first-principles many-body calculations, to propose Grokene, a graphene-derived 2D superlattice with a predicted mean-field critical temperature near 310-325 K at ambient pressure. Its strictly 2D nature introduces phase fluctuations that cap the observable monolayer transition near 120 K, which stacking, gating, or doping might raise."
     }
   ]
 }
