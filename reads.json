@@ -126,6 +126,69 @@
       "source": "arXiv · 2606.10420",
       "url": "https://arxiv.org/abs/2606.10420",
       "summary": "Uses self-consistent Eilenberger theory and a linear stability analysis to calculate the maximum field a clean superconductor can sustain in its Meissner state, focusing on niobium near the type-I/type-II boundary. For niobium-like parameters it predicts a superheating field near 290 mT at low temperature, setting a fundamental limit relevant to the performance of superconducting radio-frequency accelerator cavities."
+    },
+    {
+      "id": "2026-06-10-ai-2",
+      "date": "2026-06-10",
+      "category": "AI",
+      "title": "Agentic Transformers Provably Learn to Search via Reinforcement Learning",
+      "source": "arXiv · 2606.00183",
+      "url": "https://arxiv.org/abs/2606.00183",
+      "summary": "A theory paper studying how transformer policies acquire search behavior when trained with reinforcement learning. The authors show that tree-search-like strategies can provably emerge from sparse reward signals during training, offering a mathematical account of why agentic models learn to explore and backtrack rather than just memorize answers."
+    },
+    {
+      "id": "2026-06-10-semiconductors-2",
+      "date": "2026-06-10",
+      "category": "Semiconductors",
+      "title": "Thermal Processing Limits in Oxide-Channel Ferroelectric Field Effect Transistors",
+      "source": "arXiv · 2606.08378",
+      "url": "https://arxiv.org/abs/2606.08378",
+      "summary": "Systematically studies how high-temperature post-capping anneals affect the memory behavior of oxide-semiconductor-channel ferroelectric FETs built on a Hf0.5Zr0.5O2 gate stack with an HfO2 capping layer. By mapping the thermal-budget window that preserves device performance, the work informs how these emerging non-volatile memory transistors can be integrated into back-end-of-line manufacturing flows."
+    },
+    {
+      "id": "2026-06-10-biotechnology-2",
+      "date": "2026-06-10",
+      "category": "Biotechnology",
+      "title": "Single-Cell Cross-Modal Transfer by Adversarial Fine-Tuning of Foundation Models",
+      "source": "arXiv · 2606.07676",
+      "url": "https://arxiv.org/abs/2606.07676",
+      "summary": "Shows that a single-cell foundation model can be adversarially fine-tuned to translate between biological data modalities, helping bridge the gap between bulk and spatial transcriptomics. The approach aims to profile many thousands of genes at subcellular resolution, supporting tissue analyses that depend on cellular structure, proximity, and interaction."
+    },
+    {
+      "id": "2026-06-10-sustainable-energy-2",
+      "date": "2026-06-10",
+      "category": "Sustainable Energy",
+      "title": "Artificial Intelligence for Instability in Inorganic Perovskites: From Mechanism Discovery to Engineering Strategies",
+      "source": "arXiv · 2606.09147",
+      "url": "https://arxiv.org/abs/2606.09147",
+      "summary": "Reviews how AI can tackle the instability that still limits inorganic perovskite solar cells under thermal, chemical, optical, and electrical stress. The authors argue an integrated approach is needed because the design space spans composition, additives, processing, interfaces, and encapsulation, with targets including not just efficiency but lifetime, reproducibility, and manufacturability."
+    },
+    {
+      "id": "2026-06-10-defense-tech-2",
+      "date": "2026-06-10",
+      "category": "Defense Tech",
+      "title": "AI-Enabled Military Decision-Making and Escalation Risk: Human-Machine Command Authority in Great Power Competition",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6082847",
+      "summary": "Argues that while high autonomy may be warranted in narrow tasks such as missile defense and hypersonic intercept, delegating command authority to AI in ambiguous or nuclear-adjacent situations undermines crisis stability. It compares US, Chinese, and Russian approaches to human-machine command and the escalation risks each creates in great-power competition."
+    },
+    {
+      "id": "2026-06-10-quantum-computing-2",
+      "date": "2026-06-10",
+      "category": "Quantum Computing",
+      "title": "Correlation-Assisted Odd-Parity Encoded Gates in Coupled Fluxonium Qubits under Non-Markovian TLS Noise",
+      "source": "arXiv · 2606.07699",
+      "url": "https://arxiv.org/abs/2606.07699",
+      "summary": "Proposes encoding two-qubit gates in the odd-parity subspace of coupled fluxonium qubits to make them more resilient to non-Markovian noise from two-level-system defects. By exploiting noise correlations rather than fighting them, the scheme aims to raise gate fidelity in fluxonium processors, an increasingly competitive alternative to transmon-based superconducting hardware."
+    },
+    {
+      "id": "2026-06-10-materials-science-2",
+      "date": "2026-06-10",
+      "category": "Materials Science",
+      "title": "Six Open Questions in Machine-Learned Interatomic Potential Foundation Models",
+      "source": "arXiv · 2606.07327",
+      "url": "https://arxiv.org/abs/2606.07327",
+      "summary": "A perspective on the shift toward 'foundational' machine-learned interatomic potentials—large pretrained models meant to predict atomic forces across much of the periodic table. It lays out six open questions about their accuracy, transferability, and evaluation, framing what the materials-modeling community still needs to resolve before these models can be trusted as general-purpose tools."
     }
   ]
 }
