@@ -3,11 +3,16 @@
 `reads.html` renders a reading list from `reads.json`. The list on the
 main page is reached via the **📖 puck is here** button on `index.html`.
 
-> **How this runs:** this job is meant to be run **once a week** by a scheduled
-> Claude Code session (a weekly trigger pointed at this repo). The page itself
-> is a static file and cannot fetch new articles on its own — this runbook is
-> what actually pulls them in. New articles are **committed straight to `main`**,
-> so they appear on the live page automatically with no review step.
+> **How this runs:** this job is meant to be run **once a week, on Sunday
+> morning**, by a scheduled Claude Code session (a weekly trigger pointed at this
+> repo). The page itself is a static file and cannot fetch new articles on its
+> own — this runbook is what actually pulls them in. New articles are
+> **committed straight to `main`**, so they appear on the live page automatically
+> with no review step.
+
+> **This is a growing syllabus, not a feed:** never delete or replace older
+> entries. Each week's articles are **appended** so the list accumulates into a
+> long reading list over time.
 
 ## TL;DR weekly run
 
@@ -15,11 +20,26 @@ main page is reached via the **📖 puck is here** button on `index.html`.
 2. For each of the seven categories below, find one strong, recent article
    (≈ the last week), preferring arXiv/SSRN — see **Sourcing**.
 3. Write a 2–3 sentence summary of each (see **Article schema**).
-4. Append one object per category to the `articles` array in `reads.json`,
-   using today's date in the `id` and `date` fields.
+4. **Append** one object per category to the `articles` array in `reads.json`,
+   using today's date in the `id` and `date` fields. Leave all existing entries
+   untouched.
 5. Set the top-level `"updated"` field to today's date.
 6. Validate the JSON, then **commit straight to `main` and push** with a
    message like `reads: weekly update YYYY-MM-DD`.
+7. **Email a recap** to jcsylvan@gmail.com — see **Weekly email** below.
+
+## Weekly email
+
+After the push succeeds, send a short email to **jcsylvan@gmail.com** so the
+update lands in the inbox without having to check the page:
+
+- **Subject:** `reads — weekly update YYYY-MM-DD`
+- **Body:** one line per category with the article title, source, and link
+  (e.g. `AI — "Title" (arXiv) https://…`), and a closing line linking to the
+  page: `https://jcsylvan.ai/reads.html`.
+- Use whatever email tool is available to the session (e.g. the Gmail
+  integration). If no email tool is available that run, skip this step — the
+  commit is the source of truth and the page is already updated.
 
 ## The job
 
