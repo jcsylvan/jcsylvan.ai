@@ -1,11 +1,29 @@
-# Daily "reads" updater
+# Weekly "reads" updater
 
-`reads.html` renders a daily reading list from `reads.json`. The list on the
+`reads.html` renders a reading list from `reads.json`. The list on the
 main page is reached via the **📖 puck is here** button on `index.html`.
 
-## Daily job
+> **How this runs:** this job is meant to be run **once a week** by a scheduled
+> Claude Code session (a weekly trigger pointed at this repo). The page itself
+> is a static file and cannot fetch new articles on its own — this runbook is
+> what actually pulls them in. New articles are **committed straight to `main`**,
+> so they appear on the live page automatically with no review step.
 
-Once per day, add **one genuinely interesting, recent article for each of these
+## TL;DR weekly run
+
+1. `git pull` so you're on the latest `main`.
+2. For each of the seven categories below, find one strong, recent article
+   (≈ the last week), preferring arXiv/SSRN — see **Sourcing**.
+3. Write a 2–3 sentence summary of each (see **Article schema**).
+4. Append one object per category to the `articles` array in `reads.json`,
+   using today's date in the `id` and `date` fields.
+5. Set the top-level `"updated"` field to today's date.
+6. Validate the JSON, then **commit straight to `main` and push** with a
+   message like `reads: weekly update YYYY-MM-DD`.
+
+## The job
+
+Each run, add **one genuinely interesting, recent article for each of these
 seven categories**:
 
 - `AI`
@@ -19,7 +37,8 @@ seven categories**:
 ### Sourcing — prefer primary research (arXiv / SSRN)
 
 For each category, **try arXiv and SSRN first**, and only fall back to a quality
-news article if nothing strong/recent turns up in that category.
+news article if nothing strong/recent turns up in that category. Prefer work
+from roughly the past week so the list keeps moving.
 
 - **arXiv** is the primary source for the technical categories. The raw API host
   (`export.arxiv.org`) is blocked by this environment's network allowlist, so do
@@ -54,7 +73,8 @@ Suggested source per category (a guide, not a hard rule):
 4. Set `"source"` to the origin — e.g. `"arXiv · 2601.12538"`, `"SSRN"`, or the
    publication name when using a news fallback.
 5. Set the top-level `"updated"` field to today's date.
-6. Commit and push.
+6. Validate the file parses as JSON (e.g. `python3 -m json.tool reads.json`),
+   then **commit straight to `main` and push** — no PR needed.
 
 ### Article schema
 
@@ -79,7 +99,9 @@ Notes:
   If a summary is omitted, the row simply shows no toggle.
 - `id` must be unique and stable — `date` + lowercase, hyphenated category
   (e.g. `2026-05-30-sustainable-energy`). The site keys read-status and
-  comments off `id`, so never reuse or change an existing `id`.
+  comments off `id`, so never reuse or change an existing `id`. Because the date
+  is part of the `id`, a once-a-week run never collides with previous weeks.
+  (If you ever run twice in one day, append `-2` to disambiguate.)
 - Category slugs used by the styling: `ai`, `semiconductors`, `biotechnology`,
   `sustainable-energy`, `defense-tech`, `quantum-computing`, `materials-science`.
 - Don't remove old entries — the list is meant to accumulate.
