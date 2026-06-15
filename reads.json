@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-10",
+  "updated": "2026-06-15",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -189,6 +189,69 @@
       "source": "arXiv · 2606.07327",
       "url": "https://arxiv.org/abs/2606.07327",
       "summary": "A perspective on the shift toward 'foundational' machine-learned interatomic potentials—large pretrained models meant to predict atomic forces across much of the periodic table. It lays out six open questions about their accuracy, transferability, and evaluation, framing what the materials-modeling community still needs to resolve before these models can be trusted as general-purpose tools."
+    },
+    {
+      "id": "2026-06-15-ai",
+      "date": "2026-06-15",
+      "category": "AI",
+      "title": "WorldReasoner: Evaluating Whether Language Model Agents Forecast Events with Valid Reasoning",
+      "source": "arXiv · 2606.11816",
+      "url": "https://arxiv.org/abs/2606.11816",
+      "summary": "Introduces a benchmark of 345 resolved forecasting tasks, with causal graphs spanning 8,087 events, to test not just whether language-model agents predict the future accurately but whether they reason validly in doing so. The authors find that temporally valid retrieval is the strongest driver of accuracy and that building causal graphs improves recovery of the key events behind an outcome."
+    },
+    {
+      "id": "2026-06-15-semiconductors",
+      "date": "2026-06-15",
+      "category": "Semiconductors",
+      "title": "Breaking the width-scaling limit in high-performance atomically thin 2D nanoribbon transistors",
+      "source": "arXiv · 2606.04219",
+      "url": "https://arxiv.org/abs/2606.04219",
+      "summary": "Reducing transistor channel width below 40-50 nm has been a bottleneck because edge disorder and lateral depletion sap drive current. Using atomically thin MoS2 nanoribbon transistors scaled to 15 nm, the authors instead see on-current density rise by up to 230% (monolayer) and 170% (bilayer), while keeping record on/off ratios—overturning the usual width-scaling penalty."
+    },
+    {
+      "id": "2026-06-15-biotechnology",
+      "date": "2026-06-15",
+      "category": "Biotechnology",
+      "title": "AgentPLM: Agentic Protein Language Models with Reasoning-Augmented Decoding for Protein Sequence Design",
+      "source": "arXiv · 2606.02386",
+      "url": "https://arxiv.org/abs/2606.02386",
+      "summary": "Reframes protein language models as agents that consult external biophysical feedback while decoding, rather than generating sequences passively in one pass. This reasoning-augmented decoding lets the model steer designs toward better structural and functional properties, aiming to improve the reliability of computational protein sequence design."
+    },
+    {
+      "id": "2026-06-15-sustainable-energy",
+      "date": "2026-06-15",
+      "category": "Sustainable Energy",
+      "title": "Learning-Assisted Day-Ahead Energy Scheduling for Frequency-Secure Inverter-Dominated Grids with Grid-Forming Battery Storage",
+      "source": "arXiv · 2606.05534",
+      "url": "https://arxiv.org/abs/2606.05534",
+      "summary": "Proposes a learning-assisted day-ahead scheduling framework that uses a surrogate model to capture the frequency-support dynamics of grid-forming battery storage. This sidesteps the electromagnetic-transient simulations normally too costly to embed in grid optimization, helping operators schedule inverter-dominated, renewable-heavy grids while keeping frequency secure."
+    },
+    {
+      "id": "2026-06-15-defense-tech",
+      "date": "2026-06-15",
+      "category": "Defense Tech",
+      "title": "Appropriate Human Judgement: U.S. Policy on Lethal Autonomous Weapons Systems and the Law of Armed Conflict",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5216684",
+      "summary": "Examines the U.S. requirement (DODI 3000.09) for 'appropriate levels of human judgement' over lethal autonomous weapons and what it demands of commanders under the law of armed conflict. It works through how that standard maps onto targeting obligations as autonomous systems move closer to fielding."
+    },
+    {
+      "id": "2026-06-15-quantum-computing",
+      "date": "2026-06-15",
+      "category": "Quantum Computing",
+      "title": "Coherent versus stochastic error injection on a repetition-code logical qubit in superconducting hardware",
+      "source": "arXiv · 2606.07377",
+      "url": "https://arxiv.org/abs/2606.07377",
+      "summary": "Uses a bit-flip repetition code on a transmon processor as a testbed to compare how coherent versus stochastic physical errors propagate to logical performance. Distinguishing these error types matters because they degrade error-corrected qubits differently, informing how real hardware noise should be modeled and suppressed."
+    },
+    {
+      "id": "2026-06-15-materials-science",
+      "date": "2026-06-15",
+      "category": "Materials Science",
+      "title": "DPA4: Pushing the Accuracy-Cost Frontier of Interatomic Potentials with EMFA SO(2) Convolution",
+      "source": "arXiv · 2606.02419",
+      "url": "https://arxiv.org/abs/2606.02419",
+      "summary": "Presents DPA4, an equivariant machine-learned interatomic-potential architecture whose new SO(2) convolution and training path cut the heavy compute cost of expressive models, with about a 3x speedup. On the Matbench Discovery benchmark its compact 2.76M-parameter variant beats a 30M-parameter baseline, pushing the accuracy-versus-cost frontier for atomistic materials simulation."
     }
   ]
 }
