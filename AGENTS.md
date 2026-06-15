@@ -3,8 +3,8 @@
 `reads.html` renders a reading list from `reads.json`. The list on the
 main page is reached via the **📖 puck is here** button on `index.html`.
 
-> **How this runs:** this job is meant to be run **once a week, on Sunday
-> morning**, by a scheduled Claude Code session (a weekly trigger pointed at this
+> **How this runs:** this job is meant to be run **once a week, on Tuesday at
+> 6 AM**, by a scheduled Claude Code session (a weekly trigger pointed at this
 > repo). The page itself is a static file and cannot fetch new articles on its
 > own — this runbook is what actually pulls them in. New articles are
 > **committed straight to `main`**, so they appear on the live page automatically
@@ -17,16 +17,49 @@ main page is reached via the **📖 puck is here** button on `index.html`.
 ## TL;DR weekly run
 
 1. `git pull` so you're on the latest `main`.
-2. For each of the seven categories below, find one strong, recent article
-   (≈ the last week), preferring arXiv/SSRN — see **Sourcing**.
-3. Write a 2–3 sentence summary of each (see **Article schema**).
-4. **Append** one object per category to the `articles` array in `reads.json`,
+2. **Note which URLs are already in `reads.json`** so you don't repost them
+   (see **No duplicates** below).
+3. For each of the seven categories below, find one strong, recent article
+   (≈ the last week) that is **not already in the file**, preferring
+   arXiv/SSRN — see **Sourcing**.
+4. Write a 2–3 sentence summary of each (see **Article schema**).
+5. **Append** one object per category to the `articles` array in `reads.json`,
    using today's date in the `id` and `date` fields. Leave all existing entries
    untouched.
-5. Set the top-level `"updated"` field to today's date.
-6. Validate the JSON, then **commit straight to `main` and push** with a
+6. Set the top-level `"updated"` field to today's date.
+7. **Validate the JSON and confirm no duplicate `url` or `id`** (see
+   **No duplicates**), then **commit straight to `main` and push** with a
    message like `reads: weekly update YYYY-MM-DD`.
-7. **Email a recap** to jcsylvan@gmail.com — see **Weekly email** below.
+8. **Email a recap** to jcsylvan@gmail.com — see **Weekly email** below.
+
+## No duplicates
+
+The list has started to accumulate repeats — actively prevent this each run:
+
+- **Before searching**, read the existing `reads.json` and collect every
+  `url` and `title` already present. Treat those as off-limits.
+- For each category, if your best candidate is **already in the file** (same
+  URL, or the same paper under a different link), **pick a different recent
+  article** instead. Do not re-add it.
+- Normalize arXiv URLs before comparing: `arxiv.org/abs/2606.04079`,
+  `.../pdf/2606.04079`, and a versioned `...v2` all refer to the **same paper** —
+  treat them as duplicates of each other.
+- **After editing**, verify uniqueness across the whole file before committing.
+  A quick check:
+
+  ```bash
+  python3 - <<'PY'
+  import json
+  a = json.load(open("reads.json"))["articles"]
+  for key in ("id", "url"):
+      vals = [x[key] for x in a]
+      dupes = {v for v in vals if vals.count(v) > 1}
+      print(f"duplicate {key}s:", dupes or "none")
+  PY
+  ```
+
+  If it prints anything other than `none`, replace the offending entry before
+  committing.
 
 ## Weekly email
 
