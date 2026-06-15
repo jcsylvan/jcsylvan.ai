@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Export License Screener &mdash; jcsylvan.ai</title>
-  <meta name="description" content="Preliminary screen of whether a part number or piece of equipment is likely to need an export license.">
+  <meta name="description" content="Shop-floor triage of whether a part number or piece of equipment is likely to need an export license.">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="icon" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
@@ -71,33 +71,35 @@
       border-radius: 5px;
       color: #e0e0e0;
       font-family: inherit;
-      font-size: 0.9rem;
-      padding: 0.75rem 0.85rem;
+      font-size: 0.95rem;
+      padding: 0.8rem 0.85rem;
       resize: vertical;
     }
-    textarea { min-height: 90px; }
+    textarea { min-height: 96px; }
     textarea:focus, input[type="text"]:focus { outline: none; border-color: #f0c040; }
 
     .field + .field { margin-top: 1rem; }
 
     .row2 { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: flex-end; }
-    .row2 .field { flex: 1; min-width: 200px; margin-top: 0; }
+    .row2 .field { flex: 1; min-width: 180px; margin-top: 0; }
 
-    button.go {
-      background: #f0c040;
-      color: #0a0a0a;
+    .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.1rem; }
+    button.go, button.alt {
       border: none;
       border-radius: 5px;
       font-family: inherit;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      padding: 0.7rem 1.4rem;
+      padding: 0.85rem 1.5rem;
       cursor: pointer;
       letter-spacing: 0.03em;
-      transition: background 0.15s ease;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
       white-space: nowrap;
     }
+    button.go { background: #f0c040; color: #0a0a0a; }
     button.go:hover { background: #ffd35a; }
+    button.alt { background: none; color: #999; border: 1px solid #333; }
+    button.alt:hover { color: #e0e0e0; border-color: #888; }
 
     .examples { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
     .examples .lbl { color: #555; font-size: 0.72rem; }
@@ -108,7 +110,7 @@
       color: #888;
       font-family: inherit;
       font-size: 0.72rem;
-      padding: 0.3rem 0.7rem;
+      padding: 0.35rem 0.75rem;
       cursor: pointer;
       transition: color 0.15s ease, border-color 0.15s ease;
     }
@@ -117,27 +119,29 @@
     /* result */
     .verdict {
       border-radius: 6px;
-      padding: 1.1rem 1.25rem;
+      padding: 1.2rem 1.3rem;
       margin-bottom: 1.25rem;
       border: 1px solid;
     }
-    .verdict .tag {
-      font-size: 0.66rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
+    .verdict .light {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 0.5rem;
+      display: inline-flex; align-items: center; gap: 0.5rem;
     }
-    .verdict .headline { font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
-    .verdict .sub { font-size: 0.82rem; line-height: 1.55; margin-top: 0.5rem; }
+    .verdict .light::before {
+      content: ""; width: 0.7rem; height: 0.7rem; border-radius: 50%;
+      background: currentColor; display: inline-block;
+    }
+    .verdict .headline { font-size: 1.08rem; font-weight: 600; line-height: 1.4; }
+    .verdict .action { font-size: 0.9rem; font-weight: 600; margin-top: 0.55rem; }
+    .verdict .sub { font-size: 0.82rem; line-height: 1.55; margin-top: 0.5rem; color: #bdbdbd; }
 
     .v-likely   { border-color: #5a2424; background: #1a0f0f; }
-    .v-likely .tag, .v-likely .headline { color: #ff7a6f; }
+    .v-likely .light, .v-likely .headline, .v-likely .action { color: #ff7a6f; }
     .v-maybe    { border-color: #5a4a18; background: #16130b; }
-    .v-maybe .tag, .v-maybe .headline { color: #f0c040; }
+    .v-maybe .light, .v-maybe .headline, .v-maybe .action { color: #f0c040; }
     .v-unlikely { border-color: #285a28; background: #0d160d; }
-    .v-unlikely .tag, .v-unlikely .headline { color: #79d479; }
-    .v-likely .sub, .v-maybe .sub, .v-unlikely .sub { color: #bdbdbd; }
+    .v-unlikely .light, .v-unlikely .headline, .v-unlikely .action { color: #79d479; }
 
     /* destination flag */
     .destflag {
@@ -182,6 +186,10 @@
 
     .empty { color: #888; font-size: 0.85rem; line-height: 1.6; }
 
+    .resultbar {
+      display: flex; justify-content: flex-end; margin-bottom: 1rem;
+    }
+
     .disclaimer {
       margin-top: 2rem;
       border-top: 1px solid #1c1c1c;
@@ -195,8 +203,30 @@
     .steps2 { margin: 0.5rem 0 0 1.1rem; padding: 0; }
     .steps2 li { font-size: 0.8rem; color: #999; line-height: 1.55; margin-bottom: 0.3rem; }
 
+    /* printable screening record — hidden on screen, shown only when printing */
+    #record { display: none; }
+
     @media (max-width: 600px) {
       body { padding: 1rem; }
+      .actions { flex-direction: column; }
+      button.go, button.alt { width: 100%; }
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      body > .wrap > *:not(#record) { display: none !important; }
+      #record {
+        display: block; color: #000; font-size: 12px; line-height: 1.5;
+        padding: 1.5rem;
+      }
+      #record h2 { font-size: 16px; margin-bottom: 0.75rem; }
+      #record .rrow { margin-bottom: 0.4rem; }
+      #record .rlabel { font-weight: 700; }
+      #record .rverdict { font-weight: 700; font-size: 14px; margin: 0.75rem 0; padding: 0.5rem 0.75rem; border: 1px solid #000; }
+      #record ul { margin: 0.25rem 0 0.5rem 1.25rem; }
+      #record .rsig { margin-top: 2rem; }
+      #record .rsig .line { border-top: 1px solid #000; width: 60%; margin-top: 2rem; padding-top: 0.25rem; }
+      #record .rdisc { margin-top: 1.5rem; font-size: 10px; color: #333; border-top: 1px solid #999; padding-top: 0.5rem; }
     }
   </style>
 </head>
@@ -205,10 +235,11 @@
     <a href="tools.html" class="back-link">&larr; tools</a>
     <h1>Export License Screener</h1>
     <p class="subtitle">
-      Enter a part number or a plain-language description of a piece of equipment to get a
-      quick, first-pass read on whether it is likely to need a US export license &mdash; which
-      Commerce Control List category and ECCN it tends to fall under, and why. This is a triage
-      aid, not a classification.
+      A shop-floor triage aid: enter a part number or a plain-language description of a piece of
+      equipment to get a fast first read on whether it is likely to need a US export license &mdash;
+      which Commerce Control List category and ECCN it tends to fall under, and why. Use it to
+      decide what can move and what to hold for export-compliance sign-off. It is a triage step,
+      not an official classification.
     </p>
     <p class="updated">knowledge base updated <span id="updated">&mdash;</span></p>
 
@@ -222,7 +253,14 @@
           <label for="dest">Destination country (optional)</label>
           <input type="text" id="dest" placeholder="e.g. Germany, China, Iran" />
         </div>
+        <div class="field">
+          <label for="who">Screened by (initials, optional)</label>
+          <input type="text" id="who" placeholder="e.g. JS" />
+        </div>
+      </div>
+      <div class="actions">
         <button class="go" id="go">Screen item</button>
+        <button class="alt" id="print" hidden>Print / save record</button>
       </div>
       <div class="examples">
         <span class="lbl">try:</span>
@@ -239,17 +277,22 @@
     <div class="disclaimer">
       <b>Not legal or compliance advice.</b> This tool does a keyword screen against a small,
       illustrative knowledge base of common dual-use categories. It cannot and does not produce
-      an official classification. The real export-control outcome depends on the precise technical
-      parameters of the item, its <b>jurisdiction</b> (EAR vs. ITAR vs. NRC/DOE), the
-      <b>destination</b>, the <b>end-user</b> and the <b>end-use</b> &mdash; and on the current
-      regulations, which change frequently. Always confirm with the EAR Commerce Control List,
-      a self-classification or CCATS, and a licensed export-compliance professional before
-      shipping. Edit <code>export-license.json</code> to expand the rules.
+      an official classification, and a green result is <b>not</b> authorization to export.
+      The real outcome depends on the precise technical parameters of the item, its
+      <b>jurisdiction</b> (EAR vs. ITAR vs. NRC/DOE), the <b>destination</b>, the
+      <b>end-user</b> and the <b>end-use</b> &mdash; and on the current regulations, which change
+      frequently. Always confirm with the EAR Commerce Control List, a self-classification or
+      CCATS, and your export-compliance team before shipping. Edit
+      <code>export-license.json</code> to expand the rules.
     </div>
+
+    <!-- printable screening record -->
+    <div id="record"></div>
   </div>
 
   <script>
     let data = { categories: [], reasonCodes: {}, highRiskDestinations: [] };
+    let lastScreen = null;
 
     function esc(s) {
       return String(s).replace(/[&<>"']/g, c =>
@@ -287,41 +330,58 @@
     }
 
     function verdictFor(results) {
-      if (!results.length) return { cls: "unlikely", tag: "likely no license — EAR99 candidate" };
+      if (!results.length) return { cls: "unlikely" };
       const anyLikely = results.some(r => r.cat.license === "likely");
-      if (anyLikely) return { cls: "likely", tag: "license likely required" };
-      return { cls: "maybe", tag: "may be controlled — review needed" };
+      if (anyLikely) return { cls: "likely" };
+      return { cls: "maybe" };
     }
 
-    function render(text, dest) {
+    const COPY = {
+      likely: {
+        light: "Red — hold",
+        action: "Action: HOLD. Do not ship without export-compliance sign-off.",
+        headline: "This item matches one or more strictly controlled categories.",
+        sub: "A specific ECCN very likely applies and a license is probably required for many destinations. Route to your export-compliance team for a formal classification before quoting or shipping."
+      },
+      maybe: {
+        light: "Amber — review",
+        action: "Action: REVIEW. Confirm the technical specs before it moves.",
+        headline: "This item may be export-controlled depending on its exact specs.",
+        sub: "It matches a controlled category, but whether it is actually caught usually turns on performance thresholds. Confirm the parameters against the ECCN — a License Exception may apply, or it may clear."
+      },
+      unlikely: {
+        light: "Green — likely EAR99",
+        action: "Action: RECORD and route per your export procedure. Green is not authorization to export.",
+        headline: "No controlled category matched — this looks like a possible EAR99 item.",
+        sub: "Most ordinary commercial goods are EAR99 (no license for most destinations). But a clean keyword screen is not a determination: verify the technical specs, and remember EAR99 items still need a license to embargoed destinations, denied/listed parties, or prohibited end-uses."
+      }
+    };
+
+    function render(text, dest, who) {
       const el = document.getElementById("result");
+      const printBtn = document.getElementById("print");
       if (!text.trim()) {
         el.innerHTML = '<div class="match"><span class="empty">Enter a part number or description above, then press <b>Screen item</b>.</span></div>';
+        printBtn.hidden = true;
+        lastScreen = null;
         return;
       }
 
       const results = screen(text);
       const v = verdictFor(results);
       const destRule = checkDestination(dest);
+      const c = COPY[v.cls];
+      const when = new Date();
 
-      let headline, sub;
-      if (v.cls === "likely") {
-        headline = "This item matches one or more strictly controlled categories.";
-        sub = "A specific ECCN very likely applies and a license is probably required for many destinations. Do a formal classification before quoting or shipping.";
-      } else if (v.cls === "maybe") {
-        headline = "This item may be export-controlled depending on its exact specs.";
-        sub = "It matches a controlled category, but whether it is actually caught usually turns on performance thresholds. Confirm the parameters against the ECCN, or a License Exception may apply.";
-      } else {
-        headline = "No controlled category matched — this looks like a possible EAR99 item.";
-        sub = "Most ordinary commercial goods are EAR99 (no license for most destinations). But a clean keyword screen is not a determination: verify the technical specs, and remember EAR99 items still need a license to embargoed destinations, denied parties, or prohibited end-uses.";
-      }
+      lastScreen = { text, dest, who, results, v, destRule, when };
 
       let html = "";
 
       html += `<div class="verdict v-${v.cls}">
-        <div class="tag">${esc(v.tag)}</div>
-        <div class="headline">${esc(headline)}</div>
-        <div class="sub">${esc(sub)}</div>
+        <div class="light">${esc(c.light)}</div>
+        <div class="headline">${esc(c.headline)}</div>
+        <div class="action">${esc(c.action)}</div>
+        <div class="sub">${esc(c.sub)}</div>
       </div>`;
 
       if (destRule) {
@@ -358,19 +418,65 @@
       }
 
       el.innerHTML = html;
+      printBtn.hidden = false;
+      buildRecord();
+    }
+
+    // assemble the print-only screening record from the last screen
+    function buildRecord() {
+      const rec = document.getElementById("record");
+      if (!lastScreen) { rec.innerHTML = ""; return; }
+      const { text, dest, who, results, v, destRule, when } = lastScreen;
+      const c = COPY[v.cls];
+
+      let cats = "";
+      if (results.length) {
+        cats = "<ul>" + results.map(r =>
+          `<li>${esc(r.cat.name)} &mdash; ${esc(r.cat.eccn)} (${esc(r.cat.ccl)}); reasons: ${esc((r.cat.reasons || []).join(", ") || "—")}</li>`
+        ).join("") + "</ul>";
+      } else {
+        cats = "<p>No controlled category matched (possible EAR99).</p>";
+      }
+
+      rec.innerHTML = `
+        <h2>Export License Screening Record</h2>
+        <div class="rrow"><span class="rlabel">Date / time:</span> ${esc(when.toLocaleString())}</div>
+        <div class="rrow"><span class="rlabel">Screened by:</span> ${esc(who || "—")}</div>
+        <div class="rrow"><span class="rlabel">Item / part:</span> ${esc(text)}</div>
+        <div class="rrow"><span class="rlabel">Destination:</span> ${esc(dest || "—")}</div>
+        <div class="rverdict">${esc(c.light.toUpperCase())} — ${esc(c.action)}</div>
+        ${destRule ? `<div class="rrow"><span class="rlabel">Destination flag:</span> ${esc(destRule.note)}</div>` : ""}
+        <div class="rrow"><span class="rlabel">Matched categories:</span></div>
+        ${cats}
+        <div class="rsig">
+          <div class="rrow">Reviewed / approved by (export compliance):</div>
+          <div class="line">signature &amp; date</div>
+        </div>
+        <div class="rdisc">
+          Preliminary screening only — not an official classification and not authorization to export.
+          Final determination depends on technical parameters, jurisdiction (EAR / ITAR / NRC/DOE),
+          destination, end-user and end-use under current regulations. Confirm against the EAR
+          Commerce Control List and with export compliance before shipping. Generated by the
+          jcsylvan.ai Export License Screener.
+        </div>`;
     }
 
     function run() {
-      render(document.getElementById("desc").value, document.getElementById("dest").value);
+      render(
+        document.getElementById("desc").value,
+        document.getElementById("dest").value,
+        document.getElementById("who").value
+      );
     }
 
     document.getElementById("go").addEventListener("click", run);
+    document.getElementById("print").addEventListener("click", () => { if (lastScreen) window.print(); });
     document.getElementById("desc").addEventListener("keydown", e => {
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run();
     });
-    document.getElementById("dest").addEventListener("keydown", e => {
+    ["dest", "who"].forEach(id => document.getElementById(id).addEventListener("keydown", e => {
       if (e.key === "Enter") run();
-    });
+    }));
     document.querySelectorAll(".chip[data-ex]").forEach(c => {
       c.addEventListener("click", () => {
         document.getElementById("desc").value = c.getAttribute("data-ex");
