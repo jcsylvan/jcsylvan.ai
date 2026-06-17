@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What I Pay For a&hellip; &mdash; jcsylvan.ai</title>
+  <meta name="description" content="A running daily budget of small recurring costs &mdash; what each little thing actually costs per day.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem 1.25rem;
+    }
+
+    a { color: #f0c040; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 760px; margin: 0 auto; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .back-link:hover { color: #e0e0e0; }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+      color: #f0c040;
+      font-weight: 600;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 1.75rem;
+      max-width: 640px;
+      line-height: 1.5;
+    }
+
+    /* totals summary */
+    .totals {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+    .totals .box {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 0.9rem 1rem;
+      text-align: center;
+    }
+    .totals .box .label {
+      color: #777;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .totals .box .value {
+      color: #f0c040;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 0.3rem;
+    }
+    .totals .box.daily { border-color: #4a3a10; }
+
+    /* item list */
+    .items { display: grid; gap: 0.85rem; margin-bottom: 1.5rem; }
+
+    .item {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 0.95rem 1rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.6rem 0.75rem;
+      align-items: center;
+    }
+    .item:focus-within { border-color: #333; }
+
+    .item .name-row { grid-column: 1; }
+    .item input,
+    .item textarea {
+      width: 100%;
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 0.5rem 0.6rem;
+      transition: border-color 0.15s ease;
+    }
+    .item input:focus,
+    .item textarea:focus {
+      outline: none;
+      border-color: #f0c040;
+    }
+    .item input.name { font-weight: 600; color: #e0e0e0; }
+    .item textarea {
+      grid-column: 1 / -1;
+      resize: vertical;
+      min-height: 2.2rem;
+      color: #999;
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+    .item textarea::placeholder,
+    .item input::placeholder { color: #555; }
+
+    .amount-wrap {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .amount-wrap .sign { color: #f0c040; font-size: 0.95rem; }
+    .item input.amount {
+      width: 5.5rem;
+      text-align: right;
+      color: #f0c040;
+      font-weight: 600;
+    }
+
+    .item .remove {
+      grid-column: 2;
+      grid-row: 2;
+      justify-self: end;
+      background: none;
+      border: none;
+      color: #555;
+      font-family: inherit;
+      font-size: 0.72rem;
+      cursor: pointer;
+      padding: 0.2rem 0.3rem;
+      transition: color 0.15s ease;
+    }
+    .item .remove:hover { color: #d05050; }
+
+    .empty {
+      color: #555;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 2rem 1rem;
+      border: 1px dashed #262626;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+    }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+
+    .btn {
+      background: none;
+      border: 1px solid #333;
+      border-radius: 999px;
+      color: #888;
+      font-family: inherit;
+      font-size: 0.78rem;
+      padding: 0.5rem 1.1rem;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .btn:hover { color: #e0e0e0; border-color: #888; }
+    .btn:disabled { opacity: 0.4; cursor: default; }
+    .btn:disabled:hover { color: #888; border-color: #333; }
+    .btn.primary { color: #f0c040; border-color: #4a3a10; }
+    .btn.primary:hover { color: #0a0a0a; background: #f0c040; border-color: #f0c040; }
+
+    /* sync status pill */
+    .sync-status {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      color: #666;
+    }
+    .sync-status .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #444;
+      flex-shrink: 0;
+    }
+    .sync-status.ok .dot { background: #5aa86a; }
+    .sync-status.busy .dot { background: #f0c040; }
+    .sync-status.err .dot { background: #d05050; }
+    .sync-status.off .dot { background: #444; }
+
+    /* sync settings panel */
+    .sync-panel {
+      margin-top: 1.75rem;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .sync-panel > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.85rem 1rem;
+      font-size: 0.78rem;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      user-select: none;
+    }
+    .sync-panel > summary::-webkit-details-marker { display: none; }
+    .sync-panel > summary:hover { color: #e0e0e0; }
+    .sync-panel > summary .chev { color: #555; transition: transform 0.15s ease; }
+    .sync-panel[open] > summary .chev { transform: rotate(90deg); }
+
+    .sync-body {
+      padding: 0 1rem 1.1rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+    .sync-body .hint {
+      color: #777;
+      font-size: 0.75rem;
+      line-height: 1.55;
+      max-width: 620px;
+    }
+    .sync-body label {
+      display: grid;
+      gap: 0.3rem;
+      font-size: 0.7rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .sync-body input {
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 0.82rem;
+      padding: 0.5rem 0.6rem;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+    .sync-body input:focus { outline: none; border-color: #f0c040; }
+    .sync-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .setup-steps {
+      border-top: 1px solid #1c1c1c;
+      padding-top: 0.85rem;
+      margin-top: 0.15rem;
+    }
+    .setup-steps ol { margin: 0.4rem 0 0 1.1rem; display: grid; gap: 0.3rem; }
+    .setup-steps li { color: #777; font-size: 0.74rem; line-height: 1.5; }
+
+    @media (max-width: 520px) {
+      .totals { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="index.html" class="back-link">&larr; back</a>
+    <h1>What I Pay For a&hellip;</h1>
+    <p class="subtitle">
+      A running tally of the small recurring things and what each one costs
+      <em>per day</em>. Edit any amount or note right here &mdash; it saves
+      automatically and syncs across your devices &mdash; to see your real daily
+      overhead and spot where to trim down or spend more.
+    </p>
+
+    <div class="totals">
+      <div class="box daily">
+        <div class="label">Per day</div>
+        <div class="value" id="total-daily">$0.00</div>
+      </div>
+      <div class="box">
+        <div class="label">Per month</div>
+        <div class="value" id="total-month">$0.00</div>
+      </div>
+      <div class="box">
+        <div class="label">Per year</div>
+        <div class="value" id="total-year">$0.00</div>
+      </div>
+    </div>
+
+    <div class="items" id="items"></div>
+    <div class="empty" id="empty" hidden>
+      Nothing here yet. Add your first daily cost &mdash; a cup of coffee, a
+      smoothie, a parking spot.
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="add">+ add a cost</button>
+      <span class="sync-status off" id="sync-status">
+        <span class="dot"></span><span class="text">on this device only</span>
+      </span>
+    </div>
+
+    <details class="sync-panel" id="sync-panel">
+      <summary><span class="chev">&rsaquo;</span> sync across devices</summary>
+      <div class="sync-body">
+        <p class="hint">
+          Paste the <b>same</b> Bin&nbsp;ID and Access&nbsp;Key on each device to keep this
+          budget in sync. They're stored only on this device (never uploaded to the site or
+          its code). The newer copy always wins, so edit on one device at a time.
+        </p>
+        <label>JSONBin Bin ID
+          <input id="cfg-bin" type="text" autocomplete="off" autocapitalize="off"
+                 spellcheck="false" placeholder="e.g. 66a1f2c3ad19ca34f8b7e901">
+        </label>
+        <label>Access Key
+          <input id="cfg-key" type="password" autocomplete="off" autocapitalize="off"
+                 spellcheck="false" placeholder="$2a$10$… (read + update permissions)">
+        </label>
+        <div class="sync-actions">
+          <button class="btn primary" id="cfg-save">save &amp; connect</button>
+          <button class="btn" id="cfg-sync">sync now</button>
+          <button class="btn" id="cfg-clear">disconnect</button>
+        </div>
+        <div class="hint setup-steps">
+          <b>One-time setup</b>
+          <ol>
+            <li>Sign up free at <a href="https://jsonbin.io" target="_blank" rel="noopener">jsonbin.io</a>.</li>
+            <li>Create a bin (any content, e.g. <code>{}</code>) and copy its <b>Bin&nbsp;ID</b>.</li>
+            <li>Under <b>API Keys &rarr; Access Keys</b>, create a key with <b>Read</b> and
+                <b>Update</b> enabled and copy it.</li>
+            <li>Paste both above, tap <b>save &amp; connect</b>, then repeat on your other devices.</li>
+          </ol>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <script>
+    // ---- storage keys -------------------------------------------------------
+    const LS_DOC  = "what-i-pay-for-a-items";   // { items, updatedAt } (was an array pre-sync)
+    const LS_SYNC = "what-i-pay-for-a-sync";    // { binId, accessKey }
+    const JSONBIN = "https://api.jsonbin.io/v3/b";
+
+    // ---- state --------------------------------------------------------------
+    let items = [];
+    let updatedAt = 0;          // ms timestamp of the last local change
+    let sync = loadSyncConfig(); // { binId, accessKey } | null
+    let pushTimer = null;
+
+    // ---- local persistence --------------------------------------------------
+    function loadLocal() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(LS_DOC));
+        if (Array.isArray(raw)) return { items: raw, updatedAt: 0 };      // legacy shape
+        if (raw && Array.isArray(raw.items)) {
+          return { items: raw.items, updatedAt: Number(raw.updatedAt) || 0 };
+        }
+      } catch { /* fall through */ }
+      return null;
+    }
+
+    function saveLocal() {
+      localStorage.setItem(LS_DOC, JSON.stringify({ items, updatedAt }));
+    }
+
+    /** Record a local change: bump timestamp, persist, schedule a remote push. */
+    function touch() {
+      updatedAt = Date.now();
+      saveLocal();
+      schedulePush();
+    }
+
+    function loadSyncConfig() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(LS_SYNC));
+        if (raw && raw.binId && raw.accessKey) return raw;
+      } catch { /* ignore */ }
+      return null;
+    }
+
+    function uid() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    }
+
+    function seedItems() {
+      return [
+        { id: uid(), name: "Cup of Coffee", amount: 0.36, note: "Beans + filter, brewed at home" },
+        { id: uid(), name: "Smoothie", amount: 1.50, note: "Frozen fruit + protein from the blender" },
+      ];
+    }
+
+    // ---- remote (JSONBin) ---------------------------------------------------
+    function adopt(doc) {
+      items = Array.isArray(doc.items) ? doc.items : [];
+      updatedAt = Number(doc.updatedAt) || 0;
+      saveLocal();
+    }
+
+    async function pullRemote() {
+      if (!sync) return null;
+      const res = await fetch(`${JSONBIN}/${encodeURIComponent(sync.binId)}/latest`, {
+        headers: { "X-Access-Key": sync.accessKey, "X-Bin-Meta": "false" },
+      });
+      if (!res.ok) throw new Error(`read failed (${res.status})`);
+      const data = await res.json();
+      // A fresh/empty bin won't match our shape — treat as "no remote doc yet".
+      if (data && Array.isArray(data.items)) {
+        return { items: data.items, updatedAt: Number(data.updatedAt) || 0 };
+      }
+      return { items: null, updatedAt: 0 };
+    }
+
+    async function pushRemote() {
+      if (!sync) return;
+      const res = await fetch(`${JSONBIN}/${encodeURIComponent(sync.binId)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "X-Access-Key": sync.accessKey },
+        body: JSON.stringify({ items, updatedAt }),
+      });
+      if (!res.ok) throw new Error(`save failed (${res.status})`);
+    }
+
+    function schedulePush() {
+      if (!sync) { setStatus("local", "saved on this device"); return; }
+      clearTimeout(pushTimer);
+      setStatus("busy", "saving…");
+      pushTimer = setTimeout(async () => {
+        try {
+          await pushRemote();
+          setStatus("ok", `synced · ${fmtTime()}`);
+        } catch (e) {
+          setStatus("err", "sync failed — saved locally");
+        }
+      }, 1000);
+    }
+
+    /** Pull, reconcile (newer wins), then push if local is ahead. */
+    async function reconcile({ silent = false } = {}) {
+      if (!sync) return;
+      if (!silent) setStatus("busy", "syncing…");
+      try {
+        const remote = await pullRemote();
+        if (!remote || remote.items === null) {
+          await pushRemote();                       // initialize an empty/new bin
+        } else if (remote.updatedAt > updatedAt) {
+          adopt(remote); render(); renderTotals();  // remote is newer
+        } else if (updatedAt > remote.updatedAt) {
+          await pushRemote();                        // local is newer
+        }
+        setStatus("ok", `synced · ${fmtTime()}`);
+      } catch (e) {
+        setStatus("err", "sync failed — saved locally");
+      }
+    }
+
+    // ---- status indicator ---------------------------------------------------
+    function fmtTime() {
+      return new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    }
+    function setStatus(kind, text) {
+      const el = document.getElementById("sync-status");
+      // kind: off | local | busy | ok | err  -> css class: off/ok/busy/err
+      const cls = kind === "local" ? "off" : kind;
+      el.className = "sync-status " + cls;
+      el.querySelector(".text").textContent = text;
+    }
+
+    // ---- money + totals -----------------------------------------------------
+    function fmtMoney(n) {
+      return "$" + (Number(n) || 0).toLocaleString("en-US", {
+        minimumFractionDigits: 2, maximumFractionDigits: 2,
+      });
+    }
+    function renderTotals() {
+      const daily = items.reduce((sum, it) => sum + (Number(it.amount) || 0), 0);
+      document.getElementById("total-daily").textContent = fmtMoney(daily);
+      document.getElementById("total-month").textContent = fmtMoney(daily * 30.437);
+      document.getElementById("total-year").textContent = fmtMoney(daily * 365.25);
+    }
+
+    // ---- item list rendering ------------------------------------------------
+    function render() {
+      const list = document.getElementById("items");
+      const empty = document.getElementById("empty");
+      list.innerHTML = "";
+      empty.hidden = items.length > 0;
+
+      for (const it of items) {
+        const row = document.createElement("div");
+        row.className = "item";
+
+        const nameWrap = document.createElement("div");
+        nameWrap.className = "name-row";
+        const name = document.createElement("input");
+        name.className = "name";
+        name.type = "text";
+        name.placeholder = "What is it? (e.g. Cup of Coffee)";
+        name.value = it.name;
+        name.addEventListener("input", () => { it.name = name.value; touch(); });
+        nameWrap.appendChild(name);
+
+        const amountWrap = document.createElement("div");
+        amountWrap.className = "amount-wrap";
+        const sign = document.createElement("span");
+        sign.className = "sign";
+        sign.textContent = "$";
+        const amount = document.createElement("input");
+        amount.className = "amount";
+        amount.type = "number";
+        amount.inputMode = "decimal";
+        amount.step = "0.01";
+        amount.min = "0";
+        amount.placeholder = "0.00";
+        amount.setAttribute("aria-label", "amount per day");
+        amount.value = it.amount === 0 ? "" : it.amount;
+        amount.addEventListener("input", () => {
+          it.amount = parseFloat(amount.value) || 0;
+          renderTotals();
+          touch();
+        });
+        amountWrap.appendChild(sign);
+        amountWrap.appendChild(amount);
+
+        const note = document.createElement("textarea");
+        note.placeholder = "Short note — where you get it, why it costs that…";
+        note.value = it.note || "";
+        note.rows = 1;
+        note.addEventListener("input", () => { it.note = note.value; touch(); });
+
+        const remove = document.createElement("button");
+        remove.className = "remove";
+        remove.type = "button";
+        remove.textContent = "remove";
+        remove.addEventListener("click", () => {
+          items = items.filter((x) => x.id !== it.id);
+          touch();
+          render();
+          renderTotals();
+        });
+
+        row.appendChild(nameWrap);
+        row.appendChild(amountWrap);
+        row.appendChild(remove);
+        row.appendChild(note);
+        list.appendChild(row);
+      }
+    }
+
+    // ---- wiring -------------------------------------------------------------
+    document.getElementById("add").addEventListener("click", () => {
+      items.push({ id: uid(), name: "", amount: 0, note: "" });
+      touch();
+      render();
+      renderTotals();
+      const inputs = document.querySelectorAll("#items .item .name");
+      const last = inputs[inputs.length - 1];
+      if (last) last.focus();
+    });
+
+    document.getElementById("cfg-save").addEventListener("click", async () => {
+      const binId = document.getElementById("cfg-bin").value.trim();
+      const accessKey = document.getElementById("cfg-key").value.trim();
+      if (!binId || !accessKey) {
+        setStatus("err", "enter a Bin ID and Access Key");
+        return;
+      }
+      sync = { binId, accessKey };
+      localStorage.setItem(LS_SYNC, JSON.stringify(sync));
+      await reconcile();
+    });
+
+    document.getElementById("cfg-sync").addEventListener("click", () => {
+      if (!sync) { setStatus("err", "connect a bin first"); return; }
+      reconcile();
+    });
+
+    document.getElementById("cfg-clear").addEventListener("click", () => {
+      sync = null;
+      localStorage.removeItem(LS_SYNC);
+      document.getElementById("cfg-key").value = "";
+      setStatus("local", "on this device only");
+    });
+
+    function reflectConfigInputs() {
+      if (sync) {
+        document.getElementById("cfg-bin").value = sync.binId;
+        document.getElementById("cfg-key").value = sync.accessKey;
+      }
+    }
+
+    // ---- boot ---------------------------------------------------------------
+    (function init() {
+      const local = loadLocal();
+      if (local) {
+        items = local.items;
+        updatedAt = local.updatedAt;
+      } else {
+        items = seedItems();      // first run on this device
+        updatedAt = 0;            // epoch, so any real remote doc wins on first sync
+        saveLocal();
+      }
+      reflectConfigInputs();
+      render();
+      renderTotals();
+
+      if (sync) {
+        setStatus("busy", "syncing…");
+        reconcile({ silent: true });
+      } else {
+        setStatus("local", "on this device only");
+      }
+    })();
+  </script>
+</body>
+</html>
