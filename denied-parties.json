@@ -1,0 +1,70 @@
+{
+  "updated": "2026-06-15",
+  "note": "FICTIONAL demonstration screening list. These names, aliases and listings are invented for the demo and are NOT the real US Consolidated Screening List. For real screening use the official CSL (trade.gov), OFAC SDN, BIS Entity/Denied Persons/Unverified Lists.",
+  "parties": [
+    {
+      "name": "Vostok Precision Instruments LLC",
+      "aliases": ["VPI", "Vostok Precision", "Vostok Pribor"],
+      "country": "Russia",
+      "list": "Entity List (demo)",
+      "reason": "Diversion of dual-use navigation and sensor components to military programs.",
+      "action": "License required for all items subject to the EAR; presumption of denial."
+    },
+    {
+      "name": "Nilufar General Trading FZE",
+      "aliases": ["Nilufar Trading", "Nilufar FZE"],
+      "country": "United Arab Emirates",
+      "list": "OFAC SDN (demo)",
+      "reason": "Front company procuring on behalf of a blocked end-user.",
+      "action": "Blocked party — transactions prohibited; no exports."
+    },
+    {
+      "name": "Crescent Avionics Co.",
+      "aliases": ["Crescent Aero", "Crescent Avionics"],
+      "country": "Iran",
+      "list": "Entity List (demo)",
+      "reason": "UAV and missile-program procurement.",
+      "action": "License required; policy of denial."
+    },
+    {
+      "name": "Pyongsan Machine Works",
+      "aliases": ["Pyongsan", "PMW"],
+      "country": "North Korea",
+      "list": "OFAC SDN (demo)",
+      "reason": "WMD and ballistic-missile procurement network.",
+      "action": "Blocked party — comprehensive prohibition; no exports."
+    },
+    {
+      "name": "Aleksandr Morozov",
+      "aliases": ["A. Morozov", "Alexander Morozov"],
+      "country": "Russia",
+      "list": "Denied Persons List (demo)",
+      "reason": "Prior export-control violation; export privileges denied.",
+      "action": "Denied person — no exports or participation in any EAR transaction."
+    },
+    {
+      "name": "Meridian Components Ltd",
+      "aliases": ["Meridian Components", "MCL"],
+      "country": "Hong Kong",
+      "list": "Unverified List (demo)",
+      "reason": "Bona fides could not be verified in an end-use check.",
+      "action": "No License Exceptions; obtain a signed end-use statement and verify before shipping."
+    },
+    {
+      "name": "Sahand Industrial Group",
+      "aliases": ["Sahand Industries", "SIG"],
+      "country": "Iran",
+      "list": "Entity List (demo)",
+      "reason": "Supports sanctioned defense manufacturing.",
+      "action": "License required; policy of denial."
+    },
+    {
+      "name": "Star Horizon Logistics",
+      "aliases": ["Star Horizon", "SHL"],
+      "country": "China",
+      "list": "Entity List — Military End User (demo)",
+      "reason": "Identified military end-user (MEU).",
+      "action": "License required for items destined to a military end-use/end-user."
+    }
+  ]
+}
