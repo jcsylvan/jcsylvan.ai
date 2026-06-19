@@ -1,0 +1,127 @@
+{
+  "company": "Helios Dynamics (fictional demo company)",
+  "updated": "2026-06-15",
+  "note": "Illustrative product catalog for demonstration only. Part numbers, products and ECCN assignments are invented and must not be relied on for real classification.",
+  "products": [
+    {
+      "pn": "HD-NAV-7A",
+      "name": "Tactical-grade fiber-optic IMU",
+      "desc": "Six-axis fiber-optic gyro inertial measurement unit, 0.1 deg/hr bias.",
+      "eccn": "7A003",
+      "ccl": "Category 7 — Navigation & Avionics",
+      "reasons": ["NS", "MT", "AT"],
+      "license": "likely",
+      "note": "Inertial equipment within 7A003 thresholds — license required for most destinations; Missile Technology controls apply."
+    },
+    {
+      "pn": "HD-NAV-3G",
+      "name": "GNSS/INS integrated navigator",
+      "desc": "GNSS-aided inertial navigator rated for high dynamics / high altitude.",
+      "eccn": "7A003",
+      "ccl": "Category 7 — Navigation & Avionics",
+      "reasons": ["NS", "MT", "AT"],
+      "license": "likely",
+      "note": "High-dynamic GNSS/INS — review against 7A003/7A005; MT-controlled, license generally required."
+    },
+    {
+      "pn": "HD-CAM-640",
+      "name": "Uncooled LWIR thermal camera core, 640x512",
+      "desc": "Long-wave infrared microbolometer camera core, 60 Hz.",
+      "eccn": "6A003",
+      "ccl": "Category 6 — Sensors & Lasers",
+      "reasons": ["NS", "RS", "AT"],
+      "license": "likely",
+      "note": "Imaging camera caught by 6A003 frame-rate/parameter thresholds — license required for many destinations."
+    },
+    {
+      "pn": "HD-SEC-256",
+      "name": "Layer-2 Ethernet encryptor (AES-256)",
+      "desc": "Line-rate Ethernet encryption appliance using AES-256.",
+      "eccn": "5A002.a",
+      "ccl": "Category 5 Part 2 — Information Security",
+      "reasons": ["NS", "AT", "EI"],
+      "license": "maybe",
+      "note": "Encryption item classified under 5A002; mass-market/commercial use often ships under License Exception ENC after self-classification or CCATS."
+    },
+    {
+      "pn": "HD-RF-12",
+      "name": "GaN microwave power amplifier, 2-18 GHz",
+      "desc": "Wideband gallium-nitride microwave power amplifier MMIC.",
+      "eccn": "3A001.b.2",
+      "ccl": "Category 3 — Electronics",
+      "reasons": ["NS", "MT", "AT"],
+      "license": "maybe",
+      "note": "RF/microwave amplifier — control turns on frequency/power thresholds in 3A001.b; verify against the parameter limits."
+    },
+    {
+      "pn": "HD-MILL-5X",
+      "name": "5-axis precision machining center",
+      "desc": "Five-axis CNC machining center, sub-micron positioning.",
+      "eccn": "2B001.b",
+      "ccl": "Category 2 — Materials Processing",
+      "reasons": ["NS", "NP", "MT"],
+      "license": "maybe",
+      "note": "Multi-axis machine tool — caught by 2B001 accuracy/axis thresholds; nuclear/missile reasons can apply."
+    },
+    {
+      "pn": "HD-LAS-100",
+      "name": "100 W pulsed fiber laser source",
+      "desc": "Industrial pulsed fiber laser, 100 W average power.",
+      "eccn": "6A005",
+      "ccl": "Category 6 — Sensors & Lasers",
+      "reasons": ["NS", "RS"],
+      "license": "maybe",
+      "note": "Laser control under 6A005 depends on wavelength, power and pulse parameters — confirm against the threshold table."
+    },
+    {
+      "pn": "HD-SENS-MAG",
+      "name": "Fluxgate magnetometer module",
+      "desc": "Three-axis fluxgate magnetometer sensor module.",
+      "eccn": "6A006",
+      "ccl": "Category 6 — Sensors & Lasers",
+      "reasons": ["NS", "MT", "AT"],
+      "license": "maybe",
+      "note": "Magnetometers/sensors under 6A006 are sensitivity-dependent — verify the parameters."
+    },
+    {
+      "pn": "HD-PWR-48",
+      "name": "48 V industrial DC power supply",
+      "desc": "Commercial 48 volt 500 W industrial DC power supply.",
+      "eccn": "EAR99",
+      "ccl": "Not on the CCL",
+      "reasons": [],
+      "license": "unlikely",
+      "note": "Ordinary commercial power supply — EAR99. No license for most destinations, but still screen destination, party and end-use."
+    },
+    {
+      "pn": "HD-MNT-10",
+      "name": "Aluminum equipment mounting bracket",
+      "desc": "Machined aluminum mounting bracket / chassis hardware.",
+      "eccn": "EAR99",
+      "ccl": "Not on the CCL",
+      "reasons": [],
+      "license": "unlikely",
+      "note": "Generic mechanical hardware — EAR99."
+    },
+    {
+      "pn": "HD-CBL-2",
+      "name": "Shielded signal cable assembly, 2 m",
+      "desc": "Standard shielded multi-conductor signal cable assembly.",
+      "eccn": "EAR99",
+      "ccl": "Not on the CCL",
+      "reasons": [],
+      "license": "unlikely",
+      "note": "Commercial cable assembly — EAR99."
+    },
+    {
+      "pn": "HD-ENV-5",
+      "name": "Environmental chamber controller",
+      "desc": "Programmable controller for a benchtop environmental test chamber.",
+      "eccn": "EAR99",
+      "ccl": "Not on the CCL",
+      "reasons": [],
+      "license": "unlikely",
+      "note": "General-purpose controller — EAR99 as supplied; the chamber it drives should be screened separately."
+    }
+  ]
+}

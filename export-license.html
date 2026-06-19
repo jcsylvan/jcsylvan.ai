@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Export License Screener &mdash; jcsylvan.ai</title>
-  <meta name="description" content="Shop-floor triage of whether a part number or piece of equipment is likely to need an export license.">
+  <meta name="description" content="Shop-floor triage of whether a part number or piece of equipment is likely to need an export license, with product-catalog lookup and restricted-party screening (demo).">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="icon" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
@@ -45,6 +45,12 @@
       max-width: 720px;
       line-height: 1.5;
     }
+    .demo-note {
+      font-size: 0.72rem; color: #8a7a40; background: #15120a;
+      border: 1px solid #2e2913; border-radius: 5px;
+      padding: 0.55rem 0.75rem; margin: 0.75rem 0 0.4rem; line-height: 1.5;
+      max-width: 720px;
+    }
     .updated { color: #444; font-size: 0.72rem; margin-bottom: 2rem; }
 
     /* form */
@@ -80,7 +86,7 @@
 
     .field + .field { margin-top: 1rem; }
 
-    .row2 { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: flex-end; }
+    .row2 { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
     .row2 .field { flex: 1; min-width: 180px; margin-top: 0; }
 
     .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.1rem; }
@@ -115,8 +121,10 @@
       transition: color 0.15s ease, border-color 0.15s ease;
     }
     .chip:hover { color: #e0e0e0; border-color: #888; }
+    .chip.demo { border-color: #5a2424; color: #ff9a8f; }
+    .chip.demo:hover { border-color: #ff7a6f; color: #ff7a6f; }
 
-    /* result */
+    /* verdict */
     .verdict {
       border-radius: 6px;
       padding: 1.2rem 1.3rem;
@@ -136,6 +144,8 @@
     .verdict .action { font-size: 0.9rem; font-weight: 600; margin-top: 0.55rem; }
     .verdict .sub { font-size: 0.82rem; line-height: 1.55; margin-top: 0.5rem; color: #bdbdbd; }
 
+    .v-stop     { border-color: #7a1f1f; background: #220a0a; border-width: 2px; }
+    .v-stop .light, .v-stop .headline, .v-stop .action { color: #ff5a4a; }
     .v-likely   { border-color: #5a2424; background: #1a0f0f; }
     .v-likely .light, .v-likely .headline, .v-likely .action { color: #ff7a6f; }
     .v-maybe    { border-color: #5a4a18; background: #16130b; }
@@ -168,14 +178,24 @@
       padding: 1rem 1.15rem;
       margin-bottom: 0.8rem;
     }
+    .match.cat { border-color: #4a3a10; }
+    .match.party { border-color: #7a1f1f; background: #160c0c; }
     .match .top { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.45rem; }
     .match .nm { font-size: 0.92rem; color: #e0e0e0; font-weight: 600; }
+    .match.party .nm { color: #ff7a6f; }
     .match .eccn {
       font-size: 0.66rem; padding: 0.18rem 0.5rem; border-radius: 4px;
       border: 1px solid #4a3a10; color: #f0c040; white-space: nowrap;
     }
+    .match .badge {
+      font-size: 0.6rem; padding: 0.16rem 0.45rem; border-radius: 999px;
+      border: 1px solid #4a3a10; color: #f0c040; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .match.party .badge { border-color: #7a1f1f; color: #ff7a6f; }
     .match .ccl { font-size: 0.7rem; color: #666; }
     .match .summary { font-size: 0.82rem; color: #aaa; line-height: 1.55; }
+    .match .kv { font-size: 0.76rem; color: #999; margin-top: 0.3rem; }
+    .match .kv b { color: #bbb; font-weight: 600; }
     .match .reasons { margin-top: 0.55rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
     .match .reason {
       font-size: 0.64rem; padding: 0.16rem 0.45rem; border-radius: 3px;
@@ -185,10 +205,6 @@
     .match .hits b { color: #888; font-weight: 600; }
 
     .empty { color: #888; font-size: 0.85rem; line-height: 1.6; }
-
-    .resultbar {
-      display: flex; justify-content: flex-end; margin-bottom: 1rem;
-    }
 
     .disclaimer {
       margin-top: 2rem;
@@ -223,6 +239,7 @@
       #record .rrow { margin-bottom: 0.4rem; }
       #record .rlabel { font-weight: 700; }
       #record .rverdict { font-weight: 700; font-size: 14px; margin: 0.75rem 0; padding: 0.5rem 0.75rem; border: 1px solid #000; }
+      #record .rstop { border: 2px solid #000; }
       #record ul { margin: 0.25rem 0 0.5rem 1.25rem; }
       #record .rsig { margin-top: 2rem; }
       #record .rsig .line { border-top: 1px solid #000; width: 60%; margin-top: 2rem; padding-top: 0.25rem; }
@@ -237,22 +254,33 @@
     <p class="subtitle">
       A shop-floor triage aid: enter a part number or a plain-language description of a piece of
       equipment to get a fast first read on whether it is likely to need a US export license &mdash;
-      which Commerce Control List category and ECCN it tends to fall under, and why. Use it to
-      decide what can move and what to hold for export-compliance sign-off. It is a triage step,
-      not an official classification.
+      its Commerce Control List category and ECCN, and why &mdash; plus a restricted-party check on
+      the consignee. Use it to decide what can move and what to hold for export-compliance sign-off.
     </p>
+    <div class="demo-note">
+      <b>Proof-of-concept demo.</b> Known part numbers are matched against a <b>fictional</b>
+      product catalog (&ldquo;Helios Dynamics&rdquo;) and the consignee is screened against a
+      <b>fictional</b> restricted-party list &mdash; not the real Consolidated Screening List.
+      Sample data, for demonstration only.
+    </div>
     <p class="updated">knowledge base updated <span id="updated">&mdash;</span></p>
 
     <div class="panel">
       <div class="field">
         <label for="desc">Part number or description</label>
-        <textarea id="desc" placeholder="e.g. 5-axis CNC milling machine, 100W fiber laser, FPGA with high-speed ADC, encrypted radio module&hellip;"></textarea>
+        <textarea id="desc" placeholder="e.g. HD-NAV-7A, or: 5-axis CNC milling machine, 100W fiber laser, encrypted radio module&hellip;"></textarea>
       </div>
       <div class="row2">
         <div class="field">
           <label for="dest">Destination country (optional)</label>
           <input type="text" id="dest" placeholder="e.g. Germany, China, Iran" />
         </div>
+        <div class="field">
+          <label for="party">Consignee / end-user (optional)</label>
+          <input type="text" id="party" placeholder="company or person receiving the item" />
+        </div>
+      </div>
+      <div class="row2">
         <div class="field">
           <label for="who">Screened by (initials, optional)</label>
           <input type="text" id="who" placeholder="e.g. JS" />
@@ -264,11 +292,11 @@
       </div>
       <div class="examples">
         <span class="lbl">try:</span>
-        <button class="chip" data-ex="5-axis CNC milling machine with 0.001mm positioning">5-axis CNC</button>
-        <button class="chip" data-ex="Uncooled thermal imaging infrared camera, 640x480, 9Hz">thermal camera</button>
-        <button class="chip" data-ex="VPN appliance using AES-256 encryption for network traffic">encrypted VPN</button>
-        <button class="chip" data-ex="Fiber-optic gyroscope inertial measurement unit for UAV navigation">IMU / gyro</button>
-        <button class="chip" data-ex="Stainless steel M6 socket-head cap screw, hardware fastener">plain hardware</button>
+        <button class="chip" data-desc="HD-NAV-7A">catalog: HD-NAV-7A</button>
+        <button class="chip" data-desc="HD-PWR-48">catalog: HD-PWR-48</button>
+        <button class="chip" data-desc="Uncooled thermal imaging infrared camera, 640x480">thermal camera</button>
+        <button class="chip" data-desc="Stainless steel M6 socket-head cap screw">plain hardware</button>
+        <button class="chip demo" data-desc="HD-NAV-7A tactical IMU" data-dest="Russia" data-party="Vostok Precision Instruments LLC" data-who="JS">run full demo &rarr;</button>
       </div>
     </div>
 
@@ -276,14 +304,16 @@
 
     <div class="disclaimer">
       <b>Not legal or compliance advice.</b> This tool does a keyword screen against a small,
-      illustrative knowledge base of common dual-use categories. It cannot and does not produce
-      an official classification, and a green result is <b>not</b> authorization to export.
+      illustrative knowledge base, plus a lookup against fictional demo data. It cannot and does not
+      produce an official classification, and a green result is <b>not</b> authorization to export.
       The real outcome depends on the precise technical parameters of the item, its
       <b>jurisdiction</b> (EAR vs. ITAR vs. NRC/DOE), the <b>destination</b>, the
       <b>end-user</b> and the <b>end-use</b> &mdash; and on the current regulations, which change
-      frequently. Always confirm with the EAR Commerce Control List, a self-classification or
-      CCATS, and your export-compliance team before shipping. Edit
-      <code>export-license.json</code> to expand the rules.
+      frequently. Restricted-party screening here uses invented data; for real screening use the
+      official <b>Consolidated Screening List</b> (trade.gov) and OFAC SDN. Always confirm with the
+      EAR Commerce Control List, a self-classification or CCATS, and your export-compliance team
+      before shipping. Edit <code>export-license.json</code>, <code>export-catalog.json</code> and
+      <code>denied-parties.json</code> to expand the data.
     </div>
 
     <!-- printable screening record -->
@@ -291,27 +321,46 @@
   </div>
 
   <script>
-    let data = { categories: [], reasonCodes: {}, highRiskDestinations: [] };
+    let rules = { categories: [], reasonCodes: {}, highRiskDestinations: [] };
+    let catalog = { products: [] };
+    let denied = { parties: [] };
     let lastScreen = null;
+
+    const RANK = { unlikely: 1, maybe: 2, likely: 3 };
 
     function esc(s) {
       return String(s).replace(/[&<>"']/g, c =>
         ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     }
+    function norm(s) {
+      return " " + String(s).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim() + " ";
+    }
 
-    // score each category by how many of its keywords appear in the query text
-    function screen(text) {
-      const q = " " + text.toLowerCase().replace(/[^a-z0-9]+/g, " ") + " ";
+    // exact-ish lookup against the (fictional) product catalog by part number or product name
+    function catalogLookup(text) {
+      const q = norm(text);
+      const hits = [];
+      catalog.products.forEach(p => {
+        const pn = norm(p.pn).trim();
+        const nm = norm(p.name).trim();
+        if ((pn && q.indexOf(" " + pn + " ") !== -1) || (nm && q.indexOf(" " + nm + " ") !== -1)) {
+          hits.push(p);
+        }
+      });
+      return hits;
+    }
+
+    // keyword screen against the dual-use category knowledge base
+    function keywordScreen(text) {
+      const q = norm(text);
       const results = [];
-      data.categories.forEach(cat => {
+      rules.categories.forEach(cat => {
         const hits = [];
         cat.keywords.forEach(kw => {
-          const k = kw.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-          if (!k) return;
-          if (q.indexOf(" " + k + " ") !== -1) hits.push(kw);
+          const k = norm(kw).trim();
+          if (k && q.indexOf(" " + k + " ") !== -1) hits.push(kw);
         });
         if (hits.length) {
-          // longer multi-word matches are stronger signal
           const score = hits.reduce((s, h) => s + (h.indexOf(" ") !== -1 ? 2 : 1), 0);
           results.push({ cat, hits, score });
         }
@@ -320,20 +369,38 @@
       return results;
     }
 
+    // restricted-party screen (fictional demo list)
+    function partyScreen(name) {
+      const q = norm(name).trim();
+      if (q.length < 3) return [];
+      const hits = [];
+      denied.parties.forEach(p => {
+        const names = [p.name, ...(p.aliases || [])];
+        const matched = names.find(n => {
+          const nn = norm(n).trim();
+          if (!nn) return false;
+          return q.indexOf(nn) !== -1 || (nn.indexOf(q) !== -1 && q.length >= 4);
+        });
+        if (matched) hits.push({ p, matched });
+      });
+      return hits;
+    }
+
     function checkDestination(text) {
-      const d = text.toLowerCase();
+      const d = (text || "").toLowerCase();
       if (!d.trim()) return null;
-      for (const rule of data.highRiskDestinations) {
+      for (const rule of rules.highRiskDestinations) {
         if (rule.match.some(m => d.indexOf(m) !== -1)) return rule;
       }
       return null;
     }
 
-    function verdictFor(results) {
-      if (!results.length) return { cls: "unlikely" };
-      const anyLikely = results.some(r => r.cat.license === "likely");
-      if (anyLikely) return { cls: "likely" };
-      return { cls: "maybe" };
+    function tierFor(catHits, kw) {
+      let pool = [];
+      if (catHits.length) pool = catHits.map(p => p.license);
+      else if (kw.length) pool = kw.map(r => r.cat.license);
+      if (!pool.length) return "unlikely";
+      return pool.reduce((best, t) => (RANK[t] > RANK[best] ? t : best), "unlikely");
     }
 
     const COPY = {
@@ -357,27 +424,45 @@
       }
     };
 
-    function render(text, dest, who) {
+    function render() {
+      const text = document.getElementById("desc").value;
+      const dest = document.getElementById("dest").value;
+      const party = document.getElementById("party").value;
+      const who = document.getElementById("who").value;
       const el = document.getElementById("result");
       const printBtn = document.getElementById("print");
-      if (!text.trim()) {
+
+      if (!text.trim() && !party.trim()) {
         el.innerHTML = '<div class="match"><span class="empty">Enter a part number or description above, then press <b>Screen item</b>.</span></div>';
         printBtn.hidden = true;
         lastScreen = null;
         return;
       }
 
-      const results = screen(text);
-      const v = verdictFor(results);
+      const catHits = catalogLookup(text);
+      const kw = keywordScreen(text);
+      const partyHits = partyScreen(party);
       const destRule = checkDestination(dest);
-      const c = COPY[v.cls];
+      const tier = tierFor(catHits, kw);
+      const c = COPY[tier];
       const when = new Date();
 
-      lastScreen = { text, dest, who, results, v, destRule, when };
+      lastScreen = { text, dest, party, who, catHits, kw, partyHits, destRule, tier, when };
 
       let html = "";
 
-      html += `<div class="verdict v-${v.cls}">
+      // restricted-party STOP banner takes priority
+      if (partyHits.length) {
+        html += `<div class="verdict v-stop">
+          <div class="light">Stop — restricted party</div>
+          <div class="headline">The consignee/end-user appears to match a restricted-party listing.</div>
+          <div class="action">Action: STOP. Do not proceed; escalate to compliance/legal for resolution.</div>
+          <div class="sub">A name match on a denied/blocked/entity listing can prohibit the transaction outright, regardless of the item's classification. Verify the match (name, address, country) before any further steps.</div>
+        </div>`;
+      }
+
+      // item classification banner
+      html += `<div class="verdict v-${tier}">
         <div class="light">${esc(c.light)}</div>
         <div class="headline">${esc(c.headline)}</div>
         <div class="action">${esc(c.action)}</div>
@@ -388,11 +473,52 @@
         html += `<div class="destflag"><b>Destination flag &mdash; ${esc(dest)}:</b> ${esc(destRule.note)}</div>`;
       }
 
-      if (results.length) {
-        html += `<div class="sec-h">matched control categories (${results.length})</div>`;
-        results.forEach(r => {
+      // restricted-party detail
+      if (partyHits.length) {
+        html += `<div class="sec-h">restricted-party screening (${partyHits.length} match)</div>`;
+        partyHits.forEach(h => {
+          html += `<div class="match party">
+            <div class="top">
+              <span class="nm">${esc(h.p.name)}</span>
+              <span class="badge">${esc(h.p.list)}</span>
+            </div>
+            <div class="kv"><b>Country:</b> ${esc(h.p.country)} &nbsp;&middot;&nbsp; <b>Matched on:</b> ${esc(h.matched)}</div>
+            <p class="summary" style="margin-top:0.4rem">${esc(h.p.reason)}</p>
+            <div class="kv"><b>Effect:</b> ${esc(h.p.action)}</div>
+          </div>`;
+        });
+      } else if (party.trim()) {
+        html += `<div class="sec-h">restricted-party screening</div>
+          <div class="match"><span class="empty">No match for &ldquo;${esc(party)}&rdquo; on the demo list. (A real workflow would screen the full Consolidated Screening List and re-screen before shipment.)</span></div>`;
+      }
+
+      // product catalog match
+      if (catHits.length) {
+        html += `<div class="sec-h">product catalog match (${catHits.length})</div>`;
+        catHits.forEach(p => {
+          const reasons = (p.reasons || []).map(code => {
+            const label = rules.reasonCodes[code] || code;
+            return `<span class="reason" title="${esc(label)}">${esc(code)} &middot; ${esc(label)}</span>`;
+          }).join("");
+          html += `<div class="match cat">
+            <div class="top">
+              <span class="nm">${esc(p.pn)} — ${esc(p.name)}</span>
+              <span class="eccn">${esc(p.eccn)}</span>
+            </div>
+            <div class="ccl">${esc(p.ccl)}</div>
+            <p class="summary" style="margin-top:0.5rem">${esc(p.desc)}</p>
+            <div class="reasons">${reasons}</div>
+            <div class="kv" style="margin-top:0.55rem"><b>Catalog note:</b> ${esc(p.note)}</div>
+          </div>`;
+        });
+      }
+
+      // keyword category matches
+      if (kw.length) {
+        html += `<div class="sec-h">${catHits.length ? "additional keyword signals" : "matched control categories"} (${kw.length})</div>`;
+        kw.forEach(r => {
           const reasons = (r.cat.reasons || []).map(code => {
-            const label = data.reasonCodes[code] || code;
+            const label = rules.reasonCodes[code] || code;
             return `<span class="reason" title="${esc(label)}">${esc(code)} &middot; ${esc(label)}</span>`;
           }).join("");
           html += `<div class="match">
@@ -406,7 +532,9 @@
             <div class="hits"><b>matched terms:</b> ${r.hits.map(esc).join(", ")}</div>
           </div>`;
         });
-      } else {
+      }
+
+      if (!catHits.length && !kw.length && text.trim()) {
         html += `<div class="sec-h">next steps</div>
           <div class="match"><span class="empty">
             <ul class="steps2">
@@ -422,28 +550,35 @@
       buildRecord();
     }
 
-    // assemble the print-only screening record from the last screen
     function buildRecord() {
       const rec = document.getElementById("record");
       if (!lastScreen) { rec.innerHTML = ""; return; }
-      const { text, dest, who, results, v, destRule, when } = lastScreen;
-      const c = COPY[v.cls];
+      const { text, dest, party, who, catHits, kw, partyHits, destRule, tier, when } = lastScreen;
+      const c = COPY[tier];
 
       let cats = "";
-      if (results.length) {
-        cats = "<ul>" + results.map(r =>
-          `<li>${esc(r.cat.name)} &mdash; ${esc(r.cat.eccn)} (${esc(r.cat.ccl)}); reasons: ${esc((r.cat.reasons || []).join(", ") || "—")}</li>`
-        ).join("") + "</ul>";
-      } else {
-        cats = "<p>No controlled category matched (possible EAR99).</p>";
+      const lines = [];
+      catHits.forEach(p => lines.push(`${p.pn} ${p.name} — ${p.eccn} (${p.ccl}); reasons: ${(p.reasons || []).join(", ") || "—"}`));
+      kw.forEach(r => lines.push(`${r.cat.name} — ${r.cat.eccn} (${r.cat.ccl}); reasons: ${(r.cat.reasons || []).join(", ") || "—"}`));
+      if (lines.length) cats = "<ul>" + lines.map(l => `<li>${esc(l)}</li>`).join("") + "</ul>";
+      else cats = "<p>No controlled category matched (possible EAR99).</p>";
+
+      let partyBlock = "";
+      if (partyHits.length) {
+        partyBlock = `<div class="rverdict rstop">RESTRICTED-PARTY MATCH — STOP. Escalate to compliance/legal.</div>
+          <ul>` + partyHits.map(h => `<li>${esc(h.p.name)} (${esc(h.p.list)}, ${esc(h.p.country)}) — ${esc(h.p.action)}</li>`).join("") + "</ul>";
+      } else if (party && party.trim()) {
+        partyBlock = `<div class="rrow"><span class="rlabel">Restricted-party screen:</span> no match on demo list for "${esc(party)}".</div>`;
       }
 
       rec.innerHTML = `
         <h2>Export License Screening Record</h2>
         <div class="rrow"><span class="rlabel">Date / time:</span> ${esc(when.toLocaleString())}</div>
         <div class="rrow"><span class="rlabel">Screened by:</span> ${esc(who || "—")}</div>
-        <div class="rrow"><span class="rlabel">Item / part:</span> ${esc(text)}</div>
+        <div class="rrow"><span class="rlabel">Item / part:</span> ${esc(text || "—")}</div>
         <div class="rrow"><span class="rlabel">Destination:</span> ${esc(dest || "—")}</div>
+        <div class="rrow"><span class="rlabel">Consignee / end-user:</span> ${esc(party || "—")}</div>
+        ${partyBlock}
         <div class="rverdict">${esc(c.light.toUpperCase())} — ${esc(c.action)}</div>
         ${destRule ? `<div class="rrow"><span class="rlabel">Destination flag:</span> ${esc(destRule.note)}</div>` : ""}
         <div class="rrow"><span class="rlabel">Matched categories:</span></div>
@@ -454,46 +589,44 @@
         </div>
         <div class="rdisc">
           Preliminary screening only — not an official classification and not authorization to export.
+          Product catalog and restricted-party data shown here are fictional demonstration data.
           Final determination depends on technical parameters, jurisdiction (EAR / ITAR / NRC/DOE),
-          destination, end-user and end-use under current regulations. Confirm against the EAR
-          Commerce Control List and with export compliance before shipping. Generated by the
-          jcsylvan.ai Export License Screener.
+          destination, end-user and end-use under current regulations, and on screening against the
+          official Consolidated Screening List. Confirm with export compliance before shipping.
+          Generated by the jcsylvan.ai Export License Screener.
         </div>`;
     }
 
-    function run() {
-      render(
-        document.getElementById("desc").value,
-        document.getElementById("dest").value,
-        document.getElementById("who").value
-      );
-    }
-
-    document.getElementById("go").addEventListener("click", run);
+    document.getElementById("go").addEventListener("click", render);
     document.getElementById("print").addEventListener("click", () => { if (lastScreen) window.print(); });
     document.getElementById("desc").addEventListener("keydown", e => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run();
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") render();
     });
-    ["dest", "who"].forEach(id => document.getElementById(id).addEventListener("keydown", e => {
-      if (e.key === "Enter") run();
+    ["dest", "party", "who"].forEach(id => document.getElementById(id).addEventListener("keydown", e => {
+      if (e.key === "Enter") render();
     }));
-    document.querySelectorAll(".chip[data-ex]").forEach(c => {
-      c.addEventListener("click", () => {
-        document.getElementById("desc").value = c.getAttribute("data-ex");
-        run();
+    document.querySelectorAll(".chip").forEach(ch => {
+      ch.addEventListener("click", () => {
+        const map = { desc: "desc", dest: "dest", party: "party", who: "who" };
+        document.getElementById("desc").value = ch.dataset.desc || "";
+        document.getElementById("dest").value = ch.dataset.dest || "";
+        document.getElementById("party").value = ch.dataset.party || "";
+        document.getElementById("who").value = ch.dataset.who || "";
+        render();
       });
     });
 
-    fetch("export-license.json", { cache: "no-store" })
-      .then(r => r.json())
-      .then(d => {
-        data = d;
-        document.getElementById("updated").textContent = d.updated || "—";
-      })
-      .catch(() => {
-        document.getElementById("result").innerHTML =
-          '<div class="match"><span class="empty">Could not load export-license.json.</span></div>';
-      });
+    Promise.all([
+      fetch("export-license.json", { cache: "no-store" }).then(r => r.json()),
+      fetch("export-catalog.json", { cache: "no-store" }).then(r => r.json()),
+      fetch("denied-parties.json", { cache: "no-store" }).then(r => r.json())
+    ]).then(([r, c, d]) => {
+      rules = r; catalog = c; denied = d;
+      document.getElementById("updated").textContent = r.updated || "—";
+    }).catch(() => {
+      document.getElementById("result").innerHTML =
+        '<div class="match"><span class="empty">Could not load the screening data files.</span></div>';
+    });
   </script>
 </body>
 </html>
