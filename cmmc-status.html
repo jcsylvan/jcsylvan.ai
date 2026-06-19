@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMMC C3PAO Status Checker &mdash; jcsylvan.ai</title>
+  <meta name="description" content="Look up whether an entity has completed a CMMC C3PAO assessment by CAGE code or business name, with a brief status summary and a running index of certifications.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    a { color: #f0c040; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 880px; margin: 0 auto; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .back-link:hover { color: #e0e0e0; }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+      color: #f0c040;
+      font-weight: 600;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      max-width: 740px;
+      line-height: 1.5;
+    }
+    .demo-note {
+      font-size: 0.72rem; color: #8a7a40; background: #15120a;
+      border: 1px solid #2e2913; border-radius: 5px;
+      padding: 0.55rem 0.75rem; margin: 0.75rem 0 0.4rem; line-height: 1.5;
+      max-width: 740px;
+    }
+    .updated { color: #444; font-size: 0.72rem; margin-bottom: 2rem; }
+
+    /* form */
+    .panel {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #777;
+      margin-bottom: 0.45rem;
+      font-weight: 500;
+    }
+    input[type="text"] {
+      width: 100%;
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 5px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.8rem 0.85rem;
+    }
+    input[type="text"]:focus { outline: none; border-color: #f0c040; }
+    input::placeholder { color: #444; }
+
+    .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.1rem; }
+    button.go, button.alt {
+      border: none;
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.85rem 1.5rem;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+    button.go { background: #f0c040; color: #0a0a0a; }
+    button.go:hover { background: #ffd35a; }
+    button.alt { background: none; color: #999; border: 1px solid #333; }
+    button.alt:hover { color: #e0e0e0; border-color: #888; }
+
+    .examples { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .examples .lbl { color: #555; font-size: 0.72rem; }
+    .chip {
+      background: none;
+      border: 1px solid #333;
+      border-radius: 999px;
+      color: #888;
+      font-family: inherit;
+      font-size: 0.72rem;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .chip:hover { color: #e0e0e0; border-color: #888; }
+
+    /* verdict */
+    .verdict {
+      border-radius: 6px;
+      padding: 1.2rem 1.3rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid;
+    }
+    .verdict .light {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 0.5rem;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .verdict .light::before {
+      content: ""; width: 0.7rem; height: 0.7rem; border-radius: 50%;
+      background: currentColor; display: inline-block;
+    }
+    .verdict .headline { font-size: 1.08rem; font-weight: 600; line-height: 1.4; }
+    .verdict .sub { font-size: 0.85rem; line-height: 1.55; margin-top: 0.55rem; color: #bdbdbd; }
+
+    .v-certified  { border-color: #285a28; background: #0d160d; }
+    .v-certified .light, .v-certified .headline { color: #79d479; }
+    .v-conditional, .v-self, .v-in-progress { border-color: #5a4a18; background: #16130b; }
+    .v-conditional .light, .v-conditional .headline,
+    .v-self .light, .v-self .headline,
+    .v-in-progress .light, .v-in-progress .headline { color: #f0c040; }
+    .v-expired { border-color: #5a2424; background: #1a0f0f; }
+    .v-expired .light, .v-expired .headline { color: #ff7a6f; }
+    .v-none { border-color: #333; background: #111; }
+    .v-none .light, .v-none .headline { color: #aaa; }
+
+    /* detail key/values */
+    .kvs { margin-top: 0.4rem; }
+    .kv { font-size: 0.82rem; color: #bbb; line-height: 1.6; }
+    .kv b { color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.68rem; margin-right: 0.4rem; }
+    .kv .sampletag {
+      font-size: 0.6rem; padding: 0.12rem 0.45rem; border-radius: 999px;
+      border: 1px solid #5a4a18; color: #f0c040; text-transform: uppercase;
+      letter-spacing: 0.06em; margin-left: 0.4rem;
+    }
+
+    .lookup-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.9rem; }
+    .lookup-links a.chip { color: #f0c040; border-color: #4a3a10; }
+    .lookup-links a.chip:hover { color: #ffd35a; border-color: #f0c040; text-decoration: none; }
+
+    /* inline add-to-index form (on a miss) */
+    .addbox {
+      border: 1px dashed #333; border-radius: 6px;
+      padding: 1rem 1.1rem; margin-top: 1rem;
+    }
+    .addbox .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem; }
+    .addbox .grid .full { grid-column: 1 / -1; }
+    .addbox label { margin-top: 0; }
+    .addbox select, .addbox input[type="text"] {
+      width: 100%; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 5px;
+      color: #e0e0e0; font-family: inherit; font-size: 0.85rem; padding: 0.55rem 0.6rem;
+    }
+    .addbox select:focus, .addbox input:focus { outline: none; border-color: #f0c040; }
+    @media (max-width: 600px) { .addbox .grid { grid-template-columns: 1fr; } }
+
+    /* running index table */
+    .index-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.5rem; margin: 2.25rem 0 0.75rem;
+    }
+    .index-head h2 {
+      font-size: 0.9rem; color: #999; text-transform: uppercase;
+      letter-spacing: 0.08em; font-weight: 500;
+    }
+    .index-head .idx-actions { display: flex; gap: 0.5rem; }
+    .table-wrap { overflow-x: auto; border: 1px solid #222; border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th, td { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 1px solid #1c1c1c; white-space: nowrap; }
+    th { color: #777; font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 500; background: #0d0d0d; }
+    tr:last-child td { border-bottom: none; }
+    td.name { white-space: normal; color: #e0e0e0; min-width: 160px; }
+    td .cage { color: #888; font-size: 0.72rem; }
+    .pill {
+      display: inline-block; font-size: 0.62rem; padding: 0.18rem 0.5rem;
+      border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid;
+    }
+    .pill.certified { color: #79d479; border-color: #285a28; background: #0d160d; }
+    .pill.conditional, .pill.self, .pill.in-progress { color: #f0c040; border-color: #5a4a18; background: #16130b; }
+    .pill.expired { color: #ff7a6f; border-color: #5a2424; background: #1a0f0f; }
+    .pill.none { color: #aaa; border-color: #333; }
+    td .rm {
+      background: none; border: none; color: #555; font-family: inherit;
+      font-size: 0.72rem; cursor: pointer; padding: 0.15rem 0.3rem;
+    }
+    td .rm:hover { color: #d05050; }
+    td a.src { color: #888; font-size: 0.72rem; }
+    .idx-empty {
+      color: #555; font-size: 0.85rem; text-align: center;
+      padding: 2rem 1rem; border: 1px dashed #262626; border-radius: 6px;
+    }
+
+    .disclaimer {
+      margin-top: 2rem;
+      border-top: 1px solid #1c1c1c;
+      padding-top: 1rem;
+      color: #555;
+      font-size: 0.72rem;
+      line-height: 1.65;
+    }
+    .disclaimer b { color: #777; }
+    .disclaimer code { color: #8a7a40; }
+
+    /* password gate */
+    #gate {
+      position: fixed; inset: 0;
+      background: #0a0a0a;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 100; padding: 2rem;
+    }
+    #gate .lock { font-size: 2rem; margin-bottom: 1.5rem; }
+    #gate .gate-box {
+      display: flex; align-items: center;
+      border: 1px solid #333; border-radius: 4px;
+      padding: 0.75rem 1rem; width: 100%; max-width: 360px;
+      background: #111;
+    }
+    #gate .gate-box:focus-within { border-color: #888; }
+    #gate input {
+      flex: 1; background: none; border: none; outline: none;
+      color: #e0e0e0; font-family: inherit; font-size: 0.95rem;
+    }
+    #gate .gate-go {
+      background: none; border: none; color: #555; cursor: pointer;
+      font-size: 1.1rem; transition: color 0.2s ease;
+    }
+    #gate .gate-go:hover { color: #fff; }
+    #gate .gate-err { color: #d17f7f; font-size: 0.8rem; margin-top: 1rem; min-height: 1rem; }
+    #gate .gate-label { color: #555; font-size: 0.8rem; margin-bottom: 1rem; letter-spacing: 0.05em; }
+    #app { display: none; }
+
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .actions { flex-direction: column; }
+      .actions button.go { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Password gate -->
+  <div id="gate">
+    <div class="lock">&#128274;</div>
+    <div class="gate-label">CMMC C3PAO Status Checker &mdash; restricted</div>
+    <form class="gate-box" onsubmit="return checkGate(event)">
+      <input id="gate-pw" type="password" placeholder="password" autofocus autocomplete="off" />
+      <button type="submit" class="gate-go" aria-label="Unlock">&#8594;</button>
+    </form>
+    <div class="gate-err" id="gate-err"></div>
+  </div>
+
+  <!-- App -->
+  <div id="app">
+    <div class="wrap">
+      <a href="tools.html" class="back-link">&larr; tools</a>
+      <h1>CMMC C3PAO Status Checker</h1>
+      <p class="subtitle">
+        Quickly assess whether an entity has completed a CMMC (Cybersecurity Maturity Model
+        Certification) third-party assessment. Enter a <b>CAGE code</b> or a <b>business name</b>
+        to get a brief status summary &mdash; certification level, date, and assessing C3PAO &mdash;
+        and add it to a running index of entities and their current CMMC status.
+      </p>
+      <div class="demo-note">
+        <b>No public real-time feed exists.</b> Authoritative CMMC status lives in DoD
+        <b>SPRS / eMASS</b>, which is not public. This tool checks a small, manually-curated table
+        (<code>cmmc-status.json</code>) seeded with <b>illustrative sample</b> entries to demonstrate
+        the flow. On a miss it points you to public sources (Cyber&nbsp;AB Marketplace, SAM.gov, web
+        search) so you can verify, then add the confirmed entity to your running index. Verify every
+        result against an authoritative source before relying on it.
+      </div>
+      <p class="updated">lookup table updated <span id="updated">&mdash;</span></p>
+
+      <div class="panel">
+        <label for="q">CAGE code or business name</label>
+        <input type="text" id="q" placeholder="e.g. 9SAM1, or: Aegis Precision Manufacturing" autocomplete="off" />
+        <div class="actions">
+          <button class="go" id="go">Check status</button>
+        </div>
+        <div class="examples">
+          <span class="lbl">try:</span>
+          <button class="chip" data-q="9SAM1">CAGE 9SAM1</button>
+          <button class="chip" data-q="Northwind Avionics">Northwind Avionics</button>
+          <button class="chip" data-q="Granite Machine Works">Granite Machine Works</button>
+          <button class="chip" data-q="Unknown Defense Co">a name not on file</button>
+        </div>
+      </div>
+
+      <div id="result"></div>
+
+      <!-- running index -->
+      <div class="index-head">
+        <h2>Running index <span id="idx-count" style="color:#555;font-weight:400"></span></h2>
+        <div class="idx-actions">
+          <button class="alt" id="idx-copy" style="font-size:0.78rem;padding:0.5rem 1rem">copy as JSON</button>
+          <button class="alt" id="idx-clear" style="font-size:0.78rem;padding:0.5rem 1rem">clear</button>
+        </div>
+      </div>
+      <div id="index"></div>
+
+      <div class="disclaimer">
+        <b>Not an official CMMC determination.</b> A result here reflects only what is in the
+        manually-maintained <code>cmmc-status.json</code> table or what you have added to your
+        index &mdash; it is <b>not</b> proof of certification and carries no authority. Official
+        CMMC status is recorded by the DoD in SPRS/eMASS and is confirmed by the assessing
+        <b>C3PAO</b> and the Cyber&nbsp;AB. The running index is stored only in this browser
+        (<code>localStorage</code>) on this device. Always confirm a contractor's actual CMMC level,
+        scope, certification date and expiry directly with the entity, its C3PAO, or the
+        contracting officer before making any decision. CMMC certifications are valid for three
+        years and may lapse.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- Password gate (shared password with the NIS2 tracker) ---------- */
+    const GATE_HASH = "438a94e7ba86187e15644c61874992fe9a8e7891371cb898314d2a7b593980d5";
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function checkGate(e) {
+      e.preventDefault();
+      const pw = document.getElementById("gate-pw").value;
+      const err = document.getElementById("gate-err");
+      if (!pw) return false;
+      const hash = await sha256(pw);
+      if (hash === GATE_HASH) {
+        sessionStorage.setItem("cmmc_unlocked", "1");
+        revealApp();
+      } else {
+        err.textContent = "access denied";
+        document.getElementById("gate-pw").value = "";
+      }
+      return false;
+    }
+
+    function revealApp() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("app").style.display = "block";
+      boot();
+    }
+
+    /* ---------- helpers ---------- */
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+    function norm(s) {
+      return " " + String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim() + " ";
+    }
+    // a CAGE code is 5 alphanumeric chars
+    function looksLikeCage(s) {
+      return /^[a-z0-9]{5}$/i.test(String(s || "").trim());
+    }
+
+    /* ---------- data + index state ---------- */
+    let DB = { entities: [], levels: {}, statusMeanings: {}, updated: "" };
+    const LS_INDEX = "cmmc-running-index";
+    let index = loadIndex();
+
+    function loadIndex() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(LS_INDEX));
+        if (Array.isArray(raw)) return raw;
+      } catch { /* ignore */ }
+      return [];
+    }
+    function saveIndex() { localStorage.setItem(LS_INDEX, JSON.stringify(index)); }
+
+    function indexKey(e) {
+      return (e.cage ? norm(e.cage).trim() : "") + "|" + norm(e.name).trim();
+    }
+
+    function addToIndex(entry) {
+      const key = indexKey(entry);
+      const existing = index.findIndex(e => indexKey(e) === key);
+      const row = {
+        cage: entry.cage || "",
+        name: entry.name || "",
+        status: entry.status || "none",
+        level: entry.level || "",
+        date: entry.date || "",
+        source: entry.source || "",
+        addedAt: Date.now()
+      };
+      if (existing !== -1) index[existing] = { ...index[existing], ...row };
+      else index.unshift(row);
+      saveIndex();
+      renderIndex();
+      return existing === -1;
+    }
+
+    /* ---------- lookup ---------- */
+    function lookup(query) {
+      const q = query.trim();
+      if (!q) return null;
+      // CAGE exact match first
+      if (looksLikeCage(q)) {
+        const byCage = DB.entities.find(e => e.cage && e.cage.toLowerCase() === q.toLowerCase());
+        if (byCage) return byCage;
+      }
+      const nq = norm(q).trim();
+      // exact name
+      let hit = DB.entities.find(e => norm(e.name).trim() === nq);
+      if (hit) return hit;
+      // alias exact
+      hit = DB.entities.find(e => (e.aliases || []).some(a => norm(a).trim() === nq));
+      if (hit) return hit;
+      // substring on name / alias (query must be reasonably specific)
+      if (nq.length >= 3) {
+        hit = DB.entities.find(e => {
+          const names = [e.name, ...(e.aliases || [])];
+          return names.some(n => {
+            const nn = norm(n).trim();
+            return nn.indexOf(nq) !== -1 || nq.indexOf(nn) !== -1;
+          });
+        });
+        if (hit) return hit;
+      }
+      return null;
+    }
+
+    const STATUS_LABEL = {
+      certified: "Certified",
+      conditional: "Conditional certification",
+      "in-progress": "Assessment in progress",
+      self: "Self-assessment on record",
+      expired: "Certification expired",
+      none: "No record found"
+    };
+
+    function statusHeadline(e) {
+      const lvl = e.level ? ` (${e.level})` : "";
+      switch (e.status) {
+        case "certified":   return `${e.name} holds a CMMC certification${lvl}.`;
+        case "conditional": return `${e.name} holds a conditional CMMC certification${lvl}.`;
+        case "in-progress": return `${e.name} has a CMMC assessment underway${lvl}.`;
+        case "self":        return `${e.name} has a CMMC self-assessment on record${lvl}.`;
+        case "expired":     return `${e.name}'s CMMC certification has expired${lvl}.`;
+        default:            return `No CMMC record on file for ${e.name}.`;
+      }
+    }
+
+    function render() {
+      const query = document.getElementById("q").value;
+      const el = document.getElementById("result");
+      if (!query.trim()) {
+        el.innerHTML = "";
+        return;
+      }
+
+      const hit = lookup(query);
+
+      if (hit) {
+        const meaning = DB.statusMeanings[hit.status] || "";
+        const isNew = addToIndex(hit);
+        const rows = [];
+        if (hit.cage)     rows.push(`<div class="kv"><b>CAGE</b>${esc(hit.cage)}</div>`);
+        if (hit.level)    rows.push(`<div class="kv"><b>Level</b>${esc(hit.level)}</div>`);
+        if (hit.date)     rows.push(`<div class="kv"><b>${hit.status === "in-progress" ? "Scheduled" : "Assessment date"}</b>${esc(hit.date)}</div>`);
+        if (hit.expires)  rows.push(`<div class="kv"><b>Expires</b>${esc(hit.expires)}</div>`);
+        if (hit.assessor) rows.push(`<div class="kv"><b>Assessor (C3PAO)</b>${esc(hit.assessor)}</div>`);
+        if (hit.scope)    rows.push(`<div class="kv"><b>Scope</b>${esc(hit.scope)}</div>`);
+        if (meaning)      rows.push(`<div class="kv"><b>What this means</b>${esc(meaning)}</div>`);
+        if (hit.note)     rows.push(`<div class="kv"><b>Note</b>${esc(hit.note)}</div>`);
+        if (hit.source)   rows.push(`<div class="kv"><b>Source</b>${/^https?:/i.test(hit.source) ? `<a href="${esc(hit.source)}" target="_blank" rel="noopener">${esc(hit.source)}</a>` : esc(hit.source)}</div>`);
+
+        el.innerHTML = `
+          <div class="verdict v-${esc(hit.status)}">
+            <div class="light">${esc(STATUS_LABEL[hit.status] || hit.status)}</div>
+            <div class="headline">${esc(statusHeadline(hit))}${hit.sample ? '<span class="sampletag">illustrative sample</span>' : ""}</div>
+            <div class="kvs">${rows.join("")}</div>
+            <div class="sub">${isNew ? "Added to your running index below." : "Already in your running index (refreshed)."}</div>
+          </div>`;
+      } else {
+        renderMiss(query.trim());
+      }
+    }
+
+    function renderMiss(q) {
+      const el = document.getElementById("result");
+      const enc = encodeURIComponent(q + " CMMC certification C3PAO");
+      const encName = encodeURIComponent(q);
+      el.innerHTML = `
+        <div class="verdict v-none">
+          <div class="light">No record found</div>
+          <div class="headline">No CMMC record on file for &ldquo;${esc(q)}&rdquo;.</div>
+          <div class="sub">
+            Nothing in the curated table matched. That does not mean the entity is uncertified &mdash;
+            it just isn't in this index yet. Verify against a public source, then add the confirmed
+            result to your running index below.
+          </div>
+          <div class="lookup-links">
+            <a class="chip" href="https://cyberab.org/Catalog/Cyber-AB-Marketplace" target="_blank" rel="noopener">Cyber&nbsp;AB Marketplace &rarr;</a>
+            <a class="chip" href="https://sam.gov/search/?q=${encName}" target="_blank" rel="noopener">SAM.gov / CAGE lookup &rarr;</a>
+            <a class="chip" href="https://www.google.com/search?q=${enc}" target="_blank" rel="noopener">Web search &rarr;</a>
+          </div>
+
+          <div class="addbox">
+            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.07em;color:#777;font-weight:500">Add a verified entry to the index</div>
+            <div class="grid">
+              <div>
+                <label for="add-name">Business name</label>
+                <input type="text" id="add-name" value="${esc(q)}">
+              </div>
+              <div>
+                <label for="add-cage">CAGE code</label>
+                <input type="text" id="add-cage" placeholder="5-char CAGE" value="${looksLikeCage(q) ? esc(q) : ""}">
+              </div>
+              <div>
+                <label for="add-status">Status</label>
+                <select id="add-status">
+                  <option value="certified">Certified</option>
+                  <option value="conditional">Conditional certification</option>
+                  <option value="in-progress">Assessment in progress</option>
+                  <option value="self">Self-assessment on record</option>
+                  <option value="expired">Certification expired</option>
+                  <option value="none">No record / not certified</option>
+                </select>
+              </div>
+              <div>
+                <label for="add-level">Level</label>
+                <select id="add-level">
+                  <option value="">&mdash;</option>
+                  <option value="Level 1">Level 1</option>
+                  <option value="Level 2">Level 2</option>
+                  <option value="Level 3">Level 3</option>
+                </select>
+              </div>
+              <div>
+                <label for="add-date">Certification / assessment date</label>
+                <input type="text" id="add-date" placeholder="YYYY-MM-DD">
+              </div>
+              <div>
+                <label for="add-source">Source (URL or note)</label>
+                <input type="text" id="add-source" placeholder="where you verified it">
+              </div>
+            </div>
+            <div class="actions" style="margin-top:0.9rem">
+              <button class="alt" id="add-go" style="font-size:0.82rem;padding:0.6rem 1.2rem">+ add to index</button>
+            </div>
+          </div>
+        </div>`;
+
+      document.getElementById("add-go").addEventListener("click", () => {
+        const name = document.getElementById("add-name").value.trim();
+        if (!name) { document.getElementById("add-name").focus(); return; }
+        const added = addToIndex({
+          name,
+          cage: document.getElementById("add-cage").value.trim(),
+          status: document.getElementById("add-status").value,
+          level: document.getElementById("add-level").value,
+          date: document.getElementById("add-date").value.trim(),
+          source: document.getElementById("add-source").value.trim()
+        });
+        const box = document.querySelector(".addbox");
+        if (box) box.insertAdjacentHTML("beforeend",
+          `<div class="sub" style="color:#79d479;margin-top:0.6rem">${added ? "Added to the running index." : "Updated the existing index entry."}</div>`);
+      });
+    }
+
+    /* ---------- running index render ---------- */
+    function renderIndex() {
+      const el = document.getElementById("index");
+      const count = document.getElementById("idx-count");
+      count.textContent = index.length ? `(${index.length})` : "";
+      if (!index.length) {
+        el.innerHTML = `<div class="idx-empty">No entities yet. Check a CAGE code or business name above &mdash; hits land here automatically, and you can add verified entries on a miss.</div>`;
+        return;
+      }
+      const body = index.map((e, i) => {
+        const src = e.source
+          ? (/^https?:/i.test(e.source)
+              ? `<a class="src" href="${esc(e.source)}" target="_blank" rel="noopener">link</a>`
+              : `<span class="src">${esc(e.source)}</span>`)
+          : "<span class='src'>&mdash;</span>";
+        return `<tr>
+          <td class="name">${esc(e.name) || "&mdash;"}${e.cage ? `<div class="cage">${esc(e.cage)}</div>` : ""}</td>
+          <td><span class="pill ${esc(e.status)}">${esc(STATUS_LABEL[e.status] || e.status)}</span></td>
+          <td>${esc(e.level) || "&mdash;"}</td>
+          <td>${esc(e.date) || "&mdash;"}</td>
+          <td>${src}</td>
+          <td><button class="rm" data-i="${i}">remove</button></td>
+        </tr>`;
+      }).join("");
+      el.innerHTML = `<div class="table-wrap"><table>
+        <thead><tr><th>Entity</th><th>Status</th><th>Level</th><th>Cert date</th><th>Source</th><th></th></tr></thead>
+        <tbody>${body}</tbody></table></div>`;
+      el.querySelectorAll(".rm").forEach(btn => btn.addEventListener("click", () => {
+        index.splice(Number(btn.dataset.i), 1);
+        saveIndex();
+        renderIndex();
+      }));
+    }
+
+    /* ---------- wiring ---------- */
+    document.getElementById("go").addEventListener("click", render);
+    document.getElementById("q").addEventListener("keydown", e => { if (e.key === "Enter") render(); });
+    document.querySelectorAll(".panel .chip").forEach(ch => ch.addEventListener("click", () => {
+      document.getElementById("q").value = ch.dataset.q || "";
+      render();
+    }));
+    document.getElementById("idx-clear").addEventListener("click", () => {
+      if (!index.length) return;
+      if (confirm("Clear the entire running index on this device?")) {
+        index = []; saveIndex(); renderIndex();
+      }
+    });
+    document.getElementById("idx-copy").addEventListener("click", async () => {
+      const json = JSON.stringify(index, null, 2);
+      const btn = document.getElementById("idx-copy");
+      try {
+        await navigator.clipboard.writeText(json);
+        const t = btn.textContent; btn.textContent = "copied!";
+        setTimeout(() => { btn.textContent = t; }, 1500);
+      } catch {
+        prompt("Copy the index JSON:", json);
+      }
+    });
+
+    /* ---------- boot ---------- */
+    let booted = false;
+    function boot() {
+      if (booted) return;
+      booted = true;
+      renderIndex();
+      fetch("cmmc-status.json", { cache: "no-store" })
+        .then(r => r.json())
+        .then(d => {
+          DB = d;
+          document.getElementById("updated").textContent = d.updated || "—";
+        })
+        .catch(() => {
+          document.getElementById("result").innerHTML =
+            '<div class="verdict v-none"><div class="headline">Could not load the lookup table.</div></div>';
+        });
+    }
+
+    if (sessionStorage.getItem("cmmc_unlocked") === "1") revealApp();
+  </script>
+</body>
+</html>

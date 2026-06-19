@@ -1,0 +1,75 @@
+{
+  "updated": "2026-06-19",
+  "note": "Curated, manually-maintained lookup table of CMMC assessment status by CAGE code / business name. There is no public real-time feed of certified entities — authoritative status lives in DoD SPRS / eMASS and is not public — so seed entries marked \"sample\": true are ILLUSTRATIVE placeholders to demonstrate the tool. Replace them with verified entries (cite a public source per row) as you confirm them.",
+  "levels": {
+    "Level 1": "Annual self-assessment, 15 safeguarding requirements (FAR 52.204-21). Protects Federal Contract Information (FCI). No C3PAO involved.",
+    "Level 2": "NIST SP 800-171 (110 controls) for Controlled Unclassified Information (CUI). Most CUI contracts require a triennial third-party assessment by a C3PAO; some are self-assessed.",
+    "Level 3": "Highest tier. NIST SP 800-171 plus selected NIST SP 800-172 enhancements, assessed by the government (DIBCAC), not a C3PAO. For the most sensitive CUI."
+  },
+  "statusMeanings": {
+    "certified": "Final CMMC certification achieved (assessment passed, no open POA&M).",
+    "conditional": "Conditional certification — passed with an open Plan of Action & Milestones (POA&M); must close out within 180 days for Final status.",
+    "in-progress": "Assessment scheduled or underway with a C3PAO; no certificate issued yet.",
+    "self": "Self-assessment on record (Level 1, or a self-assessed Level 2) — not a C3PAO certification.",
+    "expired": "Prior certification has lapsed (CMMC certifications are valid for 3 years).",
+    "none": "No CMMC assessment record found in this index."
+  },
+  "entities": [
+    {
+      "cage": "9SAM1",
+      "name": "Aegis Precision Manufacturing LLC",
+      "aliases": ["Aegis Precision", "APM"],
+      "status": "certified",
+      "level": "Level 2",
+      "scope": "CUI enclave covering engineering and production of machined defense components.",
+      "date": "2025-04-22",
+      "expires": "2028-04-22",
+      "assessor": "Sample C3PAO Assessments Inc.",
+      "source": "illustrative sample — verify before relying",
+      "sample": true,
+      "note": "Placeholder example showing a clean Final Level 2 certification."
+    },
+    {
+      "cage": "9SAM2",
+      "name": "Northwind Avionics Corporation",
+      "aliases": ["Northwind Avionics", "Northwind"],
+      "status": "conditional",
+      "level": "Level 2",
+      "scope": "Avionics firmware development environment handling CUI.",
+      "date": "2026-02-10",
+      "expires": "2029-02-10",
+      "assessor": "Sample C3PAO Assessments Inc.",
+      "source": "illustrative sample — verify before relying",
+      "sample": true,
+      "note": "Placeholder example: conditional certification with an open POA&M (180-day close-out window)."
+    },
+    {
+      "cage": "9SAM3",
+      "name": "Cascade Defense Logistics Inc.",
+      "aliases": ["Cascade Defense", "CDL"],
+      "status": "in-progress",
+      "level": "Level 2",
+      "scope": "Logistics and sustainment systems; assessment scheduled.",
+      "date": "2026-05-30",
+      "expires": "",
+      "assessor": "Sample C3PAO Assessments Inc.",
+      "source": "illustrative sample — verify before relying",
+      "sample": true,
+      "note": "Placeholder example: assessment booked, no certificate yet."
+    },
+    {
+      "cage": "9SAM4",
+      "name": "Granite Machine Works LLC",
+      "aliases": ["Granite Machine", "GMW"],
+      "status": "self",
+      "level": "Level 1",
+      "scope": "Handles FCI only (no CUI). Annual self-assessment.",
+      "date": "2026-01-15",
+      "expires": "2027-01-15",
+      "assessor": "Self-assessment (no C3PAO)",
+      "source": "illustrative sample — verify before relying",
+      "sample": true,
+      "note": "Placeholder example: Level 1 self-assessment — not a third-party certification."
+    }
+  ]
+}
