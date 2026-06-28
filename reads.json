@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-15",
+  "updated": "2026-06-28",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -252,6 +252,69 @@
       "source": "arXiv · 2606.02419",
       "url": "https://arxiv.org/abs/2606.02419",
       "summary": "Presents DPA4, an equivariant machine-learned interatomic-potential architecture whose new SO(2) convolution and training path cut the heavy compute cost of expressive models, with about a 3x speedup. On the Matbench Discovery benchmark its compact 2.76M-parameter variant beats a 30M-parameter baseline, pushing the accuracy-versus-cost frontier for atomistic materials simulation."
+    },
+    {
+      "id": "2026-06-28-ai",
+      "date": "2026-06-28",
+      "category": "AI",
+      "title": "LLM Consortium for Software Design Refinement: A Controlled Experiment on Multi-Agent Collaboration Topologies",
+      "source": "arXiv · 2606.01490",
+      "url": "https://arxiv.org/abs/2606.01490",
+      "summary": "A controlled experiment compares 12 ways of wiring multiple LLM agents together for software architecture design, running 520 trials across 8 tasks and scoring them with three independent automated evaluators. It finds that an adversarial setup demanding full rewrites ranks best, and that cross-model review—generating with one model and reviewing with another—is a consistent runner-up."
+    },
+    {
+      "id": "2026-06-28-semiconductors",
+      "date": "2026-06-28",
+      "category": "Semiconductors",
+      "title": "Solid-state transcapacitor: a new gain element for logic, memory and interconnects",
+      "source": "arXiv · 2606.21772",
+      "url": "https://arxiv.org/abs/2606.21772",
+      "summary": "Proposes the 'transcapacitor,' a solid-state gain element intended to address the energy-scaling limits of conventional transistors across logic, memory, and interconnects. The work frames it as a candidate building block for more energy-efficient electronics as traditional device scaling slows."
+    },
+    {
+      "id": "2026-06-28-biotechnology",
+      "date": "2026-06-28",
+      "category": "Biotechnology",
+      "title": "ProHiFlo: Hierarchical Flow Matching with Functional Guidance for De Novo Protein Generation",
+      "source": "arXiv · 2606.11243",
+      "url": "https://arxiv.org/abs/2606.11243",
+      "summary": "Introduces ProHiFlo, a hierarchical flow-matching generative model for designing proteins from scratch with explicit functional guidance. On the task of scaffolding enzyme active sites it reports a 58.9% success rate, well above the 41.2% of the RFDiffusion baseline, pointing toward more reliable de novo design for enzyme engineering and therapeutics."
+    },
+    {
+      "id": "2026-06-28-sustainable-energy",
+      "date": "2026-06-28",
+      "category": "Sustainable Energy",
+      "title": "Energy Storage as a Multi-Use Asset: Applications Across the Power System",
+      "source": "arXiv · 2606.08808",
+      "url": "https://arxiv.org/abs/2606.08808",
+      "summary": "Surveys how a single energy-storage asset can serve many roles across the power system, from short-duration services like frequency regulation and voltage support to longer-duration peak shaving and seasonal buffering. It frames storage as flexible infrastructure for offsetting renewable variability rather than a single-purpose device."
+    },
+    {
+      "id": "2026-06-28-defense-tech",
+      "date": "2026-06-28",
+      "category": "Defense Tech",
+      "title": "Artificial Intelligence in Future Warfare: Ethical Frameworks and the Regulation of Lethal Autonomous Weapons",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6537338",
+      "summary": "Argues that AI has compressed the lethal decision cycle from hours to milliseconds, outpacing the international law meant to constrain it. The paper surveys nine real-world autonomous-weapon systems, classifies each by how much human control remains (in-, on-, or out-of-the-loop), and proposes regulation calibrated to the actual risk of autonomous lethality."
+    },
+    {
+      "id": "2026-06-28-quantum-computing",
+      "date": "2026-06-28",
+      "category": "Quantum Computing",
+      "title": "Approximating optimal decoding of quantum LDPC codes with narrow frontiers",
+      "source": "arXiv · 2606.20513",
+      "url": "https://arxiv.org/abs/2606.20513",
+      "summary": "Presents the 'Frontier' decoder, a pruned dynamic-programming method for quantum LDPC codes that keeps only a narrow set of the most promising decoding states instead of the full exponential search. It reaches near-optimal thresholds for surface and color codes and state-of-the-art accuracy on the gross code while retaining a very small candidate list."
+    },
+    {
+      "id": "2026-06-28-materials-science",
+      "date": "2026-06-28",
+      "category": "Materials Science",
+      "title": "Density-wave order enhances the phonon thermal Hall effect in a trilayer nickelate",
+      "source": "arXiv · 2606.24125",
+      "url": "https://arxiv.org/abs/2606.24125",
+      "summary": "Reports a phonon thermal Hall effect in the trilayer nickelate La4Ni3O10 that is strongly enhanced below its density-wave transition near 140 K, showing two distinct plateaus. The extracted energy scale matches a magnon-phonon crossing, pointing to magnon-phonon hybridization as the mechanism—insight into a family of materials tied to high-temperature superconductivity."
     }
   ]
 }

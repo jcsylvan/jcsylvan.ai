@@ -3,8 +3,8 @@
 `reads.html` renders a reading list from `reads.json`. The list on the
 main page is reached via the **📖 puck is here** button on `index.html`.
 
-> **How this runs:** this job is meant to be run **once a week, on Tuesday at
-> 6 AM**, by a scheduled Claude Code session (a weekly trigger pointed at this
+> **How this runs:** this job is meant to be run **once a week, on Sunday at
+> 11:00 AM**, by a scheduled Claude Code session (a weekly trigger pointed at this
 > repo). The page itself is a static file and cannot fetch new articles on its
 > own — this runbook is what actually pulls them in. New articles are
 > **committed straight to `main`**, so they appear on the live page automatically
