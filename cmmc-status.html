@@ -397,8 +397,8 @@
   </div>
 
   <script>
-    /* ---------- Password gate (shared password with the NIS2 tracker) ---------- */
-    const GATE_HASH = "438a94e7ba86187e15644c61874992fe9a8e7891371cb898314d2a7b593980d5";
+    /* ---------- Password gate ---------- */
+    const GATE_HASH = "7b2e9f882fb00c76d3863ad4d12a8254bc146fdcf8934dfb20322f6598f03e0c";
 
     async function sha256(str) {
       const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
