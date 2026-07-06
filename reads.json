@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01",
+  "updated": "2026-07-06",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -378,6 +378,69 @@
       "source": "arXiv · 2607.00683",
       "url": "https://arxiv.org/abs/2607.00683",
       "summary": "Demonstrates Josephson junctions built on the weak topological insulator ZrTe5 in which the supercurrent concentrates on specific crystallographic facets that host gapless topological surface states. Superconducting quantum interferometry shows SQUID-like critical-current oscillations with flux-quantum periodicity, realizing in a 3D crystal a facet-selective surface supercurrent that had previously only been achieved with 1D edge modes in 2D systems—a building block for topological superconductivity."
+    },
+    {
+      "id": "2026-07-06-ai",
+      "date": "2026-07-06",
+      "category": "AI",
+      "title": "DiscoLoop: Looping Discrete Embeddings and Continuous Hidden States for Multi-hop Reasoning",
+      "source": "arXiv · 2607.00341",
+      "url": "https://arxiv.org/abs/2607.00341",
+      "summary": "Studies why standard Transformers struggle to compose two facts within a single forward pass, tracing it to a 'depth-local storage' problem where a fact learned in early layers isn't available where the second-hop lookup happens. The authors propose DiscoLoop, a looping architecture whose recurrence carries both a discrete token-embedding channel and a continuous hidden-state channel, and show a training-free realignment step nearly closes the multi-hop generalization gap."
+    },
+    {
+      "id": "2026-07-06-semiconductors",
+      "date": "2026-07-06",
+      "category": "Semiconductors",
+      "title": "An analog ac voltage amplifier based on a single straintronic magnetic tunnel junction",
+      "source": "arXiv · 2607.00104",
+      "url": "https://arxiv.org/abs/2607.00104",
+      "summary": "Shows that a single straintronic magnetic tunnel junction, whose conductance varies continuously with strain induced by a gate voltage, can act as an analog ac voltage amplifier. Biasing the device at the midpoint of its linear region and superimposing a small ac signal amplifies the signal without distortion, pointing toward compact, energy-efficient magnetoelectric building blocks for analog signal processing beyond conventional CMOS."
+    },
+    {
+      "id": "2026-07-06-biotechnology",
+      "date": "2026-07-06",
+      "category": "Biotechnology",
+      "title": "Commutative Algebra Learning for Protein Flexibility Analysis",
+      "source": "arXiv · 2607.00879",
+      "url": "https://arxiv.org/abs/2607.00879",
+      "summary": "Protein flexibility, usually quantified by B-factors, depends on the fine-grained local geometry around each atom, which global structural models capture poorly. The authors introduce CAL, a framework that builds localized algebraic descriptors at multiple spatial scales using commutative algebra, improving B-factor prediction accuracy by 34.5% over the classical Gaussian network model and enabling a mathematically principled blind model for cross-protein flexibility prediction."
+    },
+    {
+      "id": "2026-07-06-sustainable-energy",
+      "date": "2026-07-06",
+      "category": "Sustainable Energy",
+      "title": "Impact of distribution fees on BESS scheduling and profitability",
+      "source": "arXiv · 2606.22185",
+      "url": "https://arxiv.org/abs/2606.22185",
+      "summary": "Examines how grid distribution fees—often overlooked next to price arbitrage and ancillary services—shape when battery energy storage charges and discharges and whether it pays off. Using a mixed-integer linear program calibrated on German day-ahead prices across four configurations (stand-alone storage and storage paired with consumption, generation, or both), it quantifies how rising fee levels erode storage value, an input for tariff design as renewables grow."
+    },
+    {
+      "id": "2026-07-06-defense-tech",
+      "date": "2026-07-06",
+      "category": "Defense Tech",
+      "title": "AI, Trust, and Teaming: The Humans-as-Handlers Approach for Autonomous and Opaque AI Systems",
+      "source": "arXiv · 2607.00523",
+      "url": "https://arxiv.org/abs/2607.00523",
+      "summary": "Argues that as increasingly autonomous, opaque AI systems take on high-stakes tasks in medicine and warfighting, effective human-machine teams must rest on a carefully defined notion of trust rather than the loose usage common in AI ethics and regulation. The author proposes a 'humans-as-handlers' framing, treating such systems as analogous to working animals like dogs, to reason about oversight, accountability, and trust when full transparency is unattainable."
+    },
+    {
+      "id": "2026-07-06-quantum-computing",
+      "date": "2026-07-06",
+      "category": "Quantum Computing",
+      "title": "Bit flips are erasures in dissipative cat qubits",
+      "source": "arXiv · 2607.01375",
+      "url": "https://arxiv.org/abs/2607.01375",
+      "summary": "Using quantum-trajectory simulations, the authors show that in dissipatively stabilized cat qubits a bit flip is not a silent logical error but is accompanied by a strong, time-localized photon burst from the stabilizing buffer. Photon counting or homodyne monitoring can therefore herald the loss of logical information without disrupting the autonomous stabilization, effectively converting rare bit flips into heralded erasures that a decoder can exploit for autonomous error correction."
+    },
+    {
+      "id": "2026-07-06-materials-science",
+      "date": "2026-07-06",
+      "category": "Materials Science",
+      "title": "Plaid-Like Spin Splitting and Chirality of Magnon Bands in Antiferromagnetic MnTe2",
+      "source": "arXiv · 2607.02114",
+      "url": "https://arxiv.org/abs/2607.02114",
+      "summary": "Combines helicity- and angle-resolved Raman scattering with DFT+U and linear spin-wave theory to reveal momentum-dependent handedness in the magnon bands of antiferromagnetic MnTe2. The measurements show reduced magnon rotational symmetry and a left/right circular-polarization imbalance, and the calculations uncover a 'plaid-like' spin-splitting texture that mirrors altermagnetic electronic bands—extending altermagnet-like physics to charge-neutral spin waves for magnonics."
     }
   ]
 }
