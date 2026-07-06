@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01",
+  "updated": "2026-07-06",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -378,6 +378,69 @@
       "source": "arXiv · 2607.00683",
       "url": "https://arxiv.org/abs/2607.00683",
       "summary": "Demonstrates Josephson junctions built on the weak topological insulator ZrTe5 in which the supercurrent concentrates on specific crystallographic facets that host gapless topological surface states. Superconducting quantum interferometry shows SQUID-like critical-current oscillations with flux-quantum periodicity, realizing in a 3D crystal a facet-selective surface supercurrent that had previously only been achieved with 1D edge modes in 2D systems—a building block for topological superconductivity."
+    },
+    {
+      "id": "2026-07-06-ai",
+      "date": "2026-07-06",
+      "category": "AI",
+      "title": "Message Passing Enables Efficient Reasoning",
+      "source": "arXiv · 2607.01077",
+      "url": "https://arxiv.org/abs/2607.01077",
+      "summary": "Tackles the computational bottleneck of long chain-of-thought reasoning by letting parallel LLM threads talk to each other directly. The proposed Message Passing Language Models add lightweight send and receive primitives so threads share only what matters and can terminate early on partial results from peers, improving on fork-join parallel scaling where threads stay isolated."
+    },
+    {
+      "id": "2026-07-06-semiconductors",
+      "date": "2026-07-06",
+      "category": "Semiconductors",
+      "title": "GaN Power Devices and Converter Architectures for AI Data Centers: Efficiency, Reliability, and Deployment Pathways",
+      "source": "arXiv · 2606.25281",
+      "url": "https://arxiv.org/abs/2606.25281",
+      "summary": "Reviews how gallium-nitride power transistors fit the escalating power-delivery demands of AI data centers, mapping Si, SiC, and GaN against converter-relevant metrics across each stage from front-end power-factor correction to point-of-load regulation. It concludes GaN offers a stage-dependent rather than universal advantage, with mature lateral GaN HEMTs most effective in high-frequency, low-to-mid-voltage stages where switching losses dominate."
+    },
+    {
+      "id": "2026-07-06-biotechnology",
+      "date": "2026-07-06",
+      "category": "Biotechnology",
+      "title": "BioMatrix: Towards a Comprehensive Biological Foundation Model Spanning the Modality Matrix of Sequences, Structures, and Language",
+      "source": "arXiv · 2606.22138",
+      "url": "https://arxiv.org/abs/2606.22138",
+      "summary": "Introduces BioMatrix, a single decoder-only foundation model that natively handles molecule and protein sequences, 3D structures, and natural language in one shared token space, avoiding the separate encoders most biological models rely on. Built on Qwen3 and continually pretrained on 304 billion tokens, it aims to unify broad entity coverage with true multimodality under a single next-token objective for tasks across drug and protein design."
+    },
+    {
+      "id": "2026-07-06-sustainable-energy",
+      "date": "2026-07-06",
+      "category": "Sustainable Energy",
+      "title": "Mobility-safe adaptive reserve certification for EV–hydrogen-bus–building resilience hubs",
+      "source": "arXiv · 2607.00585",
+      "url": "https://arxiv.org/abs/2607.00585",
+      "summary": "Proposes a scheduling framework for zero-emission depots that combine EV charging, hydrogen buses, and backup power for critical buildings, where hydrogen sent to a building could otherwise strand buses. Using a physics-hybrid building-load model and conformal reserve calibration that adapts to seasonal drift, it enforces a mobility-first rule that protects post-disaster bus service before allocating hydrogen to buildings, treating these sites as grid resilience assets."
+    },
+    {
+      "id": "2026-07-06-defense-tech",
+      "date": "2026-07-06",
+      "category": "Defense Tech",
+      "title": "Governing Military Artificial Intelligence Technologies: Manufacturing War or Peace with Artificial Intelligence",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6376219",
+      "summary": "Uses BERTopic natural-language-processing over 505 papers from 2014–2025 to systematically map the decade of scholarship on military AI. The review distills the literature into three spectra and six sub-themes—governance (national strategy, rules and ethics), application (regional security, social and cultural influences), and technology (tactics, logistics)—offering a structured picture of where military-AI research has concentrated and where gaps remain."
+    },
+    {
+      "id": "2026-07-06-quantum-computing",
+      "date": "2026-07-06",
+      "category": "Quantum Computing",
+      "title": "Bias-Preserving Gates and Quantum Error Correction With Dual-Rail Cat Codes",
+      "source": "arXiv · 2607.00786",
+      "url": "https://arxiv.org/abs/2607.00786",
+      "summary": "Proposes the dual-rail cat code, a concatenated bosonic encoding that nests an inner cat code inside an outer dual-rail structure to inherit the strengths of both. The dual-rail layer converts photon-loss errors into detectable erasures, while the cat layer supplies resource-efficient, bias-preserving logical gates—combining efficient photon-loss handling with bias-tailored error correction that each encoding lacks on its own."
+    },
+    {
+      "id": "2026-07-06-materials-science",
+      "date": "2026-07-06",
+      "category": "Materials Science",
+      "title": "Ising superconductivity and anomalous metallic states in a bulk crystal with artificial unidirectional stacking layers",
+      "source": "arXiv · 2607.01302",
+      "url": "https://arxiv.org/abs/2607.01302",
+      "summary": "Reports a synthesized Sr0.75ClNbS2 crystal that forces all NbS2 layers into a parallel AA stacking never before realized in bulk, using a planar Sr-Cl network to reorganize the structure rather than just expand layer spacing. Breaking inversion symmetry this way reproduces an isolated monolayer's electronic environment in three dimensions, preventing cancellation of the local Ising fields and yielding bulk Ising superconductivity plus anomalous metallic states."
     }
   ]
 }
