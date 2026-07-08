@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06",
+  "updated": "2026-07-08",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -441,6 +441,69 @@
       "source": "arXiv · 2607.01302",
       "url": "https://arxiv.org/abs/2607.01302",
       "summary": "Reports a synthesized Sr0.75ClNbS2 crystal that forces all NbS2 layers into a parallel AA stacking never before realized in bulk, using a planar Sr-Cl network to reorganize the structure rather than just expand layer spacing. Breaking inversion symmetry this way reproduces an isolated monolayer's electronic environment in three dimensions, preventing cancellation of the local Ising fields and yielding bulk Ising superconductivity plus anomalous metallic states."
+    },
+    {
+      "id": "2026-07-08-ai",
+      "date": "2026-07-08",
+      "category": "AI",
+      "title": "Don't Let Gains FADE: Breaking Down Policy Gradient Weights in RL",
+      "source": "arXiv · 2607.01490",
+      "url": "https://arxiv.org/abs/2607.01490",
+      "summary": "Reinforcement-learning post-training sharply improves LLM reasoning but suffers from training instability and diversity collapse. This paper decomposes the policy-gradient advantage into the weight it places on each rollout, showing how the advantage function quietly reshapes the training objective and decides which samples drive learning. The analysis points toward reweighting schemes that stabilize RL fine-tuning without collapsing the model's output diversity."
+    },
+    {
+      "id": "2026-07-08-semiconductors",
+      "date": "2026-07-08",
+      "category": "Semiconductors",
+      "title": "Substrate-Mediated Persistent Photodoping in WSe2/hBN Field-Effect Transistors Enabled by Defect States in SiO2",
+      "source": "arXiv · 2607.03121",
+      "url": "https://arxiv.org/abs/2607.03121",
+      "summary": "Studies UV-induced persistent photodoping in multilayer WSe2 field-effect transistors built on WSe2/hBN heterostructures over a SiO2/silicon substrate, tracing the long-lived doping to defect states in the underlying oxide rather than the 2D channel itself. Understanding this substrate-driven effect matters because it can unintentionally shift threshold voltages in 2D devices, but could also be harnessed for optically programmable memory and sensing."
+    },
+    {
+      "id": "2026-07-08-biotechnology",
+      "date": "2026-07-08",
+      "category": "Biotechnology",
+      "title": "Folding, Reasoning, and Scaling with Open-source Drug Discovery Engine",
+      "source": "arXiv · 2607.03787",
+      "url": "https://arxiv.org/abs/2607.03787",
+      "summary": "Introduces OpenDDE, an open-source all-atom biomolecular foundation model that treats co-folding—predicting the joint structure of interacting molecules—as the entry point to a broader drug-discovery engine rather than an isolated endpoint. Built as a shared structural-reasoning layer, it reaches frontier co-folding accuracy while laying groundwork for de novo design, affinity estimation, and structure-conditioned optimization, and the authors release code, checkpoints, and benchmarks to open up access to the capability."
+    },
+    {
+      "id": "2026-07-08-sustainable-energy",
+      "date": "2026-07-08",
+      "category": "Sustainable Energy",
+      "title": "LLMs for Agentic Home Energy Management",
+      "source": "arXiv · 2607.04569",
+      "url": "https://arxiv.org/abs/2607.04569",
+      "summary": "Builds a tool-calling ReAct agent driven by a large language model that schedules flexible household loads using live half-hourly electricity prices, weather and solar-generation forecasts, home usage data, and a retrieval-augmented knowledge base. It tests whether general LLM agents, rather than bespoke optimizers, can cut bills and shift demand for rooftop-solar homes, pointing toward more accessible smart-home energy control."
+    },
+    {
+      "id": "2026-07-08-defense-tech",
+      "date": "2026-07-08",
+      "category": "Defense Tech",
+      "title": "Strengthening AI Treaty Mechanisms for Mitigating Risks in Autonomous Weapons Systems",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5908065",
+      "summary": "Draws on arms-control precedent and the UN's push for a binding treaty to argue for embedding human oversight and ethical constraints into the governance of autonomous weapons systems. Using deployed systems such as the Israeli Harpy and U.S. Switchblade as case studies, it maps the diverse regulatory challenges and warns that without verifiable treaty-based constraints, autonomous-weapon development will outpace legal norms."
+    },
+    {
+      "id": "2026-07-08-quantum-computing",
+      "date": "2026-07-08",
+      "category": "Quantum Computing",
+      "title": "Surface code logical operations on a superconducting quantum processor",
+      "source": "arXiv · 2607.01473",
+      "url": "https://arxiv.org/abs/2607.01473",
+      "summary": "Experimentally realizes patch-based surface-code logical processing on a 107-qubit superconducting processor, implementing a reusable primitive layer—merge and split, patch growth and shrinkage, and domain-wall and twist-defect deformations—then composing them into logical state routing, a logical CNOT, and single-qubit Hadamard and phase gates. All operations run on distance-three rotated surface-code patches with multi-round syndrome extraction and neural-network decoding, without post-selection, a step toward programmable fault-tolerant logic."
+    },
+    {
+      "id": "2026-07-08-materials-science",
+      "date": "2026-07-08",
+      "category": "Materials Science",
+      "title": "Imaging superconducting weak spots through vortex-assisted THz near-field photovoltage",
+      "source": "arXiv · 2607.00914",
+      "url": "https://arxiv.org/abs/2607.00914",
+      "summary": "Demonstrates the first use of terahertz near-field photovoltage nanoscopy inside a superconductor, reaching roughly 300 nm spatial resolution at 2.52 THz on current-biased NbN strips. The technique reveals localized photovoltage peaks at nanoscale defects of reduced superfluid density, offering a way to image the 'weak spots' that limit superconducting devices such as single-photon detectors and nanowire circuits."
     }
   ]
 }
