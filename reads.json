@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08",
+  "updated": "2026-07-15",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -504,6 +504,69 @@
       "source": "arXiv · 2607.00914",
       "url": "https://arxiv.org/abs/2607.00914",
       "summary": "Demonstrates the first use of terahertz near-field photovoltage nanoscopy inside a superconductor, reaching roughly 300 nm spatial resolution at 2.52 THz on current-biased NbN strips. The technique reveals localized photovoltage peaks at nanoscale defects of reduced superfluid density, offering a way to image the 'weak spots' that limit superconducting devices such as single-photon detectors and nanowire circuits."
+    },
+    {
+      "id": "2026-07-15-ai",
+      "date": "2026-07-15",
+      "category": "AI",
+      "title": "Switch-Reasoner: Learn When to Think in Multitask Mixtures via Reinforcement Learning",
+      "source": "arXiv · 2607.08572",
+      "url": "https://arxiv.org/abs/2607.08572",
+      "summary": "Proposes Switch-Reasoner, a reinforcement-learning framework that trains a model to decide when to think before answering, treating explicit step-by-step reasoning as an optional tool it can invoke rather than always run. Trained with GRPO across a mixture of tasks, it answers easy queries directly and reasons only when needed, cutting wasted computation while preserving accuracy on harder problems."
+    },
+    {
+      "id": "2026-07-15-semiconductors",
+      "date": "2026-07-15",
+      "category": "Semiconductors",
+      "title": "Monolithic GaN Systems Combining Non-Volatile Memory and Analog Computing via Area-Ratio-Engineered Ferroelectric AlScN Gate Stacks",
+      "source": "arXiv · 2607.07577",
+      "url": "https://arxiv.org/abs/2607.07577",
+      "summary": "Demonstrates gallium-nitride transistors with a ferroelectric AlScN gate stack in which tuning the device 'area ratio' controls both non-volatile memory and analog computing behavior on one platform. The devices reach a 27 V memory window and 27 mV/dec subthreshold swing, support 4-bit multi-level storage, and enable multi-state inverters and the first GaN-based ferroelectric frequency-to-voltage converter, pointing toward in-memory computing in power-grade GaN."
+    },
+    {
+      "id": "2026-07-15-biotechnology",
+      "date": "2026-07-15",
+      "category": "Biotechnology",
+      "title": "Variable-Length Generative Protein Design via Generalized Poisson Flow",
+      "source": "arXiv · 2607.09039",
+      "url": "https://arxiv.org/abs/2607.09039",
+      "summary": "Introduces Generalized Poisson Flow (GPFlow), a generative model for protein design that no longer requires fixing the protein's length before sampling, a constraint that limits most diffusion- and flow-based designers. By letting length emerge during generation, the method can produce more varied backbones, aiming to broaden the range of structures accessible to de novo protein design."
+    },
+    {
+      "id": "2026-07-15-sustainable-energy",
+      "date": "2026-07-15",
+      "category": "Sustainable Energy",
+      "title": "Hybrid electrolyzer systems: Smart strategy or economic fallacy?",
+      "source": "arXiv · 2607.06093",
+      "url": "https://arxiv.org/abs/2607.06093",
+      "summary": "Asks whether 'hybrid' green-hydrogen plants that combine more than one electrolyzer technology to better follow variable wind and solar actually pay off, or whether the added complexity is an economic fallacy. Using a Gurobi-based optimization of dispatch and sizing, it weighs the operational flexibility gains against capital costs to judge when mixing electrolyzer types beats a single-technology design."
+    },
+    {
+      "id": "2026-07-15-defense-tech",
+      "date": "2026-07-15",
+      "category": "Defense Tech",
+      "title": "Programmed to Obey: The Limits of Law and the Debate over Meaningful Human Control of Autonomous Weapons",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5205545",
+      "summary": "Examines the influential idea that lethal autonomous weapons must stay under 'meaningful human control' and argues the concept promises more than law can deliver. Analyzing how human operators actually interact with autonomous systems, the authors contend that requiring meaningful control may not resolve the accountability and legality problems it is meant to, and press for a clearer legal footing."
+    },
+    {
+      "id": "2026-07-15-quantum-computing",
+      "date": "2026-07-15",
+      "category": "Quantum Computing",
+      "title": "A Cross-Platform Analysis of High-Performance Quantum Error Correction Codes",
+      "source": "arXiv · 2607.04082",
+      "url": "https://arxiv.org/abs/2607.04082",
+      "summary": "Builds a unified analytical framework to estimate the logical error rates of leading quantum error-correction codes across different hardware platforms, rather than benchmarking each in isolation. It isolates two dominant drivers of logical error—the code's structure and the overhead of its two-qubit gates—giving a cross-platform way to compare which code-and-hardware pairings look most promising as machines scale."
+    },
+    {
+      "id": "2026-07-15-materials-science",
+      "date": "2026-07-15",
+      "category": "Materials Science",
+      "title": "Soft point-contact Andreev reflection spectroscopy in a palm-type cubic anvil-pressure cell",
+      "source": "arXiv · 2607.10668",
+      "url": "https://arxiv.org/abs/2607.10668",
+      "summary": "Develops soft point-contact Andreev reflection spectroscopy inside a palm-sized cubic anvil pressure cell, extending this probe of superconducting pairing to high-pressure conditions. Applied to the kagome-lattice superconductor CsCr3Sb5 and the bilayer nickelate La2PrNi2O7, the measurements yield spectroscopic signatures consistent with unconventional superconductivity in both—materials whose superconducting states are hard to study by other means under pressure."
     }
   ]
 }
