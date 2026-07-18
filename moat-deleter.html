@@ -86,6 +86,26 @@
     .step b { display: block; font-size: 0.85rem; color: #e0e0e0; font-weight: 600; }
     .step span { font-size: 0.8rem; color: #777; line-height: 1.45; }
 
+    /* toolbox */
+    .toolbox { margin-bottom: 2rem; }
+    .toolbox > h2 {
+      font-size: 0.7rem;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .toolbox > .lede {
+      color: #888;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      margin-bottom: 1.1rem;
+      max-width: 700px;
+    }
+    .tool-name { font-size: 1rem; color: #e0e0e0; font-weight: 600; }
+    .deletes-label { font-size: 0.68rem; color: #555; text-transform: uppercase; letter-spacing: 0.08em; }
+
     /* filters */
     .toolbar {
       display: flex; flex-wrap: wrap; gap: 0.5rem;
@@ -191,6 +211,13 @@
       <div class="steps" id="steps"></div>
     </section>
 
+    <section class="toolbox" id="toolbox" hidden>
+      <h2>the toolbox</h2>
+      <p class="lede">General-purpose instruments for draining a moat, independent of sector.
+        Each one reverses a load-bearing assumption; the case studies below show where to aim it.</p>
+      <div id="tool-list"></div>
+    </section>
+
     <div class="toolbar" id="filters"></div>
     <div id="list">
       <div class="loading">loading&hellip;</div>
@@ -219,6 +246,58 @@
         d.className = "step";
         d.innerHTML = `<div class="n">${i + 1}</div><div><b>${f.step}</b><span>${f.detail}</span></div>`;
         el.appendChild(d);
+      });
+    }
+
+    function renderTools() {
+      const section = document.getElementById("toolbox");
+      const tools = data.tools || [];
+      if (!tools.length) { section.hidden = true; return; }
+      section.hidden = false;
+
+      const list = document.getElementById("tool-list");
+      list.innerHTML = "";
+      tools.forEach(t => {
+        const c = document.createElement("details");
+        c.className = "card";
+        const chips = (t.deletes || [])
+          .map(d => `<span class="type">${d}</span>`)
+          .join("");
+        const steps = (t.playbook || [])
+          .map(s => `<div class="pstep"><div class="n"></div><span>${s}</span></div>`)
+          .join("");
+        c.innerHTML = `
+          <summary>
+            <span class="deletes-label">deletes</span>
+            <span class="row">
+              <span class="tool-name">${t.name}</span>
+              ${chips}
+            </span>
+            <span class="claim">${t.summary}</span>
+            <span class="marker">read how to use it &darr;</span>
+          </summary>
+          <div class="body">
+            <div class="block">
+              <div class="h">how it deletes</div>
+              <p>${t.howItDeletes}</p>
+            </div>
+            <div class="block">
+              <div class="h">usage playbook</div>
+              <div class="play">${steps}</div>
+            </div>
+            ${t.seenInTheWild ? `
+            <div class="block">
+              <div class="h">seen in the wild</div>
+              <p>${t.seenInTheWild}</p>
+            </div>` : ""}
+            ${t.watchOut ? `
+            <div class="block weak">
+              <div class="h">watch out</div>
+              <p>${t.watchOut}</p>
+            </div>` : ""}
+          </div>`;
+        c.querySelectorAll(".play .n").forEach((n, i) => { n.textContent = i + 1; });
+        list.appendChild(c);
       });
     }
 
@@ -288,6 +367,7 @@
         data = d;
         document.getElementById("updated").textContent = d.updated || "—";
         renderSteps();
+        renderTools();
         renderFilters();
         renderList();
       })

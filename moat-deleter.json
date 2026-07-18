@@ -1,5 +1,23 @@
 {
-  "updated": "2026-05-30",
+  "updated": "2026-07-18",
+  "tools": [
+    {
+      "id": "free-api",
+      "name": "Free API",
+      "deletes": ["Proprietary data/IP", "Switching costs", "Distribution control", "Network effects"],
+      "summary": "Whatever the incumbent gates, give away through an open, documented, instantly-accessible API. Access itself becomes a commodity, and the gate stops being a moat.",
+      "howItDeletes": "Many moats are really a gated interface: a paid data feed, a certified integration, a proprietary format, a connector hidden behind a sales call. The gate is only a moat while access is scarce. A free API reverses the load-bearing assumption &mdash; it makes access abundant, drops the cost of leaving the incumbent to near zero, and turns every developer who integrates you into distribution the incumbent now has to displace.",
+      "playbook": [
+        "Find the gate: the interface the incumbent monetizes or restricts &mdash; the data feed, the integration marketplace, the proprietary format, the connector behind a sales call.",
+        "Ship the same capability as a free, well-documented, self-serve API &mdash; a key in under a minute, no contract, no call. Friction left in is moat left standing.",
+        "Make it the easy path: SDKs, copy-paste examples, and importers from the incumbent's format, so integrating with you is easier than staying integrated with them.",
+        "Let others build on it. Every app, plugin, and workflow built on the free API is distribution you didn't pay for and the incumbent can't easily unwind.",
+        "Monetize above the access (scale, SLAs, support, enterprise controls), never the access itself &mdash; the moment the API stops being free, the moat starts refilling on your side of the water."
+      ],
+      "seenInTheWild": "Stripe turned sales-gated merchant accounts into seven lines of code; Twilio did the same to carrier messaging contracts; open-banking APIs pried deposit data out of incumbent banks; a free-tier Google Maps API deleted the paid GIS market.",
+      "watchOut": "A free API is a promise. Re-pricing it later (the Google Maps move) torches the trust that made it work and hands challengers the same playbook against you. Budget it as customer acquisition, not as a loss leader to claw back."
+    }
+  ],
   "framework": [
     {
       "step": "Name the moat",
