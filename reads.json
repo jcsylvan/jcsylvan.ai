@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-15",
+  "updated": "2026-07-22",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -567,6 +567,69 @@
       "source": "arXiv · 2607.10668",
       "url": "https://arxiv.org/abs/2607.10668",
       "summary": "Develops soft point-contact Andreev reflection spectroscopy inside a palm-sized cubic anvil pressure cell, extending this probe of superconducting pairing to high-pressure conditions. Applied to the kagome-lattice superconductor CsCr3Sb5 and the bilayer nickelate La2PrNi2O7, the measurements yield spectroscopic signatures consistent with unconventional superconductivity in both—materials whose superconducting states are hard to study by other means under pressure."
+    },
+    {
+      "id": "2026-07-22-ai",
+      "date": "2026-07-22",
+      "category": "AI",
+      "title": "Your Agent's Memories Are Not Its Own: Forged Reasoning Attacks on LLM Agent Memory and Defenses",
+      "source": "arXiv · 2607.05029",
+      "url": "https://arxiv.org/abs/2607.05029",
+      "summary": "Introduces the Forged Amplifying Rationale Memory Attack (FARMA), which poisons the stored reasoning traces an LLM agent retrieves from its long-term memory so that later, benign queries are steered toward attacker-chosen actions. The work shows that agents relying on retrieved past experience are vulnerable even without altering the underlying model, and evaluates defenses that detect or filter tampered memory entries."
+    },
+    {
+      "id": "2026-07-22-semiconductors",
+      "date": "2026-07-22",
+      "category": "Semiconductors",
+      "title": "Are gate-all-around 2D CFETs the optimal architecture for the A2 node and beyond?",
+      "source": "arXiv · 2607.12707",
+      "url": "https://arxiv.org/abs/2607.12707",
+      "summary": "Develops an A2-node integration flow for vertically stacked complementary field-effect transistors built from atomically thin 2D semiconductors, targeting a 36 nm contacted poly pitch and 10 nm gate length with demonstrations of key process modules. The analysis finds that, despite their thinner channels, 2D gate-all-around CFETs offer no pitch-scaling advantage over silicon at this node because contact-formation constraints set a similar minimum pitch."
+    },
+    {
+      "id": "2026-07-22-biotechnology",
+      "date": "2026-07-22",
+      "category": "Biotechnology",
+      "title": "Spectral Diffusion for Protein Dynamics",
+      "source": "arXiv · 2607.04134",
+      "url": "https://arxiv.org/abs/2607.04134",
+      "summary": "Proposes a generative model that samples protein conformational dynamics directly in the frequency domain, using Fourier transforms as an inductive bias for the multiscale timescales of molecular motion. Diffusing in the spectral domain disentangles slow conformational modes from fast atomic jitter, enabling rapid prediction of protein dynamics across temperatures as a cheaper alternative to long molecular-dynamics simulations."
+    },
+    {
+      "id": "2026-07-22-sustainable-energy",
+      "date": "2026-07-22",
+      "category": "Sustainable Energy",
+      "title": "Deep Reinforcement Learning-Based Energy Management for Hydrogen-Enabled Community Microgrids Under Uncertainty",
+      "source": "arXiv · 2607.17248",
+      "url": "https://arxiv.org/abs/2607.17248",
+      "summary": "Develops a proximal-policy-optimization energy manager for a grid-connected community microgrid that couples solar and wind generation with battery storage, an electrolyzer, hydrogen storage, a fuel cell, and diesel backup. Framed as a Markov decision process with continuous dispatch actions, the learned controller handles renewable and demand uncertainty and coordinates storage to lower cost while keeping the power balance stable."
+    },
+    {
+      "id": "2026-07-22-defense-tech",
+      "date": "2026-07-22",
+      "category": "Defense Tech",
+      "title": "The Economics of Asymmetric Attrition: A Quantitative Analysis of Low-Cost Drone Warfare in the Ukraine and Iranian Shahed Programs (2022–2026)",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6375919",
+      "summary": "Quantifies the cost-exchange dynamics of low-cost attack drones by analyzing the Ukrainian and Iranian Shahed programs from 2022 to 2026. It finds interception economics that heavily favor the attacker—on the order of a 190-to-1 cost ratio when expensive interceptors are fired at cheap drones—and argues this asymmetry is reshaping air-defense strategy and procurement priorities."
+    },
+    {
+      "id": "2026-07-22-quantum-computing",
+      "date": "2026-07-22",
+      "category": "Quantum Computing",
+      "title": "Towards logical entanglement creation in trivalent planar architectures",
+      "source": "arXiv · 2607.15044",
+      "url": "https://arxiv.org/abs/2607.15044",
+      "summary": "Studies how to create entanglement between logical qubits in low-connectivity, trivalent planar hardware layouts, where each physical qubit couples to only three neighbors. The work develops low-overhead error-correction schemes suited to such constrained geometries, a practical step toward scaling registers that hold multiple logical qubits without demanding dense all-to-all connectivity."
+    },
+    {
+      "id": "2026-07-22-materials-science",
+      "date": "2026-07-22",
+      "category": "Materials Science",
+      "title": "CatRetriever: Contrastive Representation Learning for Slab-to-Bulk Retrieval in Generative Catalyst Discovery",
+      "source": "arXiv · 2607.11712",
+      "url": "https://arxiv.org/abs/2607.11712",
+      "summary": "Presents a contrastive-learning model that embeds catalyst surface slabs and bulk crystals into a shared latent space so that a generated surface can be matched back to a plausible parent bulk material. Reporting retrieval accuracy above 91% at rank 1 and 98% at rank 3, it helps close the gap between generative surface design and synthesizable bulk compounds in catalyst discovery."
     }
   ]
 }
