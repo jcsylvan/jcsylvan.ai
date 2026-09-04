@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-22",
+  "updated": "2026-09-04",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -630,6 +630,69 @@
       "source": "arXiv · 2607.11712",
       "url": "https://arxiv.org/abs/2607.11712",
       "summary": "Presents a contrastive-learning model that embeds catalyst surface slabs and bulk crystals into a shared latent space so that a generated surface can be matched back to a plausible parent bulk material. Reporting retrieval accuracy above 91% at rank 1 and 98% at rank 3, it helps close the gap between generative surface design and synthesizable bulk compounds in catalyst discovery."
+    },
+    {
+      "id": "2026-09-04-ai",
+      "date": "2026-09-04",
+      "category": "AI",
+      "title": "SkillForge: Evolving Verifiable Skills for Reinforcement Learning Agents",
+      "source": "arXiv · 2608.24747",
+      "url": "https://arxiv.org/abs/2608.24747",
+      "summary": "Addresses a limitation of LLM agents trained with reinforcement learning: they stay episodic, solving each task from scratch without carrying anything forward. SkillForge has agents evolve a library of reusable skills whose correctness can be verified, so competence accumulates across tasks instead of being discarded at the end of every episode."
+    },
+    {
+      "id": "2026-09-04-semiconductors",
+      "date": "2026-09-04",
+      "category": "Semiconductors",
+      "title": "Compact Modeling of Oxide-Semiconductor, 2D Material, Carbon Nanotube, and Cryogenic Transistors with Experiment Verification",
+      "source": "arXiv · 2608.27528",
+      "url": "https://arxiv.org/abs/2608.27528",
+      "summary": "Presents one compact model covering four emerging transistor families at once: oxide-semiconductor FETs, 2D-material FETs, carbon-nanotube FETs, and cryogenic MOSFETs. A unified charge-density formulation handles quantum confinement, trap charges, and band-tail states, while a physics-based transport model spans the long-channel diffusive regime through to the short-channel ballistic limit, with results checked against experiment."
+    },
+    {
+      "id": "2026-09-04-biotechnology",
+      "date": "2026-09-04",
+      "category": "Biotechnology",
+      "title": "SimpleDesign: A Joint Model for Protein Sequence and Structure Codesign",
+      "source": "arXiv · 2609.03377",
+      "url": "https://arxiv.org/abs/2609.03377",
+      "summary": "Argues that the multi-stage training pipelines common in protein co-design models are unnecessary. SimpleDesign trains end-to-end in a single stage, combining discrete cross-entropy for sequences with a regression objective for structures under a Mixture-of-Transformer architecture that keeps global attention across both modalities. Trained on over two million sequence-structure pairs, it performs strongly on co-design and unconditional generation benchmarks."
+    },
+    {
+      "id": "2026-09-04-sustainable-energy",
+      "date": "2026-09-04",
+      "category": "Sustainable Energy",
+      "title": "Dynamic droop specifications for Grid-Forming Inverter-Based Resources",
+      "source": "arXiv · 2608.25250",
+      "url": "https://arxiv.org/abs/2608.25250",
+      "summary": "As synchronous generators retire at scale, grids increasingly depend on inverter-based resources whose controls vary widely between vendors. This work extends the familiar steady-state droop coefficient into a dynamic droop coefficient describing an inverter's small-signal response below line frequency, then proposes gain and phase bounds as minimum grid-forming requirements to promote interoperability and avoid adverse interactions."
+    },
+    {
+      "id": "2026-09-04-defense-tech",
+      "date": "2026-09-04",
+      "category": "Defense Tech",
+      "title": "Governance as a “Blocker”: How the Pentagon's New AI Strategy Trades Oversight for Speed",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6227318",
+      "summary": "Examines the Pentagon's push to accelerate AI acquisition by expanding waiver authority, and argues the speed comes at the cost of oversight capacity. The gap is structural rather than a deliberate policy choice: the acquisition workforce is shrinking through retirements, buyouts, and reductions in force, leaving fewer people to exercise the very discretion the new strategy demands."
+    },
+    {
+      "id": "2026-09-04-quantum-computing",
+      "date": "2026-09-04",
+      "category": "Quantum Computing",
+      "title": "Quantum error correction at ultra-low overhead",
+      "source": "arXiv · 2608.02773",
+      "url": "https://arxiv.org/abs/2608.02773",
+      "summary": "Demonstrates a [[2844,1426,18]] code block encoding 1,426 distance-18 logical qubits, with an extrapolated logical error rate of 2.6e-16 per logical qubit per cycle at a 0.1% physical error rate. Its syndrome extraction measures all X- and Z-type checks in parallel using 12 entangling layers regardless of code size, with a threshold comparable to surface and bivariate bicycle codes."
+    },
+    {
+      "id": "2026-09-04-materials-science",
+      "date": "2026-09-04",
+      "category": "Materials Science",
+      "title": "Distinct Surface and Bulk Superconductivity in the Kagome Superconductor SrSn3",
+      "source": "arXiv · 2608.25271",
+      "url": "https://arxiv.org/abs/2608.25271",
+      "summary": "Finds that the kagome superconductor SrSn3 hosts two separable superconducting channels. The surface channel shows a superconducting gap independent of film thickness plus an enhanced upper critical field, while the bulk channel has a larger gap that shrinks as films get thinner, separating surface from bulk behaviour in a material family of active interest."
     }
   ]
 }
