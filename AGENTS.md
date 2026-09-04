@@ -27,7 +27,7 @@ main page is reached via the **📖 puck is here** button on `index.html`.
    using today's date in the `id` and `date` fields. Leave all existing entries
    untouched.
 6. Set the top-level `"updated"` field to today's date.
-7. **Validate the JSON and confirm no duplicate `url` or `id`** (see
+7. **Run `python3 validate_reads.py`** and only commit if it passes (see
    **No duplicates**), then **commit straight to `main` and push** with a
    message like `reads: weekly update YYYY-MM-DD`.
 8. **Email a recap** to jcsylvan@gmail.com — see **Weekly email** below.
@@ -44,22 +44,21 @@ The list has started to accumulate repeats — actively prevent this each run:
 - Normalize arXiv URLs before comparing: `arxiv.org/abs/2606.04079`,
   `.../pdf/2606.04079`, and a versioned `...v2` all refer to the **same paper** —
   treat them as duplicates of each other.
-- **After editing**, verify uniqueness across the whole file before committing.
-  A quick check:
+- **After editing**, run the committed validator from the repo root:
 
   ```bash
-  python3 - <<'PY'
-  import json
-  a = json.load(open("reads.json"))["articles"]
-  for key in ("id", "url"):
-      vals = [x[key] for x in a]
-      dupes = {v for v in vals if vals.count(v) > 1}
-      print(f"duplicate {key}s:", dupes or "none")
-  PY
+  python3 validate_reads.py
   ```
 
-  If it prints anything other than `none`, replace the offending entry before
-  committing.
+  It enforces all of the above mechanically — duplicate `id`s, duplicate `url`s,
+  and duplicate papers hiding behind different link forms (arXiv `/abs/`,
+  `/pdf/` and `vN` variants; SSRN `abstract_id=` and `ssrn.com/abstract=` all
+  normalize to one id) — plus required fields, `date` format, valid categories,
+  and `id` ↔ `date`/`category` agreement. Warnings (e.g. an off-length summary)
+  are printed but don't fail the run.
+
+  A **non-zero exit means do not commit**: fix the offending entry — it prints
+  the `id` of each one — and re-run until it passes.
 
 ## Weekly email
 
@@ -126,7 +125,7 @@ Suggested source per category (a guide, not a hard rule):
 4. Set `"source"` to the origin — e.g. `"arXiv · 2601.12538"`, `"SSRN"`, or the
    publication name when using a news fallback.
 5. Set the top-level `"updated"` field to today's date.
-6. Validate the file parses as JSON (e.g. `python3 -m json.tool reads.json`),
+6. Validate with `python3 validate_reads.py` (see **No duplicates**),
    then **commit straight to `main` and push** — no PR needed.
 
 ### Article schema
