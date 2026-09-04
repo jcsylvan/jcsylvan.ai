@@ -200,6 +200,56 @@
       font-size: 0.85rem;
     }
 
+    .search-input {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 999px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.85rem;
+      outline: none;
+      min-width: 200px;
+    }
+    .search-input:focus { border-color: #f0c040; }
+    .search-input::placeholder { color: #444; }
+
+    .chip.toggle.active { color: #0a0a0a; background: #6fb3ff; border-color: #6fb3ff; }
+    .chip.ghost { border-style: dashed; }
+
+    tr.group-row td {
+      background: #141414;
+      border-bottom: 1px solid #222;
+      padding: 0;
+    }
+    .group-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      background: none;
+      border: none;
+      color: #999;
+      font-family: inherit;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      text-align: left;
+    }
+    .group-btn:hover { color: #f0c040; background: #181818; }
+    .group-btn .caret { font-size: 0.6rem; transition: transform 0.15s ease; }
+    .group-btn[aria-expanded="true"] .caret { transform: rotate(90deg); }
+    .group-btn .count { color: #555; text-transform: none; letter-spacing: 0; }
+    .group-btn .unread-dot {
+      margin-left: auto;
+      color: #f0c040;
+      font-size: 0.7rem;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
     .footnote { color: #444; font-size: 0.72rem; margin-top: 1rem; line-height: 1.6; }
 
     @media (max-width: 720px) {
@@ -223,10 +273,13 @@
       A weekly feed of one interesting article each across AI, semiconductors, biotechnology,
       sustainable energy, defense tech, quantum computing and materials science. Expand the
       AI summary to preview each one, tick a box when you've read it, and jot down notes &mdash;
-      your read status and comments are saved in this browser.
+      your read status and comments are saved in this browser. Batches are grouped by date with
+      the newest open; search or pick categories to narrow things down, and use
+      &ldquo;copy notes as Markdown&rdquo; to take your notes elsewhere.
     </p>
 
     <div class="toolbar" id="filters"></div>
+    <div class="toolbar" id="controls"></div>
 
     <div class="table-wrap">
       <table>
@@ -253,10 +306,16 @@
 
   <script>
     const STORAGE_KEY = "reads-tracker-state";
-    const CATEGORIES = ["AI", "Semiconductors", "Biotechnology", "Sustainable Energy", "Defense Tech", "Quantum Computing", "Materials Science"];
+
+    // Category list is derived from the data itself (see buildCategories), so
+    // adding a new category to reads.json needs no change here.
+    let CATEGORIES = [];
 
     let state = loadState();
-    let activeFilter = "All";
+    let selectedCats = new Set();   // empty === show all
+    let unreadOnly = false;
+    let query = "";
+    let collapsed = new Set();      // dates the reader has collapsed
     let articles = [];
 
     function loadState() {
@@ -279,38 +338,199 @@
       return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
     }
 
+    function buildCategories() {
+      // Preserve a stable, sensible order: known order first, then any new
+      // category that shows up in the data.
+      const preferred = ["AI", "Semiconductors", "Biotechnology", "Sustainable Energy",
+                         "Defense Tech", "Quantum Computing", "Materials Science"];
+      const present = [...new Set(articles.map(a => a.category))];
+      CATEGORIES = [...preferred.filter(c => present.includes(c)),
+                    ...present.filter(c => !preferred.includes(c)).sort()];
+    }
+
+    function visibleArticles() {
+      const q = query.trim().toLowerCase();
+      return articles.filter(a => {
+        if (selectedCats.size && !selectedCats.has(a.category)) return false;
+        if (unreadOnly && entryFor(a.id).read) return false;
+        if (q) {
+          const hay = (a.title + " " + (a.summary || "") + " " + (a.source || "")).toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+    }
+
     function renderFilters() {
       const el = document.getElementById("filters");
       el.innerHTML = "";
-      ["All", ...CATEGORIES].forEach(cat => {
+
+      const all = document.createElement("button");
+      all.className = "chip" + (selectedCats.size === 0 ? " active" : "");
+      all.textContent = "All";
+      all.onclick = () => { selectedCats.clear(); rerender(); };
+      el.appendChild(all);
+
+      CATEGORIES.forEach(cat => {
         const b = document.createElement("button");
-        b.className = "chip" + (cat === activeFilter ? " active" : "");
+        b.className = "chip" + (selectedCats.has(cat) ? " active" : "");
         b.textContent = cat;
-        b.onclick = () => { activeFilter = cat; renderFilters(); renderRows(); };
+        b.setAttribute("aria-pressed", String(selectedCats.has(cat)));
+        b.onclick = () => {
+          if (selectedCats.has(cat)) selectedCats.delete(cat);
+          else selectedCats.add(cat);
+          rerender();
+        };
         el.appendChild(b);
       });
+
       const stats = document.createElement("span");
       stats.className = "stats";
-      const total = articles.length;
+      const shown = visibleArticles().length;
       const read = articles.filter(a => entryFor(a.id).read).length;
-      stats.textContent = read + " / " + total + " read";
+      stats.textContent = shown === articles.length
+        ? read + " / " + articles.length + " read"
+        : shown + " shown · " + read + " / " + articles.length + " read";
       el.appendChild(stats);
     }
 
+    function renderControls() {
+      const el = document.getElementById("controls");
+      el.innerHTML = "";
+
+      const search = document.createElement("input");
+      search.type = "search";
+      search.className = "search-input";
+      search.placeholder = "search titles & summaries…";
+      search.value = query;
+      search.setAttribute("aria-label", "Search articles");
+      search.oninput = () => {
+        query = search.value;
+        renderFilters();
+        renderRows();
+        // keep focus and caret while typing
+        const el2 = document.querySelector(".search-input");
+        if (el2 && el2 !== document.activeElement) el2.focus();
+      };
+      el.appendChild(search);
+
+      const unread = document.createElement("button");
+      unread.className = "chip toggle" + (unreadOnly ? " active" : "");
+      unread.textContent = "Unread only";
+      unread.setAttribute("aria-pressed", String(unreadOnly));
+      unread.onclick = () => { unreadOnly = !unreadOnly; rerender(); };
+      el.appendChild(unread);
+
+      const copy = document.createElement("button");
+      copy.className = "chip ghost";
+      copy.textContent = "Copy notes as Markdown";
+      copy.onclick = () => copyNotes(copy);
+      el.appendChild(copy);
+    }
+
+    function copyNotes(btn) {
+      const noted = articles
+        .filter(a => { const e = entryFor(a.id); return e.read || (e.comment || "").trim(); })
+        .slice()
+        .sort((a, b) => b.date.localeCompare(a.date) || a.category.localeCompare(b.category));
+
+      if (!noted.length) {
+        btn.textContent = "nothing to copy";
+        setTimeout(() => { btn.textContent = "Copy notes as Markdown"; }, 1600);
+        return;
+      }
+
+      const lines = ["# reads — notes", ""];
+      let lastDate = null;
+      noted.forEach(a => {
+        if (a.date !== lastDate) { lines.push("", "## " + fmtDate(a.date), ""); lastDate = a.date; }
+        const e = entryFor(a.id);
+        lines.push("- [" + (e.read ? "x" : " ") + "] **" + a.category + "** — [" + a.title + "](" + a.url + ")");
+        const note = (e.comment || "").trim();
+        if (note) note.split("\n").forEach(l => lines.push("  > " + l));
+      });
+      const text = lines.join("\n").replace(/\n{3,}/g, "\n\n").trim() + "\n";
+
+      const done = ok => {
+        btn.textContent = ok ? "copied ✓" : "copy failed";
+        setTimeout(() => { btn.textContent = "Copy notes as Markdown"; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => done(true), () => fallbackCopy(text, done));
+      } else {
+        fallbackCopy(text, done);
+      }
+    }
+
+    function fallbackCopy(text, done) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        done(ok);
+      } catch { done(false); }
+    }
+
+    function rerender() { renderFilters(); renderControls(); renderRows(); }
+
     function renderRows() {
       const tbody = document.getElementById("rows");
-      const list = articles
-        .filter(a => activeFilter === "All" || a.category === activeFilter)
+      const list = visibleArticles()
         .slice()
         .sort((a, b) => b.date.localeCompare(a.date) || a.category.localeCompare(b.category));
 
       if (!list.length) {
-        tbody.innerHTML = '<tr><td colspan="5" class="empty">No articles yet.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="empty">Nothing matches those filters.</td></tr>';
         return;
       }
 
-      tbody.innerHTML = "";
+      // Group by date, newest first.
+      const groups = [];
       list.forEach(a => {
+        const g = groups[groups.length - 1];
+        if (g && g.date === a.date) g.items.push(a);
+        else groups.push({ date: a.date, items: [a] });
+      });
+
+      // Searching or picking categories is a "find it" action, so matches are
+      // auto-expanded and nothing hides behind a collapsed header. "Unread only"
+      // is just a view filter — it keeps your collapse state, since expanding
+      // every group at once would bury you.
+      const narrowing = !!query.trim() || selectedCats.size > 0;
+
+      tbody.innerHTML = "";
+      groups.forEach((group, gi) => {
+        const open = narrowing ? true : !collapsed.has(group.date);
+
+        const gtr = document.createElement("tr");
+        gtr.className = "group-row";
+        const gtd = document.createElement("td");
+        gtd.colSpan = 5;
+        const btn = document.createElement("button");
+        btn.className = "group-btn";
+        btn.type = "button";
+        btn.setAttribute("aria-expanded", String(open));
+        const unread = group.items.filter(a => !entryFor(a.id).read).length;
+        btn.innerHTML = '<span class="caret">▶</span>' +
+          "<span>" + escapeHtml(fmtDate(group.date)) + "</span>" +
+          '<span class="count">' + group.items.length + "</span>" +
+          (unread ? '<span class="unread-dot">' + unread + " unread</span>" : "");
+        btn.onclick = () => {
+          if (collapsed.has(group.date)) collapsed.delete(group.date);
+          else collapsed.add(group.date);
+          renderRows();
+        };
+        gtd.appendChild(btn);
+        gtr.appendChild(gtd);
+        tbody.appendChild(gtr);
+
+        if (!open) return;
+        group.items.forEach(a => {
         const e = entryFor(a.id);
         const tr = document.createElement("tr");
         if (e.read) tr.classList.add("read");
@@ -361,6 +581,16 @@
           saveState();
           tr.classList.toggle("read", checkbox.checked);
           renderFilters();
+          if (unreadOnly) {
+            renderRows();          // row no longer belongs in this view
+          } else {
+            const left = group.items.filter(x => !entryFor(x.id).read).length;
+            const dot = btn.querySelector(".unread-dot");
+            if (left && dot) dot.textContent = left + " unread";
+            else if (left) btn.insertAdjacentHTML("beforeend",
+              '<span class="unread-dot">' + left + " unread</span>");
+            else if (dot) dot.remove();
+          }
         };
         tr.querySelector(".col-read").appendChild(checkbox);
 
@@ -372,7 +602,8 @@
         comment.oninput = () => { entryFor(a.id).comment = comment.value; saveState(); };
         tr.lastElementChild.appendChild(comment);
 
-        tbody.appendChild(tr);
+          tbody.appendChild(tr);
+        });
       });
     }
 
@@ -386,8 +617,11 @@
       .then(data => {
         articles = Array.isArray(data) ? data : (data.articles || []);
         document.getElementById("updated").textContent = (data && data.updated) || "—";
-        renderFilters();
-        renderRows();
+        buildCategories();
+        // Start with every group except the newest collapsed.
+        const dates = [...new Set(articles.map(a => a.date))].sort((a, b) => b.localeCompare(a));
+        dates.slice(1).forEach(d => collapsed.add(d));
+        rerender();
       })
       .catch(() => {
         document.getElementById("rows").innerHTML =
