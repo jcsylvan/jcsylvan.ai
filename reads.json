@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-09-04",
+  "updated": "2026-09-09",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -694,6 +694,69 @@
       "source": "arXiv · 2608.25271",
       "url": "https://arxiv.org/abs/2608.25271",
       "summary": "Finds that the kagome superconductor SrSn3 hosts two separable superconducting channels. The surface channel shows a superconducting gap independent of film thickness plus an enhanced upper critical field, while the bulk channel has a larger gap that shrinks as films get thinner, separating surface from bulk behaviour in a material family of active interest."
+    },
+    {
+      "id": "2026-09-09-ai",
+      "date": "2026-09-09",
+      "category": "AI",
+      "title": "From Language Models to World-Acting Systems: Progress and Limits of Agentic AI across Digital, Social, Virtual, and Physical Environments",
+      "source": "arXiv · 2609.04894",
+      "url": "https://arxiv.org/abs/2609.04894",
+      "summary": "A critical review of agentic AI systems that call tools, operate interfaces, and control robots and lab equipment, synthesizing research through August 2026. Organizing the evidence along delegated authority, persistence, and environmental coupling, it finds that expanding action interfaces is far better documented than robust completion, recovery, authorization, or independent verification — a caution against narratives of one steady march toward autonomy."
+    },
+    {
+      "id": "2026-09-09-semiconductors",
+      "date": "2026-09-09",
+      "category": "Semiconductors",
+      "title": "A Time-Encoded Analog Photonic Interposer for Energy-Efficient Integration of Analog Vision Sensors and Analog Accelerators",
+      "source": "arXiv · 2609.03125",
+      "url": "https://arxiv.org/abs/2609.03125",
+      "summary": "Introduces a photonic interposer that carries analog signals between chiplets by converting amplitudes into timing intervals and sending them over a wavelength-multiplexed optical link, skipping the usual power-hungry ADC/DAC conversion pipeline. In a fully analog vision pipeline with an in-pixel-computing sensor, it delivers about a 2x energy-delay-product improvement over an 8-bit digital electrical baseline."
+    },
+    {
+      "id": "2026-09-09-biotechnology",
+      "date": "2026-09-09",
+      "category": "Biotechnology",
+      "title": "Advances in Machine Learning for Directed Evolution: A Five-Year Retrospective",
+      "source": "arXiv · 2609.03046",
+      "url": "https://arxiv.org/abs/2609.03046",
+      "summary": "A retrospective on why machine learning has transformed much of protein engineering but not directed evolution. The author argues ML-assisted methods chase an 'optimal' protein while practitioners need a sufficient one under time and budget constraints, and shows how ignoring DNA synthesis costs leaves most current methods impractical regardless of how capable the underlying models are."
+    },
+    {
+      "id": "2026-09-09-sustainable-energy",
+      "date": "2026-09-09",
+      "category": "Sustainable Energy",
+      "title": "Grid-Mode-Aware Model Predictive Control of Hybrid Energy Storage Systems for AI Data Center Power Smoothing",
+      "source": "arXiv · 2609.04398",
+      "url": "https://arxiv.org/abs/2609.04398",
+      "summary": "Proposes a model predictive controller that coordinates a battery and a supercapacitor to smooth the highly variable power draw of AI data centers. By embedding band-pass filter dynamics directly in the optimization, it suppresses the power components that excite vulnerable grid oscillatory modes, making very large compute loads friendlier to the surrounding grid."
+    },
+    {
+      "id": "2026-09-09-defense-tech",
+      "date": "2026-09-09",
+      "category": "Defense Tech",
+      "title": "Civil-Military Convergence in AI: Emerging Risks and Institutional Responsibilities",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7242864",
+      "summary": "Examines how integrating frontier AI into weapon systems and command-and-control infrastructure is blurring the line between defense agencies and the commercial technology sector. The authors flag high technical complexity, reduced reliability in novel environments, weakened human accountability, and unproven real-world performance, and lay out institutional responsibilities for both militaries and AI companies."
+    },
+    {
+      "id": "2026-09-09-quantum-computing",
+      "date": "2026-09-09",
+      "category": "Quantum Computing",
+      "title": "Efficient Quantum Error Correction from Three Dimensional Qubit Control",
+      "source": "arXiv · 2609.04459",
+      "url": "https://arxiv.org/abs/2609.04459",
+      "summary": "Studies running the [[144,12,12]] bivariate bicycle quantum LDPC code on a neutral-atom architecture that exploits native three-dimensional qubit control. The 3D embedding packs logical qubits roughly 4x denser per unit area than a planar layout and 42x denser than a surface-code baseline, pointing to substantially lower overhead for future fault-tolerant machines."
+    },
+    {
+      "id": "2026-09-09-materials-science",
+      "date": "2026-09-09",
+      "category": "Materials Science",
+      "title": "When Literature Data Mislead Artificial Intelligence in Materials Discovery",
+      "source": "arXiv · 2609.01621",
+      "url": "https://arxiv.org/abs/2609.01621",
+      "summary": "Using solid-electrolyte conductivity data as a case study, the authors trace values from source papers into curated datasets and find recurring text-figure mismatches, ambiguous axes, and unit errors. Because these discrepancies look numerically plausible, they slip past preprocessing and propagate as structured label noise into AI models — one cross-database example produces a 100-fold conductivity error."
     }
   ]
 }
