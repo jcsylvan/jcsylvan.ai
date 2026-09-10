@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Export License Board &mdash; jcsylvan.ai</title>
-  <meta name="description" content="A hex-tile board of export licenses by country: click a destination to see every authorization on file, what it covers, how much is drawn down and when it lapses (demo data).">
+  <meta name="description" content="A hex-tile board of export licenses by country, with a twelve-month renewal calendar, the conditions riding on each license, a sortable list view and CSV export (demo data).">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="icon" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
@@ -22,40 +22,84 @@
     a { color: #f0c040; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    .wrap { max-width: 1120px; margin: 0 auto; }
+    .wrap { max-width: 1180px; margin: 0 auto; }
 
     .back-link { display: inline-block; margin-bottom: 1.5rem; color: #666; font-size: 0.85rem; }
     .back-link:hover { color: #e0e0e0; }
 
     h1 { font-size: 1.4rem; margin-bottom: 0.25rem; color: #f0c040; font-weight: 600; }
-    .subtitle { color: #666; font-size: 0.85rem; margin-bottom: 0.4rem; max-width: 760px; line-height: 1.5; }
+    .subtitle { color: #666; font-size: 0.85rem; margin-bottom: 0.4rem; max-width: 780px; line-height: 1.5; }
     .demo-note {
       font-size: 0.72rem; color: #8a7a40; background: #15120a;
       border: 1px solid #2e2913; border-radius: 5px;
-      padding: 0.55rem 0.75rem; margin: 0.75rem 0 0.4rem; line-height: 1.5; max-width: 760px;
+      padding: 0.55rem 0.75rem; margin: 0.75rem 0 0.4rem; line-height: 1.5; max-width: 780px;
     }
     .updated { color: #444; font-size: 0.72rem; margin-bottom: 1.5rem; }
     .updated a { color: #6a6a6a; }
 
     /* summary tiles */
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
-    .stat {
-      background: #111; border: 1px solid #222; border-radius: 6px; padding: 0.8rem 0.9rem;
-    }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.6rem; margin-bottom: 1.1rem; }
+    .stat { background: #111; border: 1px solid #222; border-radius: 6px; padding: 0.8rem 0.9rem; }
     .stat .n { font-size: 1.35rem; font-weight: 600; color: #e0e0e0; line-height: 1.1; }
     .stat .l { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.07em; color: #777; margin-top: 0.3rem; line-height: 1.4; }
+    .stat .sub { font-size: 0.66rem; color: #5c5c5c; margin-top: 0.35rem; line-height: 1.45; }
     .stat.warn { border-color: #5a4a18; } .stat.warn .n { color: #d9b348; }
     .stat.bad  { border-color: #5a2424; } .stat.bad .n  { color: #ff7a6f; }
     .stat.good { border-color: #285a28; } .stat.good .n { color: #79d479; }
 
+    /* toolbar */
+    .toolbar { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.8rem; }
+    .search { position: relative; flex: 1; min-width: 220px; }
+    .search input {
+      width: 100%; background: #0d0d0d; border: 1px solid #262626; border-radius: 5px;
+      color: #e0e0e0; font-family: inherit; font-size: 0.8rem; padding: 0.55rem 0.7rem 0.55rem 1.9rem;
+    }
+    .search input:focus { outline: none; border-color: #f0c040; }
+    .search::before {
+      content: "\2315"; position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+      color: #555; font-size: 0.85rem; pointer-events: none;
+    }
+    .search .hits {
+      position: absolute; right: 0.6rem; top: 50%; transform: translateY(-50%);
+      font-size: 0.66rem; color: #666; pointer-events: none;
+    }
+    .seg { display: inline-flex; border: 1px solid #262626; border-radius: 5px; overflow: hidden; }
+    .seg button {
+      background: none; border: none; color: #888; font-family: inherit; font-size: 0.74rem;
+      padding: 0.55rem 0.9rem; cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
+    }
+    .seg button + button { border-left: 1px solid #262626; }
+    .seg button.on { background: #f0c040; color: #0a0a0a; font-weight: 600; }
+    .seg button:not(.on):hover { color: #e0e0e0; background: #151515; }
+
+    button.go, button.alt {
+      border: none; border-radius: 5px; font-family: inherit; font-size: 0.74rem; font-weight: 600;
+      padding: 0.55rem 0.9rem; cursor: pointer; letter-spacing: 0.03em;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    button.go { background: #f0c040; color: #0a0a0a; }
+    button.go:hover { background: #ffd35a; }
+    button.alt { background: none; color: #999; border: 1px solid #333; }
+    button.alt:hover { color: #e0e0e0; border-color: #888; }
+
+    .active-filters { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.7rem; font-size: 0.68rem; color: #5a5a5a; }
+    .fchip {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      border: 1px solid #4a3a10; color: #d9b348; border-radius: 999px;
+      padding: 0.2rem 0.55rem; font-size: 0.68rem; background: #14110a;
+      cursor: pointer; font-family: inherit;
+    }
+    .fchip:hover { border-color: #f0c040; color: #ffd35a; }
+    .fchip::after { content: "\00d7"; color: #8a7a40; }
+
     /* board + panel */
     .board-grid { display: grid; grid-template-columns: minmax(0, 1fr) 372px; gap: 1.25rem; align-items: start; }
-    @media (max-width: 960px) { .board-grid { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 1000px) { .board-grid { grid-template-columns: minmax(0, 1fr); } }
 
     .board {
       background: radial-gradient(120% 120% at 50% 30%, #10212c 0%, #0b1620 55%, #070f16 100%);
       border: 1px solid #1b2b36; border-radius: 8px; padding: 0.75rem;
-      overflow: hidden;
+      overflow: hidden; position: relative;
     }
     .board svg { display: block; width: 100%; height: auto; }
 
@@ -67,7 +111,7 @@
     .hex-land.sel .ring { stroke: #fff4d6; stroke-width: 5; }
     .hex-land.sel .face { filter: brightness(1.18); }
     .hex-land.sel .hex-label { fill: #fffaf0; }
-    .hex-land.dim { opacity: 0.22; }
+    .hex-land.dim { opacity: 0.18; }
     .hex-label {
       font-family: "SF Mono", "Fira Code", monospace; font-weight: 600;
       fill: #fdf6e6; stroke: #1b1409; stroke-width: 2.6px; paint-order: stroke fill;
@@ -78,19 +122,58 @@
       fill: #241c0c; text-anchor: middle; pointer-events: none;
     }
     .hex-token-g { font-size: 13px; font-weight: 700; text-anchor: middle; pointer-events: none; }
+    .obl-badge { font-size: 10px; font-weight: 700; text-anchor: middle; pointer-events: none; }
+    .port { cursor: pointer; }
+    .port:hover .port-plate { filter: brightness(1.25); }
+    .port-label {
+      font-family: "SF Mono", "Fira Code", monospace; font-size: 8px; font-weight: 700;
+      fill: #0d1b25; text-anchor: middle; pointer-events: none; letter-spacing: 0.06em;
+    }
+    .port.on .port-plate { stroke: #fff4d6; stroke-width: 2.5; }
+
+    /* hover summary */
+    .tip {
+      position: absolute; pointer-events: none; z-index: 5; display: none;
+      background: #0b0b0b; border: 1px solid #333; border-radius: 6px;
+      padding: 0.55rem 0.7rem; font-size: 0.7rem; line-height: 1.6; color: #bbb;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6); max-width: 240px;
+    }
+    .tip b { color: #f0c040; font-size: 0.78rem; }
+    .tip .row { color: #999; }
+    .tip .row i { font-style: normal; color: #e0e0e0; }
+
+    /* calendar strip */
+    .cal { margin-top: 0.9rem; border: 1px solid #1e1e1e; border-radius: 8px; background: #0e0e0e; padding: 0.7rem 0.75rem; }
+    .cal-h { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+    .cal-h .t { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; font-weight: 500; }
+    .cal-h .k { font-size: 0.64rem; color: #5a5a5a; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .cal-h .k span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .cal-h .k i { width: 0.55rem; height: 0.55rem; border-radius: 2px; display: inline-block; }
+    .months { display: flex; gap: 0.25rem; overflow-x: auto; padding-bottom: 0.2rem; }
+    .mo {
+      flex: 1 1 0; min-width: 48px; background: none; border: 1px solid #1e1e1e; border-radius: 5px;
+      padding: 0.35rem 0.25rem 0.4rem; cursor: pointer; font-family: inherit;
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    .mo:hover { border-color: #555; background: #131313; }
+    .mo.on { border-color: #f0c040; background: #14110a; }
+    .mo.empty { opacity: 0.45; cursor: default; }
+    .mo .ml { font-size: 0.6rem; color: #888; letter-spacing: 0.03em; }
+    .mo.now .ml { color: #f0c040; }
+    .mo .pips { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; min-height: 14px; align-content: flex-start; }
+    .mo .pips i { width: 5px; height: 5px; border-radius: 1px; display: block; }
+    .mo .mc { font-size: 0.62rem; color: #666; }
+    .mo.on .mc { color: #d9b348; }
 
     /* legend */
     .legend { margin-top: 1rem; }
-    .legend-h {
-      font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em;
-      color: #777; margin: 0 0 0.55rem; font-weight: 500;
-    }
+    .legend-h { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin: 0 0 0.55rem; font-weight: 500; }
     .keys { display: flex; flex-wrap: wrap; gap: 0.4rem; }
     .key {
       display: inline-flex; align-items: center; gap: 0.45rem;
       background: #111; border: 1px solid #222; border-radius: 999px;
-      padding: 0.35rem 0.7rem; font-size: 0.7rem; color: #aaa;
-      cursor: pointer; font-family: inherit;
+      padding: 0.35rem 0.7rem; font-size: 0.7rem; color: #aaa; cursor: pointer; font-family: inherit;
       transition: border-color 0.15s ease, color 0.15s ease;
     }
     .key:hover { color: #e0e0e0; border-color: #555; }
@@ -98,29 +181,50 @@
     .key .sw { width: 0.72rem; height: 0.72rem; border-radius: 3px; border: 1px solid rgba(255,255,255,0.22); }
     .key .ct { color: #666; }
     .key.on .ct { color: #c9a94a; }
-    .legend-note { font-size: 0.68rem; color: #555; line-height: 1.6; margin-top: 0.7rem; max-width: 760px; }
+    .legend-note { font-size: 0.68rem; color: #555; line-height: 1.6; margin-top: 0.7rem; max-width: 780px; }
+
+    /* list view */
+    .listwrap { border: 1px solid #1e1e1e; border-radius: 8px; background: #0e0e0e; overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.7rem; }
+    thead th {
+      text-align: left; color: #888; font-weight: 600; white-space: nowrap;
+      padding: 0.6rem 0.55rem; border-bottom: 1px solid #242424; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.6rem; position: sticky; top: 0; background: #0e0e0e;
+    }
+    thead th:hover { color: #f0c040; }
+    thead th .ar { color: #f0c040; }
+    tbody td { padding: 0.55rem; border-bottom: 1px solid #171717; color: #aaa; vertical-align: top; }
+    tbody tr:hover td { background: #141414; }
+    tbody td.co { color: #e0e0e0; cursor: pointer; white-space: nowrap; }
+    tbody td.co:hover { color: #f0c040; }
+    tbody td.num { text-align: right; white-space: nowrap; }
+    tbody td.ref { color: #ccc; white-space: nowrap; }
+    .pill { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+    .empty-row { padding: 1.5rem; color: #777; font-size: 0.78rem; }
 
     /* detail panel */
     .panel {
       background: #111; border: 1px solid #222; border-radius: 8px; padding: 1.1rem;
-      position: sticky; top: 1rem;
-      max-height: calc(100vh - 2rem); overflow-y: auto;
+      position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto;
     }
-    @media (max-width: 960px) { .panel { position: static; max-height: none; } }
+    @media (max-width: 1000px) { .panel { position: static; max-height: none; } }
     .panel h2 { font-size: 1.05rem; color: #f0c040; font-weight: 600; margin-bottom: 0.15rem; }
     .panel .meta { font-size: 0.7rem; color: #666; margin-bottom: 0.75rem; }
     .panel .risk { font-size: 0.76rem; color: #9a9a9a; line-height: 1.55; margin-bottom: 0.9rem; }
+    .panel .screenlink { font-size: 0.72rem; }
 
     .chip-status {
       display: inline-flex; align-items: center; gap: 0.4rem;
       font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.07em;
       border-radius: 999px; padding: 0.22rem 0.6rem; border: 1px solid; font-weight: 600;
     }
-
-    .sec-h {
-      font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em;
-      color: #777; margin: 1.1rem 0 0.6rem; font-weight: 500;
+    .aukus-tag {
+      display: inline-flex; align-items: center; gap: 0.3rem; margin-left: 0.35rem;
+      font-size: 0.6rem; letter-spacing: 0.07em; text-transform: uppercase;
+      border: 1px solid #2f6f8f; color: #6fb6d6; border-radius: 999px; padding: 0.18rem 0.5rem;
     }
+
+    .sec-h { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin: 1.1rem 0 0.6rem; font-weight: 500; }
 
     .lic {
       border: 1px solid #242424; border-left-width: 3px; border-radius: 5px;
@@ -137,36 +241,31 @@
     .lic .barl { font-size: 0.64rem; color: #666; margin-top: 0.25rem; }
     .lic .local { font-size: 0.6rem; color: #7a6a30; text-transform: uppercase; letter-spacing: 0.06em; }
 
+    .conds { margin-top: 0.6rem; border-top: 1px solid #1c1c1c; padding-top: 0.5rem; }
+    .conds .ch { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; color: #6e6e6e; margin-bottom: 0.35rem; }
+    .cond { display: flex; gap: 0.45rem; align-items: flex-start; font-size: 0.7rem; color: #9a9a9a; line-height: 1.5; padding: 0.2rem 0; }
+    .cond input { margin-top: 0.22rem; accent-color: #f0c040; flex: none; }
+    .cond .when { color: #666; font-size: 0.64rem; }
+    .cond.overdue .when { color: #ff7a6f; font-weight: 600; }
+    .cond.soon .when { color: #d9b348; }
+    .cond.done label { text-decoration: line-through; color: #5a5a5a; }
+    .cond label { cursor: pointer; }
+
     select, input[type="text"], input[type="number"], textarea {
       width: 100%; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 4px;
       color: #e0e0e0; font-family: inherit; font-size: 0.76rem; padding: 0.45rem 0.5rem;
     }
     select:focus, input:focus, textarea:focus { outline: none; border-color: #f0c040; }
     .lic select { width: auto; font-size: 0.62rem; padding: 0.18rem 0.3rem; }
-    label.fl {
-      display: block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.07em;
-      color: #6e6e6e; margin-bottom: 0.25rem;
-    }
+    label.fl { display: block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.07em; color: #6e6e6e; margin-bottom: 0.25rem; }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
     .form-grid .wide { grid-column: 1 / -1; }
     details.addform { margin-top: 0.9rem; border-top: 1px solid #1c1c1c; padding-top: 0.8rem; }
-    details.addform summary {
-      cursor: pointer; font-size: 0.7rem; color: #999; list-style: none;
-    }
+    details.addform summary { cursor: pointer; font-size: 0.7rem; color: #999; list-style: none; }
     details.addform summary::-webkit-details-marker { display: none; }
     details.addform summary::before { content: "+ "; color: #f0c040; }
     details.addform[open] summary::before { content: "\2212 "; }
     details.addform summary:hover { color: #e0e0e0; }
-
-    button.go, button.alt {
-      border: none; border-radius: 4px; font-family: inherit; font-size: 0.76rem; font-weight: 600;
-      padding: 0.55rem 1rem; cursor: pointer; letter-spacing: 0.03em;
-      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-    }
-    button.go { background: #f0c040; color: #0a0a0a; }
-    button.go:hover { background: #ffd35a; }
-    button.alt { background: none; color: #999; border: 1px solid #333; }
-    button.alt:hover { color: #e0e0e0; border-color: #888; }
 
     .watch { list-style: none; }
     .watch li { border-bottom: 1px solid #1b1b1b; }
@@ -183,8 +282,7 @@
 
     .localbar {
       margin-top: 0.9rem; border-top: 1px solid #1c1c1c; padding-top: 0.7rem;
-      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
-      font-size: 0.66rem; color: #666;
+      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; font-size: 0.66rem; color: #666;
     }
 
     .disclaimer {
@@ -196,6 +294,7 @@
     @media (max-width: 600px) {
       body { padding: 1rem; }
       .form-grid { grid-template-columns: 1fr; }
+      .toolbar { gap: 0.45rem; }
     }
   </style>
 </head>
@@ -205,16 +304,17 @@
     <h1>Export License Board</h1>
     <p class="subtitle">
       Every export authorization this business holds, laid out as a board of hex tiles &mdash; one
-      tile per destination country. The colour of a tile is the state of that country's licenses,
-      the chip in the middle counts the live authorizations, and clicking a tile opens the detail:
-      what each license covers, who the end-user is, how much of the authorized value is drawn down,
-      and when it lapses.
+      tile per destination country. The colour of a tile is the state of that country's licenses, the
+      chip in the middle counts the live authorizations, and clicking a tile opens the detail: what
+      each license covers, who the end-user is, how much of the authorized value is drawn down, when
+      it lapses, and which conditions ride on it. The calendar under the board turns all of that into
+      a work queue.
     </p>
     <div class="demo-note">
       <b>Proof-of-concept demo.</b> The portfolio belongs to a <b>fictional</b> exporter
-      (&ldquo;Helios Dynamics&rdquo;). Every license number, end-user, date and dollar figure is
-      invented, and tile placement is schematic rather than geographic. Anything you add or change on
-      the board is kept in this browser only.
+      (&ldquo;Helios Dynamics&rdquo;). Every license number, end-user, date, dollar figure and
+      condition is invented, and tile placement is schematic rather than geographic. Anything you add
+      or tick on the board is kept in this browser only.
     </div>
     <p class="updated">
       portfolio as of <span id="asof">&mdash;</span> &nbsp;&middot;&nbsp;
@@ -223,9 +323,39 @@
 
     <div class="stats" id="stats"></div>
 
+    <div class="toolbar">
+      <div class="search">
+        <input type="text" id="q" placeholder="country, license number, end-user, item or ECCN" aria-label="Search the portfolio">
+        <span class="hits" id="hits"></span>
+      </div>
+      <div class="seg" role="group" aria-label="View">
+        <button id="v-board" class="on">Board</button>
+        <button id="v-list">List</button>
+      </div>
+      <button class="alt" id="csv">Download CSV</button>
+    </div>
+    <div class="active-filters" id="afilters"></div>
+
     <div class="board-grid">
       <div>
-        <div class="board"><svg id="map" role="group" aria-label="Export license board by country"></svg></div>
+        <div class="board" id="boardwrap">
+          <svg id="map" role="group" aria-label="Export license board by country"></svg>
+          <div class="tip" id="tip"></div>
+        </div>
+
+        <div class="listwrap" id="listwrap" hidden></div>
+
+        <div class="cal">
+          <div class="cal-h">
+            <span class="t">next twelve months &mdash; click a month to filter</span>
+            <span class="k">
+              <span><i style="background:#d9b348"></i> license lapses</span>
+              <span><i style="background:#7d93a6"></i> condition due</span>
+              <span><i style="background:#c0392b"></i> overdue</span>
+            </span>
+          </div>
+          <div class="months" id="months"></div>
+        </div>
 
         <div class="legend">
           <p class="legend-h">tile state &mdash; click to filter</p>
@@ -237,7 +367,10 @@
             The pips under the number show how far the most drawn-down of those licenses has run:
             one pip is barely touched, five is nearly exhausted. A tile with no live authorization
             carries a marker instead &mdash; a circled arrow for an application still out, a dash for
-            nothing on file, and a cross for a restricted destination.
+            nothing on file, and a cross for a restricted destination. An amber dot in the corner
+            means a condition falls due soon, and a red one means a condition is already overdue.
+            The three harbours mark the AUKUS partners, where much defence trade moves under the
+            §126.7 exemption rather than a license.
           </p>
         </div>
       </div>
@@ -250,10 +383,10 @@
       system of record. A real license portfolio lives in your export-management system, and the
       authoritative state of any authorization is what BIS (SNAP-R), DDTC (DECCS) or the issuing
       agency shows &mdash; including conditions, provisos, quantity limits and reporting obligations
-      that a tile cannot capture. Expiry dates here are measured against the portfolio date above
-      rather than today's date, so the demo stays readable over time. Screening an item for
-      classification is a separate step &mdash; see the
-      <a href="export-screener.html">Export License Screener</a>. Edit
+      beyond the few modelled here. Dates are measured against the portfolio date above rather than
+      today's date, so the demo stays readable over time. Screening an item for classification is a
+      separate step &mdash; see the <a href="export-screener.html">Export License Screener</a>, which
+      reads this same file to tell you whether what you are screening is already covered. Edit
       <code>export-licenses.json</code> to change the board.
     </div>
   </div>
@@ -262,29 +395,33 @@
     const LS_KEY = "export-license-board-state";
     const SHORT = {
       "United Kingdom": "UK", "United Arab Emirates": "UAE", "South Korea": "S. Korea",
-      "South Africa": "S. Africa", "Saudi Arabia": "Saudi Arabia"
+      "South Africa": "S. Africa", "Saudi Arabia": "Saudi Arabia", "United States": "USA"
     };
     const LIC_STATES = ["active", "pending", "expired", "denied", "revoked", "surrendered"];
-    const R = 46, W = Math.sqrt(3) * R, RH = 1.5 * R;
+    const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const R = 46, W = Math.sqrt(3) * R, RH = 1.5 * R, LAND_K = 0.955;
 
-    let data = null, local = loadLocal(), selected = null;
-    let filter = { status: null, region: null };
+    let data = null, local = loadLocal(), selected = null, view = "board";
+    let filter = { status: null, region: null, month: null, aukus: false };
+    let query = "";
+    let sort = { key: "expires", dir: 1 };
 
     function esc(s) {
       return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
         ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     }
     function loadLocal() {
-      try { return JSON.parse(localStorage.getItem(LS_KEY)) || { added: {}, status: {}, notes: {} }; }
-      catch (e) { return { added: {}, status: {}, notes: {} }; }
+      try {
+        const o = JSON.parse(localStorage.getItem(LS_KEY)) || {};
+        return { added: o.added || {}, status: o.status || {}, notes: o.notes || {}, conds: o.conds || {} };
+      } catch (e) { return { added: {}, status: {}, notes: {}, conds: {} }; }
     }
-    function saveLocal() {
-      try { localStorage.setItem(LS_KEY, JSON.stringify(local)); } catch (e) {}
-    }
+    function saveLocal() { try { localStorage.setItem(LS_KEY, JSON.stringify(local)); } catch (e) {} }
     function localCount() {
       return Object.values(local.added).reduce((n, a) => n + a.length, 0)
         + Object.keys(local.status).length
-        + Object.values(local.notes).filter(v => v && v.trim()).length;
+        + Object.values(local.notes).filter(v => v && v.trim()).length
+        + Object.values(local.conds).filter(Boolean).length;
     }
 
     const money = n => n >= 1e6 ? "$" + (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + "M"
@@ -295,10 +432,13 @@
       const d = parseDate(s);
       return d ? Math.round((d - today()) / 86400000) : null;
     };
+    const monthKey = s => s ? s.slice(0, 7) : "";
+    const monthLabel = k => MONTHS[Number(k.slice(5, 7)) - 1] + " " + k.slice(2, 4);
 
     /* ---------- model ---------- */
 
-    // every license for a country, with local additions and local status overrides folded in
+    const dests = () => data.countries.filter(c => !c.origin);
+
     function licensesFor(c) {
       const base = c.licenses.map((l, i) => ({ ...l, _key: c.code + "::" + (l.ref || i), _local: false }));
       const added = (local.added[c.code] || []).map((l, i) => ({ ...l, _key: c.code + "::local" + i, _local: true }));
@@ -308,11 +448,35 @@
       });
     }
 
-    // a license that can carry a shipment today
     const isLive = l => l.status === "active" && (!l.expires || daysUntil(l.expires) >= 0);
     const isExpiringSoon = l => isLive(l) && l.expires && daysUntil(l.expires) <= data.expiringWindowDays;
 
+    // every condition in the portfolio, flattened, with its local tick folded in
+    function conditionsFor(c) {
+      const out = [];
+      licensesFor(c).forEach(l => {
+        (l.conditions || []).forEach((cond, i) => {
+          const key = l._key + "::c" + i;
+          out.push({
+            ...cond, key, country: c, lic: l, done: !!local.conds[key],
+            days: cond.due ? daysUntil(cond.due) : null,
+            live: isLive(l)
+          });
+        });
+      });
+      return out;
+    }
+    // an obligation only matters while its licence is live and it is not ticked off
+    const openConds = c => conditionsFor(c).filter(x => !x.done && x.live && x.days !== null);
+    function oblState(c) {
+      const open = openConds(c);
+      if (open.some(x => x.days < 0)) return "overdue";
+      if (open.some(x => x.days <= data.obligationWindowDays)) return "soon";
+      return null;
+    }
+
     function stateOf(c) {
+      if (c.origin) return "origin";
       const ls = licensesFor(c);
       if (c.restricted) return "restricted";
       if (ls.some(isExpiringSoon)) return "expiring";
@@ -322,7 +486,6 @@
       return "none";
     }
 
-    // effective status of one license, expiry folded in
     function effStatus(l) {
       if (l.status === "active" && l.expires && daysUntil(l.expires) < 0) return "expired";
       if (isExpiringSoon(l)) return "expiring";
@@ -335,32 +498,60 @@
       return Math.min(1, (Number(l.valueShipped) || 0) / a);
     }
 
+    /* ---------- filtering ---------- */
+
+    function matchesQuery(c) {
+      if (!query) return true;
+      const q = query.toLowerCase();
+      if (c.name.toLowerCase().includes(q) || c.code.toLowerCase() === q) return true;
+      return licensesFor(c).some(l => [l.ref, l.endUser, l.item, l.eccn, l.type, l.authority]
+        .some(v => String(v || "").toLowerCase().includes(q)));
+    }
+    function inMonth(c) {
+      if (!filter.month) return true;
+      if (filter.month === "later") {
+        return licensesFor(c).some(l => isLive(l) && l.expires && monthKey(l.expires) > lastMonthKey());
+      }
+      const ls = licensesFor(c).some(l => isLive(l) && monthKey(l.expires) === filter.month);
+      const cs = openConds(c).some(x => monthKey(x.due) === filter.month || (x.days < 0 && filter.month === monthKey(data.asOf)));
+      return ls || cs;
+    }
+    function isVisible(c) {
+      if (filter.status && stateOf(c) !== filter.status) return false;
+      if (filter.region && c.region !== filter.region) return false;
+      if (filter.aukus && !c.aukus) return false;
+      if (!inMonth(c)) return false;
+      if (!matchesQuery(c)) return false;
+      return true;
+    }
+    const anyFilter = () => !!(filter.status || filter.region || filter.month || filter.aukus || query);
+
     /* ---------- board ---------- */
 
-    // k < 1 leaves a thin gutter of sea between neighbouring tiles, so each one reads on its own
     function hexPath(cx, cy, k) {
       const f = k || 1;
       const p = [[0, -R], [W / 2, -R / 2], [W / 2, R / 2], [0, R], [-W / 2, R / 2], [-W / 2, -R / 2]];
       return p.map(([dx, dy]) => (cx + dx * f).toFixed(1) + "," + (cy + dy * f).toFixed(1)).join(" ");
     }
-    const LAND_K = 0.955;
     const cxy = (row, col) => [col * W, row * RH];
+    const NB = [[0, -1], [0, 1], [-1, -0.5], [-1, 0.5], [1, -0.5], [1, 0.5]];
 
-    // the sea frame: every hex position touching land that is not itself land
     function seaRing(land) {
       const key = (r, c) => r + "|" + c;
       const have = new Set(land.map(c => key(c.row, c.col)));
       const sea = new Map();
-      land.forEach(c => {
-        [[0, -1], [0, 1], [-1, -0.5], [-1, 0.5], [1, -0.5], [1, 0.5]].forEach(([dr, dc]) => {
-          const r = c.row + dr, co = c.col + dc, k = key(r, co);
-          if (!have.has(k) && !sea.has(k)) sea.set(k, { row: r, col: co });
-        });
-      });
+      land.forEach(c => NB.forEach(([dr, dc]) => {
+        const r = c.row + dr, co = c.col + dc, k = key(r, co);
+        if (!have.has(k) && !sea.has(k)) sea.set(k, { row: r, col: co });
+      }));
       return [...sea.values()];
     }
 
     function token(st, n, pips) {
+      if (st === "origin") {
+        return `<circle cx="0" cy="0" r="16" fill="#0f1519" stroke="#f0c040" stroke-width="2"/>
+          <text class="hex-token-g" y="4.6" fill="#f0c040">&#9733;</text>`;
+      }
       if (st === "restricted") {
         return `<circle cx="0" cy="0" r="16" fill="#18100f" stroke="#a83b33" stroke-width="2"/>
           <text class="hex-token-g" y="4.6" fill="#ff8a7a">&#10005;</text>`;
@@ -370,9 +561,7 @@
         let dots = "";
         if (pips > 0) {
           const start = -((pips - 1) * 4.6) / 2;
-          for (let i = 0; i < pips; i++) {
-            dots += `<circle cx="${(start + i * 4.6).toFixed(1)}" cy="11.4" r="1.5" fill="#4a3c1c"/>`;
-          }
+          for (let i = 0; i < pips; i++) dots += `<circle cx="${(start + i * 4.6).toFixed(1)}" cy="11.4" r="1.5" fill="#4a3c1c"/>`;
         }
         return `<circle cx="0" cy="0" r="17.5" fill="#f2e6cc"${dash}/>
           <text class="hex-token-n" y="${pips > 0 ? "1.5" : "5.5"}">${n}</text>${dots}`;
@@ -387,6 +576,39 @@
       }
       return `<circle cx="0" cy="0" r="11" fill="#171510" stroke="#9d9071" stroke-width="1.5"/>
         <text class="hex-token-g" y="4" fill="#b5a98a" style="font-size:11px">&#8212;</text>`;
+    }
+
+    // a Catan-style harbour on the sea tile outside each AUKUS partner
+    function ports(land, sea) {
+      const seaKeys = new Map(sea.map(s => [s.row + "|" + s.col, s]));
+      const cxAll = land.map(c => cxy(c.row, c.col));
+      const mid = [cxAll.reduce((s, p) => s + p[0], 0) / cxAll.length, cxAll.reduce((s, p) => s + p[1], 0) / cxAll.length];
+      const used = new Set();
+      let g = "";
+      land.filter(c => c.aukus).forEach(c => {
+        const [lx, ly] = cxy(c.row, c.col);
+        let best = null, bestD = -1;
+        NB.forEach(([dr, dc]) => {
+          const k = (c.row + dr) + "|" + (c.col + dc);
+          const s = seaKeys.get(k);
+          if (!s || used.has(k)) return;
+          const [sx, sy] = cxy(s.row, s.col);
+          const d = Math.hypot(sx - mid[0], sy - mid[1]);
+          if (d > bestD) { bestD = d; best = { k, sx, sy }; }
+        });
+        if (!best) return;
+        used.add(best.k);
+        const ux = (lx - best.sx) / Math.hypot(lx - best.sx, ly - best.sy);
+        const uy = (ly - best.sy) / Math.hypot(lx - best.sx, ly - best.sy);
+        g += `<g class="port" data-aukus="1" role="button" tabindex="0" aria-label="AUKUS partner: ${esc(c.name)}">
+          <line x1="${(best.sx + ux * 16).toFixed(1)}" y1="${(best.sy + uy * 16).toFixed(1)}" x2="${(lx - ux * 30).toFixed(1)}" y2="${(ly - uy * 30).toFixed(1)}" stroke="#6fb6d6" stroke-width="2" stroke-dasharray="5 4" opacity="0.7"/>
+          <rect class="port-plate" x="-24" y="-11" width="48" height="22" rx="5" fill="#8fd0ea" stroke="#3d7f9c" stroke-width="1.5"
+                transform="translate(${best.sx.toFixed(1)},${best.sy.toFixed(1)})"/>
+          <text class="port-label" x="${best.sx.toFixed(1)}" y="${(best.sy - 1).toFixed(1)}">AUKUS</text>
+          <text class="port-label" x="${best.sx.toFixed(1)}" y="${(best.sy + 7).toFixed(1)}" style="font-size:7.5px">${esc(c.code)}</text>
+        </g>`;
+      });
+      return g;
     }
 
     function drawBoard() {
@@ -404,6 +626,7 @@
         const [x, y] = cxy(s.row, s.col);
         g += `<polygon points="${hexPath(x, y, 0.955)}" fill="#0d1b25" stroke="#16303f" stroke-width="1.5"/>`;
       });
+      g += ports(land, sea);
 
       land.forEach(c => {
         const [x, y] = cxy(c.row, c.col);
@@ -415,13 +638,21 @@
           : 0;
         const label = SHORT[c.name] || c.name;
         const fs = label.length > 10 ? 8.6 : label.length > 8 ? 9.6 : 10.5;
-        const aria = `${c.name}. ${S.label}. ${live.length} live authorization${live.length === 1 ? "" : "s"}, ${ls.length} on file.`;
-        g += `<g class="hex-land" data-code="${esc(c.code)}" data-status="${st}" data-region="${esc(c.region)}"
-                 tabindex="0" role="button" aria-label="${esc(aria)}">
+        const ob = oblState(c);
+        const badge = ob
+          ? `<g transform="translate(${(x + 26).toFixed(1)},${(y - 2).toFixed(1)})">
+               <circle r="7.5" fill="${ob === "overdue" ? "#c0392b" : "#c9a227"}" stroke="#140f06" stroke-width="1.5"/>
+               <text class="obl-badge" y="3.2" fill="#140f06">!</text></g>`
+          : "";
+        const aria = c.origin
+          ? `${c.name}. Point of export.`
+          : `${c.name}. ${S.label}. ${live.length} live authorization${live.length === 1 ? "" : "s"}, ${ls.length} on file.${ob ? " Condition " + (ob === "overdue" ? "overdue." : "due soon.") : ""}`;
+        g += `<g class="hex-land" data-code="${esc(c.code)}" tabindex="0" role="button" aria-label="${esc(aria)}">
           <polygon class="face" points="${hexPath(x, y, LAND_K)}" fill="${S.color}"/>
           <polygon class="ring" points="${hexPath(x, y, LAND_K)}" fill="none" stroke="${S.edge}" stroke-width="2"/>
           <text class="hex-label" x="${x.toFixed(1)}" y="${(y - 15).toFixed(1)}" style="font-size:${fs}px">${esc(label)}</text>
           <g transform="translate(${x.toFixed(1)},${(y + 13).toFixed(1)})">${token(st, live.length, pips)}</g>
+          ${badge}
         </g>`;
       });
 
@@ -429,10 +660,20 @@
       svg.innerHTML = g;
 
       svg.querySelectorAll(".hex-land").forEach(el => {
+        const c = data.countries.find(x => x.code === el.dataset.code);
         el.addEventListener("click", () => select(el.dataset.code));
         el.addEventListener("keydown", e => {
           if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(el.dataset.code); }
         });
+        el.addEventListener("mousemove", e => showTip(c, e));
+        el.addEventListener("mouseleave", hideTip);
+        el.addEventListener("focus", () => showTip(c, null, el));
+        el.addEventListener("blur", hideTip);
+      });
+      svg.querySelectorAll(".port").forEach(el => {
+        const go = () => { filter.aukus = !filter.aukus; refreshViews(); };
+        el.addEventListener("click", go);
+        el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
       });
       applyFilter();
       markSelected();
@@ -444,38 +685,73 @@
     }
     function applyFilter() {
       document.querySelectorAll(".hex-land").forEach(el => {
-        const off = (filter.status && el.dataset.status !== filter.status)
-          || (filter.region && el.dataset.region !== filter.region);
-        el.classList.toggle("dim", !!off);
+        const c = data.countries.find(x => x.code === el.dataset.code);
+        el.classList.toggle("dim", !(c.origin && !anyFilter()) && !isVisible(c));
       });
-      document.querySelectorAll("#keys-status .key").forEach(b =>
-        b.classList.toggle("on", b.dataset.k === filter.status));
-      document.querySelectorAll("#keys-region .key").forEach(b =>
-        b.classList.toggle("on", b.dataset.k === filter.region));
+      document.querySelectorAll(".port").forEach(el => el.classList.toggle("on", filter.aukus));
+      document.querySelectorAll("#keys-status .key").forEach(b => b.classList.toggle("on", b.dataset.k === filter.status));
+      document.querySelectorAll("#keys-region .key").forEach(b => b.classList.toggle("on", b.dataset.k === filter.region));
+      document.querySelectorAll(".mo").forEach(b => b.classList.toggle("on", b.dataset.m === filter.month));
+      drawActiveFilters();
+      const n = dests().filter(isVisible).length;
+      document.getElementById("hits").textContent = query ? n + " of " + dests().length : "";
     }
 
-    /* ---------- summary + legend ---------- */
+    /* ---------- hover summary ---------- */
+
+    function tipHTML(c) {
+      const st = stateOf(c), S = data.statuses[st];
+      if (c.origin) return `<b>${esc(c.name)}</b><div class="row">Point of export. Everything on this board ships from here.</div>`;
+      const ls = licensesFor(c), live = ls.filter(isLive);
+      const next = live.filter(l => l.expires).sort((a, b) => daysUntil(a.expires) - daysUntil(b.expires))[0];
+      const open = openConds(c);
+      const soonest = open.sort((a, b) => a.days - b.days)[0];
+      return `<b>${esc(c.name)}</b>
+        <div class="row" style="color:${S.edge}">${esc(S.label)}${c.aukus ? " &middot; AUKUS" : ""}</div>
+        <div class="row">Live: <i>${live.length}</i> of ${ls.length} on file</div>
+        ${next ? `<div class="row">Next lapse: <i>${esc(next.expires)}</i> (${daysUntil(next.expires)} days)</div>` : ""}
+        ${soonest ? `<div class="row">Next condition: <i>${soonest.days < 0 ? Math.abs(soonest.days) + " days overdue" : "in " + soonest.days + " days"}</i></div>` : ""}
+        <div class="row" style="color:#5a5a5a;margin-top:0.2rem">click for detail</div>`;
+    }
+    function showTip(c, e, el) {
+      const tip = document.getElementById("tip"), wrap = document.getElementById("boardwrap");
+      tip.innerHTML = tipHTML(c);
+      tip.style.display = "block";
+      const box = wrap.getBoundingClientRect();
+      let x, y;
+      if (e) { x = e.clientX - box.left + 14; y = e.clientY - box.top + 14; }
+      else { const b = el.getBoundingClientRect(); x = b.left - box.left + b.width / 2; y = b.bottom - box.top + 6; }
+      tip.style.left = Math.max(6, Math.min(x, box.width - tip.offsetWidth - 6)) + "px";
+      tip.style.top = Math.max(6, Math.min(y, box.height - tip.offsetHeight - 6)) + "px";
+    }
+    function hideTip() { document.getElementById("tip").style.display = "none"; }
+
+    /* ---------- summary + legend + calendar ---------- */
 
     function drawStats() {
-      const all = data.countries.flatMap(c => licensesFor(c).map(l => ({ c, l })));
+      const all = dests().flatMap(c => licensesFor(c).map(l => ({ c, l })));
       const live = all.filter(x => isLive(x.l));
       const soon = all.filter(x => isExpiringSoon(x.l));
       const pend = all.filter(x => x.l.status === "pending");
       const lapsed = all.filter(x => effStatus(x.l) === "expired");
-      const restricted = data.countries.filter(c => c.restricted).length;
+      const conds = dests().flatMap(openConds);
+      const overdue = conds.filter(x => x.days < 0);
+      const dueSoon = conds.filter(x => x.days >= 0 && x.days <= data.obligationWindowDays);
       const auth = live.reduce((s, x) => s + (Number(x.l.valueAuthorized) || 0), 0);
       const shipped = live.reduce((s, x) => s + (Number(x.l.valueShipped) || 0), 0);
+      const restricted = dests().filter(c => c.restricted).length;
       const tiles = [
-        ["good", live.length, "live authorizations"],
-        ["warn", soon.length, "lapse within " + data.expiringWindowDays + " days"],
-        ["", pend.length, "applications out"],
-        ["bad", lapsed.length, "lapsed or refused"],
-        ["bad", restricted, "restricted destinations"],
-        ["", money(auth), "authorized value"],
-        ["", money(shipped), "shipped to date"]
+        ["good", live.length, "live authorizations",
+          `across ${dests().filter(c => licensesFor(c).some(isLive)).length} destinations &middot; ${money(auth)} authorized, ${money(shipped)} shipped`],
+        ["warn", soon.length, "lapse within " + data.expiringWindowDays + " days",
+          `${lapsed.length} already lapsed or refused`],
+        ["", pend.length, "applications out", `${restricted} restricted destinations`],
+        [overdue.length ? "bad" : "warn", overdue.length + dueSoon.length, "conditions due",
+          `${overdue.length} overdue &middot; ${dueSoon.length} inside ${data.obligationWindowDays} days`]
       ];
-      document.getElementById("stats").innerHTML = tiles.map(([cls, n, l]) =>
-        `<div class="stat ${cls}"><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div></div>`).join("");
+      document.getElementById("stats").innerHTML = tiles.map(([cls, n, l, sub]) =>
+        `<div class="stat ${cls}"><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div>
+          <div class="sub">${sub}</div></div>`).join("");
     }
 
     function drawLegend() {
@@ -491,19 +767,168 @@
         `<button class="key" data-k="${k}">${esc(r.label)}<span class="ct">${rc[k] || 0}</span></button>`).join("");
 
       document.querySelectorAll("#keys-status .key").forEach(b => b.addEventListener("click", () => {
-        filter.status = filter.status === b.dataset.k ? null : b.dataset.k; applyFilter();
+        filter.status = filter.status === b.dataset.k ? null : b.dataset.k; refreshViews();
       }));
       document.querySelectorAll("#keys-region .key").forEach(b => b.addEventListener("click", () => {
-        filter.region = filter.region === b.dataset.k ? null : b.dataset.k; applyFilter();
+        filter.region = filter.region === b.dataset.k ? null : b.dataset.k; refreshViews();
       }));
+    }
+
+    function monthList() {
+      const start = today();
+      const out = [];
+      for (let i = 0; i < 12; i++) {
+        const d = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + i, 1));
+        out.push(d.toISOString().slice(0, 7));
+      }
+      return out;
+    }
+    const lastMonthKey = () => monthList()[11];
+
+    function drawCalendar() {
+      const keys = monthList(), nowKey = monthKey(data.asOf);
+      const buckets = {};
+      keys.forEach(k => buckets[k] = []);
+      let later = 0;
+      dests().forEach(c => {
+        licensesFor(c).forEach(l => {
+          if (!isLive(l) || !l.expires) return;
+          const k = monthKey(l.expires);
+          if (buckets[k]) buckets[k].push({ kind: "expiry", c, when: l.expires });
+          else if (k > keys[11]) later++;
+        });
+        openConds(c).forEach(x => {
+          const k = x.days < 0 ? nowKey : monthKey(x.due);
+          if (buckets[k]) buckets[k].push({ kind: x.days < 0 ? "overdue" : "cond", c, when: x.due });
+        });
+      });
+      const COL = { expiry: "#d9b348", cond: "#7d93a6", overdue: "#c0392b" };
+      let html = keys.map(k => {
+        const items = buckets[k];
+        const shown = items.slice(0, 8);
+        return `<button class="mo${items.length ? "" : " empty"}${k === nowKey ? " now" : ""}" data-m="${k}"
+                  ${items.length ? "" : "disabled"} title="${items.length} due in ${monthLabel(k)}">
+          <span class="ml">${esc(monthLabel(k))}</span>
+          <span class="pips">${shown.map(i => `<i style="background:${COL[i.kind]}"></i>`).join("")}</span>
+          <span class="mc">${items.length || "&middot;"}</span></button>`;
+      }).join("");
+      html += `<button class="mo${later ? "" : " empty"}" data-m="later" ${later ? "" : "disabled"} title="lapses beyond twelve months">
+        <span class="ml">later</span><span class="pips">${later ? '<i style="background:#3f6b36"></i>' : ""}</span>
+        <span class="mc">${later || "&middot;"}</span></button>`;
+      document.getElementById("months").innerHTML = html;
+      document.querySelectorAll(".mo").forEach(b => b.addEventListener("click", () => {
+        if (b.disabled) return;
+        filter.month = filter.month === b.dataset.m ? null : b.dataset.m;
+        refreshViews();
+      }));
+    }
+
+    function drawActiveFilters() {
+      const bits = [];
+      if (filter.status) bits.push(["status", data.statuses[filter.status].label]);
+      if (filter.region) bits.push(["region", data.regions[filter.region].label]);
+      if (filter.month) bits.push(["month", filter.month === "later" ? "beyond twelve months" : monthLabel(filter.month)]);
+      if (filter.aukus) bits.push(["aukus", "AUKUS partners"]);
+      if (query) bits.push(["query", '"' + query + '"']);
+      const el = document.getElementById("afilters");
+      if (!bits.length) { el.innerHTML = ""; return; }
+      el.innerHTML = `<span>filtered by</span>` + bits.map(([k, l]) =>
+        `<button class="fchip" data-f="${k}">${esc(l)}</button>`).join("")
+        + `<button class="fchip" data-f="all" style="border-color:#333;color:#888;background:none">clear all</button>`;
+      el.querySelectorAll(".fchip").forEach(b => b.addEventListener("click", () => {
+        const f = b.dataset.f;
+        if (f === "all") { filter = { status: null, region: null, month: null, aukus: false }; query = ""; document.getElementById("q").value = ""; }
+        else if (f === "query") { query = ""; document.getElementById("q").value = ""; }
+        else if (f === "aukus") filter.aukus = false;
+        else filter[f] = null;
+        refreshViews();
+      }));
+    }
+
+    /* ---------- list view ---------- */
+
+    const COLS = [
+      { k: "country", l: "Country" }, { k: "ref", l: "Reference" }, { k: "item", l: "Item" },
+      { k: "eccn", l: "Class" }, { k: "type", l: "Type" }, { k: "endUser", l: "End-user" },
+      { k: "issued", l: "Issued" }, { k: "expires", l: "Expires" }, { k: "days", l: "Days", num: true },
+      { k: "status", l: "Status" }, { k: "valueAuthorized", l: "Authorized", num: true },
+      { k: "valueShipped", l: "Shipped", num: true }, { k: "drawn", l: "Drawn", num: true },
+      { k: "conditions", l: "Conditions" }
+    ];
+
+    function rows() {
+      const out = [];
+      dests().filter(isVisible).forEach(c => licensesFor(c).forEach(l => {
+        const open = (l.conditions || []).map((cond, i) => ({ ...cond, done: !!local.conds[l._key + "::c" + i] }));
+        const dd = drawdown(l);
+        out.push({
+          country: c.name, code: c.code, ref: l.ref, item: l.item, eccn: l.eccn || "",
+          type: l.type || "", authority: l.authority || "", endUser: l.endUser || "",
+          issued: l.issued || "", expires: l.expires || "", days: l.expires ? daysUntil(l.expires) : null,
+          status: effStatus(l), valueAuthorized: Number(l.valueAuthorized) || 0,
+          valueShipped: Number(l.valueShipped) || 0, drawn: dd === null ? null : Math.round(dd * 100),
+          conditions: open.filter(x => !x.done).length + " of " + open.length + " open"
+        });
+      }));
+      const dir = sort.dir;
+      out.sort((a, b) => {
+        const x = a[sort.key], y = b[sort.key];
+        if (x === null || x === undefined || x === "") return 1;
+        if (y === null || y === undefined || y === "") return -1;
+        return (typeof x === "number" ? x - y : String(x).localeCompare(String(y))) * dir;
+      });
+      return out;
+    }
+
+    function drawList() {
+      const rs = rows();
+      const head = COLS.map(c =>
+        `<th data-k="${c.k}">${esc(c.l)}${sort.key === c.k ? ` <span class="ar">${sort.dir > 0 ? "↑" : "↓"}</span>` : ""}</th>`).join("");
+      const body = rs.map(r => `<tr>
+        <td class="co" data-code="${esc(r.code)}">${esc(r.country)}</td>
+        <td class="ref">${esc(r.ref)}</td>
+        <td>${esc(r.item)}</td>
+        <td>${esc(r.eccn)}</td>
+        <td>${esc(r.type)}</td>
+        <td>${esc(r.endUser)}</td>
+        <td>${esc(r.issued)}</td>
+        <td>${esc(r.expires || "—")}</td>
+        <td class="num" style="color:${r.days === null ? "#666" : r.days < 0 ? "#c26a42" : r.days <= data.expiringWindowDays ? "#d9b348" : "#888"}">${r.days === null ? "—" : r.days}</td>
+        <td><span class="pill" style="color:${LIC_COLOR[r.status] || "#888"}">${esc(LIC_LABEL[r.status] || r.status)}</span></td>
+        <td class="num">${r.valueAuthorized ? money(r.valueAuthorized) : "—"}</td>
+        <td class="num">${r.valueShipped ? money(r.valueShipped) : "—"}</td>
+        <td class="num">${r.drawn === null ? "—" : r.drawn + "%"}</td>
+        <td>${esc(r.conditions)}</td></tr>`).join("");
+      document.getElementById("listwrap").innerHTML = rs.length
+        ? `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`
+        : `<div class="empty-row">No authorizations match the current filters.</div>`;
+      document.querySelectorAll("#listwrap th").forEach(th => th.addEventListener("click", () => {
+        if (sort.key === th.dataset.k) sort.dir = -sort.dir; else { sort.key = th.dataset.k; sort.dir = 1; }
+        drawList();
+      }));
+      document.querySelectorAll("#listwrap td.co").forEach(td =>
+        td.addEventListener("click", () => select(td.dataset.code)));
+    }
+
+    function downloadCSV() {
+      const rs = rows();
+      const head = ["Country", "Reference", "Authority", "Type", "Item", "Classification", "End-user",
+        "Issued", "Expires", "Days remaining", "Status", "Value authorized (USD)", "Value shipped (USD)",
+        "Drawn down (%)", "Conditions open"];
+      const q = v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
+      const lines = [head.map(q).join(",")].concat(rs.map(r => [r.country, r.ref, r.authority, r.type,
+        r.item, r.eccn, r.endUser, r.issued, r.expires, r.days, LIC_LABEL[r.status] || r.status,
+        r.valueAuthorized, r.valueShipped, r.drawn, r.conditions].map(q).join(",")));
+      const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "export-licenses-" + data.asOf + ".csv";
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
     }
 
     /* ---------- panel ---------- */
 
-    function statusChip(st) {
-      const S = data.statuses[st] || { label: st, color: "#444", edge: "#666" };
-      return `<span class="chip-status" style="border-color:${S.edge};color:${S.edge}">${esc(S.label)}</span>`;
-    }
     const LIC_COLOR = {
       active: "#588c4a", expiring: "#d9b348", pending: "#7d93a6",
       expired: "#c26a42", denied: "#a83b33", revoked: "#a83b33", surrendered: "#777"
@@ -512,37 +937,57 @@
       active: "Live", expiring: "Expires soon", pending: "Pending",
       expired: "Lapsed", denied: "Denied", revoked: "Revoked", surrendered: "Surrendered"
     };
+    function statusChip(st) {
+      const S = data.statuses[st] || { label: st, edge: "#666" };
+      return `<span class="chip-status" style="border-color:${S.edge};color:${S.edge}">${esc(S.label)}</span>`;
+    }
 
     function select(code) {
       selected = code;
       markSelected();
       drawPanel();
-      if (window.matchMedia("(max-width: 960px)").matches) {
+      history.replaceState(null, "", code ? "#" + code : location.pathname);
+      if (window.matchMedia("(max-width: 1000px)").matches) {
         document.getElementById("panel").scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }
 
     function watchlist() {
       const rows = [];
-      data.countries.forEach(c => {
-        const st = stateOf(c);
-        if (st === "active" || st === "none") return;
+      dests().forEach(c => {
+        const st = stateOf(c), ob = oblState(c);
+        if (st === "active" && !ob) return;
+        if (st === "none" && !ob) return;
         const ls = licensesFor(c);
-        let why = "";
-        if (st === "expiring") {
-          const d = Math.min(...ls.filter(isExpiringSoon).map(l => daysUntil(l.expires)));
-          why = d + " days left";
-        } else if (st === "pending") {
-          why = ls.filter(l => l.status === "pending").length + " filed";
-        } else if (st === "expired") {
-          why = "nothing live";
-        } else if (st === "restricted") {
-          why = "stop-ship";
-        }
-        rows.push({ c, st, why, rank: { expiring: 0, expired: 1, pending: 2, restricted: 3 }[st] });
+        let why = "", rank = 5;
+        if (ob === "overdue") { why = "condition overdue"; rank = 0; }
+        else if (st === "expiring") { why = Math.min(...ls.filter(isExpiringSoon).map(l => daysUntil(l.expires))) + " days left"; rank = 1; }
+        else if (st === "expired") { why = "nothing live"; rank = 2; }
+        else if (ob === "soon") { why = "condition due"; rank = 3; }
+        else if (st === "pending") { why = ls.filter(l => l.status === "pending").length + " filed"; rank = 4; }
+        else if (st === "restricted") { why = "stop-ship"; rank = 6; }
+        rows.push({ c, st, why, rank });
       });
       rows.sort((a, b) => a.rank - b.rank || a.c.name.localeCompare(b.c.name));
       return rows;
+    }
+
+    function condHTML(l) {
+      const cs = (l.conditions || []).map((cond, i) => {
+        const key = l._key + "::c" + i;
+        const done = !!local.conds[key];
+        const d = cond.due ? daysUntil(cond.due) : null;
+        const cls = done ? "done" : d === null ? "" : d < 0 ? "overdue" : d <= data.obligationWindowDays ? "soon" : "";
+        const when = cond.due
+          ? (d < 0 ? Math.abs(d) + " days overdue" : "due " + cond.due + " (" + d + " days)")
+          : (cond.recurring === "per-shipment" ? "every shipment" : "standing condition");
+        return `<div class="cond ${cls}">
+          <input type="checkbox" id="c-${esc(key)}" data-ck="${esc(key)}"${done ? " checked" : ""}>
+          <label for="c-${esc(key)}">${esc(cond.label)}
+            <span class="when">&middot; ${esc(when)}${cond.recurring && cond.recurring !== "standing" && cond.due ? " &middot; " + esc(cond.recurring) : ""}</span>
+          </label></div>`;
+      }).join("");
+      return cs ? `<div class="conds"><div class="ch">conditions</div>${cs}</div>` : "";
     }
 
     function drawPanel() {
@@ -550,13 +995,13 @@
       const c = data.countries.find(x => x.code === selected);
 
       if (!c) {
-        const rows = watchlist();
+        const rs = watchlist();
         el.innerHTML = `<h2>Needs attention</h2>
-          <p class="meta">${rows.length} of ${data.countries.length} destinations</p>
-          <p class="hint">Click any tile on the board to open that country's licenses, or start from
-            the list below &mdash; renewals first, then lapses, applications out, and restricted
-            destinations.</p>
-          <ul class="watch">${rows.map(r =>
+          <p class="meta">${rs.length} of ${dests().length} destinations</p>
+          <p class="hint">Click any tile, month or table row to open a country. The list below is
+            ordered the way the work falls due: overdue conditions first, then renewals, lapses,
+            conditions coming up, and applications still out.</p>
+          <ul class="watch">${rs.map(r =>
             `<li><button data-code="${esc(r.c.code)}">
               <span class="sw" style="background:${data.statuses[r.st].color}"></span>
               <span>${esc(r.c.name)}</span>
@@ -564,6 +1009,16 @@
           ${localBar()}`;
         el.querySelectorAll(".watch button").forEach(b =>
           b.addEventListener("click", () => select(b.dataset.code)));
+        wireLocalBar();
+        return;
+      }
+
+      if (c.origin) {
+        el.innerHTML = `<h2>${esc(c.name)}${c.aukus ? '<span class="aukus-tag">AUKUS partner</span>' : ""}</h2>
+          <p class="meta">Point of export</p>
+          <p class="risk">${esc(c.risk)}</p>
+          <p class="screenlink"><a href="export-screener.html">Screen an item before it ships &rarr;</a></p>
+          ${localBar()}`;
         wireLocalBar();
         return;
       }
@@ -592,6 +1047,7 @@
           ${dd === null ? "" : `<div class="bar"><i style="width:${(dd * 100).toFixed(0)}%;background:${col}"></i></div>
             <div class="barl">${money(Number(l.valueShipped) || 0)} shipped of ${money(Number(l.valueAuthorized) || 0)} authorized &middot; ${(dd * 100).toFixed(0)}% drawn down</div>`}
           ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
+          ${condHTML(l)}
           <div class="kv" style="margin-top:0.5rem">
             <b>Set status:</b>
             <select data-key="${esc(l._key)}" class="st-sel">
@@ -604,11 +1060,12 @@
       }).join("");
 
       el.innerHTML = `
-        <h2>${esc(c.name)}</h2>
+        <h2>${esc(c.name)}${c.aukus ? '<span class="aukus-tag">AUKUS partner</span>' : ""}</h2>
         <p class="meta">${esc(data.regions[c.region] ? data.regions[c.region].label : c.region)}
           &nbsp;&middot;&nbsp; ${ls.filter(isLive).length} live of ${ls.length} on file</p>
         <p>${statusChip(st)}</p>
         <p class="risk" style="margin-top:0.7rem">${esc(c.risk || "")}</p>
+        <p class="screenlink"><a href="export-screener.html?dest=${encodeURIComponent(c.name)}">Screen an item for ${esc(c.name)} &rarr;</a></p>
         <div class="sec-h">authorizations (${ls.length})</div>
         ${ls.length ? cards : `<p class="hint">Nothing on file for this destination. Either no controlled
           item moves here, or shipments are going under an exception that should be documented.</p>`}
@@ -628,27 +1085,30 @@
               <select id="f-st">${LIC_STATES.map(s => `<option value="${s}">${esc(LIC_LABEL[s])}</option>`).join("")}</select></div>
             <div><label class="fl" for="f-va">Authorized value</label><input type="number" id="f-va" placeholder="1500000"></div>
             <div><label class="fl" for="f-vs">Shipped to date</label><input type="number" id="f-vs" placeholder="0"></div>
+            <div class="wide"><label class="fl" for="f-cond">Condition (optional)</label><input type="text" id="f-cond" placeholder="annual end-use report"></div>
+            <div class="wide"><label class="fl" for="f-cdue">Condition due</label><input type="text" id="f-cdue" placeholder="YYYY-MM-DD"></div>
             <div class="wide" style="margin-top:0.2rem"><button class="go" id="f-add">Add to ${esc(c.name)}</button></div>
           </div>
         </details>
         ${localBar()}`;
 
       el.querySelectorAll(".st-sel").forEach(sel => sel.addEventListener("change", () => {
-        local.status[sel.dataset.key] = sel.value;
+        local.status[sel.dataset.key] = sel.value; saveLocal(); refresh();
+      }));
+      el.querySelectorAll(".cond input").forEach(cb => cb.addEventListener("change", () => {
+        if (cb.checked) local.conds[cb.dataset.ck] = true; else delete local.conds[cb.dataset.ck];
         saveLocal(); refresh();
       }));
       const note = el.querySelector("#note");
-      note.addEventListener("change", () => {
-        local.notes[c.code] = note.value; saveLocal(); refreshLocalBar();
-      });
+      note.addEventListener("change", () => { local.notes[c.code] = note.value; saveLocal(); refreshLocalBar(); });
       el.querySelector("#f-add").addEventListener("click", () => {
         const v = id => (el.querySelector("#" + id).value || "").trim();
-        const ref = v("f-ref") || "untitled authorization";
+        const conds = v("f-cond") ? [{ label: v("f-cond"), due: v("f-cdue"), recurring: v("f-cdue") ? "once" : "standing" }] : [];
         (local.added[c.code] = local.added[c.code] || []).push({
-          ref, authority: v("f-auth"), type: "Added on this device", item: v("f-item") || "—",
-          eccn: v("f-eccn"), endUser: v("f-user"), issued: data.asOf, expires: v("f-exp"),
-          valueAuthorized: Number(v("f-va")) || 0, valueShipped: Number(v("f-vs")) || 0,
-          status: v("f-st") || "active", note: ""
+          ref: v("f-ref") || "untitled authorization", authority: v("f-auth"), type: "Added on this device",
+          item: v("f-item") || "—", eccn: v("f-eccn"), endUser: v("f-user"), issued: data.asOf,
+          expires: v("f-exp"), valueAuthorized: Number(v("f-va")) || 0, valueShipped: Number(v("f-vs")) || 0,
+          status: v("f-st") || "active", note: "", conditions: conds
         });
         saveLocal(); refresh();
       });
@@ -659,27 +1119,60 @@
       const n = localCount();
       return `<div class="localbar" id="localbar">
         <span>${n ? n + " change" + (n === 1 ? "" : "s") + " saved in this browser" : "no local changes"}</span>
-        ${n ? `<button class="alt" id="reset">Clear local changes</button>` : ""}
-      </div>`;
+        ${n ? `<button class="alt" id="reset">Clear local changes</button>` : ""}</div>`;
     }
     function wireLocalBar() {
       const b = document.getElementById("reset");
       if (b) b.addEventListener("click", () => {
-        if (!confirm("Clear every license, status change and note you added in this browser?")) return;
-        local = { added: {}, status: {}, notes: {} }; saveLocal(); refresh();
+        if (!confirm("Clear every license, status change, ticked condition and note you added in this browser?")) return;
+        local = { added: {}, status: {}, notes: {}, conds: {} }; saveLocal(); refresh();
       });
     }
     function refreshLocalBar() {
       const bar = document.getElementById("localbar");
       if (bar) { bar.outerHTML = localBar(); wireLocalBar(); }
     }
-    function refresh() { drawStats(); drawLegend(); drawBoard(); drawPanel(); }
+
+    function setView(v) {
+      view = v;
+      document.getElementById("v-board").classList.toggle("on", v === "board");
+      document.getElementById("v-list").classList.toggle("on", v === "list");
+      document.getElementById("boardwrap").hidden = v !== "board";
+      document.getElementById("listwrap").hidden = v !== "list";
+      if (v === "list") drawList();
+    }
+    // filters changed: everything that depends on them redraws, the data itself has not moved
+    function refreshViews() {
+      applyFilter();
+      if (view === "list") drawList();
+    }
+    function refresh() {
+      drawStats(); drawLegend(); drawCalendar(); drawBoard(); drawPanel();
+      if (view === "list") drawList();
+    }
+
+    document.getElementById("q").addEventListener("input", e => { query = e.target.value.trim(); refreshViews(); });
+    document.getElementById("q").addEventListener("keydown", e => {
+      if (e.key !== "Enter") return;
+      const first = dests().filter(isVisible)[0];
+      if (first) select(first.code);
+    });
+    // a link to #DE works whether the page is loading or already open
+    window.addEventListener("hashchange", () => {
+      const h = (location.hash || "").replace("#", "").toUpperCase();
+      if (data && h && h !== selected && data.countries.some(c => c.code === h)) select(h);
+    });
+    document.getElementById("v-board").addEventListener("click", () => setView("board"));
+    document.getElementById("v-list").addEventListener("click", () => setView("list"));
+    document.getElementById("csv").addEventListener("click", downloadCSV);
 
     fetch("export-licenses.json", { cache: "no-store" })
       .then(r => r.json())
       .then(d => {
         data = d;
         document.getElementById("asof").textContent = d.asOf || "—";
+        const hash = (location.hash || "").replace("#", "").toUpperCase();
+        if (hash && d.countries.some(c => c.code === hash)) selected = hash;
         refresh();
       })
       .catch(() => {

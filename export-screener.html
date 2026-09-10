@@ -172,6 +172,28 @@
       color: #777; margin: 1.5rem 0 0.75rem; font-weight: 500;
     }
 
+    /* coverage: what the licence board already knows about this destination */
+    .cover {
+      border-radius: 6px; padding: 0.9rem 1.05rem; margin-bottom: 1.25rem;
+      border: 1px solid #285a28; background: #0d160d; font-size: 0.82rem; line-height: 1.55; color: #b6d9b6;
+    }
+    .cover.none { border-color: #4a3a10; background: #14110a; color: #d9c48a; }
+    .cover b { color: #79d479; }
+    .cover.none b { color: #f0c040; }
+    .cover .lic {
+      margin-top: 0.6rem; padding: 0.55rem 0.7rem; border-radius: 5px;
+      background: #0a0f0a; border: 1px solid #1e2e1e;
+    }
+    .cover.none .lic { background: #0d0b06; border-color: #2e2913; }
+    .cover .lic .r { color: #e0e0e0; font-weight: 600; font-size: 0.8rem; }
+    .cover .lic .m { font-size: 0.72rem; color: #8fae8f; margin-top: 0.2rem; }
+    .cover.none .lic .m { color: #a2955f; }
+    .cover .hit {
+      display: inline-block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em;
+      border: 1px solid #4a7a3a; color: #9fd48a; border-radius: 999px; padding: 0.12rem 0.45rem; margin-left: 0.4rem;
+    }
+    .cover .more { font-size: 0.72rem; margin-top: 0.6rem; }
+
     .match {
       background: #111;
       border: 1px solid #222;
@@ -328,6 +350,7 @@
     let rules = { categories: [], reasonCodes: {}, highRiskDestinations: [] };
     let catalog = { products: [] };
     let denied = { parties: [] };
+    let portfolio = { countries: [], asOf: "" };
     let lastScreen = null;
 
     const RANK = { unlikely: 1, maybe: 2, likely: 3 };
@@ -388,6 +411,45 @@
         if (matched) hits.push({ p, matched });
       });
       return hits;
+    }
+
+    // the licence board keyed by destination: what is already authorized to go there
+    const DEST_ALIAS = {
+      "uk": "United Kingdom", "britain": "United Kingdom", "england": "United Kingdom",
+      "great britain": "United Kingdom", "uae": "United Arab Emirates", "emirates": "United Arab Emirates",
+      "korea": "South Korea", "south korea": "South Korea", "turkey": "Türkiye", "turkiye": "Türkiye",
+      "holland": "Netherlands", "usa": "United States", "us": "United States",
+      "united states of america": "United States", "prc": "China", "taiwan": "Taiwan"
+    };
+    function findDestCountry(text) {
+      const d = (text || "").trim().toLowerCase();
+      if (!d) return null;
+      const alias = DEST_ALIAS[d];
+      const cs = portfolio.countries || [];
+      return cs.find(c => alias && c.name === alias)
+        || cs.find(c => c.name.toLowerCase() === d)
+        || cs.find(c => c.code.toLowerCase() === d)
+        || cs.find(c => d.length >= 4 && c.name.toLowerCase().includes(d))
+        || null;
+    }
+    const daysTo = s => {
+      if (!s || !portfolio.asOf) return null;
+      return Math.round((new Date(s + "T00:00:00Z") - new Date(portfolio.asOf + "T00:00:00Z")) / 86400000);
+    };
+    const isLive = l => l.status === "active" && (!l.expires || daysTo(l.expires) >= 0);
+
+    // does an authorization already cover the thing being screened?
+    function coverageMatch(l, text, catHits, kw) {
+      const item = String(l.item || "").toLowerCase();
+      const pn = catHits.find(p => item.includes(String(p.pn).toLowerCase()));
+      if (pn) return "covers this exact part";
+      const fams = catHits.map(p => p.eccn).concat(kw.map(r => r.cat.eccn));
+      const le = String(l.eccn || "").replace(/\s/g, "");
+      if (le && fams.some(f => String(f).split("/").some(x => {
+        const a = x.replace(/\s/g, "").slice(0, 5);
+        return a.length >= 5 && le.slice(0, 5) === a;
+      }))) return "same classification";
+      return "";
     }
 
     function checkDestination(text) {
@@ -475,6 +537,42 @@
 
       if (destRule) {
         html += `<div class="destflag"><b>Destination flag &mdash; ${esc(dest)}:</b> ${esc(destRule.note)}</div>`;
+      }
+
+      // what the licence board already holds for this destination
+      const country = findDestCountry(dest);
+      if (country) {
+        const live = (country.licenses || []).filter(isLive);
+        const rated = live.map(l => ({ l, hit: coverageMatch(l, text, catHits, kw) }));
+        const hits = rated.filter(x => x.hit);
+        const link = `<div class="more"><a href="export-license.html#${esc(country.code)}">open ${esc(country.name)} on the license board &rarr;</a></div>`;
+        if (hits.length) {
+          html += `<div class="cover">
+            <b>Already authorized to ${esc(country.name)}.</b> ${hits.length} live authorization${hits.length === 1 ? "" : "s"}
+            on the board appear${hits.length === 1 ? "s" : ""} to cover what you screened. Confirm the quantity, value and
+            conditions before you ship against it.
+            ${hits.map(({ l, hit }) => `<div class="lic">
+              <span class="r">${esc(l.ref)}</span><span class="hit">${esc(hit)}</span>
+              <div class="m">${esc(l.item)} &middot; ${esc(l.eccn || "—")} &middot; ${esc(l.endUser || "—")}
+                &middot; expires ${esc(l.expires || "—")}${l.expires ? " (" + daysTo(l.expires) + " days)" : ""}</div>
+            </div>`).join("")}${link}</div>`;
+        } else if (live.length) {
+          const next = tier === "unlikely"
+            ? "On this screen the item looks like EAR99, so it may not need one, but confirm the specs before relying on that."
+            : "A new application is likely needed.";
+          html += `<div class="cover none">
+            <b>No license on file covers this item for ${esc(country.name)}.</b> There ${live.length === 1 ? "is" : "are"}
+            ${live.length} live authorization${live.length === 1 ? "" : "s"} to that destination, but ${live.length === 1 ? "it is" : "none is"}
+            for this part or classification. ${next}${link}</div>`;
+        } else if (country.restricted) {
+          html += `<div class="cover none">
+            <b>${esc(country.name)} is a restricted destination on the license board.</b> Nothing is authorized to ship
+            there, and legacy authorizations were denied or revoked.${link}</div>`;
+        } else {
+          html += `<div class="cover none">
+            <b>Nothing on file for ${esc(country.name)}.</b> The license board shows no live authorization to that
+            destination, so anything controlled will need one${tier === "unlikely" ? ", though an EAR99 item generally will not" : ""}.${link}</div>`;
+        }
       }
 
       // restricted-party detail
@@ -601,6 +699,13 @@
         </div>`;
     }
 
+    function prefillFromURL() {
+      const p = new URLSearchParams(location.search);
+      const set = (id, key) => { const v = p.get(key); if (v) document.getElementById(id).value = v; };
+      set("desc", "desc"); set("dest", "dest"); set("party", "party"); set("who", "who");
+      if (p.get("desc") || p.get("dest") || p.get("party")) render();
+    }
+
     document.getElementById("go").addEventListener("click", render);
     document.getElementById("print").addEventListener("click", () => { if (lastScreen) window.print(); });
     document.getElementById("desc").addEventListener("keydown", e => {
@@ -623,10 +728,12 @@
     Promise.all([
       fetch("export-license.json", { cache: "no-store" }).then(r => r.json()),
       fetch("export-catalog.json", { cache: "no-store" }).then(r => r.json()),
-      fetch("denied-parties.json", { cache: "no-store" }).then(r => r.json())
-    ]).then(([r, c, d]) => {
-      rules = r; catalog = c; denied = d;
+      fetch("denied-parties.json", { cache: "no-store" }).then(r => r.json()),
+      fetch("export-licenses.json", { cache: "no-store" }).then(r => r.json()).catch(() => portfolio)
+    ]).then(([r, c, d, p]) => {
+      rules = r; catalog = c; denied = d; portfolio = p;
       document.getElementById("updated").textContent = r.updated || "—";
+      prefillFromURL();
     }).catch(() => {
       document.getElementById("result").innerHTML =
         '<div class="match"><span class="empty">Could not load the screening data files.</span></div>';
