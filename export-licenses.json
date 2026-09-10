@@ -1,0 +1,252 @@
+{
+  "updated": "2026-09-10",
+  "asOf": "2026-09-10",
+  "company": "Helios Dynamics (fictional demo company)",
+  "note": "Illustrative export-license portfolio for demonstration only. Every license number, end-user, date and dollar figure below is invented. Tile placement on the board is schematic, not geographic.",
+  "expiringWindowDays": 90,
+  "statuses": {
+    "active":    { "label": "Authorized",      "terrain": "forest",    "color": "#3f6b36", "edge": "#588c4a", "desc": "At least one live authorization covering shipments to this destination." },
+    "expiring":  { "label": "Expiring soon",   "terrain": "fields",    "color": "#b8912a", "edge": "#d9b348", "desc": "A live authorization lapses inside the next 90 days. Start the renewal now." },
+    "pending":   { "label": "Application out", "terrain": "mountains",  "color": "#56687a", "edge": "#7d93a6", "desc": "An application is filed and awaiting agency action. Nothing may ship yet." },
+    "expired":   { "label": "Lapsed",          "terrain": "hills",     "color": "#9c4c2b", "edge": "#c26a42", "desc": "Every authorization on file has run out. Shipments are stopped until a new one issues." },
+    "none":      { "label": "No coverage",     "terrain": "desert",    "color": "#7d7053", "edge": "#9d9071", "desc": "Nothing on file. Either no controlled item moves here, or an exception is being relied on." },
+    "restricted":{ "label": "Restricted",      "terrain": "robber",    "color": "#6d1f1f", "edge": "#a83b33", "desc": "Embargo, arms embargo or a presumption of denial applies. Treat as stop-ship pending legal review." }
+  },
+  "regions": {
+    "americas":  { "label": "Americas" },
+    "europe":    { "label": "Europe" },
+    "mea":       { "label": "Middle East & Africa" },
+    "indopac":   { "label": "Indo-Pacific" },
+    "restricted":{ "label": "Restricted destinations" }
+  },
+  "countries": [
+    {
+      "name": "Canada", "code": "CA", "region": "americas", "row": 0, "col": 1.5,
+      "risk": "Closest trading relationship; many dual-use items move under the Canadian exception, but ITAR-controlled hardware still needs DDTC authorization.",
+      "licenses": [
+        { "ref": "DSP-5 / 26-0114883", "authority": "DDTC (State)", "type": "DSP-5 permanent export", "item": "HD-NAV-7A tactical-grade fiber-optic IMU", "eccn": "USML VIII(h)", "endUser": "Maple Aerospace Systems, Winnipeg", "issued": "2026-03-19", "expires": "2028-03-31", "valueAuthorized": 4200000, "valueShipped": 1150000, "status": "active", "note": "Covers 40 units plus spares. Annual end-use report due each March." }
+      ]
+    },
+    {
+      "name": "Mexico", "code": "MX", "region": "americas", "row": 1, "col": 1.0,
+      "risk": "No embargo, but diversion risk through maquiladora supply chains makes end-use documentation the weak point.",
+      "licenses": [
+        { "ref": "BIS / D1948221", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-MILL-5X 5-axis precision machining center", "eccn": "2B001.b", "endUser": "Cortez Precision Manufacturing S.A., Querétaro", "issued": "2024-11-06", "expires": "2026-11-05", "valueAuthorized": 2750000, "valueShipped": 2410000, "status": "active", "note": "Two-year term nearly run and 88% of value shipped. Renewal should be filed now, not in October." }
+      ]
+    },
+    {
+      "name": "Brazil", "code": "BR", "region": "americas", "row": 2, "col": 0.5,
+      "risk": "Routine destination for Category 6 sensors; watch re-export to third countries in the region.",
+      "licenses": [
+        { "ref": "BIS / D1902447", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-CAM-640 uncooled LWIR camera core", "eccn": "6A003", "endUser": "Instituto Aeronáutico Serra, São José dos Campos", "issued": "2025-07-22", "expires": "2029-07-21", "valueAuthorized": 1850000, "valueShipped": 430000, "status": "active", "note": "Four-year term. No-re-export condition to the end-user named on the license only." },
+        { "ref": "BIS / D1911308", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-LAS-100 100 W pulsed fiber laser source", "eccn": "6A005", "endUser": "Ferrova Industrial Ltda, Belo Horizonte", "issued": "2025-09-30", "expires": "2029-09-29", "valueAuthorized": 960000, "valueShipped": 120000, "status": "active", "note": "Industrial marking end-use confirmed by site visit." }
+      ]
+    },
+    {
+      "name": "United Kingdom", "code": "GB", "region": "europe", "row": 0, "col": 2.5,
+      "risk": "STA-eligible partner. Most exposure is agreement paperwork rather than license risk.",
+      "licenses": [
+        { "ref": "STA / self-documented", "authority": "BIS (Commerce)", "type": "License Exception STA", "item": "HD-RF-12 GaN microwave power amplifier", "eccn": "3A001.b.2", "endUser": "Pennine Microwave Ltd, Sheffield", "issued": "2026-01-15", "expires": "2027-01-14", "valueAuthorized": 1400000, "valueShipped": 610000, "status": "active", "note": "Exception, not a license. Prior consignee statement on file; re-verify annually." },
+        { "ref": "DSP-5 / 26-0120774", "authority": "DDTC (State)", "type": "DSP-5 permanent export", "item": "HD-NAV-3G GNSS/INS integrated navigator", "eccn": "USML XII(d)", "endUser": "Albion Guidance Systems plc, Bristol", "issued": "2026-02-02", "expires": "2030-02-01", "valueAuthorized": 7600000, "valueShipped": 980000, "status": "active", "note": "Largest single authorization in the portfolio." },
+        { "ref": "TAA / 26-TA-4471", "authority": "DDTC (State)", "type": "Technical Assistance Agreement", "item": "Integration support, HD-NAV-3G", "eccn": "USML XII(f) technical data", "endUser": "Albion Guidance Systems plc, Bristol", "issued": "2026-02-10", "expires": "2031-02-09", "valueAuthorized": 0, "valueShipped": 0, "status": "active", "note": "Covers defense-service support. No hardware value; scope is the limit that matters." }
+      ]
+    },
+    {
+      "name": "Norway", "code": "NO", "region": "europe", "row": 0, "col": 3.5,
+      "risk": "NATO member and STA-eligible. Low risk, well-documented end-users.",
+      "licenses": [
+        { "ref": "BIS / D1936550", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-SENS-MAG fluxgate magnetometer module", "eccn": "6A006", "endUser": "Nordkapp Marine Sensing AS, Trondheim", "issued": "2026-04-11", "expires": "2030-04-10", "valueAuthorized": 540000, "valueShipped": 85000, "status": "active", "note": "Seabed survey end-use. Underwater integration reviewed against Category 8." }
+      ]
+    },
+    {
+      "name": "Sweden", "code": "SE", "region": "europe", "row": 0, "col": 4.5,
+      "risk": "STA-eligible. One lapsed line here is stale paperwork rather than live exposure.",
+      "licenses": [
+        { "ref": "BIS / D1889120", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-CAM-640 uncooled LWIR camera core", "eccn": "6A003", "endUser": "Vasa Optronik AB, Linköping", "issued": "2026-05-28", "expires": "2030-05-27", "valueAuthorized": 2100000, "valueShipped": 260000, "status": "active", "note": "Replaced the 2022 license on the same program." },
+        { "ref": "BIS / D1711904", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-LAS-100 100 W pulsed fiber laser source", "eccn": "6A005", "endUser": "Vasa Optronik AB, Linköping", "issued": "2022-06-01", "expires": "2026-05-31", "valueAuthorized": 700000, "valueShipped": 700000, "status": "expired", "note": "Fully shipped and closed out. Keep for the five-year recordkeeping period." }
+      ]
+    },
+    {
+      "name": "Poland", "code": "PL", "region": "europe", "row": 1, "col": 4.0,
+      "risk": "Front-line NATO state with rising demand; screen onward movement toward Ukraine-adjacent end-users carefully.",
+      "licenses": [
+        { "ref": "BIS / D1951067", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-RF-12 GaN microwave power amplifier", "eccn": "3A001.b.2", "endUser": "Wisła Radar Works Sp. z o.o., Gdańsk", "issued": "2026-06-17", "expires": "2030-06-16", "valueAuthorized": 3300000, "valueShipped": 140000, "status": "active", "note": "Ground radar program. Conditioned on no re-export outside the EU." },
+        { "ref": "BIS / pending D1962118", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-NAV-7A tactical-grade fiber-optic IMU", "eccn": "7A003", "endUser": "Wisła Radar Works Sp. z o.o., Gdańsk", "issued": "2026-08-04", "expires": "", "valueAuthorized": 2900000, "valueShipped": 0, "status": "pending", "note": "In interagency review (day 37). Missile Technology reasons usually stretch the clock." }
+      ]
+    },
+    {
+      "name": "Belarus", "code": "BY", "region": "restricted", "row": 1, "col": 5.0,
+      "restricted": true,
+      "risk": "Sanctioned alongside Russia. Broad license requirement with a policy of denial; treat as stop-ship.",
+      "licenses": []
+    },
+    {
+      "name": "France", "code": "FR", "region": "europe", "row": 1, "col": 2.0,
+      "risk": "STA-eligible. Main friction is agency timing on new applications, not approvability.",
+      "licenses": [
+        { "ref": "BIS / D1925884", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-MILL-5X 5-axis precision machining center", "eccn": "2B001.b", "endUser": "Atelier Brissac S.A.S., Toulouse", "issued": "2026-02-25", "expires": "2030-02-24", "valueAuthorized": 4100000, "valueShipped": 1620000, "status": "active", "note": "Aerostructure machining. Nuclear end-use screened and cleared." },
+        { "ref": "ENC / self-classified 26-ENC-0442", "authority": "BIS (Commerce)", "type": "License Exception ENC", "item": "HD-SEC-256 Layer-2 Ethernet encryptor", "eccn": "5A002.a", "endUser": "Réseau Garonne S.A., Bordeaux", "issued": "2026-01-08", "expires": "2027-01-07", "valueAuthorized": 880000, "valueShipped": 340000, "status": "active", "note": "Self-classification report filed. Annual ENC reporting obligation applies." },
+        { "ref": "BIS / pending D1964902", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-NAV-3G GNSS/INS integrated navigator", "eccn": "7A003", "endUser": "Occitane Aéro S.A.S., Blagnac", "issued": "2026-08-21", "expires": "", "valueAuthorized": 1950000, "valueShipped": 0, "status": "pending", "note": "Filed three weeks ago. Hold the purchase order until it issues." }
+      ]
+    },
+    {
+      "name": "Netherlands", "code": "NL", "region": "europe", "row": 1, "col": 3.0,
+      "risk": "Major transshipment hub. Rotterdam routing means freight-forwarder screening matters as much as the end-user.",
+      "licenses": [
+        { "ref": "ENC / self-classified 26-ENC-0455", "authority": "BIS (Commerce)", "type": "License Exception ENC", "item": "HD-SEC-256 Layer-2 Ethernet encryptor", "eccn": "5A002.a", "endUser": "Delta Netwerk B.V., Rotterdam", "issued": "2026-03-02", "expires": "2027-03-01", "valueAuthorized": 1250000, "valueShipped": 705000, "status": "active", "note": "Exception relied on, so there is no license number to point to in an audit. Keep the classification file current." }
+      ]
+    },
+    {
+      "name": "Germany", "code": "DE", "region": "europe", "row": 2, "col": 3.5,
+      "risk": "Largest European customer base. Volume, not approvability, is the exposure.",
+      "licenses": [
+        { "ref": "BIS / D1843377", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-CAM-640 uncooled LWIR camera core", "eccn": "6A003", "endUser": "Rheinoptik GmbH, Wetzlar", "issued": "2022-12-01", "expires": "2026-11-28", "valueAuthorized": 5200000, "valueShipped": 4980000, "status": "active", "note": "Expires in under 90 days with 96% of value drawn down. Renew and re-baseline the quantity." },
+        { "ref": "BIS / D1940015", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-RF-12 GaN microwave power amplifier", "eccn": "3A001.b.2", "endUser": "Bodensee Mikrowelle AG, Friedrichshafen", "issued": "2026-05-05", "expires": "2030-05-04", "valueAuthorized": 2600000, "valueShipped": 310000, "status": "active", "note": "Commercial satcom end-use." },
+        { "ref": "STA / self-documented", "authority": "BIS (Commerce)", "type": "License Exception STA", "item": "HD-SENS-MAG fluxgate magnetometer module", "eccn": "6A006", "endUser": "Rheinoptik GmbH, Wetzlar", "issued": "2026-06-30", "expires": "2027-06-29", "valueAuthorized": 420000, "valueShipped": 95000, "status": "active", "note": "Prior consignee statement on file." }
+      ]
+    },
+    {
+      "name": "Switzerland", "code": "CH", "region": "europe", "row": 2, "col": 2.5,
+      "risk": "Not an STA partner. Individual licenses are the norm, so lapses bite immediately.",
+      "licenses": [
+        { "ref": "BIS / D1866291", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-LAS-100 100 W pulsed fiber laser source", "eccn": "6A005", "endUser": "Jura Photonik AG, Neuchâtel", "issued": "2022-12-10", "expires": "2026-10-31", "valueAuthorized": 1100000, "valueShipped": 840000, "status": "active", "note": "Seven weeks to expiry. Renewal not yet filed, and there is no exception to fall back on." }
+      ]
+    },
+    {
+      "name": "Italy", "code": "IT", "region": "europe", "row": 3, "col": 2.0,
+      "risk": "STA-eligible. Straightforward destination with a stable end-user.",
+      "licenses": [
+        { "ref": "BIS / D1933620", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-MILL-5X 5-axis precision machining center", "eccn": "2B001.b", "endUser": "Officine Garda S.p.A., Brescia", "issued": "2026-03-30", "expires": "2030-03-29", "valueAuthorized": 1980000, "valueShipped": 520000, "status": "active", "note": "Single machine plus tooling and installation support." }
+      ]
+    },
+    {
+      "name": "Spain", "code": "ES", "region": "europe", "row": 2, "col": 1.5,
+      "risk": "No live coverage. A quoted program is waiting on the agency, so nothing may ship.",
+      "licenses": [
+        { "ref": "BIS / pending D1965774", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-CAM-640 uncooled LWIR camera core", "eccn": "6A003", "endUser": "Ibérica Sensores S.L., Zaragoza", "issued": "2026-09-01", "expires": "", "valueAuthorized": 1450000, "valueShipped": 0, "status": "pending", "note": "Filed nine days ago. Sales has already promised a Q4 delivery; that date is not supportable yet." }
+      ]
+    },
+    {
+      "name": "Türkiye", "code": "TR", "region": "mea", "row": 3, "col": 3.0,
+      "risk": "NATO member under partial restrictions. Expect long review cycles and conditions on military end-users.",
+      "licenses": [
+        { "ref": "BIS / D1790442", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-RF-12 GaN microwave power amplifier", "eccn": "3A001.b.2", "endUser": "Anadolu Mikrodalga A.Ş., Ankara", "issued": "2022-04-18", "expires": "2026-04-17", "valueAuthorized": 1600000, "valueShipped": 1310000, "status": "expired", "note": "Lapsed in April. Two shipments were held at the dock as a result." },
+        { "ref": "BIS / pending D1958830", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-RF-12 GaN microwave power amplifier", "eccn": "3A001.b.2", "endUser": "Anadolu Mikrodalga A.Ş., Ankara", "issued": "2026-07-09", "expires": "", "valueAuthorized": 1600000, "valueShipped": 0, "status": "pending", "note": "Replacement application, day 63 in review. Escalate if it passes 90." }
+      ]
+    },
+    {
+      "name": "Egypt", "code": "EG", "region": "mea", "row": 3, "col": 1.0,
+      "risk": "Arms-embargo-adjacent scrutiny and a history of end-use conditions. Renewals are not routine here.",
+      "licenses": [
+        { "ref": "BIS / D1752018", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-SENS-MAG fluxgate magnetometer module", "eccn": "6A006", "endUser": "Nile Survey Authority, Cairo", "issued": "2022-02-14", "expires": "2026-02-13", "valueAuthorized": 380000, "valueShipped": 380000, "status": "expired", "note": "Fully shipped before expiry. No renewal requested; confirm whether the program is actually closed." }
+      ]
+    },
+    {
+      "name": "Israel", "code": "IL", "region": "mea", "row": 4, "col": 2.5,
+      "risk": "Deep co-development relationship. The live question is technical-data scope under the agreements, not hardware approval.",
+      "licenses": [
+        { "ref": "DSP-5 / 26-0118902", "authority": "DDTC (State)", "type": "DSP-5 permanent export", "item": "HD-NAV-7A tactical-grade fiber-optic IMU", "eccn": "USML VIII(h)", "endUser": "Carmel Guidance Ltd, Haifa", "issued": "2026-01-28", "expires": "2030-01-27", "valueAuthorized": 6400000, "valueShipped": 2180000, "status": "active", "note": "Conditioned against re-transfer to any third country without prior DDTC approval." },
+        { "ref": "BIS / D1929118", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-CAM-640 uncooled LWIR camera core", "eccn": "6A003", "endUser": "Carmel Guidance Ltd, Haifa", "issued": "2026-03-11", "expires": "2030-03-10", "valueAuthorized": 2300000, "valueShipped": 640000, "status": "active", "note": "Same end-user as the DSP-5; keep the two files cross-referenced." }
+      ]
+    },
+    {
+      "name": "Saudi Arabia", "code": "SA", "region": "mea", "row": 4, "col": 3.5,
+      "risk": "Politically sensitive destination. Congressional notification can apply to larger defense cases.",
+      "licenses": [
+        { "ref": "BIS / D1944755", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-MILL-5X 5-axis precision machining center", "eccn": "2B001.b", "endUser": "Najd Advanced Manufacturing Co., Dammam", "issued": "2026-05-19", "expires": "2030-05-18", "valueAuthorized": 3600000, "valueShipped": 400000, "status": "active", "note": "Civil aerospace end-use with an on-site verification condition." },
+        { "ref": "DDTC / pending 26-0127440", "authority": "DDTC (State)", "type": "DSP-5 permanent export", "item": "HD-NAV-3G GNSS/INS integrated navigator", "eccn": "USML XII(d)", "endUser": "Royal Saudi Air Force sustainment office, Riyadh", "issued": "2026-06-25", "expires": "", "valueAuthorized": 8900000, "valueShipped": 0, "status": "pending", "note": "Day 77. Large defense case, so assume a long hold and possible conditions." }
+      ]
+    },
+    {
+      "name": "United Arab Emirates", "code": "AE", "region": "mea", "row": 5, "col": 2.0,
+      "risk": "Significant re-export and transshipment risk. Free-zone consignees need hard end-use documentation.",
+      "licenses": [
+        { "ref": "BIS / D1947003", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-LAS-100 100 W pulsed fiber laser source", "eccn": "6A005", "endUser": "Gulf Photonics FZE, Jebel Ali", "issued": "2026-06-02", "expires": "2030-06-01", "valueAuthorized": 740000, "valueShipped": 180000, "status": "active", "note": "Free-zone consignee. No-re-export condition plus a quarterly end-use attestation." }
+      ]
+    },
+    {
+      "name": "South Africa", "code": "ZA", "region": "mea", "row": 4, "col": 1.5,
+      "risk": "Open destination with no current controlled shipments. Revisit if the mining-sensor inquiry converts.",
+      "licenses": []
+    },
+    {
+      "name": "India", "code": "IN", "region": "indopac", "row": 3, "col": 4.0,
+      "risk": "STA-eligible since 2018 and a growing program, but nuclear and missile end-use screening still governs.",
+      "licenses": [
+        { "ref": "STA / self-documented", "authority": "BIS (Commerce)", "type": "License Exception STA", "item": "HD-RF-12 GaN microwave power amplifier", "eccn": "3A001.b.2", "endUser": "Deccan Microwave Pvt Ltd, Hyderabad", "issued": "2026-04-02", "expires": "2027-04-01", "valueAuthorized": 1900000, "valueShipped": 720000, "status": "active", "note": "Prior consignee statement on file and re-verified in July." },
+        { "ref": "BIS / D1938204", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-CAM-640 uncooled LWIR camera core", "eccn": "6A003", "endUser": "Bharat Optical Research Centre, Bengaluru", "issued": "2026-04-27", "expires": "2030-04-26", "valueAuthorized": 2450000, "valueShipped": 560000, "status": "active", "note": "Civil research end-use; entity screened clear at filing and again in August." }
+      ]
+    },
+    {
+      "name": "Taiwan", "code": "TW", "region": "indopac", "row": 3, "col": 5.0,
+      "risk": "High-volume electronics destination with real diversion pressure. Re-screen consignees every cycle.",
+      "licenses": [
+        { "ref": "BIS / D1942661", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-RF-12 GaN microwave power amplifier", "eccn": "3A001.b.2", "endUser": "Formosa RF Components Inc., Hsinchu", "issued": "2026-05-12", "expires": "2030-05-11", "valueAuthorized": 4300000, "valueShipped": 1490000, "status": "active", "note": "Largest Indo-Pacific commercial line." },
+        { "ref": "BIS / D1852190", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-SEC-256 Layer-2 Ethernet encryptor", "eccn": "5A002.a", "endUser": "Formosa RF Components Inc., Hsinchu", "issued": "2022-11-20", "expires": "2026-11-19", "valueAuthorized": 900000, "valueShipped": 610000, "status": "active", "note": "Expires in ten weeks. ENC may cover the successor product; confirm before filing a new license." }
+      ]
+    },
+    {
+      "name": "Japan", "code": "JP", "region": "indopac", "row": 3, "col": 6.0,
+      "risk": "STA-eligible treaty ally. The portfolio's cleanest major destination.",
+      "licenses": [
+        { "ref": "DSP-5 / 26-0116551", "authority": "DDTC (State)", "type": "DSP-5 permanent export", "item": "HD-NAV-7A tactical-grade fiber-optic IMU", "eccn": "USML VIII(h)", "endUser": "Sakura Avionics K.K., Nagoya", "issued": "2026-02-17", "expires": "2030-02-16", "valueAuthorized": 5800000, "valueShipped": 1740000, "status": "active", "note": "Co-production program; technical data handled under a separate TAA." },
+        { "ref": "STA / self-documented", "authority": "BIS (Commerce)", "type": "License Exception STA", "item": "HD-SENS-MAG fluxgate magnetometer module", "eccn": "6A006", "endUser": "Sakura Avionics K.K., Nagoya", "issued": "2026-03-05", "expires": "2027-03-04", "valueAuthorized": 610000, "valueShipped": 240000, "status": "active", "note": "Exception-based; keep the consignee statement current." },
+        { "ref": "BIS / D1937702", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-MILL-5X 5-axis precision machining center", "eccn": "2B001.b", "endUser": "Kanto Seiki Co. Ltd, Kawasaki", "issued": "2026-04-21", "expires": "2030-04-20", "valueAuthorized": 2900000, "valueShipped": 870000, "status": "active", "note": "Two machines, staged delivery through 2027." }
+      ]
+    },
+    {
+      "name": "South Korea", "code": "KR", "region": "indopac", "row": 4, "col": 5.5,
+      "risk": "STA-eligible ally with strong demand. Watch technical-data flows to subcontractors.",
+      "licenses": [
+        { "ref": "BIS / D1946118", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-CAM-640 uncooled LWIR camera core", "eccn": "6A003", "endUser": "Hanseo Optoelectronics Co. Ltd, Daejeon", "issued": "2026-05-26", "expires": "2030-05-25", "valueAuthorized": 3100000, "valueShipped": 690000, "status": "active", "note": "Conditioned on no re-export and on annual end-use reporting." },
+        { "ref": "TAA / 26-TA-4618", "authority": "DDTC (State)", "type": "Technical Assistance Agreement", "item": "Integration support, HD-NAV-7A", "eccn": "USML VIII(i) technical data", "endUser": "Hanseo Optoelectronics Co. Ltd, Daejeon", "issued": "2026-06-09", "expires": "2031-06-08", "valueAuthorized": 0, "valueShipped": 0, "status": "active", "note": "Scope covers design review support only. Anything past that needs an amendment." }
+      ]
+    },
+    {
+      "name": "Singapore", "code": "SG", "region": "indopac", "row": 4, "col": 4.5,
+      "risk": "Transshipment hub with a strong domestic control regime. Freight-forwarder diligence is the control that matters.",
+      "licenses": [
+        { "ref": "ENC / self-classified 26-ENC-0470", "authority": "BIS (Commerce)", "type": "License Exception ENC", "item": "HD-SEC-256 Layer-2 Ethernet encryptor", "eccn": "5A002.a", "endUser": "Straits Data Systems Pte Ltd, Singapore", "issued": "2026-02-20", "expires": "2027-02-19", "valueAuthorized": 1050000, "valueShipped": 480000, "status": "active", "note": "Annual ENC reporting obligation. Verify the end-user is not acting as a re-exporter." },
+        { "ref": "BIS / D1801664", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-LAS-100 100 W pulsed fiber laser source", "eccn": "6A005", "endUser": "Straits Data Systems Pte Ltd, Singapore", "issued": "2022-08-15", "expires": "2026-08-14", "valueAuthorized": 450000, "valueShipped": 390000, "status": "expired", "note": "Lapsed last month with value still unshipped. Either file a renewal or close the line out." }
+      ]
+    },
+    {
+      "name": "Philippines", "code": "PH", "region": "indopac", "row": 5, "col": 4.0,
+      "risk": "Growing defense relationship and a first-time end-user. Expect end-use verification conditions.",
+      "licenses": [
+        { "ref": "BIS / pending D1963441", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-SENS-MAG fluxgate magnetometer module", "eccn": "6A006", "endUser": "Luzon Coastal Survey Inc., Manila", "issued": "2026-08-12", "expires": "", "valueAuthorized": 520000, "valueShipped": 0, "status": "pending", "note": "Day 29. First transaction with this consignee, so a site visit is likely." }
+      ]
+    },
+    {
+      "name": "Australia", "code": "AU", "region": "indopac", "row": 5, "col": 5.0,
+      "risk": "AUKUS partner with a licence-free environment for much defense trade, which shifts the work to eligibility records.",
+      "licenses": [
+        { "ref": "AUKUS exemption / 26-AU-0093", "authority": "DDTC (State)", "type": "ITAR §126.7 AUKUS exemption", "item": "HD-NAV-7A tactical-grade fiber-optic IMU", "eccn": "USML VIII(h)", "endUser": "Southern Cross Defence Pty Ltd, Adelaide", "issued": "2026-01-12", "expires": "2031-01-11", "valueAuthorized": 5100000, "valueShipped": 1260000, "status": "active", "note": "Exemption, not a license. Authorized-user status and excluded-technology lists must be checked each shipment." },
+        { "ref": "BIS / D1931008", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-RF-12 GaN microwave power amplifier", "eccn": "3A001.b.2", "endUser": "Southern Cross Defence Pty Ltd, Adelaide", "issued": "2026-03-24", "expires": "2030-03-23", "valueAuthorized": 2200000, "valueShipped": 580000, "status": "active", "note": "Over-the-horizon radar program." },
+        { "ref": "STA / self-documented", "authority": "BIS (Commerce)", "type": "License Exception STA", "item": "HD-CAM-640 uncooled LWIR camera core", "eccn": "6A003", "endUser": "Great Barrier Optics Pty Ltd, Cairns", "issued": "2026-05-02", "expires": "2027-05-01", "valueAuthorized": 780000, "valueShipped": 210000, "status": "active", "note": "Prior consignee statement on file." }
+      ]
+    },
+    {
+      "name": "China", "code": "CN", "region": "restricted", "row": 2, "col": 5.5,
+      "restricted": true,
+      "risk": "Expanded controls on advanced computing and semiconductors, plus military end-use rules. Assume a license requirement and a presumption of denial for anything on the CCL.",
+      "licenses": [
+        { "ref": "BIS / D1874590", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-RF-12 GaN microwave power amplifier", "eccn": "3A001.b.2", "endUser": "Jiangnan Microelectronics Co. Ltd, Wuxi", "issued": "2025-10-03", "expires": "", "valueAuthorized": 1200000, "valueShipped": 0, "status": "denied", "note": "Returned without action, then denied on military end-user grounds. Do not re-file without counsel." }
+      ]
+    },
+    {
+      "name": "Russia", "code": "RU", "region": "restricted", "row": 2, "col": 4.5,
+      "restricted": true,
+      "risk": "Broad industry-sector controls with a policy of denial. All shipments stopped; legacy authorizations revoked.",
+      "licenses": [
+        { "ref": "BIS / D1688273", "authority": "BIS (Commerce)", "type": "Individual validated license", "item": "HD-SENS-MAG fluxgate magnetometer module", "eccn": "6A006", "endUser": "Vostok Precision Instruments LLC, Samara", "issued": "2021-05-10", "expires": "2025-05-09", "valueAuthorized": 300000, "valueShipped": 90000, "status": "revoked", "note": "Revoked in 2022 under the Russia sanctions. Consignee also appears on the restricted-party demo list in the screener." }
+      ]
+    },
+    {
+      "name": "Iran", "code": "IR", "region": "restricted", "row": 5, "col": 3.0,
+      "restricted": true,
+      "risk": "Comprehensively embargoed. Nearly every export is prohibited, including EAR99 goods, absent an OFAC authorization.",
+      "licenses": []
+    }
+  ]
+}
