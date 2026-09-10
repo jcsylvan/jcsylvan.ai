@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Export License Screener &mdash; jcsylvan.ai</title>
-  <meta name="description" content="Shop-floor triage of whether a part number or piece of equipment is likely to need an export license, with product-catalog lookup and restricted-party screening (demo).">
+  <title>Export License Board &mdash; jcsylvan.ai</title>
+  <meta name="description" content="A hex-tile board of export licenses by country: click a destination to see every authorization on file, what it covers, how much is drawn down and when it lapses (demo data).">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="icon" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
@@ -22,611 +22,670 @@
     a { color: #f0c040; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    .wrap { max-width: 820px; margin: 0 auto; }
+    .wrap { max-width: 1120px; margin: 0 auto; }
 
-    .back-link {
-      display: inline-block;
-      margin-bottom: 1.5rem;
-      color: #666;
-      font-size: 0.85rem;
-    }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #666; font-size: 0.85rem; }
     .back-link:hover { color: #e0e0e0; }
 
-    h1 {
-      font-size: 1.4rem;
-      margin-bottom: 0.25rem;
-      color: #f0c040;
-      font-weight: 600;
-    }
-    .subtitle {
-      color: #666;
-      font-size: 0.85rem;
-      margin-bottom: 0.4rem;
-      max-width: 720px;
-      line-height: 1.5;
-    }
+    h1 { font-size: 1.4rem; margin-bottom: 0.25rem; color: #f0c040; font-weight: 600; }
+    .subtitle { color: #666; font-size: 0.85rem; margin-bottom: 0.4rem; max-width: 760px; line-height: 1.5; }
     .demo-note {
       font-size: 0.72rem; color: #8a7a40; background: #15120a;
       border: 1px solid #2e2913; border-radius: 5px;
-      padding: 0.55rem 0.75rem; margin: 0.75rem 0 0.4rem; line-height: 1.5;
-      max-width: 720px;
+      padding: 0.55rem 0.75rem; margin: 0.75rem 0 0.4rem; line-height: 1.5; max-width: 760px;
     }
-    .updated { color: #444; font-size: 0.72rem; margin-bottom: 2rem; }
+    .updated { color: #444; font-size: 0.72rem; margin-bottom: 1.5rem; }
+    .updated a { color: #6a6a6a; }
 
-    /* form */
+    /* summary tiles */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+    .stat {
+      background: #111; border: 1px solid #222; border-radius: 6px; padding: 0.8rem 0.9rem;
+    }
+    .stat .n { font-size: 1.35rem; font-weight: 600; color: #e0e0e0; line-height: 1.1; }
+    .stat .l { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.07em; color: #777; margin-top: 0.3rem; line-height: 1.4; }
+    .stat.warn { border-color: #5a4a18; } .stat.warn .n { color: #d9b348; }
+    .stat.bad  { border-color: #5a2424; } .stat.bad .n  { color: #ff7a6f; }
+    .stat.good { border-color: #285a28; } .stat.good .n { color: #79d479; }
+
+    /* board + panel */
+    .board-grid { display: grid; grid-template-columns: minmax(0, 1fr) 372px; gap: 1.25rem; align-items: start; }
+    @media (max-width: 960px) { .board-grid { grid-template-columns: minmax(0, 1fr); } }
+
+    .board {
+      background: radial-gradient(120% 120% at 50% 30%, #10212c 0%, #0b1620 55%, #070f16 100%);
+      border: 1px solid #1b2b36; border-radius: 8px; padding: 0.75rem;
+      overflow: hidden;
+    }
+    .board svg { display: block; width: 100%; height: auto; }
+
+    .hex-land { cursor: pointer; }
+    .hex-land .face { transition: filter 0.12s ease; }
+    .hex-land:hover .face { filter: brightness(1.22); }
+    .hex-land:focus { outline: none; }
+    .hex-land:focus .ring { stroke: #f0c040; stroke-width: 3; }
+    .hex-land.sel .ring { stroke: #fff4d6; stroke-width: 5; }
+    .hex-land.sel .face { filter: brightness(1.18); }
+    .hex-land.sel .hex-label { fill: #fffaf0; }
+    .hex-land.dim { opacity: 0.22; }
+    .hex-label {
+      font-family: "SF Mono", "Fira Code", monospace; font-weight: 600;
+      fill: #fdf6e6; stroke: #1b1409; stroke-width: 2.6px; paint-order: stroke fill;
+      text-anchor: middle; pointer-events: none; letter-spacing: 0.02em;
+    }
+    .hex-token-n {
+      font-family: "SF Mono", "Fira Code", monospace; font-size: 15px; font-weight: 700;
+      fill: #241c0c; text-anchor: middle; pointer-events: none;
+    }
+    .hex-token-g { font-size: 13px; font-weight: 700; text-anchor: middle; pointer-events: none; }
+
+    /* legend */
+    .legend { margin-top: 1rem; }
+    .legend-h {
+      font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: #777; margin: 0 0 0.55rem; font-weight: 500;
+    }
+    .keys { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .key {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: #111; border: 1px solid #222; border-radius: 999px;
+      padding: 0.35rem 0.7rem; font-size: 0.7rem; color: #aaa;
+      cursor: pointer; font-family: inherit;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .key:hover { color: #e0e0e0; border-color: #555; }
+    .key.on { border-color: #f0c040; color: #f0c040; }
+    .key .sw { width: 0.72rem; height: 0.72rem; border-radius: 3px; border: 1px solid rgba(255,255,255,0.22); }
+    .key .ct { color: #666; }
+    .key.on .ct { color: #c9a94a; }
+    .legend-note { font-size: 0.68rem; color: #555; line-height: 1.6; margin-top: 0.7rem; max-width: 760px; }
+
+    /* detail panel */
     .panel {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 6px;
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
+      background: #111; border: 1px solid #222; border-radius: 8px; padding: 1.1rem;
+      position: sticky; top: 1rem;
+      max-height: calc(100vh - 2rem); overflow-y: auto;
     }
-    label {
-      display: block;
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #777;
-      margin-bottom: 0.45rem;
-      font-weight: 500;
+    @media (max-width: 960px) { .panel { position: static; max-height: none; } }
+    .panel h2 { font-size: 1.05rem; color: #f0c040; font-weight: 600; margin-bottom: 0.15rem; }
+    .panel .meta { font-size: 0.7rem; color: #666; margin-bottom: 0.75rem; }
+    .panel .risk { font-size: 0.76rem; color: #9a9a9a; line-height: 1.55; margin-bottom: 0.9rem; }
+
+    .chip-status {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.07em;
+      border-radius: 999px; padding: 0.22rem 0.6rem; border: 1px solid; font-weight: 600;
     }
-    textarea, input[type="text"] {
-      width: 100%;
-      background: #0a0a0a;
-      border: 1px solid #2a2a2a;
-      border-radius: 5px;
-      color: #e0e0e0;
-      font-family: inherit;
-      font-size: 0.95rem;
-      padding: 0.8rem 0.85rem;
-      resize: vertical;
+
+    .sec-h {
+      font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: #777; margin: 1.1rem 0 0.6rem; font-weight: 500;
     }
-    textarea { min-height: 96px; }
-    textarea:focus, input[type="text"]:focus { outline: none; border-color: #f0c040; }
 
-    .field + .field { margin-top: 1rem; }
+    .lic {
+      border: 1px solid #242424; border-left-width: 3px; border-radius: 5px;
+      background: #0d0d0d; padding: 0.7rem 0.8rem; margin-bottom: 0.6rem;
+    }
+    .lic .ref { font-size: 0.78rem; color: #e0e0e0; font-weight: 600; word-break: break-word; }
+    .lic .top { display: flex; justify-content: space-between; gap: 0.5rem; align-items: flex-start; }
+    .lic .item { font-size: 0.76rem; color: #bbb; margin-top: 0.35rem; line-height: 1.5; }
+    .lic .kv { font-size: 0.7rem; color: #888; margin-top: 0.3rem; line-height: 1.55; }
+    .lic .kv b { color: #aaa; font-weight: 600; }
+    .lic .note { font-size: 0.7rem; color: #777; margin-top: 0.45rem; line-height: 1.55; font-style: italic; }
+    .lic .bar { height: 5px; background: #1d1d1d; border-radius: 3px; margin-top: 0.5rem; overflow: hidden; }
+    .lic .bar i { display: block; height: 100%; border-radius: 3px; }
+    .lic .barl { font-size: 0.64rem; color: #666; margin-top: 0.25rem; }
+    .lic .local { font-size: 0.6rem; color: #7a6a30; text-transform: uppercase; letter-spacing: 0.06em; }
 
-    .row2 { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
-    .row2 .field { flex: 1; min-width: 180px; margin-top: 0; }
+    select, input[type="text"], input[type="number"], textarea {
+      width: 100%; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 4px;
+      color: #e0e0e0; font-family: inherit; font-size: 0.76rem; padding: 0.45rem 0.5rem;
+    }
+    select:focus, input:focus, textarea:focus { outline: none; border-color: #f0c040; }
+    .lic select { width: auto; font-size: 0.62rem; padding: 0.18rem 0.3rem; }
+    label.fl {
+      display: block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.07em;
+      color: #6e6e6e; margin-bottom: 0.25rem;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+    .form-grid .wide { grid-column: 1 / -1; }
+    details.addform { margin-top: 0.9rem; border-top: 1px solid #1c1c1c; padding-top: 0.8rem; }
+    details.addform summary {
+      cursor: pointer; font-size: 0.7rem; color: #999; list-style: none;
+    }
+    details.addform summary::-webkit-details-marker { display: none; }
+    details.addform summary::before { content: "+ "; color: #f0c040; }
+    details.addform[open] summary::before { content: "\2212 "; }
+    details.addform summary:hover { color: #e0e0e0; }
 
-    .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.1rem; }
     button.go, button.alt {
-      border: none;
-      border-radius: 5px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 0.85rem 1.5rem;
-      cursor: pointer;
-      letter-spacing: 0.03em;
+      border: none; border-radius: 4px; font-family: inherit; font-size: 0.76rem; font-weight: 600;
+      padding: 0.55rem 1rem; cursor: pointer; letter-spacing: 0.03em;
       transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-      white-space: nowrap;
     }
     button.go { background: #f0c040; color: #0a0a0a; }
     button.go:hover { background: #ffd35a; }
     button.alt { background: none; color: #999; border: 1px solid #333; }
     button.alt:hover { color: #e0e0e0; border-color: #888; }
 
-    .examples { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
-    .examples .lbl { color: #555; font-size: 0.72rem; }
-    .chip {
-      background: none;
-      border: 1px solid #333;
-      border-radius: 999px;
-      color: #888;
-      font-family: inherit;
-      font-size: 0.72rem;
-      padding: 0.35rem 0.75rem;
-      cursor: pointer;
-      transition: color 0.15s ease, border-color 0.15s ease;
+    .watch { list-style: none; }
+    .watch li { border-bottom: 1px solid #1b1b1b; }
+    .watch button {
+      display: flex; width: 100%; gap: 0.6rem; align-items: baseline; text-align: left;
+      background: none; border: none; font-family: inherit; cursor: pointer;
+      padding: 0.5rem 0.1rem; color: #ccc; font-size: 0.76rem;
     }
-    .chip:hover { color: #e0e0e0; border-color: #888; }
-    .chip.demo { border-color: #5a2424; color: #ff9a8f; }
-    .chip.demo:hover { border-color: #ff7a6f; color: #ff7a6f; }
+    .watch button:hover { color: #f0c040; }
+    .watch .sw { width: 0.6rem; height: 0.6rem; border-radius: 2px; flex: none; position: relative; top: 0.08rem; }
+    .watch .why { color: #6e6e6e; font-size: 0.68rem; margin-left: auto; white-space: nowrap; }
 
-    /* verdict */
-    .verdict {
-      border-radius: 6px;
-      padding: 1.2rem 1.3rem;
-      margin-bottom: 1.25rem;
-      border: 1px solid;
-    }
-    .verdict .light {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; margin-bottom: 0.5rem;
-      display: inline-flex; align-items: center; gap: 0.5rem;
-    }
-    .verdict .light::before {
-      content: ""; width: 0.7rem; height: 0.7rem; border-radius: 50%;
-      background: currentColor; display: inline-block;
-    }
-    .verdict .headline { font-size: 1.08rem; font-weight: 600; line-height: 1.4; }
-    .verdict .action { font-size: 0.9rem; font-weight: 600; margin-top: 0.55rem; }
-    .verdict .sub { font-size: 0.82rem; line-height: 1.55; margin-top: 0.5rem; color: #bdbdbd; }
+    .hint { font-size: 0.74rem; color: #777; line-height: 1.6; }
 
-    .v-stop     { border-color: #7a1f1f; background: #220a0a; border-width: 2px; }
-    .v-stop .light, .v-stop .headline, .v-stop .action { color: #ff5a4a; }
-    .v-likely   { border-color: #5a2424; background: #1a0f0f; }
-    .v-likely .light, .v-likely .headline, .v-likely .action { color: #ff7a6f; }
-    .v-maybe    { border-color: #5a4a18; background: #16130b; }
-    .v-maybe .light, .v-maybe .headline, .v-maybe .action { color: #f0c040; }
-    .v-unlikely { border-color: #285a28; background: #0d160d; }
-    .v-unlikely .light, .v-unlikely .headline, .v-unlikely .action { color: #79d479; }
-
-    /* destination flag */
-    .destflag {
-      border-radius: 6px;
-      padding: 0.85rem 1.05rem;
-      margin-bottom: 1.25rem;
-      border: 1px solid #5a2424;
-      background: #1a0f0f;
-      font-size: 0.82rem;
-      line-height: 1.5;
-      color: #ffb3a8;
+    .localbar {
+      margin-top: 0.9rem; border-top: 1px solid #1c1c1c; padding-top: 0.7rem;
+      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+      font-size: 0.66rem; color: #666;
     }
-    .destflag b { color: #ff7a6f; }
-
-    .sec-h {
-      font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em;
-      color: #777; margin: 1.5rem 0 0.75rem; font-weight: 500;
-    }
-
-    .match {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 6px;
-      padding: 1rem 1.15rem;
-      margin-bottom: 0.8rem;
-    }
-    .match.cat { border-color: #4a3a10; }
-    .match.party { border-color: #7a1f1f; background: #160c0c; }
-    .match .top { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.45rem; }
-    .match .nm { font-size: 0.92rem; color: #e0e0e0; font-weight: 600; }
-    .match.party .nm { color: #ff7a6f; }
-    .match .eccn {
-      font-size: 0.66rem; padding: 0.18rem 0.5rem; border-radius: 4px;
-      border: 1px solid #4a3a10; color: #f0c040; white-space: nowrap;
-    }
-    .match .badge {
-      font-size: 0.6rem; padding: 0.16rem 0.45rem; border-radius: 999px;
-      border: 1px solid #4a3a10; color: #f0c040; text-transform: uppercase; letter-spacing: 0.06em;
-    }
-    .match.party .badge { border-color: #7a1f1f; color: #ff7a6f; }
-    .match .ccl { font-size: 0.7rem; color: #666; }
-    .match .summary { font-size: 0.82rem; color: #aaa; line-height: 1.55; }
-    .match .kv { font-size: 0.76rem; color: #999; margin-top: 0.3rem; }
-    .match .kv b { color: #bbb; font-weight: 600; }
-    .match .reasons { margin-top: 0.55rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
-    .match .reason {
-      font-size: 0.64rem; padding: 0.16rem 0.45rem; border-radius: 3px;
-      border: 1px solid #333; color: #999;
-    }
-    .match .hits { margin-top: 0.55rem; font-size: 0.72rem; color: #666; }
-    .match .hits b { color: #888; font-weight: 600; }
-
-    .empty { color: #888; font-size: 0.85rem; line-height: 1.6; }
 
     .disclaimer {
-      margin-top: 2rem;
-      border-top: 1px solid #1c1c1c;
-      padding-top: 1rem;
-      color: #555;
-      font-size: 0.72rem;
-      line-height: 1.65;
+      margin-top: 2rem; border-top: 1px solid #1c1c1c; padding-top: 1rem;
+      color: #555; font-size: 0.72rem; line-height: 1.65;
     }
     .disclaimer b { color: #777; }
 
-    .steps2 { margin: 0.5rem 0 0 1.1rem; padding: 0; }
-    .steps2 li { font-size: 0.8rem; color: #999; line-height: 1.55; margin-bottom: 0.3rem; }
-
-    /* printable screening record — hidden on screen, shown only when printing */
-    #record { display: none; }
-
     @media (max-width: 600px) {
       body { padding: 1rem; }
-      .actions { flex-direction: column; }
-      button.go, button.alt { width: 100%; }
-    }
-
-    @media print {
-      body { background: #fff; color: #000; padding: 0; }
-      body > .wrap > *:not(#record) { display: none !important; }
-      #record {
-        display: block; color: #000; font-size: 12px; line-height: 1.5;
-        padding: 1.5rem;
-      }
-      #record h2 { font-size: 16px; margin-bottom: 0.75rem; }
-      #record .rrow { margin-bottom: 0.4rem; }
-      #record .rlabel { font-weight: 700; }
-      #record .rverdict { font-weight: 700; font-size: 14px; margin: 0.75rem 0; padding: 0.5rem 0.75rem; border: 1px solid #000; }
-      #record .rstop { border: 2px solid #000; }
-      #record ul { margin: 0.25rem 0 0.5rem 1.25rem; }
-      #record .rsig { margin-top: 2rem; }
-      #record .rsig .line { border-top: 1px solid #000; width: 60%; margin-top: 2rem; padding-top: 0.25rem; }
-      #record .rdisc { margin-top: 1.5rem; font-size: 10px; color: #333; border-top: 1px solid #999; padding-top: 0.5rem; }
+      .form-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <a href="tools.html" class="back-link">&larr; tools</a>
-    <h1>Export License Screener</h1>
+    <h1>Export License Board</h1>
     <p class="subtitle">
-      A shop-floor triage aid: enter a part number or a plain-language description of a piece of
-      equipment to get a fast first read on whether it is likely to need a US export license &mdash;
-      its Commerce Control List category and ECCN, and why &mdash; plus a restricted-party check on
-      the consignee. Use it to decide what can move and what to hold for export-compliance sign-off.
+      Every export authorization this business holds, laid out as a board of hex tiles &mdash; one
+      tile per destination country. The colour of a tile is the state of that country's licenses,
+      the chip in the middle counts the live authorizations, and clicking a tile opens the detail:
+      what each license covers, who the end-user is, how much of the authorized value is drawn down,
+      and when it lapses.
     </p>
     <div class="demo-note">
-      <b>Proof-of-concept demo.</b> Known part numbers are matched against a <b>fictional</b>
-      product catalog (&ldquo;Helios Dynamics&rdquo;) and the consignee is screened against a
-      <b>fictional</b> restricted-party list &mdash; not the real Consolidated Screening List.
-      Sample data, for demonstration only.
+      <b>Proof-of-concept demo.</b> The portfolio belongs to a <b>fictional</b> exporter
+      (&ldquo;Helios Dynamics&rdquo;). Every license number, end-user, date and dollar figure is
+      invented, and tile placement is schematic rather than geographic. Anything you add or change on
+      the board is kept in this browser only.
     </div>
-    <p class="updated">knowledge base updated <span id="updated">&mdash;</span></p>
+    <p class="updated">
+      portfolio as of <span id="asof">&mdash;</span> &nbsp;&middot;&nbsp;
+      <a href="export-screener.html">screen a new item &rarr;</a>
+    </p>
 
-    <div class="panel">
-      <div class="field">
-        <label for="desc">Part number or description</label>
-        <textarea id="desc" placeholder="e.g. HD-NAV-7A, or: 5-axis CNC milling machine, 100W fiber laser, encrypted radio module&hellip;"></textarea>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="dest">Destination country (optional)</label>
-          <input type="text" id="dest" placeholder="e.g. Germany, China, Iran" />
+    <div class="stats" id="stats"></div>
+
+    <div class="board-grid">
+      <div>
+        <div class="board"><svg id="map" role="group" aria-label="Export license board by country"></svg></div>
+
+        <div class="legend">
+          <p class="legend-h">tile state &mdash; click to filter</p>
+          <div class="keys" id="keys-status"></div>
+          <p class="legend-h" style="margin-top:0.9rem">region</p>
+          <div class="keys" id="keys-region"></div>
+          <p class="legend-note">
+            The chip on a tile counts the authorizations that can actually carry a shipment today.
+            The pips under the number show how far the most drawn-down of those licenses has run:
+            one pip is barely touched, five is nearly exhausted. A tile with no live authorization
+            carries a marker instead &mdash; a circled arrow for an application still out, a dash for
+            nothing on file, and a cross for a restricted destination.
+          </p>
         </div>
-        <div class="field">
-          <label for="party">Consignee / end-user (optional)</label>
-          <input type="text" id="party" placeholder="company or person receiving the item" />
-        </div>
       </div>
-      <div class="row2">
-        <div class="field">
-          <label for="who">Screened by (initials, optional)</label>
-          <input type="text" id="who" placeholder="e.g. JS" />
-        </div>
-      </div>
-      <div class="actions">
-        <button class="go" id="go">Screen item</button>
-        <button class="alt" id="print" hidden>Print / save record</button>
-      </div>
-      <div class="examples">
-        <span class="lbl">try:</span>
-        <button class="chip" data-desc="HD-NAV-7A">catalog: HD-NAV-7A</button>
-        <button class="chip" data-desc="HD-PWR-48">catalog: HD-PWR-48</button>
-        <button class="chip" data-desc="Uncooled thermal imaging infrared camera, 640x480">thermal camera</button>
-        <button class="chip" data-desc="Stainless steel M6 socket-head cap screw">plain hardware</button>
-        <button class="chip demo" data-desc="HD-NAV-7A tactical IMU" data-dest="Russia" data-party="Vostok Precision Instruments LLC" data-who="JS">run full demo &rarr;</button>
-      </div>
+
+      <div class="panel" id="panel"></div>
     </div>
-
-    <div id="result"></div>
 
     <div class="disclaimer">
-      <b>Not legal or compliance advice.</b> This tool does a keyword screen against a small,
-      illustrative knowledge base, plus a lookup against fictional demo data. It cannot and does not
-      produce an official classification, and a green result is <b>not</b> authorization to export.
-      The real outcome depends on the precise technical parameters of the item, its
-      <b>jurisdiction</b> (EAR vs. ITAR vs. NRC/DOE), the <b>destination</b>, the
-      <b>end-user</b> and the <b>end-use</b> &mdash; and on the current regulations, which change
-      frequently. Restricted-party screening here uses invented data; for real screening use the
-      official <b>Consolidated Screening List</b> (trade.gov) and OFAC SDN. Always confirm with the
-      EAR Commerce Control List, a self-classification or CCATS, and your export-compliance team
-      before shipping. Edit <code>export-license.json</code>, <code>export-catalog.json</code> and
-      <code>denied-parties.json</code> to expand the data.
+      <b>Not legal or compliance advice.</b> This is a tracking aid built on invented data, not a
+      system of record. A real license portfolio lives in your export-management system, and the
+      authoritative state of any authorization is what BIS (SNAP-R), DDTC (DECCS) or the issuing
+      agency shows &mdash; including conditions, provisos, quantity limits and reporting obligations
+      that a tile cannot capture. Expiry dates here are measured against the portfolio date above
+      rather than today's date, so the demo stays readable over time. Screening an item for
+      classification is a separate step &mdash; see the
+      <a href="export-screener.html">Export License Screener</a>. Edit
+      <code>export-licenses.json</code> to change the board.
     </div>
-
-    <!-- printable screening record -->
-    <div id="record"></div>
   </div>
 
   <script>
-    let rules = { categories: [], reasonCodes: {}, highRiskDestinations: [] };
-    let catalog = { products: [] };
-    let denied = { parties: [] };
-    let lastScreen = null;
+    const LS_KEY = "export-license-board-state";
+    const SHORT = {
+      "United Kingdom": "UK", "United Arab Emirates": "UAE", "South Korea": "S. Korea",
+      "South Africa": "S. Africa", "Saudi Arabia": "Saudi Arabia"
+    };
+    const LIC_STATES = ["active", "pending", "expired", "denied", "revoked", "surrendered"];
+    const R = 46, W = Math.sqrt(3) * R, RH = 1.5 * R;
 
-    const RANK = { unlikely: 1, maybe: 2, likely: 3 };
+    let data = null, local = loadLocal(), selected = null;
+    let filter = { status: null, region: null };
 
     function esc(s) {
-      return String(s).replace(/[&<>"']/g, c =>
+      return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
         ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     }
-    function norm(s) {
-      return " " + String(s).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim() + " ";
+    function loadLocal() {
+      try { return JSON.parse(localStorage.getItem(LS_KEY)) || { added: {}, status: {}, notes: {} }; }
+      catch (e) { return { added: {}, status: {}, notes: {} }; }
+    }
+    function saveLocal() {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(local)); } catch (e) {}
+    }
+    function localCount() {
+      return Object.values(local.added).reduce((n, a) => n + a.length, 0)
+        + Object.keys(local.status).length
+        + Object.values(local.notes).filter(v => v && v.trim()).length;
     }
 
-    // exact-ish lookup against the (fictional) product catalog by part number or product name
-    function catalogLookup(text) {
-      const q = norm(text);
-      const hits = [];
-      catalog.products.forEach(p => {
-        const pn = norm(p.pn).trim();
-        const nm = norm(p.name).trim();
-        if ((pn && q.indexOf(" " + pn + " ") !== -1) || (nm && q.indexOf(" " + nm + " ") !== -1)) {
-          hits.push(p);
-        }
-      });
-      return hits;
-    }
-
-    // keyword screen against the dual-use category knowledge base
-    function keywordScreen(text) {
-      const q = norm(text);
-      const results = [];
-      rules.categories.forEach(cat => {
-        const hits = [];
-        cat.keywords.forEach(kw => {
-          const k = norm(kw).trim();
-          if (k && q.indexOf(" " + k + " ") !== -1) hits.push(kw);
-        });
-        if (hits.length) {
-          const score = hits.reduce((s, h) => s + (h.indexOf(" ") !== -1 ? 2 : 1), 0);
-          results.push({ cat, hits, score });
-        }
-      });
-      results.sort((a, b) => b.score - a.score);
-      return results;
-    }
-
-    // restricted-party screen (fictional demo list)
-    function partyScreen(name) {
-      const q = norm(name).trim();
-      if (q.length < 3) return [];
-      const hits = [];
-      denied.parties.forEach(p => {
-        const names = [p.name, ...(p.aliases || [])];
-        const matched = names.find(n => {
-          const nn = norm(n).trim();
-          if (!nn) return false;
-          return q.indexOf(nn) !== -1 || (nn.indexOf(q) !== -1 && q.length >= 4);
-        });
-        if (matched) hits.push({ p, matched });
-      });
-      return hits;
-    }
-
-    function checkDestination(text) {
-      const d = (text || "").toLowerCase();
-      if (!d.trim()) return null;
-      for (const rule of rules.highRiskDestinations) {
-        if (rule.match.some(m => d.indexOf(m) !== -1)) return rule;
-      }
-      return null;
-    }
-
-    function tierFor(catHits, kw) {
-      let pool = [];
-      if (catHits.length) pool = catHits.map(p => p.license);
-      else if (kw.length) pool = kw.map(r => r.cat.license);
-      if (!pool.length) return "unlikely";
-      return pool.reduce((best, t) => (RANK[t] > RANK[best] ? t : best), "unlikely");
-    }
-
-    const COPY = {
-      likely: {
-        light: "Red — hold",
-        action: "Action: HOLD. Do not ship without export-compliance sign-off.",
-        headline: "This item matches one or more strictly controlled categories.",
-        sub: "A specific ECCN very likely applies and a license is probably required for many destinations. Route to your export-compliance team for a formal classification before quoting or shipping."
-      },
-      maybe: {
-        light: "Amber — review",
-        action: "Action: REVIEW. Confirm the technical specs before it moves.",
-        headline: "This item may be export-controlled depending on its exact specs.",
-        sub: "It matches a controlled category, but whether it is actually caught usually turns on performance thresholds. Confirm the parameters against the ECCN — a License Exception may apply, or it may clear."
-      },
-      unlikely: {
-        light: "Green — likely EAR99",
-        action: "Action: RECORD and route per your export procedure. Green is not authorization to export.",
-        headline: "No controlled category matched — this looks like a possible EAR99 item.",
-        sub: "Most ordinary commercial goods are EAR99 (no license for most destinations). But a clean keyword screen is not a determination: verify the technical specs, and remember EAR99 items still need a license to embargoed destinations, denied/listed parties, or prohibited end-uses."
-      }
+    const money = n => n >= 1e6 ? "$" + (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + "M"
+      : n >= 1e3 ? "$" + Math.round(n / 1e3) + "k" : "$" + n;
+    const parseDate = s => s ? new Date(s + "T00:00:00Z") : null;
+    const today = () => parseDate(data.asOf);
+    const daysUntil = s => {
+      const d = parseDate(s);
+      return d ? Math.round((d - today()) / 86400000) : null;
     };
 
-    function render() {
-      const text = document.getElementById("desc").value;
-      const dest = document.getElementById("dest").value;
-      const party = document.getElementById("party").value;
-      const who = document.getElementById("who").value;
-      const el = document.getElementById("result");
-      const printBtn = document.getElementById("print");
+    /* ---------- model ---------- */
 
-      if (!text.trim() && !party.trim()) {
-        el.innerHTML = '<div class="match"><span class="empty">Enter a part number or description above, then press <b>Screen item</b>.</span></div>';
-        printBtn.hidden = true;
-        lastScreen = null;
+    // every license for a country, with local additions and local status overrides folded in
+    function licensesFor(c) {
+      const base = c.licenses.map((l, i) => ({ ...l, _key: c.code + "::" + (l.ref || i), _local: false }));
+      const added = (local.added[c.code] || []).map((l, i) => ({ ...l, _key: c.code + "::local" + i, _local: true }));
+      return base.concat(added).map(l => {
+        const o = local.status[l._key];
+        return o ? { ...l, status: o, _overridden: true } : l;
+      });
+    }
+
+    // a license that can carry a shipment today
+    const isLive = l => l.status === "active" && (!l.expires || daysUntil(l.expires) >= 0);
+    const isExpiringSoon = l => isLive(l) && l.expires && daysUntil(l.expires) <= data.expiringWindowDays;
+
+    function stateOf(c) {
+      const ls = licensesFor(c);
+      if (c.restricted) return "restricted";
+      if (ls.some(isExpiringSoon)) return "expiring";
+      if (ls.some(isLive)) return "active";
+      if (ls.some(l => l.status === "pending")) return "pending";
+      if (ls.some(l => ["expired", "denied", "revoked"].includes(l.status) || (l.status === "active" && l.expires && daysUntil(l.expires) < 0))) return "expired";
+      return "none";
+    }
+
+    // effective status of one license, expiry folded in
+    function effStatus(l) {
+      if (l.status === "active" && l.expires && daysUntil(l.expires) < 0) return "expired";
+      if (isExpiringSoon(l)) return "expiring";
+      return l.status;
+    }
+
+    function drawdown(l) {
+      const a = Number(l.valueAuthorized) || 0;
+      if (!a) return null;
+      return Math.min(1, (Number(l.valueShipped) || 0) / a);
+    }
+
+    /* ---------- board ---------- */
+
+    // k < 1 leaves a thin gutter of sea between neighbouring tiles, so each one reads on its own
+    function hexPath(cx, cy, k) {
+      const f = k || 1;
+      const p = [[0, -R], [W / 2, -R / 2], [W / 2, R / 2], [0, R], [-W / 2, R / 2], [-W / 2, -R / 2]];
+      return p.map(([dx, dy]) => (cx + dx * f).toFixed(1) + "," + (cy + dy * f).toFixed(1)).join(" ");
+    }
+    const LAND_K = 0.955;
+    const cxy = (row, col) => [col * W, row * RH];
+
+    // the sea frame: every hex position touching land that is not itself land
+    function seaRing(land) {
+      const key = (r, c) => r + "|" + c;
+      const have = new Set(land.map(c => key(c.row, c.col)));
+      const sea = new Map();
+      land.forEach(c => {
+        [[0, -1], [0, 1], [-1, -0.5], [-1, 0.5], [1, -0.5], [1, 0.5]].forEach(([dr, dc]) => {
+          const r = c.row + dr, co = c.col + dc, k = key(r, co);
+          if (!have.has(k) && !sea.has(k)) sea.set(k, { row: r, col: co });
+        });
+      });
+      return [...sea.values()];
+    }
+
+    function token(st, n, pips) {
+      if (st === "restricted") {
+        return `<circle cx="0" cy="0" r="16" fill="#18100f" stroke="#a83b33" stroke-width="2"/>
+          <text class="hex-token-g" y="4.6" fill="#ff8a7a">&#10005;</text>`;
+      }
+      if (n > 0) {
+        const dash = st === "expiring" ? ` stroke="#e8c85c" stroke-width="2.5"` : ` stroke="#cdbb92" stroke-width="1.5"`;
+        let dots = "";
+        if (pips > 0) {
+          const start = -((pips - 1) * 4.6) / 2;
+          for (let i = 0; i < pips; i++) {
+            dots += `<circle cx="${(start + i * 4.6).toFixed(1)}" cy="11.4" r="1.5" fill="#4a3c1c"/>`;
+          }
+        }
+        return `<circle cx="0" cy="0" r="17.5" fill="#f2e6cc"${dash}/>
+          <text class="hex-token-n" y="${pips > 0 ? "1.5" : "5.5"}">${n}</text>${dots}`;
+      }
+      if (st === "pending") {
+        return `<circle cx="0" cy="0" r="15" fill="#0e1419" stroke="#7d93a6" stroke-width="2" stroke-dasharray="4 3"/>
+          <text class="hex-token-g" y="4.6" fill="#9fb4c6">&#8635;</text>`;
+      }
+      if (st === "expired") {
+        return `<circle cx="0" cy="0" r="15" fill="#1a0f09" stroke="#c26a42" stroke-width="2"/>
+          <text class="hex-token-g" y="4.6" fill="#e08a5c">!</text>`;
+      }
+      return `<circle cx="0" cy="0" r="11" fill="#171510" stroke="#9d9071" stroke-width="1.5"/>
+        <text class="hex-token-g" y="4" fill="#b5a98a" style="font-size:11px">&#8212;</text>`;
+    }
+
+    function drawBoard() {
+      const svg = document.getElementById("map");
+      const land = data.countries;
+      const sea = seaRing(land);
+      const all = land.concat(sea).map(c => cxy(c.row, c.col));
+      const xs = all.map(p => p[0]), ys = all.map(p => p[1]);
+      const pad = 8;
+      const minX = Math.min(...xs) - W / 2 - pad, maxX = Math.max(...xs) + W / 2 + pad;
+      const minY = Math.min(...ys) - R - pad, maxY = Math.max(...ys) + R + pad;
+
+      let g = "";
+      sea.forEach(s => {
+        const [x, y] = cxy(s.row, s.col);
+        g += `<polygon points="${hexPath(x, y, 0.955)}" fill="#0d1b25" stroke="#16303f" stroke-width="1.5"/>`;
+      });
+
+      land.forEach(c => {
+        const [x, y] = cxy(c.row, c.col);
+        const st = stateOf(c), S = data.statuses[st];
+        const ls = licensesFor(c);
+        const live = ls.filter(isLive);
+        const pips = live.length
+          ? Math.min(5, Math.max(1, Math.ceil((Math.max(...live.map(l => drawdown(l) || 0))) * 5)))
+          : 0;
+        const label = SHORT[c.name] || c.name;
+        const fs = label.length > 10 ? 8.6 : label.length > 8 ? 9.6 : 10.5;
+        const aria = `${c.name}. ${S.label}. ${live.length} live authorization${live.length === 1 ? "" : "s"}, ${ls.length} on file.`;
+        g += `<g class="hex-land" data-code="${esc(c.code)}" data-status="${st}" data-region="${esc(c.region)}"
+                 tabindex="0" role="button" aria-label="${esc(aria)}">
+          <polygon class="face" points="${hexPath(x, y, LAND_K)}" fill="${S.color}"/>
+          <polygon class="ring" points="${hexPath(x, y, LAND_K)}" fill="none" stroke="${S.edge}" stroke-width="2"/>
+          <text class="hex-label" x="${x.toFixed(1)}" y="${(y - 15).toFixed(1)}" style="font-size:${fs}px">${esc(label)}</text>
+          <g transform="translate(${x.toFixed(1)},${(y + 13).toFixed(1)})">${token(st, live.length, pips)}</g>
+        </g>`;
+      });
+
+      svg.setAttribute("viewBox", `${minX.toFixed(1)} ${minY.toFixed(1)} ${(maxX - minX).toFixed(1)} ${(maxY - minY).toFixed(1)}`);
+      svg.innerHTML = g;
+
+      svg.querySelectorAll(".hex-land").forEach(el => {
+        el.addEventListener("click", () => select(el.dataset.code));
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(el.dataset.code); }
+        });
+      });
+      applyFilter();
+      markSelected();
+    }
+
+    function markSelected() {
+      document.querySelectorAll(".hex-land").forEach(el =>
+        el.classList.toggle("sel", el.dataset.code === selected));
+    }
+    function applyFilter() {
+      document.querySelectorAll(".hex-land").forEach(el => {
+        const off = (filter.status && el.dataset.status !== filter.status)
+          || (filter.region && el.dataset.region !== filter.region);
+        el.classList.toggle("dim", !!off);
+      });
+      document.querySelectorAll("#keys-status .key").forEach(b =>
+        b.classList.toggle("on", b.dataset.k === filter.status));
+      document.querySelectorAll("#keys-region .key").forEach(b =>
+        b.classList.toggle("on", b.dataset.k === filter.region));
+    }
+
+    /* ---------- summary + legend ---------- */
+
+    function drawStats() {
+      const all = data.countries.flatMap(c => licensesFor(c).map(l => ({ c, l })));
+      const live = all.filter(x => isLive(x.l));
+      const soon = all.filter(x => isExpiringSoon(x.l));
+      const pend = all.filter(x => x.l.status === "pending");
+      const lapsed = all.filter(x => effStatus(x.l) === "expired");
+      const restricted = data.countries.filter(c => c.restricted).length;
+      const auth = live.reduce((s, x) => s + (Number(x.l.valueAuthorized) || 0), 0);
+      const shipped = live.reduce((s, x) => s + (Number(x.l.valueShipped) || 0), 0);
+      const tiles = [
+        ["good", live.length, "live authorizations"],
+        ["warn", soon.length, "lapse within " + data.expiringWindowDays + " days"],
+        ["", pend.length, "applications out"],
+        ["bad", lapsed.length, "lapsed or refused"],
+        ["bad", restricted, "restricted destinations"],
+        ["", money(auth), "authorized value"],
+        ["", money(shipped), "shipped to date"]
+      ];
+      document.getElementById("stats").innerHTML = tiles.map(([cls, n, l]) =>
+        `<div class="stat ${cls}"><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div></div>`).join("");
+    }
+
+    function drawLegend() {
+      const counts = {};
+      data.countries.forEach(c => { const s = stateOf(c); counts[s] = (counts[s] || 0) + 1; });
+      document.getElementById("keys-status").innerHTML = Object.entries(data.statuses).map(([k, s]) =>
+        `<button class="key" data-k="${k}" title="${esc(s.desc)}">
+           <span class="sw" style="background:${s.color}"></span>${esc(s.label)}
+           <span class="ct">${counts[k] || 0}</span></button>`).join("");
+      const rc = {};
+      data.countries.forEach(c => { rc[c.region] = (rc[c.region] || 0) + 1; });
+      document.getElementById("keys-region").innerHTML = Object.entries(data.regions).map(([k, r]) =>
+        `<button class="key" data-k="${k}">${esc(r.label)}<span class="ct">${rc[k] || 0}</span></button>`).join("");
+
+      document.querySelectorAll("#keys-status .key").forEach(b => b.addEventListener("click", () => {
+        filter.status = filter.status === b.dataset.k ? null : b.dataset.k; applyFilter();
+      }));
+      document.querySelectorAll("#keys-region .key").forEach(b => b.addEventListener("click", () => {
+        filter.region = filter.region === b.dataset.k ? null : b.dataset.k; applyFilter();
+      }));
+    }
+
+    /* ---------- panel ---------- */
+
+    function statusChip(st) {
+      const S = data.statuses[st] || { label: st, color: "#444", edge: "#666" };
+      return `<span class="chip-status" style="border-color:${S.edge};color:${S.edge}">${esc(S.label)}</span>`;
+    }
+    const LIC_COLOR = {
+      active: "#588c4a", expiring: "#d9b348", pending: "#7d93a6",
+      expired: "#c26a42", denied: "#a83b33", revoked: "#a83b33", surrendered: "#777"
+    };
+    const LIC_LABEL = {
+      active: "Live", expiring: "Expires soon", pending: "Pending",
+      expired: "Lapsed", denied: "Denied", revoked: "Revoked", surrendered: "Surrendered"
+    };
+
+    function select(code) {
+      selected = code;
+      markSelected();
+      drawPanel();
+      if (window.matchMedia("(max-width: 960px)").matches) {
+        document.getElementById("panel").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function watchlist() {
+      const rows = [];
+      data.countries.forEach(c => {
+        const st = stateOf(c);
+        if (st === "active" || st === "none") return;
+        const ls = licensesFor(c);
+        let why = "";
+        if (st === "expiring") {
+          const d = Math.min(...ls.filter(isExpiringSoon).map(l => daysUntil(l.expires)));
+          why = d + " days left";
+        } else if (st === "pending") {
+          why = ls.filter(l => l.status === "pending").length + " filed";
+        } else if (st === "expired") {
+          why = "nothing live";
+        } else if (st === "restricted") {
+          why = "stop-ship";
+        }
+        rows.push({ c, st, why, rank: { expiring: 0, expired: 1, pending: 2, restricted: 3 }[st] });
+      });
+      rows.sort((a, b) => a.rank - b.rank || a.c.name.localeCompare(b.c.name));
+      return rows;
+    }
+
+    function drawPanel() {
+      const el = document.getElementById("panel");
+      const c = data.countries.find(x => x.code === selected);
+
+      if (!c) {
+        const rows = watchlist();
+        el.innerHTML = `<h2>Needs attention</h2>
+          <p class="meta">${rows.length} of ${data.countries.length} destinations</p>
+          <p class="hint">Click any tile on the board to open that country's licenses, or start from
+            the list below &mdash; renewals first, then lapses, applications out, and restricted
+            destinations.</p>
+          <ul class="watch">${rows.map(r =>
+            `<li><button data-code="${esc(r.c.code)}">
+              <span class="sw" style="background:${data.statuses[r.st].color}"></span>
+              <span>${esc(r.c.name)}</span>
+              <span class="why">${esc(r.why)}</span></button></li>`).join("")}</ul>
+          ${localBar()}`;
+        el.querySelectorAll(".watch button").forEach(b =>
+          b.addEventListener("click", () => select(b.dataset.code)));
+        wireLocalBar();
         return;
       }
 
-      const catHits = catalogLookup(text);
-      const kw = keywordScreen(text);
-      const partyHits = partyScreen(party);
-      const destRule = checkDestination(dest);
-      const tier = tierFor(catHits, kw);
-      const c = COPY[tier];
-      const when = new Date();
+      const st = stateOf(c), ls = licensesFor(c);
+      const order = { expiring: 0, active: 1, pending: 2, expired: 3, denied: 4, revoked: 5, surrendered: 6 };
+      ls.sort((a, b) => (order[effStatus(a)] ?? 9) - (order[effStatus(b)] ?? 9));
 
-      lastScreen = { text, dest, party, who, catHits, kw, partyHits, destRule, tier, when };
-
-      let html = "";
-
-      // restricted-party STOP banner takes priority
-      if (partyHits.length) {
-        html += `<div class="verdict v-stop">
-          <div class="light">Stop — restricted party</div>
-          <div class="headline">The consignee/end-user appears to match a restricted-party listing.</div>
-          <div class="action">Action: STOP. Do not proceed; escalate to compliance/legal for resolution.</div>
-          <div class="sub">A name match on a denied/blocked/entity listing can prohibit the transaction outright, regardless of the item's classification. Verify the match (name, address, country) before any further steps.</div>
+      const cards = ls.map(l => {
+        const es = effStatus(l), col = LIC_COLOR[es] || "#555";
+        const dd = drawdown(l);
+        const days = l.expires ? daysUntil(l.expires) : null;
+        const when = l.expires
+          ? `${esc(l.expires)} <span style="color:${days < 0 ? "#c26a42" : days <= data.expiringWindowDays ? "#d9b348" : "#666"}">(${days < 0 ? Math.abs(days) + " days ago" : days + " days left"})</span>`
+          : "&mdash;";
+        return `<div class="lic" style="border-left-color:${col}">
+          <div class="top">
+            <span class="ref">${esc(l.ref)}</span>
+            <span style="color:${col};font-size:0.62rem;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap">${esc(LIC_LABEL[es] || es)}</span>
+          </div>
+          <div class="item">${esc(l.item)}</div>
+          <div class="kv"><b>Classification:</b> ${esc(l.eccn || "—")} &nbsp;&middot;&nbsp; <b>${esc(l.authority || "—")}</b></div>
+          <div class="kv"><b>Type:</b> ${esc(l.type || "—")}</div>
+          <div class="kv"><b>End-user:</b> ${esc(l.endUser || "—")}</div>
+          <div class="kv"><b>Issued:</b> ${esc(l.issued || "—")} &nbsp;&middot;&nbsp; <b>Expires:</b> ${when}</div>
+          ${dd === null ? "" : `<div class="bar"><i style="width:${(dd * 100).toFixed(0)}%;background:${col}"></i></div>
+            <div class="barl">${money(Number(l.valueShipped) || 0)} shipped of ${money(Number(l.valueAuthorized) || 0)} authorized &middot; ${(dd * 100).toFixed(0)}% drawn down</div>`}
+          ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
+          <div class="kv" style="margin-top:0.5rem">
+            <b>Set status:</b>
+            <select data-key="${esc(l._key)}" class="st-sel">
+              ${LIC_STATES.map(s => `<option value="${s}"${s === l.status ? " selected" : ""}>${esc(LIC_LABEL[s] || s)}</option>`).join("")}
+            </select>
+            ${l._local ? ` <span class="local">added here</span>` : ""}
+            ${l._overridden ? ` <span class="local">status changed here</span>` : ""}
+          </div>
         </div>`;
-      }
+      }).join("");
 
-      // item classification banner
-      html += `<div class="verdict v-${tier}">
-        <div class="light">${esc(c.light)}</div>
-        <div class="headline">${esc(c.headline)}</div>
-        <div class="action">${esc(c.action)}</div>
-        <div class="sub">${esc(c.sub)}</div>
-      </div>`;
+      el.innerHTML = `
+        <h2>${esc(c.name)}</h2>
+        <p class="meta">${esc(data.regions[c.region] ? data.regions[c.region].label : c.region)}
+          &nbsp;&middot;&nbsp; ${ls.filter(isLive).length} live of ${ls.length} on file</p>
+        <p>${statusChip(st)}</p>
+        <p class="risk" style="margin-top:0.7rem">${esc(c.risk || "")}</p>
+        <div class="sec-h">authorizations (${ls.length})</div>
+        ${ls.length ? cards : `<p class="hint">Nothing on file for this destination. Either no controlled
+          item moves here, or shipments are going under an exception that should be documented.</p>`}
+        <div class="sec-h">my notes</div>
+        <textarea id="note" rows="3" placeholder="What you are waiting on, who owns the renewal, where the file lives…">${esc(local.notes[c.code] || "")}</textarea>
+        <details class="addform">
+          <summary>Add an authorization</summary>
+          <div class="form-grid" style="margin-top:0.7rem">
+            <div class="wide"><label class="fl" for="f-ref">Reference</label><input type="text" id="f-ref" placeholder="BIS / D19xxxxx"></div>
+            <div class="wide"><label class="fl" for="f-item">Item</label><input type="text" id="f-item" placeholder="part number and description"></div>
+            <div><label class="fl" for="f-eccn">ECCN / USML</label><input type="text" id="f-eccn" placeholder="6A003"></div>
+            <div><label class="fl" for="f-auth">Authority</label>
+              <select id="f-auth"><option>BIS (Commerce)</option><option>DDTC (State)</option><option>DOE / NRC</option><option>OFAC</option></select></div>
+            <div class="wide"><label class="fl" for="f-user">End-user</label><input type="text" id="f-user" placeholder="company, city"></div>
+            <div><label class="fl" for="f-exp">Expires</label><input type="text" id="f-exp" placeholder="YYYY-MM-DD"></div>
+            <div><label class="fl" for="f-st">Status</label>
+              <select id="f-st">${LIC_STATES.map(s => `<option value="${s}">${esc(LIC_LABEL[s])}</option>`).join("")}</select></div>
+            <div><label class="fl" for="f-va">Authorized value</label><input type="number" id="f-va" placeholder="1500000"></div>
+            <div><label class="fl" for="f-vs">Shipped to date</label><input type="number" id="f-vs" placeholder="0"></div>
+            <div class="wide" style="margin-top:0.2rem"><button class="go" id="f-add">Add to ${esc(c.name)}</button></div>
+          </div>
+        </details>
+        ${localBar()}`;
 
-      if (destRule) {
-        html += `<div class="destflag"><b>Destination flag &mdash; ${esc(dest)}:</b> ${esc(destRule.note)}</div>`;
-      }
-
-      // restricted-party detail
-      if (partyHits.length) {
-        html += `<div class="sec-h">restricted-party screening (${partyHits.length} match)</div>`;
-        partyHits.forEach(h => {
-          html += `<div class="match party">
-            <div class="top">
-              <span class="nm">${esc(h.p.name)}</span>
-              <span class="badge">${esc(h.p.list)}</span>
-            </div>
-            <div class="kv"><b>Country:</b> ${esc(h.p.country)} &nbsp;&middot;&nbsp; <b>Matched on:</b> ${esc(h.matched)}</div>
-            <p class="summary" style="margin-top:0.4rem">${esc(h.p.reason)}</p>
-            <div class="kv"><b>Effect:</b> ${esc(h.p.action)}</div>
-          </div>`;
-        });
-      } else if (party.trim()) {
-        html += `<div class="sec-h">restricted-party screening</div>
-          <div class="match"><span class="empty">No match for &ldquo;${esc(party)}&rdquo; on the demo list. (A real workflow would screen the full Consolidated Screening List and re-screen before shipment.)</span></div>`;
-      }
-
-      // product catalog match
-      if (catHits.length) {
-        html += `<div class="sec-h">product catalog match (${catHits.length})</div>`;
-        catHits.forEach(p => {
-          const reasons = (p.reasons || []).map(code => {
-            const label = rules.reasonCodes[code] || code;
-            return `<span class="reason" title="${esc(label)}">${esc(code)} &middot; ${esc(label)}</span>`;
-          }).join("");
-          html += `<div class="match cat">
-            <div class="top">
-              <span class="nm">${esc(p.pn)} — ${esc(p.name)}</span>
-              <span class="eccn">${esc(p.eccn)}</span>
-            </div>
-            <div class="ccl">${esc(p.ccl)}</div>
-            <p class="summary" style="margin-top:0.5rem">${esc(p.desc)}</p>
-            <div class="reasons">${reasons}</div>
-            <div class="kv" style="margin-top:0.55rem"><b>Catalog note:</b> ${esc(p.note)}</div>
-          </div>`;
-        });
-      }
-
-      // keyword category matches
-      if (kw.length) {
-        html += `<div class="sec-h">${catHits.length ? "additional keyword signals" : "matched control categories"} (${kw.length})</div>`;
-        kw.forEach(r => {
-          const reasons = (r.cat.reasons || []).map(code => {
-            const label = rules.reasonCodes[code] || code;
-            return `<span class="reason" title="${esc(label)}">${esc(code)} &middot; ${esc(label)}</span>`;
-          }).join("");
-          html += `<div class="match">
-            <div class="top">
-              <span class="nm">${esc(r.cat.name)}</span>
-              <span class="eccn">${esc(r.cat.eccn)}</span>
-            </div>
-            <div class="ccl">${esc(r.cat.ccl)}</div>
-            <p class="summary" style="margin-top:0.5rem">${esc(r.cat.summary)}</p>
-            <div class="reasons">${reasons}</div>
-            <div class="hits"><b>matched terms:</b> ${r.hits.map(esc).join(", ")}</div>
-          </div>`;
-        });
-      }
-
-      if (!catHits.length && !kw.length && text.trim()) {
-        html += `<div class="sec-h">next steps</div>
-          <div class="match"><span class="empty">
-            <ul class="steps2">
-              <li>If you only entered a bare part number, look up the manufacturer's specifications or datasheet &mdash; opaque part numbers carry no signal on their own.</li>
-              <li>Confirm there is no military or "specially designed" defense application (which would push it to the ITAR / USML).</li>
-              <li>Screen the destination, end-user (denied/entity lists) and end-use even for EAR99 items.</li>
-            </ul>
-          </span></div>`;
-      }
-
-      el.innerHTML = html;
-      printBtn.hidden = false;
-      buildRecord();
-    }
-
-    function buildRecord() {
-      const rec = document.getElementById("record");
-      if (!lastScreen) { rec.innerHTML = ""; return; }
-      const { text, dest, party, who, catHits, kw, partyHits, destRule, tier, when } = lastScreen;
-      const c = COPY[tier];
-
-      let cats = "";
-      const lines = [];
-      catHits.forEach(p => lines.push(`${p.pn} ${p.name} — ${p.eccn} (${p.ccl}); reasons: ${(p.reasons || []).join(", ") || "—"}`));
-      kw.forEach(r => lines.push(`${r.cat.name} — ${r.cat.eccn} (${r.cat.ccl}); reasons: ${(r.cat.reasons || []).join(", ") || "—"}`));
-      if (lines.length) cats = "<ul>" + lines.map(l => `<li>${esc(l)}</li>`).join("") + "</ul>";
-      else cats = "<p>No controlled category matched (possible EAR99).</p>";
-
-      let partyBlock = "";
-      if (partyHits.length) {
-        partyBlock = `<div class="rverdict rstop">RESTRICTED-PARTY MATCH — STOP. Escalate to compliance/legal.</div>
-          <ul>` + partyHits.map(h => `<li>${esc(h.p.name)} (${esc(h.p.list)}, ${esc(h.p.country)}) — ${esc(h.p.action)}</li>`).join("") + "</ul>";
-      } else if (party && party.trim()) {
-        partyBlock = `<div class="rrow"><span class="rlabel">Restricted-party screen:</span> no match on demo list for "${esc(party)}".</div>`;
-      }
-
-      rec.innerHTML = `
-        <h2>Export License Screening Record</h2>
-        <div class="rrow"><span class="rlabel">Date / time:</span> ${esc(when.toLocaleString())}</div>
-        <div class="rrow"><span class="rlabel">Screened by:</span> ${esc(who || "—")}</div>
-        <div class="rrow"><span class="rlabel">Item / part:</span> ${esc(text || "—")}</div>
-        <div class="rrow"><span class="rlabel">Destination:</span> ${esc(dest || "—")}</div>
-        <div class="rrow"><span class="rlabel">Consignee / end-user:</span> ${esc(party || "—")}</div>
-        ${partyBlock}
-        <div class="rverdict">${esc(c.light.toUpperCase())} — ${esc(c.action)}</div>
-        ${destRule ? `<div class="rrow"><span class="rlabel">Destination flag:</span> ${esc(destRule.note)}</div>` : ""}
-        <div class="rrow"><span class="rlabel">Matched categories:</span></div>
-        ${cats}
-        <div class="rsig">
-          <div class="rrow">Reviewed / approved by (export compliance):</div>
-          <div class="line">signature &amp; date</div>
-        </div>
-        <div class="rdisc">
-          Preliminary screening only — not an official classification and not authorization to export.
-          Product catalog and restricted-party data shown here are fictional demonstration data.
-          Final determination depends on technical parameters, jurisdiction (EAR / ITAR / NRC/DOE),
-          destination, end-user and end-use under current regulations, and on screening against the
-          official Consolidated Screening List. Confirm with export compliance before shipping.
-          Generated by the jcsylvan.ai Export License Screener.
-        </div>`;
-    }
-
-    document.getElementById("go").addEventListener("click", render);
-    document.getElementById("print").addEventListener("click", () => { if (lastScreen) window.print(); });
-    document.getElementById("desc").addEventListener("keydown", e => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") render();
-    });
-    ["dest", "party", "who"].forEach(id => document.getElementById(id).addEventListener("keydown", e => {
-      if (e.key === "Enter") render();
-    }));
-    document.querySelectorAll(".chip").forEach(ch => {
-      ch.addEventListener("click", () => {
-        const map = { desc: "desc", dest: "dest", party: "party", who: "who" };
-        document.getElementById("desc").value = ch.dataset.desc || "";
-        document.getElementById("dest").value = ch.dataset.dest || "";
-        document.getElementById("party").value = ch.dataset.party || "";
-        document.getElementById("who").value = ch.dataset.who || "";
-        render();
+      el.querySelectorAll(".st-sel").forEach(sel => sel.addEventListener("change", () => {
+        local.status[sel.dataset.key] = sel.value;
+        saveLocal(); refresh();
+      }));
+      const note = el.querySelector("#note");
+      note.addEventListener("change", () => {
+        local.notes[c.code] = note.value; saveLocal(); refreshLocalBar();
       });
-    });
+      el.querySelector("#f-add").addEventListener("click", () => {
+        const v = id => (el.querySelector("#" + id).value || "").trim();
+        const ref = v("f-ref") || "untitled authorization";
+        (local.added[c.code] = local.added[c.code] || []).push({
+          ref, authority: v("f-auth"), type: "Added on this device", item: v("f-item") || "—",
+          eccn: v("f-eccn"), endUser: v("f-user"), issued: data.asOf, expires: v("f-exp"),
+          valueAuthorized: Number(v("f-va")) || 0, valueShipped: Number(v("f-vs")) || 0,
+          status: v("f-st") || "active", note: ""
+        });
+        saveLocal(); refresh();
+      });
+      wireLocalBar();
+    }
 
-    Promise.all([
-      fetch("export-license.json", { cache: "no-store" }).then(r => r.json()),
-      fetch("export-catalog.json", { cache: "no-store" }).then(r => r.json()),
-      fetch("denied-parties.json", { cache: "no-store" }).then(r => r.json())
-    ]).then(([r, c, d]) => {
-      rules = r; catalog = c; denied = d;
-      document.getElementById("updated").textContent = r.updated || "—";
-    }).catch(() => {
-      document.getElementById("result").innerHTML =
-        '<div class="match"><span class="empty">Could not load the screening data files.</span></div>';
-    });
+    function localBar() {
+      const n = localCount();
+      return `<div class="localbar" id="localbar">
+        <span>${n ? n + " change" + (n === 1 ? "" : "s") + " saved in this browser" : "no local changes"}</span>
+        ${n ? `<button class="alt" id="reset">Clear local changes</button>` : ""}
+      </div>`;
+    }
+    function wireLocalBar() {
+      const b = document.getElementById("reset");
+      if (b) b.addEventListener("click", () => {
+        if (!confirm("Clear every license, status change and note you added in this browser?")) return;
+        local = { added: {}, status: {}, notes: {} }; saveLocal(); refresh();
+      });
+    }
+    function refreshLocalBar() {
+      const bar = document.getElementById("localbar");
+      if (bar) { bar.outerHTML = localBar(); wireLocalBar(); }
+    }
+    function refresh() { drawStats(); drawLegend(); drawBoard(); drawPanel(); }
+
+    fetch("export-licenses.json", { cache: "no-store" })
+      .then(r => r.json())
+      .then(d => {
+        data = d;
+        document.getElementById("asof").textContent = d.asOf || "—";
+        refresh();
+      })
+      .catch(() => {
+        document.getElementById("panel").innerHTML =
+          '<p class="hint">Could not load <code>export-licenses.json</code>.</p>';
+      });
   </script>
 </body>
 </html>
