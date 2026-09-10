@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Meet Town &mdash; jcsylvan.ai</title>
+  <meta name="description" content="A storybook town of people, companies and ideas worth keeping an eye on.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f6ecd4">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <style>
+    :root {
+      --paper: #f6ecd4;
+      --paper-2: #fdf6e6;
+      --ground: #f1ead3;
+      --ink: #2b2118;
+      --ink-soft: #6b5a48;
+      --faint: #a4937c;
+      --line: #d9c9a8;
+      --red: #e2432f;
+      --yellow: #f5c542;
+      --blue: #3f7fc1;
+      --green: #6fae4b;
+      --orange: #f08a3e;
+      --pink: #e56fa5;
+      --purple: #7a5cc7;
+      --teal: #3fb3b0;
+      --road: #e3cf9e;
+      --shadow: 3px 3px 0 var(--ink);
+      --display: "Arial Rounded MT Bold", "Helvetica Rounded", "Nunito", "Varela Round", "Chalkboard SE", "Trebuchet MS", Georgia, sans-serif;
+      --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --topbar-h: 64px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--body);
+      background: var(--paper);
+      color: var(--ink);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+    button { cursor: pointer; }
+    a { color: var(--ink); }
+
+    /* ---------- password gate ---------- */
+    #gate {
+      position: fixed; inset: 0; z-index: 100;
+      background: var(--paper);
+      background-image: radial-gradient(#e6d8b8 0.9px, transparent 0.9px);
+      background-size: 16px 16px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2rem; text-align: center;
+    }
+    #gate .gate-card {
+      background: var(--paper-2);
+      border: 2px solid var(--ink);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 2rem 2rem 1.6rem;
+      width: 100%; max-width: 380px;
+    }
+    #gate .gate-art { width: 140px; height: 120px; display: block; margin: 0 auto 0.6rem; }
+    #gate h1 { font-family: var(--display); font-size: 1.7rem; letter-spacing: 0.01em; margin-bottom: 0.2rem; }
+    #gate p { color: var(--ink-soft); font-size: 0.85rem; margin-bottom: 1.2rem; }
+    #gate form { display: flex; gap: 0.5rem; }
+    #gate input {
+      flex: 1; min-width: 0;
+      border: 2px solid var(--ink); border-radius: 999px;
+      padding: 0.6rem 1rem; background: #fff; outline: none;
+    }
+    #gate input:focus { box-shadow: 0 0 0 3px rgba(63,127,193,0.25); }
+    #gate button {
+      border: 2px solid var(--ink); border-radius: 999px; background: var(--yellow);
+      padding: 0.55rem 1rem; font-weight: 700; box-shadow: var(--shadow);
+    }
+    #gate button:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+    #gate .gate-err { color: var(--red); font-size: 0.82rem; margin-top: 0.9rem; min-height: 1rem; font-weight: 600; }
+    #gate .gate-back { display: inline-block; margin-top: 1.3rem; font-size: 0.8rem; color: var(--faint); text-decoration: none; }
+    #gate .gate-back:hover { color: var(--ink); }
+
+    /* ---------- app shell ---------- */
+    #app { display: none; height: 100%; flex-direction: column; }
+    #app.on { display: flex; }
+
+    .topbar {
+      height: var(--topbar-h);
+      display: flex; align-items: center; gap: 0.9rem;
+      padding: 0 1rem;
+      background: var(--paper-2);
+      border-bottom: 2px solid var(--ink);
+      flex-shrink: 0;
+      z-index: 5;
+    }
+    .topbar .back { color: var(--faint); text-decoration: none; font-size: 0.8rem; white-space: nowrap; }
+    .topbar .back:hover { color: var(--ink); }
+    .topbar h1 {
+      font-family: var(--display); font-size: 1.35rem; letter-spacing: 0.01em;
+      white-space: nowrap; display: flex; align-items: baseline; gap: 0.6rem;
+    }
+    .topbar h1 .sub { font-family: var(--body); font-weight: 400; font-size: 0.72rem; color: var(--ink-soft); white-space: nowrap; }
+    .tb-actions { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; flex-wrap: nowrap; }
+
+    .btn {
+      border: 2px solid var(--ink); border-radius: 999px;
+      background: #fff; padding: 0.38rem 0.8rem;
+      font-weight: 700; font-size: 0.8rem; line-height: 1;
+      box-shadow: var(--shadow); white-space: nowrap;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--ink); }
+    .btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+    .btn.red { background: var(--red); color: #fff; }
+    .btn.blue { background: var(--blue); color: #fff; }
+    .btn.green { background: var(--green); color: #fff; }
+    .btn.yellow { background: var(--yellow); }
+    .btn.ghost { box-shadow: none; background: transparent; }
+    .btn.ghost:hover { background: #fff; }
+    .btn.small { padding: 0.3rem 0.65rem; font-size: 0.75rem; box-shadow: 2px 2px 0 var(--ink); }
+    .btn.danger { background: #fff; color: var(--red); border-color: var(--red); box-shadow: 2px 2px 0 var(--red); }
+    .btn[disabled] { opacity: 0.45; cursor: default; transform: none; box-shadow: var(--shadow); }
+
+    #q {
+      border: 2px solid var(--ink); border-radius: 999px; padding: 0.38rem 0.9rem;
+      background: #fff; width: 190px; outline: none; font-size: 0.82rem;
+    }
+    #q:focus { box-shadow: 0 0 0 3px rgba(63,127,193,0.25); }
+
+    .seg { display: inline-flex; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; background: #fff; box-shadow: var(--shadow); }
+    .seg button { border: none; background: transparent; padding: 0.4rem 0.8rem; font-weight: 700; font-size: 0.8rem; line-height: 1; }
+    .seg button.on { background: var(--ink); color: #fff; }
+
+    .menu { position: relative; }
+    .menu summary { list-style: none; }
+    .menu summary::-webkit-details-marker { display: none; }
+    .menu .btn { padding: 0.38rem 0.6rem; }
+    .menu-list {
+      position: absolute; right: 0; top: calc(100% + 8px);
+      background: #fff; border: 2px solid var(--ink); border-radius: 12px;
+      box-shadow: var(--shadow); min-width: 190px; padding: 0.35rem; z-index: 20;
+      display: flex; flex-direction: column;
+    }
+    .menu-list button {
+      border: none; background: none; text-align: left; padding: 0.5rem 0.7rem;
+      border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+    }
+    .menu-list button:hover { background: var(--paper); }
+    .menu-list hr { border: none; border-top: 1px solid var(--line); margin: 0.25rem 0; }
+
+    main { flex: 1; position: relative; min-height: 0; display: flex; }
+
+    /* ---------- town ---------- */
+    #town {
+      flex: 1; position: relative; min-width: 0;
+      background: var(--ground);
+      background-image: radial-gradient(#e2d6b6 0.9px, transparent 0.9px);
+      background-size: 18px 18px;
+      overflow: hidden;
+    }
+    #map {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
+    }
+    #map.dragging { cursor: grabbing; }
+    #map text { font-family: var(--display); pointer-events: none; }
+    #map .sticker .nm { font-size: 13px; font-weight: 700; fill: var(--ink); }
+    #map .sticker .sub { font-size: 7.5px; letter-spacing: 0.12em; fill: var(--ink-soft); font-family: var(--body); font-weight: 600; }
+    #map .node { cursor: pointer; transition: opacity 0.18s ease; }
+    #map .node * { stroke-linejoin: round; stroke-linecap: round; }
+    #map .node.selected .sticker rect { stroke: var(--red); stroke-width: 3; }
+    #map .road { transition: opacity 0.18s ease; }
+    #map .road .sign text { font-size: 10px; font-weight: 700; fill: var(--ink); }
+    #map.hovering .node:not(.lit), #map.hovering .road:not(.lit) { opacity: 0.28; }
+    #map.search .node:not(.hit) { opacity: 0.18; }
+    #map.search .road:not(.hit) { opacity: 0.18; }
+    #map .goldbug { cursor: pointer; }
+    #map .decor { pointer-events: none; }
+
+    #empty {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      pointer-events: none; padding: 1rem;
+    }
+    #empty[hidden], #town[hidden], #index[hidden] { display: none; }
+    #empty .card {
+      pointer-events: auto; background: var(--paper-2); border: 2px solid var(--ink);
+      border-radius: 18px; box-shadow: var(--shadow); padding: 1.6rem 1.8rem; max-width: 420px; text-align: center;
+    }
+    #empty h2 { font-family: var(--display); font-size: 1.3rem; margin-bottom: 0.4rem; }
+    #empty p { color: var(--ink-soft); font-size: 0.88rem; line-height: 1.5; margin-bottom: 1rem; }
+    #empty .row { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+
+    .legend {
+      position: absolute; left: 12px; bottom: 12px;
+      background: rgba(253,246,230,0.92); border: 2px solid var(--ink); border-radius: 12px;
+      padding: 0.45rem 0.7rem; font-size: 0.7rem; color: var(--ink-soft);
+      display: flex; gap: 0.8rem; align-items: center; box-shadow: 2px 2px 0 var(--ink);
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; border: 1px solid var(--ink); }
+    .legend .hint { color: var(--faint); }
+
+    /* ---------- index ---------- */
+    #index { flex: 1; min-width: 0; overflow: auto; padding: 1.2rem 1.4rem 3rem; }
+    .idx-tools { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+    .chips { display: inline-flex; gap: 0.3rem; flex-wrap: wrap; }
+    .chip {
+      border: 2px solid var(--ink); border-radius: 999px; background: #fff;
+      padding: 0.28rem 0.7rem; font-size: 0.75rem; font-weight: 700; line-height: 1;
+    }
+    .chip.on { background: var(--ink); color: #fff; }
+    .idx-tools select {
+      border: 2px solid var(--ink); border-radius: 999px; background: #fff;
+      padding: 0.28rem 0.7rem; font-size: 0.75rem; font-weight: 700;
+    }
+    .idx-count { margin-left: auto; font-size: 0.75rem; color: var(--faint); }
+    table.idx { width: 100%; border-collapse: separate; border-spacing: 0 6px; }
+    table.idx th {
+      text-align: left; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-soft); font-weight: 700; padding: 0 0.6rem 0.2rem;
+    }
+    table.idx td {
+      background: var(--paper-2); padding: 0.55rem 0.6rem; font-size: 0.85rem; vertical-align: middle;
+      border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink);
+    }
+    table.idx td:first-child { border-left: 2px solid var(--ink); border-radius: 12px 0 0 12px; width: 44px; }
+    table.idx td:last-child { border-right: 2px solid var(--ink); border-radius: 0 12px 12px 0; }
+    table.idx tr.row { cursor: pointer; }
+    table.idx tr.row:hover td { background: #fff; }
+    table.idx tr.row.selected td { background: #fff7d6; }
+    table.idx .mini { width: 36px; height: 40px; display: block; }
+    table.idx .name { font-weight: 700; font-family: var(--display); }
+    table.idx .tagline { color: var(--ink-soft); font-size: 0.78rem; margin-top: 0.1rem; }
+    table.idx .snippet { color: var(--ink-soft); font-size: 0.78rem; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    table.idx .muted { color: var(--faint); font-size: 0.75rem; white-space: nowrap; }
+    .pill { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+    .pill i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; border: 1px solid var(--ink); }
+    .tag { display: inline-block; font-size: 0.68rem; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 0.1rem 0.45rem; margin: 0.1rem 0.15rem 0.1rem 0; color: var(--ink-soft); }
+    .due-red { color: var(--red); font-weight: 700; }
+    .due-soon { color: #b8860b; font-weight: 700; }
+    .idx-empty { color: var(--ink-soft); padding: 2rem 0; text-align: center; font-size: 0.9rem; }
+
+    /* ---------- page (drawer) ---------- */
+    #page {
+      width: 400px; flex-shrink: 0;
+      background: var(--paper-2);
+      border-left: 2px solid var(--ink);
+      display: flex; flex-direction: column;
+      position: relative; z-index: 4;
+      box-shadow: -6px 0 0 rgba(43,33,24,0.06);
+    }
+    #page[hidden] { display: none; }
+    #page::before {
+      content: ""; position: absolute; top: -2px; right: 60px; width: 18px; height: 54px;
+      background: var(--red); border: 2px solid var(--ink); border-top: none;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+      z-index: 2;
+    }
+    .pg-head {
+      display: flex; gap: 0.7rem; align-items: flex-start;
+      padding: 0.9rem 0.9rem 0.7rem; border-bottom: 2px dashed var(--line);
+    }
+    .pg-art { width: 84px; height: 90px; flex-shrink: 0; }
+    .pg-headtxt { flex: 1; min-width: 0; padding-top: 0.2rem; padding-right: 34px; }
+    .pg-name {
+      width: 100%; border: none; background: transparent; outline: none;
+      font-family: var(--display); font-size: 1.25rem; font-weight: 700;
+      border-bottom: 2px solid transparent; padding: 0.1rem 0;
+    }
+    .pg-name:focus { border-bottom-color: var(--ink); }
+    .pg-row { display: flex; gap: 0.4rem; margin-top: 0.4rem; flex-wrap: wrap; }
+    .pg-row select {
+      border: 2px solid var(--ink); border-radius: 999px; background: #fff;
+      padding: 0.22rem 0.55rem; font-size: 0.72rem; font-weight: 700;
+    }
+    .pg-tools { display: flex; flex-direction: column; gap: 0.3rem; }
+    .pg-tools button {
+      width: 28px; height: 28px; border: 2px solid var(--ink); border-radius: 50%;
+      background: #fff; font-size: 0.85rem; line-height: 1; display: flex; align-items: center; justify-content: center;
+    }
+    .pg-tools button:hover { background: var(--yellow); }
+    .pg-body { flex: 1; overflow: auto; padding: 0.8rem 0.9rem 2rem; }
+    .pg-body label { display: block; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); font-weight: 700; margin: 0.7rem 0 0.25rem; }
+    .pg-body input[type="text"], .pg-body input[type="date"], .pg-body textarea, .pg-body select {
+      width: 100%; border: 2px solid var(--ink); border-radius: 10px; background: #fff;
+      padding: 0.45rem 0.6rem; font-size: 0.85rem; outline: none;
+    }
+    .pg-body input:focus, .pg-body textarea:focus, .pg-body select:focus { box-shadow: 0 0 0 3px rgba(63,127,193,0.22); }
+    .pg-body textarea { resize: none; line-height: 1.45; min-height: 2.6rem; }
+    .pg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .swatches { display: flex; gap: 0.35rem; margin-top: 0.5rem; align-items: center; }
+    .swatches button { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ink); padding: 0; }
+    .swatches button.on { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink); }
+    .swatches .lbl { font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); font-weight: 700; margin-right: 0.3rem; }
+    .urlchips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.35rem; }
+    .urlchips a { font-size: 0.72rem; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 0.15rem 0.55rem; text-decoration: none; color: var(--blue); font-weight: 600; }
+    .urlchips a:hover { border-color: var(--blue); }
+    .pg-body h3 { font-family: var(--display); font-size: 0.95rem; margin: 1.3rem 0 0.4rem; display: flex; align-items: center; gap: 0.5rem; }
+    .pg-body h3::after { content: ""; flex: 1; border-top: 2px dashed var(--line); }
+    .addnote { display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end; }
+    .note { background: #fff; border: 2px solid var(--ink); border-radius: 12px; padding: 0.5rem 0.6rem; margin-top: 0.55rem; box-shadow: 2px 2px 0 var(--ink); }
+    .note-top { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.25rem; }
+    .note-top input[type="date"] { width: auto; border: none; padding: 0; font-size: 0.72rem; color: var(--ink-soft); font-weight: 700; background: transparent; }
+    .note-top input[type="date"]:focus { box-shadow: none; }
+    .note-top .x { margin-left: auto; border: none; background: none; color: var(--faint); font-size: 1rem; line-height: 1; padding: 0 0.2rem; }
+    .note-top .x:hover { color: var(--red); }
+    .note textarea { border: none; padding: 0; border-radius: 0; background: transparent; min-height: 1.4rem; }
+    .note textarea:focus { box-shadow: none; }
+    .conn { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; border-bottom: 1px dashed var(--line); font-size: 0.85rem; }
+    .conn .road-ico { width: 22px; height: 8px; border-radius: 4px; background: var(--road); border: 1px solid var(--ink); flex-shrink: 0; position: relative; }
+    .conn .road-ico::after { content: ""; position: absolute; left: 3px; right: 3px; top: 2px; border-top: 1.5px dashed #fff; }
+    .conn .who { font-weight: 700; cursor: pointer; }
+    .conn .who:hover { text-decoration: underline; }
+    .conn input { flex: 1; min-width: 0; border: none !important; border-bottom: 1px dashed var(--line) !important; border-radius: 0 !important; padding: 0.1rem 0.2rem !important; font-size: 0.78rem !important; color: var(--ink-soft); background: transparent !important; }
+    .conn input:focus { box-shadow: none !important; }
+    .conn .x { border: none; background: none; color: var(--faint); font-size: 1rem; line-height: 1; }
+    .conn .x:hover { color: var(--red); }
+    .addconn { display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.4rem; margin-top: 0.6rem; align-items: center; }
+    .addconn select, .addconn input { padding: 0.35rem 0.5rem !important; font-size: 0.78rem !important; }
+    .pg-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 1.6rem; font-size: 0.72rem; color: var(--faint); }
+
+    /* ---------- toast ---------- */
+    #toast {
+      position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px);
+      background: var(--ink); color: #fff; padding: 0.55rem 1rem; border-radius: 999px;
+      font-size: 0.82rem; font-weight: 600; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease; z-index: 50; max-width: 90vw; text-align: center;
+    }
+    #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 980px) {
+      .topbar h1 .sub { display: none; }
+      #q { width: 130px; }
+    }
+    @media (max-width: 760px) {
+      :root { --topbar-h: auto; }
+      .topbar { flex-wrap: wrap; padding: 0.6rem 0.8rem; gap: 0.5rem; height: auto; }
+      .topbar .back { order: 0; }
+      .topbar h1 { order: 1; font-size: 1.15rem; }
+      .tb-actions { order: 2; width: 100%; margin-left: 0; overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
+      .tb-actions::-webkit-scrollbar { display: none; }
+      #q { width: 120px; flex-shrink: 0; }
+      #page {
+        position: fixed; left: 0; right: 0; bottom: 0; width: auto; max-height: 72vh;
+        border-left: none; border-top: 2px solid var(--ink); border-radius: 18px 18px 0 0;
+        box-shadow: 0 -6px 0 rgba(43,33,24,0.08);
+      }
+      #page::before { display: none; }
+      .legend { display: none; }
+      #index { padding: 0.9rem 0.7rem 6rem; }
+      table.idx .hide-sm { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Password gate -->
+  <div id="gate">
+    <div class="gate-card">
+      <svg class="gate-art" viewBox="-70 -70 140 120" aria-hidden="true">
+        <g id="gate-art"></g>
+      </svg>
+      <h1>Meet Town</h1>
+      <p>a busy little book of people, companies &amp; ideas worth watching</p>
+      <form onsubmit="return checkGate(event)">
+        <input id="gate-pw" type="password" placeholder="password" autofocus autocomplete="current-password" aria-label="password" />
+        <button type="submit" aria-label="Unlock">&#8594;</button>
+      </form>
+      <div class="gate-err" id="gate-err"></div>
+      <a href="index.html" class="gate-back">&larr; back to jcsylvan.ai</a>
+    </div>
+  </div>
+
+  <!-- App -->
+  <div id="app">
+    <header class="topbar">
+      <a href="index.html" class="back">&larr; jcsylvan.ai</a>
+      <h1>Meet Town <span class="sub">who is worth meeting, and what do they do all day?</span></h1>
+      <div class="tb-actions">
+        <input id="q" type="search" placeholder="find someone&hellip;" autocomplete="off" aria-label="Search" />
+        <button class="btn red" data-add="person">+ person</button>
+        <button class="btn blue" data-add="company">+ company</button>
+        <button class="btn green" data-add="topic">+ topic</button>
+        <div class="seg" role="tablist">
+          <button id="v-town" class="on" role="tab">town</button>
+          <button id="v-index" role="tab">index</button>
+        </div>
+        <button class="btn yellow" id="due-btn" title="Follow-ups that are due">0 due</button>
+        <details class="menu" id="menu">
+          <summary class="btn ghost" title="More">&#8943;</summary>
+          <div class="menu-list">
+            <button data-menu="fit">Fit the town in view</button>
+            <button data-menu="tidy">Tidy up the town</button>
+            <hr>
+            <button data-menu="export">Export as JSON</button>
+            <button data-menu="import">Import JSON&hellip;</button>
+            <hr>
+            <button data-menu="examples">Remove the examples</button>
+            <button data-menu="help">How this works</button>
+          </div>
+        </details>
+      </div>
+    </header>
+
+    <main>
+      <section id="town">
+        <svg id="map" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-label="Town map"></svg>
+        <div id="empty" hidden>
+          <div class="card">
+            <h2>The town is empty.</h2>
+            <p>Add a person, a company or a topic to build it up. Drag things around, connect them with roads, and keep notes on each one.</p>
+            <div class="row">
+              <button class="btn red" data-add="person">+ person</button>
+              <button class="btn blue" data-add="company">+ company</button>
+              <button class="btn green" data-add="topic">+ topic</button>
+            </div>
+          </div>
+        </div>
+        <div class="legend">
+          <span><i style="background:#3f7fc1"></i>watching</span>
+          <span><i style="background:#f5c542"></i>to meet</span>
+          <span><i style="background:#6fae4b"></i>in touch</span>
+          <span><i style="background:#7a5cc7"></i>met</span>
+          <span><i style="background:#9a9086"></i>parked</span>
+          <span class="hint">drag to move &middot; scroll to zoom &middot; click to open</span>
+        </div>
+      </section>
+
+      <section id="index" hidden>
+        <div class="idx-tools">
+          <div class="chips" id="type-chips">
+            <button class="chip on" data-type="">everyone</button>
+            <button class="chip" data-type="person">people</button>
+            <button class="chip" data-type="company">companies</button>
+            <button class="chip" data-type="topic">topics</button>
+          </div>
+          <select id="f-status" aria-label="Filter by status">
+            <option value="">any status</option>
+          </select>
+          <select id="f-sort" aria-label="Sort">
+            <option value="next">sort: next touch</option>
+            <option value="updated">sort: recently updated</option>
+            <option value="name">sort: name</option>
+            <option value="type">sort: kind</option>
+          </select>
+          <button class="chip" id="f-due">due only</button>
+          <span class="idx-count" id="idx-count"></span>
+        </div>
+        <div id="idx-body"></div>
+      </section>
+
+      <aside id="page" hidden aria-label="Details"></aside>
+    </main>
+
+    <input type="file" id="import-file" accept="application/json,.json" hidden>
+    <datalist id="conn-labels">
+      <option value="works at"><option value="founded"><option value="invests in"><option value="knows">
+      <option value="can intro"><option value="introduced by"><option value="former colleague"><option value="competes with">
+      <option value="partner of"><option value="fits theme"><option value="customer of"><option value="advises">
+    </datalist>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script>
+    /* =====================================================================
+       Password gate
+       Same password as the other locked pages on the site. To change it,
+       run this in the browser console and paste the result into GATE_HASH:
+         crypto.subtle.digest("SHA-256", new TextEncoder().encode("new password"))
+           .then(b => console.log(Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,"0")).join("")))
+       ===================================================================== */
+    const GATE_HASH = "7b2e9f882fb00c76d3863ad4d12a8254bc146fdcf8934dfb20322f6598f03e0c";
+    const SS_UNLOCK = "meet-town-unlocked";
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+    async function checkGate(e) {
+      e.preventDefault();
+      const input = document.getElementById("gate-pw");
+      const err = document.getElementById("gate-err");
+      const pw = input.value;
+      if (!pw) return false;
+      if (await sha256(pw) === GATE_HASH) {
+        try { sessionStorage.setItem(SS_UNLOCK, "1"); } catch { /* ignore */ }
+        revealApp();
+      } else {
+        err.textContent = "that is not the password";
+        input.value = "";
+        input.focus();
+      }
+      return false;
+    }
+    function revealApp() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("app").classList.add("on");
+      boot();
+    }
+
+    /* =====================================================================
+       Constants and helpers
+       ===================================================================== */
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const INK = "#2b2118";
+    const LS_DOC = "meet-town-doc";
+    const TYPES = { person: "Person", company: "Company", topic: "Topic" };
+    const STATUSES = [
+      ["watching", "Watching"], ["to-meet", "To meet"], ["in-touch", "In touch"], ["met", "Met"], ["parked", "Parked"]
+    ];
+    const STATUS_LABEL = Object.fromEntries(STATUSES);
+    const STATUS_COLOR = { "watching": "#3f7fc1", "to-meet": "#f5c542", "in-touch": "#6fae4b", "met": "#7a5cc7", "parked": "#9a9086" };
+    const PALETTE = ["#e2432f", "#f5c542", "#3f7fc1", "#6fae4b", "#f08a3e", "#e56fa5", "#7a5cc7", "#3fb3b0"];
+    const ANIMALS = ["cat", "fox", "rabbit", "bear", "pig", "dog", "mouse", "owl"];
+    const VEHICLES = ["pickle", "apple", "banana", "pencil", "teacup", "hotdog"];
+    const HATS = ["none", "cap", "top", "bow", "none"];
+    const BUILDINGS = ["shop", "tower", "house", "factory", "bank"];
+    const NODE_R = 82;        // rough radius used for spacing
+    const ROAD_LEN = 250;     // preferred road length
+
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+    function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function today() { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+    function addDays(iso, n) { const d = new Date(iso + "T00:00:00"); d.setDate(d.getDate() + n); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function trunc(s, n) { s = String(s || ""); return s.length > n ? s.slice(0, n - 1) + "…" : s; }
+    function fmtDate(iso) {
+      if (!iso) return "";
+      const d = new Date(iso + "T00:00:00");
+      if (isNaN(d)) return iso;
+      return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: d.getFullYear() === new Date().getFullYear() ? undefined : "numeric" });
+    }
+    function fmtStamp(ms) { if (!ms) return ""; return new Date(ms).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }); }
+    function shade(hex, amt) {
+      const n = parseInt(hex.slice(1), 16);
+      const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => Math.max(0, Math.min(255, Math.round(v + amt))));
+      return "#" + ((1 << 24) + (c[0] << 16) + (c[1] << 8) + c[2]).toString(16).slice(1);
+    }
+    function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+    let toastTimer;
+    function toast(msg) {
+      const el = $("#toast"); el.textContent = msg; el.classList.add("on");
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("on"), 2600);
+    }
+    function dueState(e) {
+      if (!e.nextTouch) return "";
+      const t = today();
+      if (e.nextTouch <= t) return "due";
+      if (e.nextTouch <= addDays(t, 7)) return "soon";
+      return "";
+    }
+
+    /* =====================================================================
+       Data model (kept in localStorage)
+       ===================================================================== */
+    let doc = { version: 1, updatedAt: 0, entities: [], links: [] };
+    const byId = id => doc.entities.find(e => e.id === id);
+
+    function randomLook() {
+      return { color: pick(PALETTE), animal: pick(ANIMALS), vehicle: pick(VEHICLES), hat: pick(HATS), building: pick(BUILDINGS) };
+    }
+    function newEntity(type, name) {
+      const now = Date.now();
+      return {
+        id: uid(), type, name: name || "", tagline: "",
+        status: type === "person" ? "to-meet" : "watching",
+        tags: [], urls: "", nextTouch: "", notes: [],
+        look: randomLook(), x: 0, y: 0, pinned: false,
+        createdAt: now, updatedAt: now
+      };
+    }
+    function normalizeEntity(raw) {
+      const e = Object.assign(newEntity("person"), raw || {});
+      if (!TYPES[e.type]) e.type = "person";
+      if (!STATUS_LABEL[e.status]) e.status = "watching";
+      e.id = String(e.id || uid());
+      e.name = String(e.name || "");
+      e.tagline = String(e.tagline || "");
+      e.urls = String(e.urls || "");
+      e.nextTouch = /^\d{4}-\d{2}-\d{2}$/.test(e.nextTouch || "") ? e.nextTouch : "";
+      e.tags = Array.isArray(e.tags) ? e.tags.map(t => String(t).trim()).filter(Boolean) : [];
+      e.notes = Array.isArray(e.notes) ? e.notes.map(n => ({ id: String(n.id || uid()), date: String(n.date || today()), text: String(n.text || "") })) : [];
+      e.look = Object.assign(randomLook(), e.look || {});
+      if (!PALETTE.includes(e.look.color) && !/^#[0-9a-f]{6}$/i.test(e.look.color)) e.look.color = pick(PALETTE);
+      if (!ANIMALS.includes(e.look.animal)) e.look.animal = pick(ANIMALS);
+      if (!VEHICLES.includes(e.look.vehicle)) e.look.vehicle = pick(VEHICLES);
+      if (!HATS.includes(e.look.hat)) e.look.hat = "none";
+      if (!BUILDINGS.includes(e.look.building)) e.look.building = pick(BUILDINGS);
+      e.x = Number(e.x) || 0; e.y = Number(e.y) || 0; e.pinned = !!e.pinned;
+      e.createdAt = Number(e.createdAt) || Date.now(); e.updatedAt = Number(e.updatedAt) || e.createdAt;
+      e.sample = !!e.sample;
+      return e;
+    }
+    function normalizeDoc(raw) {
+      const d = { version: 1, updatedAt: Number(raw && raw.updatedAt) || 0, entities: [], links: [] };
+      const seen = new Set();
+      for (const r of (raw && Array.isArray(raw.entities) ? raw.entities : [])) {
+        const e = normalizeEntity(r);
+        if (seen.has(e.id)) e.id = uid();
+        seen.add(e.id); d.entities.push(e);
+      }
+      for (const l of (raw && Array.isArray(raw.links) ? raw.links : [])) {
+        if (!l || !seen.has(String(l.a)) || !seen.has(String(l.b)) || l.a === l.b) continue;
+        d.links.push({ id: String(l.id || uid()), a: String(l.a), b: String(l.b), label: String(l.label || "") });
+      }
+      return d;
+    }
+    function load() {
+      let raw = null;
+      try { raw = JSON.parse(localStorage.getItem(LS_DOC)); } catch { raw = null; }
+      if (raw && Array.isArray(raw.entities)) { doc = normalizeDoc(raw); return; }
+      doc = { version: 1, updatedAt: 0, entities: [], links: [] };
+      seedExamples();
+    }
+    function save() {
+      doc.updatedAt = Date.now();
+      try { localStorage.setItem(LS_DOC, JSON.stringify(doc)); }
+      catch { toast("Could not save: browser storage is unavailable or full."); }
+      updateDue();
+    }
+    function seedExamples() {
+      const co = newEntity("company", "Acme Robotics (example)");
+      co.tagline = "Warehouse robots. Series B. Hiring a partnerships lead.";
+      co.tags = ["robotics", "example"]; co.urls = "https://example.com";
+      co.look.building = "factory"; co.look.color = "#3f7fc1"; co.sample = true;
+      co.notes = [{ id: uid(), date: today(), text: "This is an example entry. Remove the examples from the ⋯ menu when you are ready." }];
+      const p = newEntity("person", "Wren Okafor (example)");
+      p.tagline = "Head of partnerships at Acme"; p.status = "to-meet"; p.nextTouch = today();
+      p.tags = ["intro via Sam", "example"]; p.look.animal = "fox"; p.look.vehicle = "pickle"; p.look.color = "#f08a3e"; p.sample = true;
+      p.notes = [{ id: uid(), date: today(), text: "Sam says she is the one who decides which integrators they work with." }];
+      const s = newEntity("person", "Sam Lindqvist (example)");
+      s.tagline = "Old colleague; knows everyone in logistics"; s.status = "in-touch"; s.nextTouch = addDays(today(), 12);
+      s.tags = ["example"]; s.look.animal = "bear"; s.look.vehicle = "apple"; s.look.color = "#7a5cc7"; s.look.hat = "cap"; s.sample = true;
+      const t = newEntity("topic", "Reshoring (example)");
+      t.tagline = "Who is building factories again, and who supplies them?"; t.tags = ["theme", "example"]; t.look.color = "#6fae4b"; t.sample = true;
+      doc.entities = [co, p, s, t];
+      doc.links = [
+        { id: uid(), a: p.id, b: co.id, label: "works at" },
+        { id: uid(), a: s.id, b: p.id, label: "can intro" },
+        { id: uid(), a: co.id, b: t.id, label: "fits theme" }
+      ];
+      layoutAll();
+      save();
+    }
+
+    /* =====================================================================
+       Layout (a tiny force simulation)
+       ===================================================================== */
+    function settle(freeIds, iters) {
+      const ns = doc.entities; const n = ns.length; if (!n) return;
+      const idx = new Map(ns.map((e, i) => [e.id, i]));
+      const free = ns.map(e => freeIds.has(e.id));
+      let cx = 0, cy = 0; ns.forEach(e => { cx += e.x; cy += e.y; }); cx /= n; cy /= n;
+      const minD = NODE_R * 2.15;
+      for (let it = 0; it < iters; it++) {
+        const k = 1 - it / iters;
+        const fx = new Float64Array(n), fy = new Float64Array(n);
+        for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+          let dx = ns[j].x - ns[i].x, dy = ns[j].y - ns[i].y;
+          let d = Math.hypot(dx, dy);
+          if (d < 1) { dx = (Math.random() - 0.5); dy = (Math.random() - 0.5); d = 1; }
+          if (d < minD) { const f = (minD - d) / d * 0.55; fx[i] -= dx * f; fy[i] -= dy * f; fx[j] += dx * f; fy[j] += dy * f; }
+          else if (d < minD * 2.2) { const f = (minD * 2.2 - d) / d * 0.03; fx[i] -= dx * f; fy[i] -= dy * f; fx[j] += dx * f; fy[j] += dy * f; }
+        }
+        for (const l of doc.links) {
+          const i = idx.get(l.a), j = idx.get(l.b); if (i == null || j == null) continue;
+          const dx = ns[j].x - ns[i].x, dy = ns[j].y - ns[i].y; const d = Math.max(1, Math.hypot(dx, dy));
+          const f = (d - ROAD_LEN) / d * 0.06;
+          fx[i] += dx * f; fy[i] += dy * f; fx[j] -= dx * f; fy[j] -= dy * f;
+        }
+        for (let i = 0; i < n; i++) {
+          if (!free[i]) continue;
+          fx[i] += (cx - ns[i].x) * 0.004; fy[i] += (cy - ns[i].y) * 0.004;
+          ns[i].x += fx[i] * k; ns[i].y += fy[i] * k;
+        }
+      }
+      ns.forEach(e => { e.x = Math.round(e.x); e.y = Math.round(e.y); });
+    }
+    function layoutAll() {
+      const golden = Math.PI * (3 - Math.sqrt(5));
+      doc.entities.forEach((e, i) => {
+        const r = 150 * Math.sqrt(i + 0.5), a = i * golden;
+        e.x = Math.round(Math.cos(a) * r); e.y = Math.round(Math.sin(a) * r); e.pinned = false;
+      });
+      settle(new Set(doc.entities.map(e => e.id)), 400);
+    }
+    function placeNew(e) {
+      const nbrs = doc.links.filter(l => l.a === e.id || l.b === e.id).map(l => byId(l.a === e.id ? l.b : l.a)).filter(Boolean);
+      if (nbrs.length) {
+        e.x = nbrs.reduce((s, o) => s + o.x, 0) / nbrs.length + (Math.random() - 0.5) * 120;
+        e.y = nbrs.reduce((s, o) => s + o.y, 0) / nbrs.length + (Math.random() - 0.5) * 120 + 40;
+      } else if (doc.entities.length > 1) {
+        e.x = vb.x + vb.w / 2 + (Math.random() - 0.5) * 200;
+        e.y = vb.y + vb.h / 2 + (Math.random() - 0.5) * 200;
+      } else { e.x = 0; e.y = 0; }
+      settle(new Set([e.id]), 220);
+    }
+
+    /* =====================================================================
+       Drawing
+       ===================================================================== */
+    function personArt(look) {
+      const c = look.color, dark = shade(c, -45), hc = PALETTE[(PALETTE.indexOf(c) + 3 + PALETTE.length) % PALETTE.length];
+      const S = `stroke="${INK}" stroke-width="2"`;
+      const ears = {
+        cat: `<path d="M-19 -36 L-16 -58 L-3 -44 Z M19 -36 L16 -58 L3 -44 Z" fill="${c}" ${S}/>`,
+        fox: `<path d="M-22 -34 L-20 -63 L-2 -44 Z M22 -34 L20 -63 L2 -44 Z" fill="${c}" ${S}/><path d="M-17 -40 L-16 -53 L-8 -45 Z M17 -40 L16 -53 L8 -45 Z" fill="#fff"/>`,
+        rabbit: `<ellipse cx="-9" cy="-60" rx="6.5" ry="17" fill="${c}" ${S}/><ellipse cx="9" cy="-60" rx="6.5" ry="17" fill="${c}" ${S}/><ellipse cx="-9" cy="-60" rx="2.8" ry="11" fill="#f5b8c8"/><ellipse cx="9" cy="-60" rx="2.8" ry="11" fill="#f5b8c8"/>`,
+        bear: `<circle cx="-16" cy="-43" r="7.5" fill="${c}" ${S}/><circle cx="16" cy="-43" r="7.5" fill="${c}" ${S}/><circle cx="-16" cy="-43" r="3.5" fill="${dark}"/><circle cx="16" cy="-43" r="3.5" fill="${dark}"/>`,
+        pig: `<path d="M-18 -38 L-17 -52 L-6 -43 Z M18 -38 L17 -52 L6 -43 Z" fill="${c}" ${S}/>`,
+        dog: `<ellipse cx="-21" cy="-24" rx="6.5" ry="13" fill="${dark}" ${S}/><ellipse cx="21" cy="-24" rx="6.5" ry="13" fill="${dark}" ${S}/>`,
+        mouse: `<circle cx="-18" cy="-44" r="9.5" fill="${c}" ${S}/><circle cx="18" cy="-44" r="9.5" fill="${c}" ${S}/><circle cx="-18" cy="-44" r="5" fill="#f5b8c8"/><circle cx="18" cy="-44" r="5" fill="#f5b8c8"/>`,
+        owl: `<path d="M-17 -40 L-20 -55 L-7 -46 Z M17 -40 L20 -55 L7 -46 Z" fill="${c}" ${S}/>`
+      }[look.animal];
+      const head = `<circle cx="0" cy="-28" r="21" fill="${c}" ${S}/>`;
+      let face;
+      if (look.animal === "owl") {
+        face = `<circle cx="-8" cy="-30" r="7" fill="#fff" ${S}/><circle cx="8" cy="-30" r="7" fill="#fff" ${S}/><circle cx="-7" cy="-30" r="3" fill="${INK}"/><circle cx="9" cy="-30" r="3" fill="${INK}"/><path d="M-3 -21 L3 -21 L0 -15 Z" fill="#f08a3e" ${S}/>`;
+      } else if (look.animal === "pig") {
+        face = `<circle cx="-7" cy="-31" r="2.4" fill="${INK}"/><circle cx="7" cy="-31" r="2.4" fill="${INK}"/><ellipse cx="0" cy="-20" rx="8" ry="5.5" fill="#f5b8c8" ${S}/><circle cx="-3" cy="-20" r="1.3" fill="${INK}"/><circle cx="3" cy="-20" r="1.3" fill="${INK}"/>`;
+      } else {
+        const muzzle = (look.animal === "bear" || look.animal === "dog" || look.animal === "fox") ? `<ellipse cx="0" cy="-19" rx="9" ry="6" fill="#f7ecd8"/>` : "";
+        const whisk = (look.animal === "cat" || look.animal === "mouse") ? `<path d="M-25 -22 L-10 -20 M-25 -16 L-10 -18 M25 -22 L10 -20 M25 -16 L10 -18" stroke="${INK}" stroke-width="1.2" fill="none"/>` : "";
+        face = `${muzzle}<circle cx="-7" cy="-30" r="2.4" fill="${INK}"/><circle cx="7" cy="-30" r="2.4" fill="${INK}"/><ellipse cx="0" cy="-21" rx="3" ry="2.2" fill="${INK}"/><path d="M-6 -17 q6 5 12 0" stroke="${INK}" stroke-width="1.6" fill="none"/>${whisk}`;
+      }
+      const hat = {
+        none: "",
+        cap: `<path d="M-19 -45 a19 13 0 0 1 38 0 Z" fill="${hc}" ${S}/><path d="M0 -45 h30 a3 3 0 0 1 0 6 h-30 z" fill="${hc}" ${S}/>`,
+        top: `<rect x="-22" y="-49" width="44" height="6" rx="3" fill="${INK}"/><rect x="-14" y="-72" width="28" height="26" rx="2" fill="${INK}"/><rect x="-14" y="-54" width="28" height="5" fill="${hc}"/>`,
+        bow: `<path d="M-13 -50 L0 -45 L13 -50 L13 -40 L0 -45 L-13 -40 Z" fill="${hc}" ${S}/><circle cx="0" cy="-45" r="3" fill="${INK}"/>`
+      }[look.hat] || "";
+      const vc = { pickle: "#7cb342", apple: "#e2432f", banana: "#f5c542", pencil: "#f5c542", teacup: c, hotdog: "#e0b070" }[look.vehicle];
+      const vehicle = {
+        pickle: `<ellipse cx="0" cy="12" rx="47" ry="17" fill="${vc}" ${S}/><circle cx="-24" cy="6" r="2.4" fill="#4f7d24"/><circle cx="-6" cy="16" r="2.4" fill="#4f7d24"/><circle cx="12" cy="4" r="2.4" fill="#4f7d24"/><circle cx="28" cy="14" r="2.4" fill="#4f7d24"/>`,
+        apple: `<circle cx="0" cy="8" r="27" fill="${vc}" ${S}/><path d="M2 -18 q4 -9 9 -11" stroke="${INK}" stroke-width="2.4" fill="none"/><path d="M4 -22 q10 -9 17 -1 q-9 7 -17 1z" fill="#6fae4b" ${S}/>`,
+        banana: `<path d="M-47 -2 Q0 38 47 -2 Q30 20 0 20 Q-30 20 -47 -2 Z" fill="${vc}" ${S}/><path d="M-44 -2 q4 -6 6 -3" stroke="${INK}" stroke-width="2.5"/>`,
+        pencil: `<rect x="-42" y="-3" width="76" height="26" fill="${vc}" ${S}/><path d="M34 -3 L54 10 L34 23 Z" fill="#f3d9a8" ${S}/><path d="M47 5.5 L54 10 L47 14.5 Z" fill="${INK}"/><rect x="-52" y="-3" width="12" height="26" rx="3" fill="#e56fa5" ${S}/><rect x="-42" y="-3" width="6" height="26" fill="#9aa5ad"/>`,
+        teacup: `<ellipse cx="0" cy="26" rx="46" ry="6" fill="#fff" ${S}/><path d="M-34 -8 h68 l-9 32 h-50 z" fill="${vc}" ${S}/><path d="M34 -2 q20 6 0 20" fill="none" ${S}/><ellipse cx="0" cy="-8" rx="34" ry="5" fill="#fff8e6" ${S}/>`,
+        hotdog: `<rect x="-46" y="-2" width="92" height="28" rx="14" fill="${vc}" ${S}/><rect x="-40" y="-10" width="80" height="14" rx="7" fill="#c94f3d" ${S}/><path d="M-32 -4 q6 -7 12 0 t12 0 t12 0 t12 0" stroke="#f5c542" stroke-width="3" fill="none"/>`
+      }[look.vehicle];
+      const wheels = `<circle cx="-25" cy="27" r="10" fill="${INK}"/><circle cx="-25" cy="27" r="4" fill="#fff"/><circle cx="25" cy="27" r="10" fill="${INK}"/><circle cx="25" cy="27" r="4" fill="#fff"/>`;
+      return `<g class="art">${ears}${head}${face}${hat}${vehicle}${wheels}</g>`;
+    }
+
+    function companyArt(look) {
+      const c = look.color, dark = shade(c, -45), win = "#fff6d5";
+      const S = `stroke="${INK}" stroke-width="2"`;
+      const wins = (xs, ys, w, h) => xs.map(x => ys.map(y =>
+        `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${win}" ${S}/><path d="M${x + w / 2} ${y} v${h} M${x} ${y + h / 2} h${w}" stroke="${INK}" stroke-width="1.2"/>`
+      ).join("")).join("");
+      let body;
+      switch (look.building) {
+        case "house":
+          body = `<rect x="-45" y="-20" width="90" height="60" fill="${c}" ${S}/>` +
+            `<rect x="20" y="-58" width="13" height="26" fill="#8a5a44" ${S}/>` +
+            `<path d="M-54 -20 L0 -64 L54 -20 Z" fill="#c94f3d" ${S}/>` +
+            `<path d="M-13 40 v-26 a13 13 0 0 1 26 0 v26 z" fill="#5a3a2a" ${S}/><circle cx="8" cy="22" r="1.6" fill="#f5c542"/>` +
+            wins([-38, 22], [-6], 16, 16) + `<rect x="-40" y="12" width="20" height="4" fill="${dark}"/><rect x="20" y="12" width="20" height="4" fill="${dark}"/>`;
+          break;
+        case "tower":
+          body = `<rect x="-30" y="-64" width="60" height="104" fill="${c}" ${S}/>` +
+            `<rect x="-35" y="-70" width="70" height="8" fill="${dark}" ${S}/>` +
+            `<line x1="0" y1="-70" x2="0" y2="-92" stroke="${INK}" stroke-width="2"/><path d="M0 -92 l18 5 l-18 6 z" fill="#e2432f" ${S}/>` +
+            wins([-22, -4, 14], [-56, -38, -20, -2], 9, 11) +
+            `<rect x="-9" y="20" width="18" height="20" fill="#5a3a2a" ${S}/>`;
+          break;
+        case "factory":
+          body = `<rect x="34" y="-72" width="15" height="54" fill="#8a5a44" ${S}/>` +
+            `<g fill="#e9e3d8" opacity="0.9"><circle cx="42" cy="-80" r="6"/><circle cx="48" cy="-92" r="8"/><circle cx="58" cy="-104" r="9"/></g>` +
+            `<rect x="-58" y="-20" width="116" height="60" fill="${c}" ${S}/>` +
+            `<path d="M-58 -20 V-52 L-20 -20 V-52 L18 -20 V-52 L56 -20 Z" fill="${dark}" ${S}/>` +
+            wins([-50, -28, -6, 16, 38], [-8], 12, 12) +
+            `<rect x="-14" y="10" width="28" height="30" fill="#5a3a2a" ${S}/><path d="M-14 10 h28 M0 10 v30" stroke="${INK}" stroke-width="1.5"/>`;
+          break;
+        case "bank":
+          body = `<rect x="-52" y="-30" width="104" height="70" fill="${c}" ${S}/>` +
+            `<path d="M-60 -30 L0 -62 L60 -30 Z" fill="#fff8e6" ${S}/>` +
+            `<rect x="-58" y="34" width="116" height="6" fill="#fff8e6" ${S}/>` +
+            [-44, -18, 8, 34].map(x => `<rect x="${x}" y="-26" width="10" height="60" fill="#fff8e6" ${S}/>`).join("") +
+            `<rect x="-9" y="6" width="18" height="28" fill="#5a3a2a" ${S}/><circle cx="0" cy="-46" r="6" fill="${win}" ${S}/>`;
+          break;
+        default: // shop
+          body = `<rect x="-52" y="-32" width="104" height="72" fill="${c}" ${S}/>` +
+            `<rect x="-44" y="-8" width="52" height="30" fill="#dff1ff" ${S}/><path d="M-40 -4 l12 22" stroke="#fff" stroke-width="3"/>` +
+            `<rect x="18" y="0" width="24" height="40" fill="#5a3a2a" ${S}/><circle cx="36" cy="22" r="1.6" fill="#f5c542"/>` +
+            `<rect x="-56" y="-52" width="112" height="16" fill="#fff8e6" ${S}/>` +
+            `<g>${[0, 1, 2, 3, 4, 5, 6].map(i => `<rect x="${-56 + i * 16}" y="-36" width="16" height="14" fill="${i % 2 ? "#fff" : "#e2432f"}"/>`).join("")}` +
+            `${[0, 1, 2, 3, 4, 5, 6].map(i => `<path d="M${-56 + i * 16} -22 a8 6 0 0 0 16 0 z" fill="${i % 2 ? "#fff" : "#e2432f"}"/>`).join("")}` +
+            `<path d="M-56 -36 h112 M-56 -22 a8 6 0 0 0 16 0 a8 6 0 0 0 16 0 a8 6 0 0 0 16 0 a8 6 0 0 0 16 0 a8 6 0 0 0 16 0 a8 6 0 0 0 16 0 a8 6 0 0 0 16 0" fill="none" ${S}/></g>` +
+            `<rect x="-48" y="-48" width="96" height="8" fill="${dark}"/>`;
+      }
+      return `<g class="art">${body}</g>`;
+    }
+
+    function topicArt(look) {
+      const c = look.color; const S = `stroke="${INK}" stroke-width="2"`;
+      return `<g class="art">` +
+        `<rect x="-32" y="-4" width="7" height="44" fill="#8a5a44" ${S}/><rect x="25" y="-4" width="7" height="44" fill="#8a5a44" ${S}/>` +
+        `<rect x="-60" y="-60" width="120" height="60" rx="5" fill="${c}" ${S}/>` +
+        `<rect x="-53" y="-53" width="106" height="46" rx="3" fill="#fff8e6" ${S}/>` +
+        `<path d="M-40 -42 l-6 -6 M40 -42 l6 -6 M0 -50 v-6 M-44 -30 h-7 M44 -30 h7" stroke="#f5c542" stroke-width="2.5"/>` +
+        `<circle cx="0" cy="-33" r="12" fill="#f5c542" ${S}/><rect x="-6" y="-22" width="12" height="9" rx="2" fill="#b9b1a5" ${S}/>` +
+        `<path d="M-4 -33 q4 -6 8 0" stroke="#fff" stroke-width="2" fill="none"/>` +
+        `</g>`;
+    }
+
+    function art(e) {
+      if (e.type === "company") return companyArt(e.look);
+      if (e.type === "topic") return topicArt(e.look);
+      return personArt(e.look);
+    }
+
+    function sticker(e) {
+      const name = trunc(e.name || "(unnamed)", 26);
+      const sub = `${TYPES[e.type]} · ${STATUS_LABEL[e.status]}`.toUpperCase();
+      const w = Math.max(name.length * 7.6 + 30, sub.length * 5.6 + 30, 72);
+      const y = e.type === "person" ? 46 : 48;
+      return `<g class="sticker" transform="translate(0,${y})">` +
+        `<rect x="${-w / 2}" y="0" width="${w}" height="36" rx="9" fill="#fff" stroke="${INK}" stroke-width="1.8"/>` +
+        `<circle cx="${-w / 2 + 12}" cy="15" r="4" fill="${STATUS_COLOR[e.status]}" stroke="${INK}" stroke-width="1"/>` +
+        `<text x="5" y="19" text-anchor="middle" class="nm">${esc(name)}</text>` +
+        `<text x="0" y="30" text-anchor="middle" class="sub">${esc(sub)}</text></g>`;
+    }
+
+    function nodeSvg(e) {
+      const ds = dueState(e);
+      const badge = ds ? `<g class="due" transform="translate(${e.type === "person" ? "50,-72" : "60,-64"})"><circle r="10" fill="${ds === "due" ? "#e2432f" : "#f5c542"}" stroke="${INK}" stroke-width="2"/><text y="4.5" text-anchor="middle" style="font-size:13px;font-weight:700;fill:${ds === "due" ? "#fff" : INK}">!</text></g>` : "";
+      return `<g class="node type-${e.type}${e.id === currentId ? " selected" : ""}" data-id="${esc(e.id)}" transform="translate(${e.x},${e.y})" role="button" tabindex="0" aria-label="${esc(e.name || "unnamed")}">` +
+        `<rect x="-62" y="-100" width="124" height="190" fill="transparent"/>` +
+        `<ellipse cx="0" cy="40" rx="52" ry="7" fill="rgba(43,33,24,0.10)"/>` +
+        art(e) + sticker(e) + badge + `</g>`;
+    }
+
+    function roadSvg(l) {
+      const a = byId(l.a), b = byId(l.b); if (!a || !b) return "";
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const label = trunc(l.label, 22);
+      const w = label.length * 6.4 + 18;
+      const sign = label ? `<g class="sign" transform="translate(${mx},${my})"><rect x="${-w / 2}" y="-10" width="${w}" height="20" rx="6" fill="#fff8e6" stroke="${INK}" stroke-width="1.6"/><text y="4" text-anchor="middle">${esc(label)}</text></g>` : "";
+      return `<g class="road" data-id="${esc(l.id)}" data-a="${esc(a.id)}" data-b="${esc(b.id)}">` +
+        `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${INK}" stroke-width="30" stroke-linecap="round" opacity="0.18"/>` +
+        `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#e3cf9e" stroke-width="26" stroke-linecap="round"/>` +
+        `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#fff" stroke-width="2.5" stroke-dasharray="14 12"/>` +
+        sign + `</g>`;
+    }
+    function updateRoad(g) {
+      const a = byId(g.dataset.a), b = byId(g.dataset.b); if (!a || !b) return;
+      g.querySelectorAll("line").forEach(l => { l.setAttribute("x1", a.x); l.setAttribute("y1", a.y); l.setAttribute("x2", b.x); l.setAttribute("y2", b.y); });
+      const s = g.querySelector(".sign"); if (s) s.setAttribute("transform", `translate(${(a.x + b.x) / 2},${(a.y + b.y) / 2})`);
+    }
+
+    // deterministic scenery so the trees stay put between renders
+    function hash2(i, j) {
+      let h = (Math.imul(i, 73856093) ^ Math.imul(j, 19349663) ^ 0x9e3779b9) >>> 0;
+      h = Math.imul(h ^ (h >>> 15), 2246822519) >>> 0; h = Math.imul(h ^ (h >>> 13), 3266489917) >>> 0;
+      return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+    }
+    function distToSeg(px, py, ax, ay, bx, by) {
+      const dx = bx - ax, dy = by - ay; const l2 = dx * dx + dy * dy;
+      let t = l2 ? ((px - ax) * dx + (py - ay) * dy) / l2 : 0; t = Math.max(0, Math.min(1, t));
+      return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+    }
+    let goldbug = null;
+    function decorSvg(bb) {
+      const step = 150; let out = ""; const spots = [];
+      const roads = doc.links.map(l => [byId(l.a), byId(l.b)]).filter(r => r[0] && r[1]);
+      const i0 = Math.floor((bb.x0 - 300) / step), i1 = Math.ceil((bb.x1 + 300) / step);
+      const j0 = Math.floor((bb.y0 - 300) / step), j1 = Math.ceil((bb.y1 + 300) / step);
+      for (let i = i0; i <= i1; i++) for (let j = j0; j <= j1; j++) {
+        const r = hash2(i, j); if (r < 0.5) continue;
+        const x = i * step + hash2(i + 7, j) * step, y = j * step + hash2(i, j + 7) * step;
+        if (doc.entities.some(e => Math.hypot(e.x - x, e.y - y) < 112)) continue;
+        if (roads.some(([a, b]) => distToSeg(x, y, a.x, a.y, b.x, b.y) < 40)) continue;
+        const kind = hash2(i + 3, j + 3); const sz = 0.8 + hash2(i + 5, j + 1) * 0.6;
+        spots.push([x, y]);
+        if (kind < 0.55) {
+          const g = ["#6fae4b", "#5a9a3c", "#8cc06a"][Math.floor(hash2(i + 9, j) * 3)];
+          out += `<g transform="translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${sz.toFixed(2)})"><rect x="-3" y="4" width="6" height="16" fill="#8a5a44" stroke="${INK}" stroke-width="1.5"/><circle cx="0" cy="-6" r="15" fill="${g}" stroke="${INK}" stroke-width="1.5"/><circle cx="-8" cy="2" r="9" fill="${g}" stroke="${INK}" stroke-width="1.5"/><circle cx="8" cy="2" r="9" fill="${g}" stroke="${INK}" stroke-width="1.5"/></g>`;
+        } else if (kind < 0.8) {
+          out += `<g transform="translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${sz.toFixed(2)})"><ellipse cx="0" cy="6" rx="16" ry="10" fill="#8cc06a" stroke="${INK}" stroke-width="1.5"/><ellipse cx="-6" cy="0" rx="9" ry="8" fill="#8cc06a" stroke="${INK}" stroke-width="1.5"/></g>`;
+        } else {
+          const f = ["#e2432f", "#f5c542", "#e56fa5"][Math.floor(hash2(i, j + 9) * 3)];
+          out += `<g transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><line x1="0" y1="0" x2="0" y2="12" stroke="#5a9a3c" stroke-width="2"/><circle r="4.5" fill="${f}" stroke="${INK}" stroke-width="1.3"/><circle r="1.6" fill="#fff8e6"/></g>`;
+        }
+      }
+      if (!goldbug && spots.length) { const s = spots[Math.floor(Math.random() * spots.length)]; goldbug = { x: s[0] + 22, y: s[1] + 14 }; }
+      const bug = goldbug ? `<g class="goldbug" transform="translate(${goldbug.x},${goldbug.y})"><title>Goldbug?</title><ellipse rx="5" ry="6" fill="#f5c542" stroke="${INK}" stroke-width="1.3"/><line x1="0" y1="-6" x2="0" y2="6" stroke="${INK}" stroke-width="1"/><circle cx="-2" cy="-2" r="1" fill="${INK}"/><circle cx="2" cy="1" r="1" fill="${INK}"/><circle cx="0" cy="-8" r="2" fill="${INK}"/></g>` : "";
+      return `<g class="decor">${out}</g>${bug}`;
+    }
+
+    /* =====================================================================
+       Map rendering, pan and zoom
+       ===================================================================== */
+    const svg = $("#map");
+    let vb = { x: -600, y: -400, w: 1200, h: 800 };
+    let currentId = null;
+    let view = "town";
+
+    function nodesBBox() {
+      if (!doc.entities.length) return { x0: -300, y0: -200, x1: 300, y1: 200 };
+      const xs = doc.entities.map(e => e.x), ys = doc.entities.map(e => e.y);
+      return { x0: Math.min(...xs) - 90, y0: Math.min(...ys) - 110, x1: Math.max(...xs) + 90, y1: Math.max(...ys) + 100 };
+    }
+    function applyViewBox() { svg.setAttribute("viewBox", `${vb.x} ${vb.y} ${vb.w} ${vb.h}`); }
+    function fitView() {
+      const bb = nodesBBox(); const cw = svg.clientWidth || 1000, ch = svg.clientHeight || 700;
+      let w = Math.max(1100, bb.x1 - bb.x0 + 200), h = Math.max(700, bb.y1 - bb.y0 + 200);
+      const asp = cw / ch;
+      if (w / h < asp) w = h * asp; else h = w / asp;
+      vb = { x: (bb.x0 + bb.x1) / 2 - w / 2, y: (bb.y0 + bb.y1) / 2 - h / 2, w, h };
+      applyViewBox();
+    }
+    function panTo(e) {
+      const cw = svg.clientWidth || 1000, ch = svg.clientHeight || 700, asp = cw / ch;
+      let w = Math.min(vb.w, 1100), h = w / asp;
+      vb = { x: e.x - w / 2, y: e.y - h / 2 + 20, w, h }; applyViewBox();
+    }
+    function renderMap() {
+      const bb = nodesBBox();
+      let html = decorSvg(bb);
+      html += `<g class="roads">${doc.links.map(roadSvg).join("")}</g>`;
+      html += `<g class="nodes">${doc.entities.map(nodeSvg).join("")}</g>`;
+      svg.innerHTML = html;
+      $("#empty").hidden = doc.entities.length > 0;
+      applySearch();
+    }
+
+    // pointer handling: drag a node, pan the town, pinch to zoom
+    let drag = null; const pointers = new Map(); let pinch = null;
+    function toWorld(cx, cy) {
+      const pt = svg.createSVGPoint(); pt.x = cx; pt.y = cy;
+      const m = svg.getScreenCTM(); return m ? pt.matrixTransform(m.inverse()) : { x: cx, y: cy };
+    }
+    svg.addEventListener("pointerdown", ev => {
+      pointers.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+      if (pointers.size === 2) {
+        const [p1, p2] = [...pointers.values()];
+        pinch = { d: Math.hypot(p1.x - p2.x, p1.y - p2.y), vb: { ...vb }, mid: toWorld((p1.x + p2.x) / 2, (p1.y + p2.y) / 2) };
+        drag = null; return;
+      }
+      const bug = ev.target.closest(".goldbug");
+      if (bug) { toast("You found Goldbug! 🐞"); goldbug = null; return; }
+      svg.setPointerCapture(ev.pointerId);
+      const g = ev.target.closest(".node");
+      if (g) {
+        const e = byId(g.dataset.id); if (!e) return;
+        drag = { id: e.id, el: g, sx: ev.clientX, sy: ev.clientY, ox: e.x, oy: e.y, moved: false };
+      } else {
+        drag = { pan: true, sx: ev.clientX, sy: ev.clientY, vx: vb.x, vy: vb.y };
+      }
+      ev.preventDefault();
+    });
+    svg.addEventListener("pointermove", ev => {
+      if (pointers.has(ev.pointerId)) pointers.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+      if (pinch && pointers.size === 2) {
+        const [p1, p2] = [...pointers.values()];
+        const d = Math.hypot(p1.x - p2.x, p1.y - p2.y) || 1;
+        const scale = Math.max(0.2, Math.min(5, pinch.d / d));
+        const w = Math.max(300, Math.min(8000, pinch.vb.w * scale)), h = pinch.vb.h * (w / pinch.vb.w);
+        vb = { x: pinch.mid.x - (pinch.mid.x - pinch.vb.x) * (w / pinch.vb.w), y: pinch.mid.y - (pinch.mid.y - pinch.vb.y) * (h / pinch.vb.h), w, h };
+        applyViewBox(); return;
+      }
+      if (!drag) return;
+      const s = vb.w / (svg.clientWidth || 1000);
+      const dx = (ev.clientX - drag.sx) * s, dy = (ev.clientY - drag.sy) * s;
+      if (drag.pan) { vb.x = drag.vx - dx; vb.y = drag.vy - dy; applyViewBox(); svg.classList.add("dragging"); return; }
+      if (!drag.moved && Math.hypot(ev.clientX - drag.sx, ev.clientY - drag.sy) < 4) return;
+      drag.moved = true; svg.classList.add("dragging");
+      const e = byId(drag.id); if (!e) return;
+      e.x = Math.round(drag.ox + dx); e.y = Math.round(drag.oy + dy);
+      drag.el.setAttribute("transform", `translate(${e.x},${e.y})`);
+      svg.querySelectorAll(`.road[data-a="${e.id}"], .road[data-b="${e.id}"]`).forEach(updateRoad);
+    });
+    function endPointer(ev) {
+      pointers.delete(ev.pointerId);
+      if (pointers.size < 2) pinch = null;
+      svg.classList.remove("dragging");
+      if (!drag) return;
+      const d = drag; drag = null;
+      if (d.pan) return;
+      const e = byId(d.id); if (!e) return;
+      if (d.moved) { e.pinned = true; save(); renderMap(); }
+      else openPage(e.id);
+    }
+    svg.addEventListener("pointerup", endPointer);
+    svg.addEventListener("pointercancel", endPointer);
+    svg.addEventListener("wheel", ev => {
+      ev.preventDefault();
+      const f = Math.exp(ev.deltaY * (ev.deltaMode === 1 ? 0.05 : 0.0016));
+      const w = Math.max(300, Math.min(8000, vb.w * f)); const h = vb.h * (w / vb.w);
+      const p = toWorld(ev.clientX, ev.clientY);
+      vb = { x: p.x - (p.x - vb.x) * (w / vb.w), y: p.y - (p.y - vb.y) * (h / vb.h), w, h };
+      applyViewBox();
+    }, { passive: false });
+    svg.addEventListener("pointerover", ev => {
+      const g = ev.target.closest(".node"); if (!g || drag) return;
+      const id = g.dataset.id; const lit = new Set([id]);
+      svg.querySelectorAll(".road").forEach(r => {
+        if (r.dataset.a === id || r.dataset.b === id) { r.classList.add("lit"); lit.add(r.dataset.a); lit.add(r.dataset.b); }
+      });
+      svg.querySelectorAll(".node").forEach(n => n.classList.toggle("lit", lit.has(n.dataset.id)));
+      svg.classList.add("hovering");
+    });
+    svg.addEventListener("pointerout", ev => {
+      if (ev.target.closest(".node") && !svg.contains(ev.relatedTarget?.closest?.(".node"))) {
+        svg.classList.remove("hovering");
+        svg.querySelectorAll(".lit").forEach(n => n.classList.remove("lit"));
+      }
+    });
+    svg.addEventListener("keydown", ev => {
+      const g = ev.target.closest(".node"); if (!g) return;
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openPage(g.dataset.id); }
+    });
+
+    /* =====================================================================
+       Search
+       ===================================================================== */
+    function matches(e, q) {
+      if (!q) return true;
+      const hay = [e.name, e.tagline, e.tags.join(" "), e.urls, ...e.notes.map(n => n.text), TYPES[e.type], STATUS_LABEL[e.status]].join(" ").toLowerCase();
+      return q.split(/\s+/).filter(Boolean).every(w => hay.includes(w));
+    }
+    function applySearch() {
+      const q = $("#q").value.trim().toLowerCase();
+      svg.classList.toggle("search", !!q);
+      if (!q) return;
+      const hit = new Set(doc.entities.filter(e => matches(e, q)).map(e => e.id));
+      svg.querySelectorAll(".node").forEach(n => n.classList.toggle("hit", hit.has(n.dataset.id)));
+      svg.querySelectorAll(".road").forEach(r => r.classList.toggle("hit", hit.has(r.dataset.a) && hit.has(r.dataset.b)));
+    }
+    $("#q").addEventListener("input", () => { applySearch(); renderIndex(); });
+
+    /* =====================================================================
+       Index view
+       ===================================================================== */
+    const idx = { type: "", status: "", sort: "next", dueOnly: false };
+    function miniSvg(e) { return `<svg class="mini" viewBox="-70 -100 140 150" aria-hidden="true">${art(e)}</svg>`; }
+    function renderIndex() {
+      if ($("#index").hidden) return;
+      const q = $("#q").value.trim().toLowerCase();
+      let rows = doc.entities.filter(e => matches(e, q));
+      if (idx.type) rows = rows.filter(e => e.type === idx.type);
+      if (idx.status) rows = rows.filter(e => e.status === idx.status);
+      if (idx.dueOnly) rows = rows.filter(e => dueState(e));
+      const byName = (a, b) => (a.name || "").localeCompare(b.name || "");
+      rows.sort({
+        next: (a, b) => (a.nextTouch || "9999") < (b.nextTouch || "9999") ? -1 : (a.nextTouch || "9999") > (b.nextTouch || "9999") ? 1 : byName(a, b),
+        updated: (a, b) => b.updatedAt - a.updatedAt,
+        name: byName,
+        type: (a, b) => a.type.localeCompare(b.type) || byName(a, b)
+      }[idx.sort]);
+      $("#idx-count").textContent = `${rows.length} of ${doc.entities.length}`;
+      if (!rows.length) { $("#idx-body").innerHTML = `<div class="idx-empty">Nobody here matches. Try a different filter, or add someone new.</div>`; return; }
+      $("#idx-body").innerHTML = `<table class="idx"><thead><tr><th></th><th>Who</th><th>Status</th><th>Next touch</th><th class="hide-sm">Tags</th><th class="hide-sm">Latest note</th><th class="hide-sm">Updated</th></tr></thead><tbody>` +
+        rows.map(e => {
+          const ds = dueState(e);
+          const latest = [...e.notes].sort((a, b) => b.date < a.date ? -1 : 1)[0];
+          return `<tr class="row${e.id === currentId ? " selected" : ""}" data-id="${esc(e.id)}">` +
+            `<td>${miniSvg(e)}</td>` +
+            `<td><div class="name">${esc(e.name || "(unnamed)")}</div>${e.tagline ? `<div class="tagline">${esc(e.tagline)}</div>` : ""}</td>` +
+            `<td><span class="pill"><i style="background:${STATUS_COLOR[e.status]}"></i>${esc(STATUS_LABEL[e.status])}</span><div class="muted">${esc(TYPES[e.type])}</div></td>` +
+            `<td class="${ds === "due" ? "due-red" : ds === "soon" ? "due-soon" : "muted"}">${e.nextTouch ? esc(fmtDate(e.nextTouch)) + (ds === "due" ? " !" : "") : "—"}</td>` +
+            `<td class="hide-sm">${e.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</td>` +
+            `<td class="hide-sm"><div class="snippet" title="${esc(latest ? latest.text : "")}">${latest ? esc(latest.text) : "<span class='muted'>—</span>"}</div></td>` +
+            `<td class="hide-sm muted">${esc(fmtStamp(e.updatedAt))}</td></tr>`;
+        }).join("") + `</tbody></table>`;
+    }
+    $("#idx-body").addEventListener("click", ev => {
+      const tr = ev.target.closest("tr.row"); if (tr) openPage(tr.dataset.id);
+    });
+    $("#type-chips").addEventListener("click", ev => {
+      const b = ev.target.closest(".chip"); if (!b) return;
+      idx.type = b.dataset.type; $$("#type-chips .chip").forEach(c => c.classList.toggle("on", c === b)); renderIndex();
+    });
+    $("#f-status").addEventListener("change", ev => { idx.status = ev.target.value; renderIndex(); });
+    $("#f-sort").addEventListener("change", ev => { idx.sort = ev.target.value; renderIndex(); });
+    $("#f-due").addEventListener("click", ev => { idx.dueOnly = !idx.dueOnly; ev.target.classList.toggle("on", idx.dueOnly); renderIndex(); });
+    STATUSES.forEach(([v, l]) => { const o = document.createElement("option"); o.value = v; o.textContent = l; $("#f-status").appendChild(o); });
+
+    function setView(v) {
+      view = v;
+      $("#town").hidden = v !== "town"; $("#index").hidden = v !== "index";
+      $("#v-town").classList.toggle("on", v === "town"); $("#v-index").classList.toggle("on", v === "index");
+      if (v === "index") renderIndex(); else { applySearch(); }
+    }
+    $("#v-town").addEventListener("click", () => setView("town"));
+    $("#v-index").addEventListener("click", () => setView("index"));
+
+    function updateDue() {
+      const n = doc.entities.filter(e => dueState(e) === "due").length;
+      const b = $("#due-btn"); b.textContent = `${n} due`; b.classList.toggle("yellow", n > 0); b.classList.toggle("ghost", n === 0);
+    }
+    $("#due-btn").addEventListener("click", () => {
+      idx.dueOnly = true; $("#f-due").classList.add("on"); idx.sort = "next"; $("#f-sort").value = "next"; setView("index");
+    });
+
+    /* =====================================================================
+       The page (details drawer)
+       ===================================================================== */
+    const page = $("#page");
+    function openPage(id) {
+      currentId = id;
+      renderPage();
+      svg.querySelectorAll(".node").forEach(n => n.classList.toggle("selected", n.dataset.id === id));
+      $$("#idx-body tr.row").forEach(r => r.classList.toggle("selected", r.dataset.id === id));
+    }
+    function closePage() {
+      currentId = null; page.hidden = true; page.innerHTML = "";
+      svg.querySelectorAll(".node.selected").forEach(n => n.classList.remove("selected"));
+      $$("#idx-body tr.row.selected").forEach(r => r.classList.remove("selected"));
+    }
+    function urlChips(urls) {
+      return String(urls || "").split(/\s+/).map(u => u.trim()).filter(u => /^https?:\/\//i.test(u)).map(u => {
+        let host = u; try { host = new URL(u).hostname.replace(/^www\./, ""); } catch { /* keep */ }
+        return `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(host)} ↗</a>`;
+      }).join("");
+    }
+    function renderPage() {
+      const e = byId(currentId); if (!e) { closePage(); return; }
+      const scroll = page.querySelector(".pg-body")?.scrollTop || 0;
+      page.hidden = false;
+      const links = doc.links.filter(l => l.a === e.id || l.b === e.id);
+      const others = doc.entities.filter(o => o.id !== e.id).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      const notes = [...e.notes].sort((a, b) => b.date < a.date ? -1 : b.date > a.date ? 1 : 0);
+      page.innerHTML = `
+        <div class="pg-head">
+          <svg class="pg-art" viewBox="-70 -100 140 150" aria-hidden="true">${art(e)}</svg>
+          <div class="pg-headtxt">
+            <input id="p-name" class="pg-name" type="text" value="${esc(e.name)}" placeholder="${e.type === "person" ? "who?" : e.type === "company" ? "which company?" : "what topic?"}" autocomplete="off">
+            <div class="pg-row">
+              <select id="p-type" aria-label="Kind">${Object.entries(TYPES).map(([v, l]) => `<option value="${v}"${v === e.type ? " selected" : ""}>${l}</option>`).join("")}</select>
+              <select id="p-status" aria-label="Status">${STATUSES.map(([v, l]) => `<option value="${v}"${v === e.status ? " selected" : ""}>${l}</option>`).join("")}</select>
+            </div>
+          </div>
+          <div class="pg-tools">
+            <button data-act="close" title="Close" aria-label="Close">&times;</button>
+            <button data-act="dice" title="Redraw the picture" aria-label="Redraw">&#127922;</button>
+            <button data-act="locate" title="Show in the town" aria-label="Show in the town">&#128205;</button>
+          </div>
+        </div>
+        <div class="pg-body">
+          <label for="p-tagline">${e.type === "person" ? "What do they do all day?" : e.type === "company" ? "What do they make or do?" : "What is this about?"}</label>
+          <input id="p-tagline" type="text" value="${esc(e.tagline)}" placeholder="${e.type === "person" ? "role, company, why they matter" : "one line, plain words"}" autocomplete="off">
+          <div class="pg-grid">
+            <div><label for="p-next">Next touch</label><input id="p-next" type="date" value="${esc(e.nextTouch)}"></div>
+            <div><label for="p-tags">Tags</label><input id="p-tags" type="text" value="${esc(e.tags.join(", "))}" placeholder="comma, separated" autocomplete="off"></div>
+          </div>
+          <label for="p-urls">Links</label>
+          <textarea id="p-urls" rows="2" placeholder="one URL per line">${esc(e.urls)}</textarea>
+          <div class="urlchips" id="p-urlchips">${urlChips(e.urls)}</div>
+          <div class="swatches"><span class="lbl">Colour</span>${PALETTE.map(c => `<button data-color="${c}" class="${c === e.look.color ? "on" : ""}" style="background:${c}" title="${c}" aria-label="Colour ${c}"></button>`).join("")}</div>
+
+          <h3>Notes</h3>
+          <div class="addnote">
+            <textarea id="p-newnote" rows="2" placeholder="What's new? (dated today)"></textarea>
+            <button class="btn small yellow" data-act="addnote">add note</button>
+          </div>
+          <div class="notes">${notes.map(n => `
+            <div class="note" data-nid="${esc(n.id)}">
+              <div class="note-top"><input type="date" class="note-date" value="${esc(n.date)}" aria-label="Note date"><button class="x" data-act="delnote" data-nid="${esc(n.id)}" title="Delete note" aria-label="Delete note">&times;</button></div>
+              <textarea class="note-text" rows="1" aria-label="Note">${esc(n.text)}</textarea>
+            </div>`).join("")}</div>
+
+          <h3>Roads</h3>
+          <div class="conns">${links.length ? links.map(l => {
+            const other = byId(l.a === e.id ? l.b : l.a); if (!other) return "";
+            return `<div class="conn" data-lid="${esc(l.id)}"><span class="road-ico"></span><span class="who" data-act="goto" data-id="${esc(other.id)}">${esc(other.name || "(unnamed)")}</span><input type="text" class="conn-label" value="${esc(l.label)}" placeholder="how are they connected?" list="conn-labels" autocomplete="off"><button class="x" data-act="delconn" data-lid="${esc(l.id)}" title="Remove road" aria-label="Remove road">&times;</button></div>`;
+          }).join("") : `<div class="muted" style="font-size:.78rem;color:var(--faint)">No roads yet. Connect ${e.type === "person" ? "them" : "it"} to someone below.</div>`}</div>
+          ${others.length ? `<div class="addconn">
+            <select id="c-other" aria-label="Connect to">${others.map(o => `<option value="${esc(o.id)}">${esc(trunc(o.name || "(unnamed)", 34))}</option>`).join("")}</select>
+            <input id="c-label" type="text" placeholder="how (optional)" list="conn-labels" autocomplete="off">
+            <button class="btn small" data-act="addconn">connect</button>
+          </div>` : ""}
+
+          <div class="pg-foot">
+            <span>added ${esc(fmtStamp(e.createdAt))} · updated ${esc(fmtStamp(e.updatedAt))}</span>
+            <button class="btn small danger" data-act="delete">remove</button>
+          </div>
+        </div>`;
+      page.querySelectorAll("textarea").forEach(autoGrow);
+      const body = page.querySelector(".pg-body"); if (body) body.scrollTop = scroll;
+    }
+    function autoGrow(t) { t.style.height = "auto"; t.style.height = Math.max(t.scrollHeight, 24) + "px"; }
+
+    // collect everything on the page back into the entity
+    function collectPage() {
+      const e = byId(currentId); if (!e || page.hidden) return;
+      const v = id => (page.querySelector("#" + id) || {}).value ?? "";
+      e.name = v("p-name").trim();
+      e.type = TYPES[v("p-type")] ? v("p-type") : e.type;
+      e.status = STATUS_LABEL[v("p-status")] ? v("p-status") : e.status;
+      e.tagline = v("p-tagline").trim();
+      e.nextTouch = v("p-next");
+      e.tags = v("p-tags").split(",").map(t => t.trim()).filter(Boolean);
+      e.urls = v("p-urls").trim();
+      e.notes = Array.from(page.querySelectorAll(".note")).map(n => ({
+        id: n.dataset.nid, date: n.querySelector(".note-date").value || today(), text: n.querySelector(".note-text").value
+      }));
+      page.querySelectorAll(".conn").forEach(c => { const l = doc.links.find(x => x.id === c.dataset.lid); if (l) l.label = c.querySelector(".conn-label").value.trim(); });
+      e.updatedAt = Date.now();
+      save();
+      const chips = page.querySelector("#p-urlchips"); if (chips) chips.innerHTML = urlChips(e.urls);
+      renderMap(); renderIndex();
+    }
+    const collectSoon = debounce(collectPage, 350);
+    page.addEventListener("input", ev => {
+      if (ev.target.tagName === "TEXTAREA") autoGrow(ev.target);
+      if (ev.target.id === "p-newnote") return;
+      collectSoon();
+    });
+    page.addEventListener("change", ev => {
+      if (ev.target.id === "p-newnote") return;
+      collectPage();
+      if (ev.target.id === "p-type") renderPage();
+    });
+    page.addEventListener("keydown", ev => {
+      if (ev.target.id === "p-newnote" && ev.key === "Enter" && (ev.metaKey || ev.ctrlKey)) { ev.preventDefault(); addNote(); }
+      if (ev.target.id === "p-name" && ev.key === "Enter") { ev.preventDefault(); ev.target.blur(); }
+    });
+    page.addEventListener("click", ev => {
+      const sw = ev.target.closest("[data-color]");
+      if (sw) { const e = byId(currentId); if (e) { e.look.color = sw.dataset.color; e.updatedAt = Date.now(); save(); renderMap(); renderPage(); } return; }
+      const b = ev.target.closest("[data-act]"); if (!b) return;
+      const e = byId(currentId); if (!e) return;
+      switch (b.dataset.act) {
+        case "close": closePage(); break;
+        case "dice": { const col = e.look.color; e.look = randomLook(); e.look.color = col; e.updatedAt = Date.now(); save(); renderMap(); renderPage(); break; }
+        case "locate": setView("town"); panTo(e); break;
+        case "addnote": addNote(); break;
+        case "delnote": {
+          const n = e.notes.find(x => x.id === b.dataset.nid);
+          if (n && (n.text.trim() === "" || confirm("Delete this note?"))) { e.notes = e.notes.filter(x => x.id !== b.dataset.nid); e.updatedAt = Date.now(); save(); renderPage(); renderIndex(); }
+          break;
+        }
+        case "goto": openPage(b.dataset.id); if (view === "town") panTo(byId(b.dataset.id)); break;
+        case "addconn": {
+          const otherId = page.querySelector("#c-other")?.value; const label = page.querySelector("#c-label")?.value.trim() || "";
+          if (!otherId || otherId === e.id) break;
+          if (doc.links.some(l => (l.a === e.id && l.b === otherId) || (l.b === e.id && l.a === otherId))) { toast("There is already a road between them."); break; }
+          doc.links.push({ id: uid(), a: e.id, b: otherId, label }); e.updatedAt = Date.now();
+          save(); renderMap(); renderPage(); toast(`Road built to ${byId(otherId)?.name || "them"}.`); break;
+        }
+        case "delconn": doc.links = doc.links.filter(l => l.id !== b.dataset.lid); e.updatedAt = Date.now(); save(); renderMap(); renderPage(); break;
+        case "delete":
+          if (confirm(`Remove "${e.name || "this entry"}" and its roads from the town?`)) {
+            doc.entities = doc.entities.filter(x => x.id !== e.id);
+            doc.links = doc.links.filter(l => l.a !== e.id && l.b !== e.id);
+            save(); closePage(); renderMap(); renderIndex(); toast("Removed.");
+          }
+          break;
+      }
+    });
+    function addNote() {
+      const e = byId(currentId); const t = page.querySelector("#p-newnote"); if (!e || !t) return;
+      const text = t.value.trim(); if (!text) { t.focus(); return; }
+      collectPage();
+      e.notes.push({ id: uid(), date: today(), text }); e.updatedAt = Date.now();
+      save(); renderPage(); renderIndex(); renderMap();
+      page.querySelector("#p-newnote")?.focus();
+    }
+    document.addEventListener("keydown", ev => {
+      if (ev.key === "Escape") { if (!page.hidden) closePage(); const m = $("#menu"); if (m.open) m.open = false; }
+    });
+
+    /* =====================================================================
+       Adding, menu, export and import
+       ===================================================================== */
+    function addEntity(type) {
+      const e = newEntity(type, "");
+      doc.entities.push(e);
+      placeNew(e);
+      save();
+      if (view !== "town") setView("town");
+      renderMap(); renderIndex(); openPage(e.id); panTo(e);
+      page.querySelector("#p-name")?.focus();
+    }
+    document.addEventListener("click", ev => {
+      const b = ev.target.closest("[data-add]"); if (b) addEntity(b.dataset.add);
+    });
+    document.addEventListener("click", ev => {
+      const m = $("#menu"); if (m.open && !ev.target.closest("#menu")) m.open = false;
+    });
+    $("#menu").addEventListener("click", ev => {
+      const b = ev.target.closest("[data-menu]"); if (!b) return;
+      $("#menu").open = false;
+      switch (b.dataset.menu) {
+        case "fit": setView("town"); fitView(); break;
+        case "tidy":
+          doc.entities.forEach(e => e.pinned = false); layoutAll(); save(); setView("town"); renderMap(); fitView(); toast("Tidied up."); break;
+        case "export": exportJson(); break;
+        case "import": $("#import-file").value = ""; $("#import-file").click(); break;
+        case "examples": {
+          const ex = doc.entities.filter(e => e.sample);
+          if (!ex.length) { toast("No examples left in the town."); break; }
+          if (!confirm(`Remove the ${ex.length} example entries?`)) break;
+          const ids = new Set(ex.map(e => e.id));
+          doc.entities = doc.entities.filter(e => !ids.has(e.id));
+          doc.links = doc.links.filter(l => !ids.has(l.a) && !ids.has(l.b));
+          if (ids.has(currentId)) closePage();
+          save(); renderMap(); renderIndex(); toast("Examples removed."); break;
+        }
+        case "help":
+          alert("Meet Town keeps everything in this browser's local storage: nothing is sent anywhere.\n\n• People are characters, companies are buildings, topics are billboards.\n• Click anything to open its page; drag to move it; scroll or pinch to zoom.\n• Roads connect two entries. Add them from the page.\n• Set a 'next touch' date and the entry gets a flag when it is due.\n• Use Export to back up or move to another computer, and Import to bring a file back in.\n\nBecause the data lives in one browser, clearing site data will erase it. Export now and then.");
+          break;
+      }
+    });
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(doc, null, 2)], { type: "application/json" });
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+      a.download = `meet-town-${today()}.json`; document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      toast("Exported.");
+    }
+    function importFile(file) {
+      const r = new FileReader();
+      r.onload = () => {
+        let raw; try { raw = JSON.parse(r.result); } catch { toast("That file is not valid JSON."); return; }
+        if (!raw || !Array.isArray(raw.entities)) { toast("That does not look like a Meet Town export."); return; }
+        const inc = normalizeDoc(raw);
+        const replace = confirm(`Import ${inc.entities.length} entries.\n\nOK = replace everything in the town with this file.\nCancel = merge it into what is already here.`);
+        if (replace) { doc = inc; }
+        else {
+          const have = new Map(doc.entities.map(e => [e.id, e]));
+          for (const e of inc.entities) {
+            const cur = have.get(e.id);
+            if (!cur) { doc.entities.push(e); have.set(e.id, e); }
+            else if (e.updatedAt > cur.updatedAt) { Object.assign(cur, e, { x: cur.x, y: cur.y, pinned: cur.pinned }); }
+          }
+          for (const l of inc.links) {
+            if (!have.has(l.a) || !have.has(l.b)) continue;
+            if (doc.links.some(x => x.id === l.id || (x.a === l.a && x.b === l.b) || (x.a === l.b && x.b === l.a))) continue;
+            doc.links.push(l);
+          }
+          doc.entities.filter(e => e.x === 0 && e.y === 0 && !e.pinned).forEach(e => placeNew(e));
+        }
+        closePage(); save(); renderMap(); renderIndex(); fitView();
+        toast(replace ? "Town replaced." : "Merged in.");
+      };
+      r.readAsText(file);
+    }
+    $("#import-file").addEventListener("change", ev => { const f = ev.target.files && ev.target.files[0]; if (f) importFile(f); });
+    document.addEventListener("dragover", ev => { ev.preventDefault(); });
+    document.addEventListener("drop", ev => {
+      ev.preventDefault(); const f = ev.dataTransfer?.files?.[0];
+      if (f && /\.json$/i.test(f.name)) importFile(f);
+    });
+
+    /* =====================================================================
+       Boot
+       ===================================================================== */
+    let booted = false;
+    function boot() {
+      if (booted) return; booted = true;
+      load();
+      updateDue();
+      renderMap();
+      fitView();
+      window.addEventListener("resize", () => { if (view === "town") applyViewBox(); });
+    }
+
+    // a little character on the gate card
+    (function gateArt() {
+      const look = { color: "#f08a3e", animal: "fox", vehicle: "pickle", hat: "cap" };
+      document.getElementById("gate-art").innerHTML = personArt(look);
+    })();
+
+    let unlocked = false;
+    try { unlocked = sessionStorage.getItem(SS_UNLOCK) === "1"; } catch { /* ignore */ }
+    if (unlocked) revealApp();
+  </script>
+</body>
+</html>
