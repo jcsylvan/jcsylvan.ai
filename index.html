@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+    // One address for this site, so the browser always finds its stored data in the same place.
+    if (/^www\./i.test(location.hostname)) location.replace(location.href.replace(/^(https?:\/\/)www\./i, "$1"));
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>jcsylvan.ai</title>
   <meta name="description" content="jcsylvan.ai — personal site of jcsylvan.">

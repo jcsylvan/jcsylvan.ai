@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+    // One address for this site, so the browser always finds its stored data in the same place.
+    if (/^www\./i.test(location.hostname)) location.replace(location.href.replace(/^(https?:\/\/)www\./i, "$1"));
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Meet Town &mdash; jcsylvan.ai</title>
   <meta name="description" content="A storybook town of people, companies and ideas worth keeping an eye on.">
@@ -118,6 +122,9 @@
     .btn.green { background: var(--green); color: #fff; }
     .btn.yellow { background: var(--yellow); }
     .btn.ghost { box-shadow: none; background: transparent; }
+    #backup-btn { color: var(--ink-soft); font-weight: 600; }
+    #backup-btn.warn { color: var(--ink); background: var(--yellow); box-shadow: var(--shadow); font-weight: 700; }
+    #backup-btn.late { color: #fff; background: var(--red); box-shadow: var(--shadow); font-weight: 700; }
     .btn.ghost:hover { background: #fff; }
     .btn.small { padding: 0.3rem 0.65rem; font-size: 0.75rem; box-shadow: 2px 2px 0 var(--ink); }
     .btn.danger { background: #fff; color: var(--red); border-color: var(--red); box-shadow: 2px 2px 0 var(--red); }
@@ -395,6 +402,7 @@
           <button id="v-index" role="tab">index</button>
         </div>
         <button class="btn yellow" id="due-btn" title="Follow-ups that are due">0 due</button>
+        <button class="btn ghost" id="backup-btn" title="Export an encrypted backup file">backup</button>
         <details class="menu" id="menu">
           <summary class="btn ghost" title="More">&#8943;</summary>
           <div class="menu-list">
@@ -680,7 +688,7 @@
       return e;
     }
     function normalizeDoc(raw) {
-      const d = { version: 1, updatedAt: Number(raw && raw.updatedAt) || 0, entities: [], links: [] };
+      const d = { version: 1, updatedAt: Number(raw && raw.updatedAt) || 0, lastExportAt: Number(raw && raw.lastExportAt) || 0, entities: [], links: [] };
       const seen = new Set();
       for (const r of (raw && Array.isArray(raw.entities) ? raw.entities : [])) {
         const e = normalizeEntity(r);
@@ -1186,7 +1194,26 @@
     function updateDue() {
       const n = doc.entities.filter(e => dueState(e) === "due").length;
       const b = $("#due-btn"); b.textContent = `${n} due`; b.classList.toggle("yellow", n > 0); b.classList.toggle("ghost", n === 0);
+      updateBackupNudge();
     }
+    // Backup reminder: quiet for two weeks after an export, yellow after that,
+    // red after a month or when nothing has ever been exported.
+    function updateBackupNudge() {
+      const b = $("#backup-btn"); if (!b) return;
+      const own = doc.entities.filter(e => !e.sample).length;
+      const last = Number(doc.lastExportAt) || 0;
+      const days = last ? Math.floor((Date.now() - last) / 86400000) : null;
+      let text, state;
+      if (!own) { text = "backup"; state = ""; }
+      else if (days === null) { text = "never backed up"; state = "late"; }
+      else if (days === 0) { text = "backed up today"; state = ""; }
+      else { text = `backup ${days}d ago`; state = days >= 30 ? "late" : days >= 14 ? "warn" : ""; }
+      b.textContent = text;
+      b.classList.toggle("warn", state === "warn"); b.classList.toggle("late", state === "late");
+      b.classList.toggle("ghost", state === "");
+      b.title = state ? "Export an encrypted backup file now" : "Export an encrypted backup file";
+    }
+    $("#backup-btn").addEventListener("click", exportJson);
     $("#due-btn").addEventListener("click", () => {
       idx.dueOnly = true; $("#f-due").classList.add("on"); idx.sort = "next"; $("#f-sort").value = "next"; setView("index");
     });
@@ -1400,18 +1427,20 @@
           save(); renderMap(); renderIndex(); toast("Examples removed."); break;
         }
         case "help":
-          alert("Meet Town keeps everything in this browser's local storage, encrypted with your password. Nothing is sent anywhere.\n\n• People are characters, companies are buildings, topics are billboards.\n• Click anything to open its page; drag to move it; scroll or pinch to zoom.\n• Roads connect two entries. Add them from the page.\n• Set a 'next touch' date and the entry gets a flag when it is due.\n• Export writes an encrypted backup file (it needs the same password to open). Import brings one back in.\n\nBecause the data lives in one browser, clearing site data will erase it. Export now and then.");
+          alert("Meet Town keeps everything in this browser's local storage, encrypted with your password. Nothing is sent anywhere.\n\n• People are characters, companies are buildings, topics are billboards.\n• Click anything to open its page; drag to move it; scroll or pinch to zoom.\n• Roads connect two entries. Add them from the page.\n• Set a 'next touch' date and the entry gets a flag when it is due.\n• Export writes an encrypted backup file (it needs the same password to open). Import brings one back in.\n• The 'backup' button in the top bar shows how long since the last export and turns yellow after two weeks, red after a month. Click it to export.\n\nBecause the data lives in one browser, clearing site data will erase it. Keep the backup file in a folder that is itself backed up.");
           break;
       }
     });
     async function exportJson() {
       if (!cryptoKey) return;
+      doc.lastExportAt = Date.now();
       const vault = await encryptWith(cryptoKey, vaultSalt, doc);
       const blob = new Blob([JSON.stringify(vault, null, 2)], { type: "application/json" });
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
       a.download = `meet-town-${today()}.json`; document.body.appendChild(a); a.click();
       setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
-      toast("Exported (encrypted with your password).");
+      save();
+      toast("Exported (encrypted with your password). Keep the file somewhere that is backed up.");
     }
     function importFile(file) {
       const r = new FileReader();
