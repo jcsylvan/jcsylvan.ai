@@ -253,17 +253,28 @@
     }
     #page[hidden] { display: none; }
     #page::before {
-      content: ""; position: absolute; top: -2px; right: 60px; width: 18px; height: 54px;
+      content: ""; position: absolute; top: -2px; left: 14px; width: 16px; height: 46px;
       background: var(--red); border: 2px solid var(--ink); border-top: none;
       clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
       z-index: 2;
     }
+    .pg-bar {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 0.9rem 0 2.6rem;
+    }
+    .pg-bar .rnd {
+      width: 28px; height: 28px; border: 2px solid var(--ink); border-radius: 50%;
+      background: #fff; font-size: 0.85rem; line-height: 1; display: flex; align-items: center; justify-content: center;
+    }
+    .pg-bar .rnd:hover { background: var(--yellow); }
+    .pg-bar .closebtn { margin-left: auto; background: var(--yellow); }
+    .pg-foot-btns { display: inline-flex; gap: 0.4rem; }
     .pg-head {
       display: flex; gap: 0.7rem; align-items: flex-start;
-      padding: 0.9rem 0.9rem 0.7rem; border-bottom: 2px dashed var(--line);
+      padding: 0.5rem 0.9rem 0.7rem; border-bottom: 2px dashed var(--line);
     }
     .pg-art { width: 84px; height: 90px; flex-shrink: 0; }
-    .pg-headtxt { flex: 1; min-width: 0; padding-top: 0.2rem; padding-right: 34px; }
+    .pg-headtxt { flex: 1; min-width: 0; padding-top: 0.2rem; }
     .pg-name {
       width: 100%; border: none; background: transparent; outline: none;
       font-family: var(--display); font-size: 1.25rem; font-weight: 700;
@@ -275,12 +286,6 @@
       border: 2px solid var(--ink); border-radius: 999px; background: #fff;
       padding: 0.22rem 0.55rem; font-size: 0.72rem; font-weight: 700;
     }
-    .pg-tools { display: flex; flex-direction: column; gap: 0.3rem; }
-    .pg-tools button {
-      width: 28px; height: 28px; border: 2px solid var(--ink); border-radius: 50%;
-      background: #fff; font-size: 0.85rem; line-height: 1; display: flex; align-items: center; justify-content: center;
-    }
-    .pg-tools button:hover { background: var(--yellow); }
     .pg-body { flex: 1; overflow: auto; padding: 0.8rem 0.9rem 2rem; }
     .pg-body label { display: block; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); font-weight: 700; margin: 0.7rem 0 0.25rem; }
     .pg-body input[type="text"], .pg-body input[type="date"], .pg-body textarea, .pg-body select {
@@ -349,6 +354,7 @@
         box-shadow: 0 -6px 0 rgba(43,33,24,0.08);
       }
       #page::before { display: none; }
+      .pg-bar { padding-left: 0.9rem; }
       .legend { display: none; }
       #index { padding: 0.9rem 0.7rem 6rem; }
       table.idx .hide-sm { display: none; }
@@ -466,34 +472,109 @@
 
   <script>
     /* =====================================================================
-       Password gate
-       Same password as the other locked pages on the site. To change it,
-       run this in the browser console and paste the result into GATE_HASH:
+       Password gate and encryption
+
+       The password does two jobs: it opens the page (checked against
+       GATE_HASH) and it unlocks the data. Everything the tracker stores in
+       this browser is encrypted with a key derived from the password
+       (PBKDF2 → AES-GCM), so the stored copy is unreadable without it.
+
+       To change the password: export first (the export is encrypted with
+       the current password), then run this in the browser console and
+       paste the result into GATE_HASH:
          crypto.subtle.digest("SHA-256", new TextEncoder().encode("new password"))
            .then(b => console.log(Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,"0")).join("")))
+       Then unlock with the new password and import the export, giving the
+       old password when asked. The vault is re-encrypted with the new one.
        ===================================================================== */
     const GATE_HASH = "7b2e9f882fb00c76d3863ad4d12a8254bc146fdcf8934dfb20322f6598f03e0c";
-    const SS_UNLOCK = "meet-town-unlocked";
+    const LS_VAULT = "meet-town-vault";     // encrypted document
+    const LS_LEGACY = "meet-town-doc";      // plain document from before encryption (migrated, then removed)
+    const SS_KEY = "meet-town-key";         // derived key for this tab only, so a reload does not re-ask
+    const KDF_ITERATIONS = 250000;
+    const enc = new TextEncoder(), dec = new TextDecoder();
+    let cryptoKey = null;                   // CryptoKey once unlocked
+    let vaultSalt = null;                   // Uint8Array(16)
 
     async function sha256(str) {
-      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      const buf = await crypto.subtle.digest("SHA-256", enc.encode(str));
       return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
     }
+    const b64 = u8 => btoa(String.fromCharCode(...u8));
+    const unb64 = str => Uint8Array.from(atob(str), c => c.charCodeAt(0));
+    async function deriveKey(pw, salt) {
+      const base = await crypto.subtle.importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveKey"]);
+      return crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: KDF_ITERATIONS, hash: "SHA-256" }, base,
+        { name: "AES-GCM", length: 256 }, true, ["encrypt", "decrypt"]);
+    }
+    async function encryptWith(key, salt, obj) {
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, enc.encode(JSON.stringify(obj)));
+      return { app: "meet-town", v: 1, kdf: `PBKDF2-SHA256/${KDF_ITERATIONS}`, salt: b64(salt), iv: b64(iv), data: b64(new Uint8Array(ct)) };
+    }
+    async function decryptWith(key, vault) {
+      const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(vault.iv) }, key, unb64(vault.data));
+      return JSON.parse(dec.decode(pt));
+    }
+    const isVault = v => v && typeof v === "object" && typeof v.data === "string" && typeof v.iv === "string" && typeof v.salt === "string";
+    function readVault() { try { const v = JSON.parse(localStorage.getItem(LS_VAULT)); return isVault(v) ? v : null; } catch { return null; } }
+
     async function checkGate(e) {
       e.preventDefault();
       const input = document.getElementById("gate-pw");
       const err = document.getElementById("gate-err");
       const pw = input.value;
       if (!pw) return false;
-      if (await sha256(pw) === GATE_HASH) {
-        try { sessionStorage.setItem(SS_UNLOCK, "1"); } catch { /* ignore */ }
-        revealApp();
-      } else {
+      if (await sha256(pw) !== GATE_HASH) {
         err.textContent = "that is not the password";
-        input.value = "";
-        input.focus();
+        input.value = ""; input.focus();
+        return false;
       }
+      err.textContent = "unlocking…";
+      try {
+        await unlockWith(pw);
+      } catch {
+        err.textContent = "the stored data was locked with a different password";
+        input.value = ""; input.focus();
+        return false;
+      }
+      input.value = "";
+      revealApp();
       return false;
+    }
+    // Derive the key, open (or create) the vault, and load the document.
+    async function unlockWith(pw) {
+      const vault = readVault();
+      vaultSalt = vault ? unb64(vault.salt) : crypto.getRandomValues(new Uint8Array(16));
+      const key = await deriveKey(pw, vaultSalt);
+      let raw = null;
+      if (vault) {
+        raw = await decryptWith(key, vault);            // throws on a wrong password
+      } else {
+        try { raw = JSON.parse(localStorage.getItem(LS_LEGACY)); } catch { raw = null; }
+      }
+      cryptoKey = key;
+      try {
+        const rawKey = new Uint8Array(await crypto.subtle.exportKey("raw", key));
+        sessionStorage.setItem(SS_KEY, JSON.stringify({ k: b64(rawKey), salt: b64(vaultSalt) }));
+      } catch { /* ignore */ }
+      adoptRaw(raw);
+      if (!vault) { await save(); try { localStorage.removeItem(LS_LEGACY); } catch { /* ignore */ } }
+    }
+    // Reload within the same tab: reuse the key kept in sessionStorage.
+    async function resumeSession() {
+      let kept = null;
+      try { kept = JSON.parse(sessionStorage.getItem(SS_KEY)); } catch { kept = null; }
+      if (!kept || !kept.k || !kept.salt) return false;
+      const vault = readVault();
+      if (!vault || vault.salt !== kept.salt) return false;
+      try {
+        const key = await crypto.subtle.importKey("raw", unb64(kept.k), { name: "AES-GCM" }, true, ["encrypt", "decrypt"]);
+        const raw = await decryptWith(key, vault);
+        cryptoKey = key; vaultSalt = unb64(vault.salt);
+        adoptRaw(raw);
+        return true;
+      } catch { return false; }
     }
     function revealApp() {
       document.getElementById("gate").style.display = "none";
@@ -507,7 +588,6 @@
     const $ = s => document.querySelector(s);
     const $$ = s => Array.from(document.querySelectorAll(s));
     const INK = "#2b2118";
-    const LS_DOC = "meet-town-doc";
     const TYPES = { person: "Person", company: "Company", topic: "Topic" };
     const STATUSES = [
       ["watching", "Watching"], ["to-meet", "To meet"], ["in-touch", "In touch"], ["met", "Met"], ["parked", "Parked"]
@@ -613,18 +693,24 @@
       }
       return d;
     }
-    function load() {
-      let raw = null;
-      try { raw = JSON.parse(localStorage.getItem(LS_DOC)); } catch { raw = null; }
+    function adoptRaw(raw) {
       if (raw && Array.isArray(raw.entities)) { doc = normalizeDoc(raw); return; }
       doc = { version: 1, updatedAt: 0, entities: [], links: [] };
       seedExamples();
     }
+    // Saves are encrypted and written one after another so a fast burst of
+    // edits can never land out of order.
+    let saveChain = Promise.resolve();
     function save() {
       doc.updatedAt = Date.now();
-      try { localStorage.setItem(LS_DOC, JSON.stringify(doc)); }
-      catch { toast("Could not save: browser storage is unavailable or full."); }
       updateDue();
+      const snapshot = JSON.parse(JSON.stringify(doc));
+      saveChain = saveChain.then(async () => {
+        if (!cryptoKey) return;
+        const vault = await encryptWith(cryptoKey, vaultSalt, snapshot);
+        localStorage.setItem(LS_VAULT, JSON.stringify(vault));
+      }).catch(() => toast("Could not save: browser storage is unavailable or full."));
+      return saveChain;
     }
     function seedExamples() {
       const co = newEntity("company", "Acme Robotics (example)");
@@ -954,7 +1040,7 @@
         const e = byId(g.dataset.id); if (!e) return;
         drag = { id: e.id, el: g, sx: ev.clientX, sy: ev.clientY, ox: e.x, oy: e.y, moved: false };
       } else {
-        drag = { pan: true, sx: ev.clientX, sy: ev.clientY, vx: vb.x, vy: vb.y };
+        drag = { pan: true, sx: ev.clientX, sy: ev.clientY, vx: vb.x, vy: vb.y, moved: false };
       }
       ev.preventDefault();
     });
@@ -971,7 +1057,10 @@
       if (!drag) return;
       const s = vb.w / (svg.clientWidth || 1000);
       const dx = (ev.clientX - drag.sx) * s, dy = (ev.clientY - drag.sy) * s;
-      if (drag.pan) { vb.x = drag.vx - dx; vb.y = drag.vy - dy; applyViewBox(); svg.classList.add("dragging"); return; }
+      if (drag.pan) {
+        if (!drag.moved && Math.hypot(ev.clientX - drag.sx, ev.clientY - drag.sy) < 4) return;
+        drag.moved = true; vb.x = drag.vx - dx; vb.y = drag.vy - dy; applyViewBox(); svg.classList.add("dragging"); return;
+      }
       if (!drag.moved && Math.hypot(ev.clientX - drag.sx, ev.clientY - drag.sy) < 4) return;
       drag.moved = true; svg.classList.add("dragging");
       const e = byId(drag.id); if (!e) return;
@@ -985,7 +1074,7 @@
       svg.classList.remove("dragging");
       if (!drag) return;
       const d = drag; drag = null;
-      if (d.pan) return;
+      if (d.pan) { if (!d.moved && !page.hidden) closePage(); return; }
       const e = byId(d.id); if (!e) return;
       if (d.moved) { e.pinned = true; save(); renderMap(); }
       else openPage(e.id);
@@ -1131,6 +1220,11 @@
       const others = doc.entities.filter(o => o.id !== e.id).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
       const notes = [...e.notes].sort((a, b) => b.date < a.date ? -1 : b.date > a.date ? 1 : 0);
       page.innerHTML = `
+        <div class="pg-bar">
+          <button class="rnd" data-act="dice" title="Redraw the picture" aria-label="Redraw the picture">&#127922;</button>
+          <button class="rnd" data-act="locate" title="Show in the town" aria-label="Show in the town">&#128205;</button>
+          <button class="btn small closebtn" data-act="close" aria-label="Close this card">close &times;</button>
+        </div>
         <div class="pg-head">
           <svg class="pg-art" viewBox="-70 -100 140 150" aria-hidden="true">${art(e)}</svg>
           <div class="pg-headtxt">
@@ -1139,11 +1233,6 @@
               <select id="p-type" aria-label="Kind">${Object.entries(TYPES).map(([v, l]) => `<option value="${v}"${v === e.type ? " selected" : ""}>${l}</option>`).join("")}</select>
               <select id="p-status" aria-label="Status">${STATUSES.map(([v, l]) => `<option value="${v}"${v === e.status ? " selected" : ""}>${l}</option>`).join("")}</select>
             </div>
-          </div>
-          <div class="pg-tools">
-            <button data-act="close" title="Close" aria-label="Close">&times;</button>
-            <button data-act="dice" title="Redraw the picture" aria-label="Redraw">&#127922;</button>
-            <button data-act="locate" title="Show in the town" aria-label="Show in the town">&#128205;</button>
           </div>
         </div>
         <div class="pg-body">
@@ -1182,7 +1271,10 @@
 
           <div class="pg-foot">
             <span>added ${esc(fmtStamp(e.createdAt))} · updated ${esc(fmtStamp(e.updatedAt))}</span>
-            <button class="btn small danger" data-act="delete">remove</button>
+            <span class="pg-foot-btns">
+              <button class="btn small danger" data-act="delete">remove</button>
+              <button class="btn small" data-act="close">close</button>
+            </span>
           </div>
         </div>`;
       page.querySelectorAll("textarea").forEach(autoGrow);
@@ -1308,21 +1400,33 @@
           save(); renderMap(); renderIndex(); toast("Examples removed."); break;
         }
         case "help":
-          alert("Meet Town keeps everything in this browser's local storage: nothing is sent anywhere.\n\n• People are characters, companies are buildings, topics are billboards.\n• Click anything to open its page; drag to move it; scroll or pinch to zoom.\n• Roads connect two entries. Add them from the page.\n• Set a 'next touch' date and the entry gets a flag when it is due.\n• Use Export to back up or move to another computer, and Import to bring a file back in.\n\nBecause the data lives in one browser, clearing site data will erase it. Export now and then.");
+          alert("Meet Town keeps everything in this browser's local storage, encrypted with your password. Nothing is sent anywhere.\n\n• People are characters, companies are buildings, topics are billboards.\n• Click anything to open its page; drag to move it; scroll or pinch to zoom.\n• Roads connect two entries. Add them from the page.\n• Set a 'next touch' date and the entry gets a flag when it is due.\n• Export writes an encrypted backup file (it needs the same password to open). Import brings one back in.\n\nBecause the data lives in one browser, clearing site data will erase it. Export now and then.");
           break;
       }
     });
-    function exportJson() {
-      const blob = new Blob([JSON.stringify(doc, null, 2)], { type: "application/json" });
+    async function exportJson() {
+      if (!cryptoKey) return;
+      const vault = await encryptWith(cryptoKey, vaultSalt, doc);
+      const blob = new Blob([JSON.stringify(vault, null, 2)], { type: "application/json" });
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
       a.download = `meet-town-${today()}.json`; document.body.appendChild(a); a.click();
       setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
-      toast("Exported.");
+      toast("Exported (encrypted with your password).");
     }
     function importFile(file) {
       const r = new FileReader();
-      r.onload = () => {
+      r.onload = async () => {
         let raw; try { raw = JSON.parse(r.result); } catch { toast("That file is not valid JSON."); return; }
+        if (isVault(raw)) {
+          try {
+            if (raw.salt === b64(vaultSalt)) raw = await decryptWith(cryptoKey, raw);
+            else {
+              const pw = prompt("This backup was made with a different password. Enter the password it was exported with:");
+              if (!pw) return;
+              raw = await decryptWith(await deriveKey(pw, unb64(raw.salt)), raw);
+            }
+          } catch { toast("Could not unlock that file: wrong password or damaged file."); return; }
+        }
         if (!raw || !Array.isArray(raw.entities)) { toast("That does not look like a Meet Town export."); return; }
         const inc = normalizeDoc(raw);
         const replace = confirm(`Import ${inc.entities.length} entries.\n\nOK = replace everything in the town with this file.\nCancel = merge it into what is already here.`);
@@ -1359,7 +1463,6 @@
     let booted = false;
     function boot() {
       if (booted) return; booted = true;
-      load();
       updateDue();
       renderMap();
       fitView();
@@ -1372,9 +1475,7 @@
       document.getElementById("gate-art").innerHTML = personArt(look);
     })();
 
-    let unlocked = false;
-    try { unlocked = sessionStorage.getItem(SS_UNLOCK) === "1"; } catch { /* ignore */ }
-    if (unlocked) revealApp();
+    resumeSession().then(ok => { if (ok) revealApp(); });
   </script>
 </body>
 </html>
