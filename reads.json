@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-09-09",
+  "updated": "2026-09-16",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -757,6 +757,69 @@
       "source": "arXiv · 2609.01621",
       "url": "https://arxiv.org/abs/2609.01621",
       "summary": "Using solid-electrolyte conductivity data as a case study, the authors trace values from source papers into curated datasets and find recurring text-figure mismatches, ambiguous axes, and unit errors. Because these discrepancies look numerically plausible, they slip past preprocessing and propagate as structured label noise into AI models — one cross-database example produces a 100-fold conductivity error."
+    },
+    {
+      "id": "2026-09-16-ai",
+      "date": "2026-09-16",
+      "category": "AI",
+      "title": "LifeMem: Enabling Lifelong Experience Reuse for LLM Agents",
+      "source": "arXiv · 2609.12655",
+      "url": "https://arxiv.org/abs/2609.12655",
+      "summary": "LLM agents accumulate interaction experience but struggle to transfer it to new environments and forget old skills as new ones pile up. LifeMem clusters past trajectories by their underlying workflows into reusable skills, which the agent recalls when facing a new task. Across 10 environments and over 13,000 tasks, it reduces forgetting while improving cross-task transfer."
+    },
+    {
+      "id": "2026-09-16-semiconductors",
+      "date": "2026-09-16",
+      "category": "Semiconductors",
+      "title": "First Demonstration of Flip DRAM from Process, Architecture to System to Push DRAM Scaling beyond 4F2",
+      "source": "arXiv · 2609.14464",
+      "url": "https://arxiv.org/abs/2609.14464",
+      "summary": "DRAM density has been stuck near the 4F² cell-size floor of conventional layouts. This work flips the wafer and processes its backside so two vertical-channel 1T1C bitcells stack back-to-back, yielding an effective 2F² cell, and works through the self-aligned process modules, bitline/wordline options, and system-level implications — a first demonstration of a path to keep DRAM scaling."
+    },
+    {
+      "id": "2026-09-16-biotechnology",
+      "date": "2026-09-16",
+      "category": "Biotechnology",
+      "title": "Synthesizing State-of-the-Art Structure Predictions from Soup of Co-folding Models",
+      "source": "arXiv · 2609.15552",
+      "url": "https://arxiv.org/abs/2609.15552",
+      "summary": "Co-folding models predict how proteins bind other proteins and small molecules, but independently trained models have different strengths. SoupFold combines representations from a soup of such models instead of betting on a single one, reaching state-of-the-art accuracy on both protein-protein and protein-ligand structure prediction. Better complex prediction feeds directly into drug-discovery pipelines."
+    },
+    {
+      "id": "2026-09-16-sustainable-energy",
+      "date": "2026-09-16",
+      "category": "Sustainable Energy",
+      "title": "Towards Sustainable Hydrogen Systems: Supply Chain Optimization with Model Predictive Control and Reinforcement Learning",
+      "source": "arXiv · 2609.11933",
+      "url": "https://arxiv.org/abs/2609.11933",
+      "summary": "Green-hydrogen supply chains must juggle uncertain renewable output, volatile electricity prices, and shifting demand while respecting hard constraints on electrolyzers, storage, and grid interaction. This paper pairs model predictive control with reinforcement learning so operations plan ahead on a model while learning from experience, aiming to make renewable hydrogen production cheaper and more dependable."
+    },
+    {
+      "id": "2026-09-16-defense-tech",
+      "date": "2026-09-16",
+      "category": "Defense Tech",
+      "title": "From Square Law to Swarm Law: A Drone-extended Lanchester Model and the New Mathematics of Attrition across Eight Conflicts",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6881358",
+      "summary": "Classical Lanchester equations say combat power grows with the square of force size; this paper extends them for wars saturated with cheap drones and fits the result across eight conflicts. It finds outcomes are governed less by tactical skill than by production depth — how fast each side can manufacture and field expendable systems — reframing attrition warfare as an industrial contest."
+    },
+    {
+      "id": "2026-09-16-quantum-computing",
+      "date": "2026-09-16",
+      "category": "Quantum Computing",
+      "title": "Error Correction in a Distributed Quantum Computer",
+      "source": "arXiv · 2609.13065",
+      "url": "https://arxiv.org/abs/2609.13065",
+      "summary": "Scaling quantum computers will likely mean networking smaller modules together, but error correction spanning separate machines had not been shown. This experiment realizes a repetition code distributed across networked nodes to detect phase-flip errors on a logical qubit, and combines mid-circuit syndrome measurements with real-time feedforward to actively correct arbitrary single-qubit errors on a shared Bell state."
+    },
+    {
+      "id": "2026-09-16-materials-science",
+      "date": "2026-09-16",
+      "category": "Materials Science",
+      "title": "Discovery of Superconductivity in a Bulk Moire Superlattice Material",
+      "source": "arXiv · 2609.06622",
+      "url": "https://arxiv.org/abs/2609.06622",
+      "summary": "Moiré superlattices made by twisting stacked 2D layers host exotic phases like superconductivity, but only in fragile few-layer devices. This work reports superconductivity at 2.5 K in bulk single crystals of (Sr6TaS8)1+x(TaS2)8, where the moiré-like superlattice is built into the crystal itself. Bulk crystals make these phases far easier to probe and potentially exploit."
     }
   ]
 }
