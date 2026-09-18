@@ -106,7 +106,13 @@
       white-space: nowrap; display: flex; align-items: baseline; gap: 0.6rem;
     }
     .topbar h1 .sub { font-family: var(--body); font-weight: 400; font-size: 0.72rem; color: var(--ink-soft); white-space: nowrap; }
-    .tb-actions { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; flex-wrap: nowrap; }
+    .tb-actions {
+      margin-left: auto; display: flex; align-items: center; gap: 0.4rem;
+      flex-wrap: nowrap; min-width: 0; overflow-x: auto; overflow-y: hidden;
+      padding: 4px 2px; scrollbar-width: none;
+    }
+    .tb-actions::-webkit-scrollbar { display: none; }
+    .tb-actions > * { flex-shrink: 0; }
 
     .btn {
       border: 2px solid var(--ink); border-radius: 999px;
@@ -122,9 +128,6 @@
     .btn.green { background: var(--green); color: #fff; }
     .btn.yellow { background: var(--yellow); }
     .btn.ghost { box-shadow: none; background: transparent; }
-    #backup-btn { color: var(--ink-soft); font-weight: 600; }
-    #backup-btn.warn { color: var(--ink); background: var(--yellow); box-shadow: var(--shadow); font-weight: 700; }
-    #backup-btn.late { color: #fff; background: var(--red); box-shadow: var(--shadow); font-weight: 700; }
     .btn.ghost:hover { background: #fff; }
     .btn.small { padding: 0.3rem 0.65rem; font-size: 0.75rem; box-shadow: 2px 2px 0 var(--ink); }
     .btn.danger { background: #fff; color: var(--red); border-color: var(--red); box-shadow: 2px 2px 0 var(--red); }
@@ -132,13 +135,31 @@
 
     #q {
       border: 2px solid var(--ink); border-radius: 999px; padding: 0.38rem 0.9rem;
-      background: #fff; width: 190px; outline: none; font-size: 0.82rem;
+      background: #fff; width: 150px; outline: none; font-size: 0.82rem;
     }
     #q:focus { box-shadow: 0 0 0 3px rgba(63,127,193,0.25); }
 
     .seg { display: inline-flex; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; background: #fff; box-shadow: var(--shadow); }
     .seg button { border: none; background: transparent; padding: 0.4rem 0.8rem; font-weight: 700; font-size: 0.8rem; line-height: 1; }
     .seg button.on { background: var(--ink); color: #fff; }
+
+    /* backup + restore, kept visible side by side */
+    .filegroup {
+      display: inline-flex; border: 2px solid var(--ink); border-radius: 999px;
+      overflow: hidden; background: #fff; box-shadow: var(--shadow);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .filegroup:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--ink); }
+    .filegroup button {
+      border: none; background: transparent; padding: 0.4rem 0.8rem;
+      font-weight: 700; font-size: 0.8rem; line-height: 1; white-space: nowrap;
+    }
+    .filegroup button:hover { background: var(--paper); }
+    .filegroup #restore-btn { border-left: 2px solid var(--ink); }
+    .filegroup.warn #backup-btn { background: var(--yellow); }
+    .filegroup.warn #backup-btn:hover { background: #f8d264; }
+    .filegroup.late #backup-btn { background: var(--red); color: #fff; }
+    .filegroup.late #backup-btn:hover { background: #ea5945; }
 
     .menu { position: relative; }
     .menu summary { list-style: none; }
@@ -343,18 +364,25 @@
     #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ---------- responsive ---------- */
-    @media (max-width: 980px) {
+    @media (max-width: 1180px) {
       .topbar h1 .sub { display: none; }
+    }
+    @media (max-width: 1279px) {
+      :root { --topbar-h: auto; }
+      .topbar { flex-wrap: wrap; height: auto; padding: 0.55rem 1rem; gap: 0.5rem; }
+      .topbar .back { order: 0; }
+      .topbar h1 { order: 1; }
+      .tb-actions { order: 2; width: 100%; margin-left: 0; justify-content: flex-start; }
+    }
+    @media (max-width: 980px) {
       #q { width: 130px; }
     }
     @media (max-width: 760px) {
-      :root { --topbar-h: auto; }
-      .topbar { flex-wrap: wrap; padding: 0.6rem 0.8rem; gap: 0.5rem; height: auto; }
-      .topbar .back { order: 0; }
-      .topbar h1 { order: 1; font-size: 1.15rem; }
-      .tb-actions { order: 2; width: 100%; margin-left: 0; overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
-      .tb-actions::-webkit-scrollbar { display: none; }
-      #q { width: 120px; flex-shrink: 0; }
+      .topbar { padding: 0.6rem 0.8rem; }
+      .topbar h1 { font-size: 1.15rem; }
+      /* wrap rather than scroll, so no control hides off the edge */
+      .tb-actions { flex-wrap: wrap; overflow-x: visible; row-gap: 0.4rem; }
+      #q { width: 120px; flex: 1 1 120px; min-width: 110px; }
       #page {
         position: fixed; left: 0; right: 0; bottom: 0; width: auto; max-height: 72vh;
         border-left: none; border-top: 2px solid var(--ink); border-radius: 18px 18px 0 0;
@@ -402,15 +430,18 @@
           <button id="v-index" role="tab">index</button>
         </div>
         <button class="btn yellow" id="due-btn" title="Follow-ups that are due">0 due</button>
-        <button class="btn ghost" id="backup-btn" title="Export an encrypted backup file">backup</button>
+        <div class="filegroup" id="filegroup">
+          <button id="backup-btn" title="Save an encrypted backup file">&darr; backup</button>
+          <button id="restore-btn" title="Restore from a backup file">&uarr; restore</button>
+        </div>
         <details class="menu" id="menu">
           <summary class="btn ghost" title="More">&#8943;</summary>
           <div class="menu-list">
             <button data-menu="fit">Fit the town in view</button>
             <button data-menu="tidy">Tidy up the town</button>
             <hr>
-            <button data-menu="export">Export as JSON</button>
-            <button data-menu="import">Import JSON&hellip;</button>
+            <button data-menu="export">Back up to a file</button>
+            <button data-menu="import">Restore from a file&hellip;</button>
             <hr>
             <button data-menu="examples">Remove the examples</button>
             <button data-menu="help">How this works</button>
@@ -1199,21 +1230,25 @@
     // Backup reminder: quiet for two weeks after an export, yellow after that,
     // red after a month or when nothing has ever been exported.
     function updateBackupNudge() {
-      const b = $("#backup-btn"); if (!b) return;
+      const b = $("#backup-btn"), g = $("#filegroup"); if (!b || !g) return;
       const own = doc.entities.filter(e => !e.sample).length;
       const last = Number(doc.lastExportAt) || 0;
       const days = last ? Math.floor((Date.now() - last) / 86400000) : null;
-      let text, state;
-      if (!own) { text = "backup"; state = ""; }
-      else if (days === null) { text = "never backed up"; state = "late"; }
-      else if (days === 0) { text = "backed up today"; state = ""; }
-      else { text = `backup ${days}d ago`; state = days >= 30 ? "late" : days >= 14 ? "warn" : ""; }
+      let text, state, when;
+      if (days === 0) { text = "\u2193 saved today"; state = ""; when = "Backed up today."; }
+      else if (!own) { text = "\u2193 backup"; state = ""; when = "Nothing of your own to back up yet."; }
+      else if (days === null) { text = "\u2193 backup \u00b7 never"; state = "late"; when = "This town has never been backed up."; }
+      else {
+        state = days >= 30 ? "late" : days >= 14 ? "warn" : "";
+        text = state ? `\u2193 backup \u00b7 ${days}d` : "\u2193 backup";
+        when = `Last backup ${days} day${days === 1 ? "" : "s"} ago.`;
+      }
       b.textContent = text;
-      b.classList.toggle("warn", state === "warn"); b.classList.toggle("late", state === "late");
-      b.classList.toggle("ghost", state === "");
-      b.title = state ? "Export an encrypted backup file now" : "Export an encrypted backup file";
+      g.classList.toggle("warn", state === "warn"); g.classList.toggle("late", state === "late");
+      b.title = `${when} Click to save an encrypted backup file.`;
     }
     $("#backup-btn").addEventListener("click", exportJson);
+    $("#restore-btn").addEventListener("click", () => { $("#import-file").value = ""; $("#import-file").click(); });
     $("#due-btn").addEventListener("click", () => {
       idx.dueOnly = true; $("#f-due").classList.add("on"); idx.sort = "next"; $("#f-sort").value = "next"; setView("index");
     });
@@ -1427,7 +1462,7 @@
           save(); renderMap(); renderIndex(); toast("Examples removed."); break;
         }
         case "help":
-          alert("Meet Town keeps everything in this browser's local storage, encrypted with your password. Nothing is sent anywhere.\n\n• People are characters, companies are buildings, topics are billboards.\n• Click anything to open its page; drag to move it; scroll or pinch to zoom.\n• Roads connect two entries. Add them from the page.\n• Set a 'next touch' date and the entry gets a flag when it is due.\n• Export writes an encrypted backup file (it needs the same password to open). Import brings one back in.\n• The 'backup' button in the top bar shows how long since the last export and turns yellow after two weeks, red after a month. Click it to export.\n\nBecause the data lives in one browser, clearing site data will erase it. Keep the backup file in a folder that is itself backed up.");
+          alert("Meet Town keeps everything in this browser's local storage, encrypted with your password. Nothing is sent anywhere.\n\n• People are characters, companies are buildings, topics are billboards.\n• Click anything to open its page; drag to move it; scroll or pinch to zoom.\n• Roads connect two entries. Add them from the page.\n• Set a 'next touch' date and the entry gets a flag when it is due.\n• 'backup' in the top bar saves an encrypted file (it needs the same password to open); it shows how long since the last one and turns yellow after two weeks, red after a month. 'restore' brings a backup file back in.\n\nBecause the data lives in one browser, clearing site data will erase it. Keep the backup file in a folder that is itself backed up.");
           break;
       }
     });
