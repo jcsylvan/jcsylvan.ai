@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-09-16",
+  "updated": "2026-09-23",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -820,6 +820,69 @@
       "source": "arXiv · 2609.06622",
       "url": "https://arxiv.org/abs/2609.06622",
       "summary": "Moiré superlattices made by twisting stacked 2D layers host exotic phases like superconductivity, but only in fragile few-layer devices. This work reports superconductivity at 2.5 K in bulk single crystals of (Sr6TaS8)1+x(TaS2)8, where the moiré-like superlattice is built into the crystal itself. Bulk crystals make these phases far easier to probe and potentially exploit."
+    },
+    {
+      "id": "2026-09-23-ai",
+      "date": "2026-09-23",
+      "category": "AI",
+      "title": "Few-Shot Demonstrations Elicit the Use of In-Context World Representations in LLMs",
+      "source": "arXiv · 2609.24352",
+      "url": "https://arxiv.org/abs/2609.24352",
+      "summary": "Earlier work found that LLMs build a representation of the hidden structure behind in-context data but largely fail to use it for prediction. This paper shows that few-shot demonstrations, each drawn from a different underlying graph, fix much of that gap across six models from four families. Linear probes indicate the demonstrations move the internal world representation and make the model actually rely on it."
+    },
+    {
+      "id": "2026-09-23-semiconductors",
+      "date": "2026-09-23",
+      "category": "Semiconductors",
+      "title": "High-Performance Scaled P-Type SnOx Transistor by Atomic Layer Deposition with CFET Integration",
+      "source": "arXiv · 2609.11114",
+      "url": "https://arxiv.org/abs/2609.11114",
+      "summary": "Oxide-semiconductor transistors are attractive for stacking logic above the silicon layer, but usable p-type devices have lagged far behind n-type ones. The authors deposit tin oxide channels by atomic layer deposition at back-end-compatible temperatures and report field-effect mobility of 6.9 cm2/Vs, a 185 mV/dec subthreshold swing, and integration into a complementary FET stack."
+    },
+    {
+      "id": "2026-09-23-biotechnology",
+      "date": "2026-09-23",
+      "category": "Biotechnology",
+      "title": "Towards a knowledge-enhanced single-cell foundation model",
+      "source": "arXiv · 2609.14970",
+      "url": "https://arxiv.org/abs/2609.14970",
+      "summary": "Single-cell foundation models are usually scaled by pretraining on tens of millions of cells, which is expensive and has produced mixed benchmark results. scKITE instead injects existing biological knowledge into pretraining, and reaches better downstream performance using about 179,000 cells — under 0.5% of the data prior models needed. It suggests structured priors can substitute for raw scale in biology."
+    },
+    {
+      "id": "2026-09-23-sustainable-energy",
+      "date": "2026-09-23",
+      "category": "Sustainable Energy",
+      "title": "Reliability Value of Long-Duration Energy Storage against Extreme Events in High-Renewable Grids: A Full-Year AC-OPF Assessment",
+      "source": "arXiv · 2609.06864",
+      "url": "https://arxiv.org/abs/2609.06864",
+      "summary": "Most storage studies optimize for daily arbitrage rather than multi-day outages, so they understate what long-duration storage is worth. Running a full year of AC optimal power flow on a synthetic 200-bus Illinois network, the authors find a mixed fleet of batteries and long-duration storage cuts annual load shedding by 83% versus 68.5% for the same power rating of batteries alone."
+    },
+    {
+      "id": "2026-09-23-defense-tech",
+      "date": "2026-09-23",
+      "category": "Defense Tech",
+      "title": "Institutional and Network Mechanisms Constraining European Defence-industrial Autonomy",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7364099",
+      "summary": "European defence spending rose sharply after 2022, but the money has not translated into an independent industrial base. This paper traces why through the structure of EU procurement itself: fragmented national markets, vendor lock-in and switching costs, and revolving-door ties between ministries and incumbent primes. The argument is that the constraints are institutional rather than budgetary."
+    },
+    {
+      "id": "2026-09-23-quantum-computing",
+      "date": "2026-09-23",
+      "category": "Quantum Computing",
+      "title": "Scalable Simulation of Quantum Dynamics on Topological Quantum Hardware",
+      "source": "arXiv · 2609.19484",
+      "url": "https://arxiv.org/abs/2609.19484",
+      "summary": "Topological qubits promise error resistance built into the hardware, but there is little concrete work on what running real workloads on them would take. This paper lays out how to simulate molecular and condensed-matter quantum dynamics using the braiding of Fibonacci and Ising anyons, compiling time-evolution operators into braid sequences via the Solovay-Kitaev algorithm and estimating the resources required."
+    },
+    {
+      "id": "2026-09-23-materials-science",
+      "date": "2026-09-23",
+      "category": "Materials Science",
+      "title": "Divergent strategies and convergent outcomes in autonomous materials discovery",
+      "source": "arXiv · 2609.23957",
+      "url": "https://arxiv.org/abs/2609.23957",
+      "summary": "AI research agents are normally graded on whether they reproduce a known answer, which says little about open-ended work. Sixteen independent agent sessions were given the same 12,499-structure database of metal-organic frameworks and a week to maximize methane storage. Their strategies diverged widely, from screening 100 to 5,000 candidates, yet they converged on the same performance frontier and recovered the database's nine best structures."
     }
   ]
 }
