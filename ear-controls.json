@@ -1,0 +1,1503 @@
+{
+  "updated": "2026-09-25",
+  "regsAsOf": "eCFR Title 15, current through 2026-08-31",
+  "note": "Reference layer for the Export Administration Regulations (EAR), which the Commerce Department's Bureau of Industry and Security (BIS) administers. The country groups and Commerce Country Chart rows are transcribed from Supplement No. 1 to Part 740 and Supplement No. 1 to Part 738 of the EAR; everything else is a plain-language digest, not the regulation itself. It is here to explain why each line on the board sits where it does, not to replace a classification or a licensing decision. Verify against the current EAR before relying on any of it.",
+  "sources": [
+    {
+      "label": "Country Groups — Supp. No. 1 to Part 740",
+      "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-740/appendix-Supplement%20No.%201%20to%20Part%20740"
+    },
+    {
+      "label": "Commerce Country Chart — Supp. No. 1 to Part 738",
+      "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-738/appendix-Supplement%20No.%201%20to%20Part%20738"
+    },
+    {
+      "label": "Part 740 — License Exceptions",
+      "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-740"
+    },
+    {
+      "label": "Part 742 — CCL-based controls",
+      "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-742"
+    },
+    {
+      "label": "Part 744 — End-user and end-use controls",
+      "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-744"
+    },
+    {
+      "label": "Part 746 — Embargoes and other special controls",
+      "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-746"
+    },
+    {
+      "label": "§ 750.7 — Issuance of licenses (validity, conditions)",
+      "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-750/section-750.7"
+    },
+    {
+      "label": "§ 762.6 — Five-year record retention",
+      "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-762/section-762.6"
+    },
+    {
+      "label": "Commerce Control List — Supp. No. 1 to Part 774",
+      "url": "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-774/appendix-Supplement%20No.%201%20to%20Part%20774"
+    }
+  ],
+  "pathways": {
+    "license": {
+      "label": "BIS license",
+      "short": "LIC",
+      "color": "#79d479",
+      "desc": "An individual validated license issued by BIS through SNAP-R. Valid for four years unless BIS sets a different period (§ 750.7(g)); carries quantity, value and named-party limits plus any conditions on its face (§ 750.7(a), (d), (f))."
+    },
+    "exception": {
+      "label": "License exception",
+      "short": "EXC",
+      "color": "#6fb6d6",
+      "desc": "A Part 740 License Exception relied on instead of a license. Nothing is issued: the exporter self-documents eligibility, keeps the records and files any report the exception demands. Every exception is subject to the § 740.2 restrictions and never overrides Part 744 or Part 746."
+    },
+    "nlr": {
+      "label": "No license required",
+      "short": "NLR",
+      "color": "#cdbb92",
+      "desc": "The item is classified, the Commerce Country Chart shows no X for this destination and reason for control, and no end-user, end-use or embargo rule bites. Still a decision that must be recorded: classification, screening and the destination control statement (§ 758.6) are all required."
+    },
+    "itar-license": {
+      "label": "ITAR license (DDTC)",
+      "short": "DSP",
+      "color": "#d9b348",
+      "desc": "A State Department licence (for example a DSP-5) for a defense article on the U.S. Munitions List. Outside the EAR: the Commerce Country Chart does not apply, the ITAR does."
+    },
+    "itar-agreement": {
+      "label": "ITAR agreement (TAA/MLA)",
+      "short": "TAA",
+      "color": "#d9b348",
+      "desc": "A DDTC-approved Technical Assistance or Manufacturing License Agreement covering defense services and technical data. Scope, not dollar value, is the limit."
+    },
+    "itar-exemption": {
+      "label": "ITAR exemption",
+      "short": "EXM",
+      "color": "#d9b348",
+      "desc": "A licence-free ITAR pathway such as the § 126.7 AUKUS exemption. Eligibility (authorized users, excluded technology) has to be checked and logged on every transfer."
+    }
+  },
+  "reasons": {
+    "NS": {
+      "name": "National security",
+      "part": "§ 742.4",
+      "columns": {
+        "NS:1": "License required to every destination except Australia, Canada and the United Kingdom.",
+        "NS:2": "License required to every destination except Country Group A:1 (the Wassenaar partners)."
+      }
+    },
+    "MT": {
+      "name": "Missile technology",
+      "part": "§ 742.5",
+      "columns": {
+        "MT:1": "License required wherever the chart marks MT:1, which is nearly everywhere outside Australia, Canada and the UK. Reviewed interagency, so expect the slowest clock in the portfolio. STA is not available (except certain UAVs)."
+      }
+    },
+    "NP": {
+      "name": "Nuclear nonproliferation",
+      "part": "§ 742.3",
+      "columns": {
+        "NP:1": "License required to destinations marked NP:1 (broadly, countries outside the Nuclear Suppliers Group).",
+        "NP:2": "License required to the shorter NP:2 list."
+      }
+    },
+    "CB": {
+      "name": "Chemical & biological weapons",
+      "part": "§ 742.2",
+      "columns": {
+        "CB:1": "License required to every destination on the chart, Canada included.",
+        "CB:2": "License required to the broad CB:2 list (most countries outside the Australia Group).",
+        "CB:3": "License required to the shorter CB:3 list."
+      }
+    },
+    "RS": {
+      "name": "Regional stability",
+      "part": "§ 742.6",
+      "columns": {
+        "RS:1": "License required to every destination except Australia, Canada and the United Kingdom.",
+        "RS:2": "License required to every destination except Country Group A:1 and India (India still needs a licence for 6A003.b.4.b cameras and 9A515.e)."
+      }
+    },
+    "AT": {
+      "name": "Anti-terrorism",
+      "part": "§§ 742.8–742.10, Part 746",
+      "columns": {
+        "AT:1": "Applies to the terrorist-supporting countries in Group E:1 (Iran, North Korea, Syria); see Part 746 for the actual embargo rules."
+      }
+    },
+    "CC": {
+      "name": "Crime control",
+      "part": "§ 742.7",
+      "columns": {
+        "CC:1": "Crime-control column 1.",
+        "CC:2": "Crime-control column 2.",
+        "CC:3": "Crime-control column 3 (police / law-enforcement sales)."
+      }
+    },
+    "FC": {
+      "name": "Firearms convention",
+      "part": "§ 742.17",
+      "columns": {
+        "FC:1": "OAS Firearms Convention countries in the Western Hemisphere."
+      }
+    },
+    "EI": {
+      "name": "Encryption items",
+      "part": "§ 742.15",
+      "columns": {
+        "EI": "License required to all destinations except Canada for 5A002 / 5D002 / 5E002 items, unless License Exception ENC (§ 740.17) covers the export. Not on the Country Chart; the requirement comes from § 742.15 directly."
+      }
+    },
+    "SI": {
+      "name": "Significant items",
+      "part": "§ 742.14",
+      "columns": {
+        "SI": "Hot-section technology for certain gas-turbine engines; licence to all destinations."
+      }
+    },
+    "SS": {
+      "name": "Short supply",
+      "part": "Part 754",
+      "columns": {
+        "SS": "Crude oil, certain petroleum products and western red cedar; licence to all destinations, one-year validity."
+      }
+    },
+    "UN": {
+      "name": "United Nations sanctions",
+      "part": "§ 746.1(b)",
+      "columns": {
+        "UN": "Security Council arms-embargo destinations named in the ECCN."
+      }
+    }
+  },
+  "countryGroups": {
+    "A:1": {
+      "label": "Wassenaar Arrangement participating states",
+      "effect": "No licence for NS:2 or RS:2 items. Exports to these countries are also exempt from the § 743.1 Wassenaar report.",
+      "note": "Excludes Malta, Russia and Ukraine."
+    },
+    "A:2": {
+      "label": "Missile Technology Control Regime",
+      "effect": "MTCR partners (Russia excluded). Shapes MT licensing policy, not the chart itself."
+    },
+    "A:3": {
+      "label": "Australia Group",
+      "effect": "Chemical/biological regime partners; most CB:2 and CB:3 requirements fall away."
+    },
+    "A:4": {
+      "label": "Nuclear Suppliers Group",
+      "effect": "NSG partners (China, Russia and Belarus excluded); NP:1 is generally not marked."
+    },
+    "A:5": {
+      "label": "Strategic Trade Authorization partners",
+      "effect": "License Exception STA can replace a licence for items controlled only for NS, CB, NP, RS, CC or SI reasons (§ 740.20(c)(1)), subject to the item-level exclusions and the prior consignee statement.",
+      "note": "For the UAE, STA is limited to the approved entities in Supp. No. 8 to Part 740."
+    },
+    "A:6": {
+      "label": "STA partners, lesser scope",
+      "effect": "License Exception STA only for items controlled solely for NS reasons and not excluded in the ECCN's STA paragraph (§ 740.20(c)(2))."
+    },
+    "B": {
+      "label": "Country Group B",
+      "effect": "Eligible for License Exceptions GBS (§ 740.4) and LVS (§ 740.3) where the ECCN allows them. Most of the world outside the D and E groups."
+    },
+    "D:1": {
+      "label": "National-security concern",
+      "effect": "NS:2 is marked, so far more items need a licence; deemed-export and technology transfers get extra scrutiny."
+    },
+    "D:2": {
+      "label": "Nuclear concern",
+      "effect": "Nuclear end-use screening under § 744.2 is the live risk; NP columns are marked."
+    },
+    "D:3": {
+      "label": "Chemical & biological concern",
+      "effect": "CB:2 and CB:3 are marked; § 744.4 end-use rule applies."
+    },
+    "D:4": {
+      "label": "Missile-technology concern",
+      "effect": "§ 744.3 rocket and UAV end-use rule applies; MT licensing policy is a presumption of denial for many items."
+    },
+    "D:5": {
+      "label": "U.S. arms embargo",
+      "effect": "600-series and 9x515 items face a policy of denial; military end-use and end-user rules (§§ 744.21, 744.22) and the ITAR arms embargo (22 CFR 126.1) apply."
+    },
+    "E:1": {
+      "label": "Terrorist-supporting countries",
+      "effect": "Near-total licence requirement under Part 746; almost no License Exceptions are available; AT controls."
+    },
+    "E:2": {
+      "label": "Unilateral embargo",
+      "effect": "Cuba: comprehensive embargo under § 746.2 with a short list of exceptions."
+    }
+  },
+  "chartColumns": [
+    "CB:1",
+    "CB:2",
+    "CB:3",
+    "NP:1",
+    "NP:2",
+    "NS:1",
+    "NS:2",
+    "MT:1",
+    "RS:1",
+    "RS:2",
+    "FC:1",
+    "CC:1",
+    "CC:2",
+    "CC:3",
+    "AT:1",
+    "AT:2"
+  ],
+  "countries": {
+    "US": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "B"
+      ],
+      "chart": [],
+      "note": "Point of export. Jurisdiction, classification and screening are decided here."
+    },
+    "CA": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "FC:1"
+      ],
+      "note": "Almost nothing on the CCL needs a licence to Canada (only CB:1 and firearms-convention items); encryption items are also exempt from § 742.15. Part 744 screening still applies."
+    },
+    "MX": {
+      "groups": [
+        "A:1",
+        "A:3",
+        "A:4",
+        "A:6",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1",
+        "FC:1",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "Wassenaar and NSG partner, so NS:2 and NP:1 items are NLR; NS:1, MT and RS:1 items still need a licence. A:6, not A:5, so STA covers NS-only items only."
+    },
+    "BR": {
+      "groups": [
+        "A:2",
+        "A:4",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "FC:1",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "Not a Wassenaar member, so NS:2 items need a licence. Group B: GBS and LVS available where the ECCN allows."
+    },
+    "GB": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1"
+      ],
+      "note": "Since the 2024 AUKUS rule the chart marks only CB:1 (plus the firearms ECCNs in the chart's footnote). Most dual-use items are NLR; Part 744 and encryption (§ 742.15, via ENC) still apply."
+    },
+    "NO": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile: NS:1, MT:1 and RS:1 items need a licence or STA; NS:2 items are NLR."
+    },
+    "SE": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile."
+    },
+    "PL": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile. Watch onward movement toward Ukraine-adjacent end-users (§ 746.6 covered regions)."
+    },
+    "BY": {
+      "groups": [
+        "D:1",
+        "D:2",
+        "D:3",
+        "D:4",
+        "D:5"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "CB:3",
+        "NP:1",
+        "NP:2",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:2"
+      ],
+      "sanctions": [
+        "§ 746.8"
+      ],
+      "note": "Sanctioned alongside Russia under § 746.8: a licence is required for every item in any ECCN plus the industry-sector items in Supps. 2, 4, 5 and 6 to Part 746, with a policy of denial."
+    },
+    "FR": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile. Listed in Supp. No. 3 to Part 740, so ENC reaches any end user here."
+    },
+    "NL": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile and an ENC favourable-treatment country. Transshipment through Rotterdam makes forwarder screening the live control."
+    },
+    "DE": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile and an ENC favourable-treatment country."
+    },
+    "CH": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "A:5 partner, so STA is available for NS/RS items; MT items (7A003) still need a licence. Liechtenstein takes the Swiss row."
+    },
+    "IT": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile."
+    },
+    "ES": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile."
+    },
+    "TR": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Regime partner on paper (A:1, A:5) but reviewed case by case in practice; expect long clocks and end-use conditions on anything near a military user."
+    },
+    "EG": {
+      "groups": [
+        "B",
+        "D:3",
+        "D:4"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "CB:3",
+        "NP:1",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "Group B but also D:3 and D:4, so chemical/biological and missile end-use rules (§§ 744.3, 744.4) sit on top of the chart."
+    },
+    "IL": {
+      "groups": [
+        "A:6",
+        "B",
+        "D:2",
+        "D:3",
+        "D:4"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "CB:3",
+        "NP:1",
+        "NP:2",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "A:6, so STA reaches NS-only items; anything with an RS, NP or MT reason needs a licence. D:2/D:3/D:4 end-use rules apply."
+    },
+    "SA": {
+      "groups": [
+        "B",
+        "D:3",
+        "D:4"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "CB:3",
+        "NP:1",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "NS:2 is marked, so most Category 2, 3 and 6 items need a licence. D:3/D:4 end-use rules apply."
+    },
+    "AE": {
+      "groups": [
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "CB:3",
+        "NP:1",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "In A:5 only for the approved entities in Supp. No. 8 to Part 740, so the board treats STA as unavailable here unless the consignee is on that list; everyone else is a Group B destination with NS:2 marked. Free-zone consignees carry re-export risk, and the advanced-computing 'z' items have UAE-specific RS controls (§ 742.6(a)(6)).",
+      "staRestricted": true
+    },
+    "ZA": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:4",
+        "A:6",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "NS:1",
+        "MT:1",
+        "RS:1",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "Wassenaar member, so NS:2 items are NLR; A:6 means STA covers NS-only items."
+    },
+    "IN": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NP:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Wassenaar and A:5 partner since 2018, but not in the Nuclear Suppliers Group, so NP:1 is marked and nuclear end-use screening (§ 744.2) governs. The chart's footnote keeps a licence requirement for 6A003.b.4.b cameras and 9A515.e under RS:2."
+    },
+    "TW": {
+      "groups": [
+        "A:6",
+        "B",
+        "D:3"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "CB:3",
+        "NP:1",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "NS:2 marked, so most controlled electronics need a licence; A:6 lets STA cover NS-only items. D:3 chemical/biological end-use rule applies."
+    },
+    "JP": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile and an ENC favourable-treatment country."
+    },
+    "KR": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "NS:1",
+        "MT:1",
+        "RS:1"
+      ],
+      "note": "Standard Wassenaar/A:5 partner profile."
+    },
+    "SG": {
+      "groups": [
+        "A:6",
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "NP:1",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "Not a Wassenaar member, so NS:2 and NP:1 are marked; A:6 lets STA cover NS-only items. Transshipment hub."
+    },
+    "PH": {
+      "groups": [
+        "B"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "NP:1",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:3"
+      ],
+      "note": "Plain Group B destination: NS:2 marked, GBS/LVS available where the ECCN allows, no STA."
+    },
+    "AU": {
+      "groups": [
+        "A:1",
+        "A:2",
+        "A:3",
+        "A:4",
+        "A:5",
+        "B"
+      ],
+      "chart": [
+        "CB:1"
+      ],
+      "note": "Since the 2024 AUKUS rule the chart marks only CB:1 (plus the firearms ECCNs in the footnote). Most dual-use items are NLR; Part 744 and encryption rules still apply, and defense articles move under the ITAR § 126.7 exemption."
+    },
+    "CN": {
+      "groups": [
+        "D:1",
+        "D:3",
+        "D:4",
+        "D:5"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "CB:3",
+        "NP:1",
+        "NP:2",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:3"
+      ],
+      "sanctions": [
+        "§ 744.21 military end-use / end-user",
+        "§ 744.23 supercomputer & advanced-node end-use",
+        "Entity List (Supp. 4 to Part 744)"
+      ],
+      "note": "Every chart column that matters is marked and the end-user rules are densest here: the military end-use/end-user rule, the advanced-computing and semiconductor-equipment controls, the Entity List and the 50-percent affiliates rule. Presume a licence requirement and a policy of denial for anything on the CCL."
+    },
+    "RU": {
+      "groups": [
+        "D:1",
+        "D:2",
+        "D:3",
+        "D:4",
+        "D:5"
+      ],
+      "chart": [
+        "CB:1",
+        "CB:2",
+        "CB:3",
+        "NP:1",
+        "NP:2",
+        "NS:1",
+        "NS:2",
+        "MT:1",
+        "RS:1",
+        "RS:2",
+        "CC:1",
+        "CC:2"
+      ],
+      "sanctions": [
+        "§ 746.8"
+      ],
+      "note": "§ 746.8: licence required for all items in any ECCN, the industry-sector lists (Supps. 2, 4, 5, 6 to Part 746) and luxury goods, with a policy of denial; foreign-direct-product rules reach non-U.S. items. Removed from Groups A:1, A:2 and A:4."
+    },
+    "IR": {
+      "groups": [
+        "D:2",
+        "D:3",
+        "D:4",
+        "D:5",
+        "E:1"
+      ],
+      "chart": [],
+      "sanctions": [
+        "§ 746.7",
+        "OFAC Iranian Transactions and Sanctions Regulations"
+      ],
+      "note": "The chart says 'see Part 746': § 746.7 requires a licence for nearly everything subject to the EAR, EAR99 included, and OFAC's embargo sits on top. Almost no License Exceptions are available."
+    }
+  },
+  "eccns": {
+    "7A003": {
+      "name": "Inertial navigation systems and inertial equipment (7A003)",
+      "family": "HD-NAV",
+      "columns": [
+        "NS:1",
+        "MT:1",
+        "AT:1"
+      ],
+      "sta": {
+        "A:5": false,
+        "A:6": false,
+        "why": "MT-controlled items are excluded from STA (§ 740.20(b)(2)(iii))."
+      },
+      "lvs": "N/A",
+      "gbs": "N/A",
+      "note": "Licence to every destination except Australia, Canada and the UK, and MT means interagency review. Inertial equipment specially designed for military use is USML VIII/XII under the ITAR, which is why the same part number appears on DSP-5s on this board."
+    },
+    "6A003.b.4.b": {
+      "name": "Imaging cameras with uncooled focal-plane arrays (6A003.b.4.b)",
+      "family": "HD-CAM",
+      "columns": [
+        "NS:2",
+        "RS:1",
+        "AT:1"
+      ],
+      "columnNotes": {
+        "RS:1": "Applies because the 640×512 array exceeds 111,000 elements. Smaller, slower cameras drop to RS:2 (§ 742.6(a)(2))."
+      },
+      "sta": {
+        "A:5": true,
+        "A:6": false,
+        "why": "The 6A003 entry's STA paragraph bars b.3 and b.4 cameras to A:6 destinations; A:5 remains available (confirm against the current entry before relying on it)."
+      },
+      "lvs": "N/A",
+      "gbs": "N/A",
+      "extra": [
+        "§ 744.9: a licence is required for these cameras when destined to a military end-user or for incorporation into a 0A919 military commodity, whatever the chart says.",
+        "UN controls for Iraq and Rwanda (§ 746.1(b))."
+      ],
+      "note": "RS:1 is the column that bites: licence to everywhere except Australia, Canada and the UK, even to Wassenaar partners."
+    },
+    "6A005": {
+      "name": "Lasers and laser components (6A005)",
+      "family": "HD-LAS",
+      "columns": [
+        "NS:2",
+        "AT:1"
+      ],
+      "columnNotes": {
+        "NP:1": "Only for lasers that meet the 6A205 parameters; an industrial 100 W pulsed fibre laser does not."
+      },
+      "sta": {
+        "A:5": true,
+        "A:6": true,
+        "why": "NS-only item, so STA reaches both A:5 and A:6 (§ 740.20(c)(1)–(2))."
+      },
+      "lvs": "$3,000 (not for NP items)",
+      "gbs": "Yes for certain CO₂ and Nd lasers listed in the entry",
+      "note": "NS:2 only, so Wassenaar partners are NLR and the licence work is concentrated in Group B and D destinations."
+    },
+    "6A006": {
+      "name": "Magnetometers, gradiometers and compensation systems (6A006)",
+      "family": "HD-SENS",
+      "columns": [
+        "NS:2",
+        "AT:1"
+      ],
+      "sta": {
+        "A:5": true,
+        "A:6": true,
+        "why": "NS-only item."
+      },
+      "lvs": "See entry",
+      "gbs": "N/A",
+      "note": "NS:2 only: NLR to Wassenaar partners, licence or STA elsewhere. Underwater-platform versions can slide into Category 8, which is why the Norway line was reviewed against it."
+    },
+    "3A001.b.2": {
+      "name": "MMIC power amplifiers (3A001.b.2), other than civil telecommunications use",
+      "family": "HD-RF",
+      "columns": [
+        "NS:1",
+        "RS:1",
+        "AT:1"
+      ],
+      "sta": {
+        "A:5": false,
+        "A:6": false,
+        "why": "The 3A001 entry bars STA for b.2 and b.3 amplifiers unless they are for civil telecommunications (§ 740.20(b)(2)(xi))."
+      },
+      "lvs": "N/A",
+      "gbs": "N/A",
+      "note": "Since the 2020 rule these amplifiers are NS:1 and RS:1 unless the end-use is civil telecommunications: licence to everywhere except Australia, Canada and the UK, and no STA. See § 743.1 for Wassenaar reporting when an exception is used."
+    },
+    "3A001.b.2-civil": {
+      "name": "MMIC power amplifiers (3A001.b.2) for civil telecommunications",
+      "family": "HD-RF",
+      "columns": [
+        "NS:2",
+        "AT:1"
+      ],
+      "sta": {
+        "A:5": true,
+        "A:6": true,
+        "why": "With the civil-telecom carve-out the item is NS-only."
+      },
+      "lvs": "$3,000",
+      "gbs": "Yes",
+      "note": "The carve-out only holds while the civil-telecommunications end-use is documented on each order. The same part sold for radar reverts to NS:1/RS:1."
+    },
+    "5A002.a": {
+      "name": "Information-security hardware using cryptography (5A002.a)",
+      "family": "HD-SEC",
+      "columns": [
+        "NS:1",
+        "AT:1"
+      ],
+      "ei": true,
+      "sta": {
+        "A:5": false,
+        "A:6": false,
+        "why": "EI-controlled items are excluded from STA (§ 740.20(b)(2)(iii))."
+      },
+      "lvs": "See entry",
+      "gbs": "N/A",
+      "enc": "License Exception ENC (§ 740.17) is the normal route. Most 5A002.a hardware is self-classified under (b)(1) with an annual self-classification report due February 1; 'network infrastructure' (for example encrypted WAN/VPN throughput of 250 Mbps or more) falls under (b)(2), which needs a 30-day classification request (a CCATS) and semi-annual sales reports due August 1 and February 1. ENC never reaches E:1 or E:2 destinations, and government end-users outside the favourable-treatment countries need a licence for (b)(2) items.",
+      "note": "§ 742.15 requires a licence to every destination except Canada unless ENC applies, so the classification file and the reports are the whole compliance story for this product."
+    },
+    "2B001.b.2": {
+      "name": "Machine tools with five or more simultaneously contouring axes (2B001.b.2)",
+      "family": "HD-MILL",
+      "columns": [
+        "NS:2",
+        "NP:1",
+        "AT:1"
+      ],
+      "sta": {
+        "A:5": true,
+        "A:6": false,
+        "why": "NS plus NP is within § 740.20(c)(1), so A:5 only."
+      },
+      "lvs": "N/A",
+      "gbs": "N/A",
+      "extra": [
+        "§ 744.2: nuclear end-use screening applies to every shipment, NLR ones included."
+      ],
+      "note": "NS:2 and NP:1 are both blank for Wassenaar/NSG partners, so these machines are NLR to most of Europe, Japan and Mexico; the licences live in the Gulf, South and Southeast Asia and anywhere nuclear end-use is in play."
+    }
+  },
+  "exceptions": [
+    {
+      "symbol": "LVS",
+      "section": "§ 740.3",
+      "name": "Shipments of limited value",
+      "plain": "Small-value shipments of eligible ECCNs to Country Group B, within the dollar cap printed in the ECCN and an annual per-consignee ceiling.",
+      "duties": [
+        "Stay under the ECCN's LVS value and the 12-month limit per consignee",
+        "Wassenaar report under § 743.1 if the item is on the Sensitive List"
+      ]
+    },
+    {
+      "symbol": "GBS",
+      "section": "§ 740.4",
+      "name": "Shipments to Country Group B",
+      "plain": "NS-controlled items whose ECCN says 'GBS: Yes' may go to Group B without a licence.",
+      "duties": [
+        "Confirm the ECCN's GBS paragraph",
+        "Wassenaar report under § 743.1 for Sensitive List items"
+      ]
+    },
+    {
+      "symbol": "SPP",
+      "section": "§ 740.5",
+      "name": "Syria Peace and Prosperity",
+      "plain": "Narrow 2025 exception for certain items to Syria.",
+      "duties": []
+    },
+    {
+      "symbol": "TSR",
+      "section": "§ 740.6",
+      "name": "Technology and software under restriction",
+      "plain": "NS-controlled technology and software to Group B with a written assurance from the recipient not to re-export it.",
+      "duties": [
+        "Obtain the written assurance before release",
+        "Wassenaar report under § 743.1 where applicable"
+      ]
+    },
+    {
+      "symbol": "APP",
+      "section": "§ 740.7",
+      "name": "Computers",
+      "plain": "Computers and related items within performance tiers to specified destinations.",
+      "duties": []
+    },
+    {
+      "symbol": "NAC / ACA",
+      "section": "§ 740.8",
+      "name": "Notified Advanced Computing / Advanced Computing Authorized",
+      "plain": "Advanced-computing items (3A090, 4A090 and related) to certain destinations, with a prior notification to BIS for NAC.",
+      "duties": [
+        "25-day notification for NAC shipments"
+      ]
+    },
+    {
+      "symbol": "TMP",
+      "section": "§ 740.9",
+      "name": "Temporary imports, exports, reexports and transfers",
+      "plain": "Tools of trade, exhibition items and other temporary movements that come back within a year.",
+      "duties": [
+        "Return or re-export within the time limit",
+        "Not for MT items to most destinations"
+      ]
+    },
+    {
+      "symbol": "RPL",
+      "section": "§ 740.10",
+      "name": "Servicing and replacement of parts and equipment",
+      "plain": "One-for-one replacement parts and warranty repairs of previously lawful exports.",
+      "duties": [
+        "Same or lower capability; original export must have been lawful"
+      ]
+    },
+    {
+      "symbol": "GOV",
+      "section": "§ 740.11",
+      "name": "Governments, international organizations, CWC inspections, ISS",
+      "plain": "Exports to the U.S. Government, cooperating governments and certain international bodies.",
+      "duties": [
+        "Cooperating-government shipments are reportable under § 743.1"
+      ]
+    },
+    {
+      "symbol": "GFT",
+      "section": "§ 740.12",
+      "name": "Gift parcels and humanitarian donations",
+      "plain": "Small gifts and donated goods.",
+      "duties": []
+    },
+    {
+      "symbol": "TSU",
+      "section": "§ 740.13",
+      "name": "Technology and software, unrestricted",
+      "plain": "Operation technology, sales technology, software updates and certain mass-market or published encryption source code.",
+      "duties": [
+        "Email notification for publicly available encryption source code (§ 740.13(e))"
+      ]
+    },
+    {
+      "symbol": "BAG",
+      "section": "§ 740.14",
+      "name": "Baggage",
+      "plain": "Personal effects and tools of trade carried by a traveller.",
+      "duties": []
+    },
+    {
+      "symbol": "AVS",
+      "section": "§ 740.15",
+      "name": "Aircraft, vessels and spacecraft",
+      "plain": "Temporary sojourns of aircraft and vessels, and parts for them.",
+      "duties": []
+    },
+    {
+      "symbol": "APR",
+      "section": "§ 740.16",
+      "name": "Additional permissive reexports",
+      "plain": "Reexports from certain cooperating countries.",
+      "duties": [
+        "Items first exported under STA may not be reexported under APR(a) or (b)"
+      ]
+    },
+    {
+      "symbol": "ENC",
+      "section": "§ 740.17",
+      "name": "Encryption commodities, software and technology",
+      "plain": "The standard route for 5A002/5D002/5E002 items in place of the § 742.15 licence requirement.",
+      "duties": [
+        "Self-classify (b)(1) items and file the annual self-classification report by February 1",
+        "File a classification request and wait 30 days (or hold a CCATS) for (b)(2)/(b)(3) items",
+        "Semi-annual sales reports for (b)(2) and (b)(3)(iii) items: exports January–June due August 1, July–December due February 1",
+        "Never to E:1/E:2 destinations or their nationals",
+        "Re-classify when cryptographic functionality changes"
+      ]
+    },
+    {
+      "symbol": "AGR",
+      "section": "§ 740.18",
+      "name": "Agricultural commodities",
+      "plain": "Agricultural commodities to Cuba under the TSRA.",
+      "duties": []
+    },
+    {
+      "symbol": "CCD",
+      "section": "§ 740.19",
+      "name": "Consumer communications devices",
+      "plain": "Consumer phones, laptops and similar devices to Cuba and certain users.",
+      "duties": []
+    },
+    {
+      "symbol": "STA",
+      "section": "§ 740.20",
+      "name": "Strategic Trade Authorization",
+      "plain": "Replaces a licence for NS, CB, NP, RS, CC and SI items to A:5 partners, and for NS-only items to A:6 partners, subject to the item exclusions listed in the ECCN and in § 740.20(b).",
+      "duties": [
+        "Furnish the ECCN to the consignee (§ 740.20(d)(1))",
+        "Obtain and keep a signed prior consignee statement before the first shipment (§ 740.20(d)(2))",
+        "Notify the consignee in writing with each shipment that it moves under STA (§ 740.20(d)(3))",
+        "Keep a log tying each shipment to its consignee statement",
+        "Wassenaar report under § 743.1 for Sensitive List items to non-Wassenaar destinations",
+        "Not for EI, SS, SL, CW or (with narrow UAV exceptions) MT items, and never in place of a Part 744 or Part 746 requirement"
+      ]
+    },
+    {
+      "symbol": "SCP",
+      "section": "§ 740.21",
+      "name": "Support for the Cuban People",
+      "plain": "Items supporting private-sector and civil society activity in Cuba.",
+      "duties": []
+    },
+    {
+      "symbol": "ACE",
+      "section": "§ 740.22",
+      "name": "Authorized Cybersecurity Exports",
+      "plain": "Cybersecurity items to most destinations, with government end-user and D-group limits.",
+      "duties": [
+        "Know-your-customer screening for D:1/D:5 government end-users"
+      ]
+    },
+    {
+      "symbol": "MED",
+      "section": "§ 740.23",
+      "name": "Medical devices",
+      "plain": "Certain medical devices to Russia, Belarus and the covered regions of Ukraine.",
+      "duties": []
+    },
+    {
+      "symbol": "IEC",
+      "section": "§ 740.24",
+      "name": "Implemented Export Control",
+      "plain": "Semiconductor-manufacturing items to countries that have implemented equivalent controls.",
+      "duties": []
+    },
+    {
+      "symbol": "HBM",
+      "section": "§ 740.25",
+      "name": "High Bandwidth Memory",
+      "plain": "Certain HBM shipments for packaging at approved facilities.",
+      "duties": []
+    },
+    {
+      "symbol": "RFF",
+      "section": "§ 740.26",
+      "name": "Restricted Fabrication Facility",
+      "plain": "Narrow authorization for certain semiconductor-manufacturing exports to restricted facilities.",
+      "duties": []
+    },
+    {
+      "symbol": "AIA",
+      "section": "§ 740.27",
+      "name": "Artificial Intelligence Authorization",
+      "plain": "Advanced-computing items and model weights to the countries listed in Supp. No. 5 to Part 740 (part of the AI-diffusion framework, which BIS has said it will rescind; check current status).",
+      "duties": []
+    },
+    {
+      "symbol": "ACM",
+      "section": "§ 740.28",
+      "name": "Advanced Compute Manufacturing",
+      "plain": "Advanced-computing items for manufacturing, storage and the like (AI-diffusion framework; check current status).",
+      "duties": []
+    },
+    {
+      "symbol": "LPP",
+      "section": "§ 740.29",
+      "name": "Low Processing Performance",
+      "plain": "Small quantities of advanced-computing items below a compute threshold (AI-diffusion framework; check current status).",
+      "duties": []
+    }
+  ],
+  "exceptionRestrictions": [
+    "§ 740.2(a)(1): nothing under an exception to a party who has been denied export privileges, and nothing where the exporter knows a violation has occurred or will occur.",
+    "§ 740.2(a)(3)–(5): no exceptions for embargoed destinations beyond those Part 746 names; MT items are limited to a short list (TMP, RPL, GOV, TSU in narrow cases).",
+    "§ 740.2(a)(11)–(26): a growing list of item-specific and destination-specific carve-outs (600 series, 9x515, encryption, Russia/Belarus, advanced computing); read the ECCN's License Exceptions paragraph, then § 740.2.",
+    "Entity List and MEU List entries state which, if any, exceptions survive; for most entries the answer is none.",
+    "Unverified List: no License Exceptions at all, and a UVL statement is required before shipping (§ 744.15)."
+  ],
+  "endUserControls": [
+    {
+      "name": "Entity List",
+      "cite": "§ 744.11, § 744.16, Supp. No. 4 to Part 744",
+      "what": "Named parties that need a licence for the items stated in their entry (usually all items subject to the EAR), typically with a presumption of denial and no exceptions.",
+      "action": "Screen every party to the transaction against the list, apply the 50-percent affiliates rule (Supp. No. 8 to Part 744), and re-screen when BIS publishes a revision."
+    },
+    {
+      "name": "'Military End User' (MEU) List and rule",
+      "cite": "§ 744.21, Supp. No. 7 to Part 744",
+      "what": "Licence requirement for the items in Supp. No. 2 to Part 744 when destined to a military end use or end user in Belarus, Burma, Cambodia, China, Nicaragua, Russia or Venezuela.",
+      "action": "Know the end use, not just the customer; a civil company supporting a military programme is caught."
+    },
+    {
+      "name": "Military-intelligence end users",
+      "cite": "§ 744.22",
+      "what": "Licence for all items subject to the EAR, and limits on U.S. persons' support, for military-intelligence users in the same countries and E:1/E:2 destinations.",
+      "action": "Check for intelligence-agency ownership or end use."
+    },
+    {
+      "name": "Unverified List (UVL)",
+      "cite": "§ 744.15, Supp. No. 6 to Part 744",
+      "what": "Parties whose bona fides BIS could not verify in an end-use check. No License Exceptions; a signed UVL statement is needed before shipping.",
+      "action": "Obtain the UVL statement, ship only NLR items or under a licence, and keep the statement for five years."
+    },
+    {
+      "name": "Denied Persons List",
+      "cite": "§ 764.3, denial orders",
+      "what": "Persons whose export privileges have been denied. No participation in any EAR transaction, exceptions included.",
+      "action": "Absolute stop on any match."
+    },
+    {
+      "name": "OFAC SDN List parties",
+      "cite": "§ 744.8",
+      "what": "Where an SDN designated under specified programmes is a party, a BIS licence is required in addition to OFAC's rules; the 50-percent rule applies.",
+      "action": "Screen against OFAC lists as well as BIS lists."
+    },
+    {
+      "name": "Nuclear end uses",
+      "cite": "§ 744.2",
+      "what": "Licence for any item subject to the EAR when it will be used in nuclear explosive, unsafeguarded nuclear fuel-cycle or certain heavy-water and enrichment activities.",
+      "action": "Ask the end-use question on machine tools, lasers and precision instruments even when the chart is blank."
+    },
+    {
+      "name": "Rocket systems and UAV end uses",
+      "cite": "§ 744.3",
+      "what": "Licence for any item that will be used in missiles, space launch vehicles or UAVs in D:4 countries, or in certain UAV programmes anywhere.",
+      "action": "Inertial sensors, RF amplifiers and thermal cameras are classic dual-use inputs; document the platform."
+    },
+    {
+      "name": "Chemical and biological weapons end uses",
+      "cite": "§ 744.4",
+      "what": "Licence for any item that will be used in the design, development, production or use of chemical or biological weapons.",
+      "action": "Relevant to D:3 destinations on this board (Egypt, Israel, Saudi Arabia, Taiwan)."
+    },
+    {
+      "name": "Activities of U.S. persons",
+      "cite": "§ 744.6",
+      "what": "U.S. persons may not support proliferation, military-intelligence or certain advanced-computing and semiconductor end uses even where no item subject to the EAR is involved.",
+      "action": "Covers services, installation and training, not just shipments; ties into the TAA scopes on this board."
+    },
+    {
+      "name": "Cameras to military end users",
+      "cite": "§ 744.9",
+      "what": "Licence for 6A003.b.4.b cameras destined to a military end-user or for incorporation into a 0A919 military commodity, regardless of the chart.",
+      "action": "Applies directly to the HD-CAM-640 lines."
+    },
+    {
+      "name": "'Is informed' letters",
+      "cite": "§§ 744.2(b), 744.3(b), 744.4(b), 744.11(a)",
+      "what": "BIS can impose a licence requirement on a specific transaction or party by letter, with no list revision.",
+      "action": "Log and circulate any such letter as a stop on the affected lane."
+    },
+    {
+      "name": "Supercomputer, advanced-node and semiconductor-equipment end uses",
+      "cite": "§ 744.23",
+      "what": "Licence for items destined to supercomputers, advanced-node fabs or semiconductor-manufacturing equipment development in China, Macau and D:5 destinations.",
+      "action": "Relevant to any RF, laser or machine-tool line that could support a fab."
+    }
+  ],
+  "embargoes": [
+    {
+      "cite": "§ 746.2",
+      "where": "Cuba (E:2)",
+      "rule": "Comprehensive embargo; licence for nearly everything, with SCP, CCD, AGR, GFT and a few other exceptions."
+    },
+    {
+      "cite": "§ 746.3",
+      "where": "Iraq",
+      "rule": "UN-related licence requirements and regional-stability rules on top of the chart."
+    },
+    {
+      "cite": "§ 746.4",
+      "where": "North Korea (E:1)",
+      "rule": "Licence for all items subject to the EAR; general policy of denial; luxury goods barred."
+    },
+    {
+      "cite": "§ 746.6",
+      "where": "Temporarily occupied Crimea and the covered DNR/LNR regions of Ukraine",
+      "rule": "Licence for all items subject to the EAR other than EAR99 food and medicine and certain internet communications software."
+    },
+    {
+      "cite": "§ 746.7",
+      "where": "Iran (E:1)",
+      "rule": "Licence for nearly all items subject to the EAR, EAR99 included, coordinated with OFAC's Iranian Transactions and Sanctions Regulations."
+    },
+    {
+      "cite": "§ 746.8",
+      "where": "Russia and Belarus",
+      "rule": "Licence for all items in any ECCN, plus the industry-sector items in Supps. 2, 4, 5 and 6 to Part 746 and luxury goods; foreign-direct-product rules reach non-U.S. items; policy of denial."
+    },
+    {
+      "cite": "§ 746.9",
+      "where": "Syria (E:1)",
+      "rule": "Licence for all items subject to the EAR other than food and medicine; general policy of denial."
+    }
+  ],
+  "lifecycle": [
+    {
+      "stage": "Classify",
+      "cite": "§ 732.3, Part 774",
+      "clock": "Before quoting",
+      "what": "Assign the ECCN (or confirm EAR99) and record who did it and why. This determines every later column, exception and report."
+    },
+    {
+      "stage": "Screen",
+      "cite": "Part 744, Part 746, § 736.2(b)",
+      "clock": "Every party, every shipment",
+      "what": "Destination (chart, embargoes), parties (Entity, MEU, UVL, Denied Persons, SDN, 50-percent rule) and end use (nuclear, missile, CB, military). Red flags in Supp. No. 3 to Part 732."
+    },
+    {
+      "stage": "Choose the pathway",
+      "cite": "§ 738.4, Part 740",
+      "clock": "Before the order is accepted",
+      "what": "Chart says no X and no Part 744/746 rule bites: NLR. Chart says X and an exception fits: document it. Otherwise apply for a licence."
+    },
+    {
+      "stage": "Apply",
+      "cite": "Part 748, § 750.4",
+      "clock": "Roughly 30 days for BIS, up to 90 with interagency review; MT and China cases run longer",
+      "what": "SNAP-R application with support documents (end-user statement, technical data). Hold the purchase order until it issues."
+    },
+    {
+      "stage": "Use the licence",
+      "cite": "§ 750.7, § 750.11, § 758.1",
+      "clock": "Four-year validity",
+      "what": "Ship within the quantity, value and parties named; inform every party of its conditions in writing (§ 750.7(a), (d)); shipping tolerances in § 750.11; cite the licence number on the AES filing."
+    },
+    {
+      "stage": "Ship and mark",
+      "cite": "§ 758.6",
+      "clock": "Every shipment",
+      "what": "Destination control statement on the invoice and packing list; ECCN and licence or exception symbol on the commercial documents."
+    },
+    {
+      "stage": "Report",
+      "cite": "§ 740.17(e), § 743.1, § 748.15",
+      "clock": "February 1 and August 1",
+      "what": "ENC semi-annual sales reports and the annual self-classification report; Wassenaar semi-annual reports for Sensitive List items exported under exceptions to non-Wassenaar destinations."
+    },
+    {
+      "stage": "Renew, extend or close",
+      "cite": "§ 750.7(g), § 750.7(c)",
+      "clock": "90 days before expiry",
+      "what": "Request a validity-period extension in writing if the project runs long; a replacement licence for material changes; let the licence lapse only after the last shipment and the last condition are done."
+    },
+    {
+      "stage": "Retain",
+      "cite": "§ 762.6",
+      "clock": "Five years from the last export, reexport or termination",
+      "what": "Licences (used or unused), consignee statements, classification records, screening results and shipping documents. Nothing may be destroyed once BIS asks for it."
+    },
+    {
+      "stage": "Disclose",
+      "cite": "§ 764.5",
+      "clock": "As soon as a possible violation is found",
+      "what": "A voluntary self-disclosure is a great-weight mitigating factor; an initial notification stops the clock while the internal review runs."
+    }
+  ],
+  "standingReports": [
+    {
+      "id": "enc-semiannual",
+      "label": "ENC semi-annual sales report",
+      "cite": "§ 740.17(e)(1)",
+      "months": [
+        2,
+        8
+      ],
+      "day": 1,
+      "trigger": {
+        "exception": [
+          "ENC"
+        ]
+      },
+      "note": "Covers (b)(2) and (b)(3)(iii) encryption items exported to any destination other than Australia, Canada or the United Kingdom. Exports in January–June are due by August 1; July–December by February 1. Sent to BIS and the ENC Encryption Request Coordinator."
+    },
+    {
+      "id": "enc-selfclass",
+      "label": "ENC annual self-classification report",
+      "cite": "§ 740.17(e)(3)",
+      "months": [
+        2
+      ],
+      "day": 1,
+      "trigger": {
+        "exception": [
+          "ENC-b1"
+        ]
+      },
+      "note": "For encryption items self-classified under (b)(1) during the calendar year; due February 1 as a .csv, or an email saying nothing has changed."
+    },
+    {
+      "id": "wa-semiannual",
+      "label": "Wassenaar Arrangement report",
+      "cite": "§ 743.1",
+      "months": [
+        2,
+        8
+      ],
+      "day": 1,
+      "trigger": {
+        "exception": [
+          "STA",
+          "LVS",
+          "GBS",
+          "TSR",
+          "APP",
+          "GOV"
+        ]
+      },
+      "note": "Semi-annual report of Sensitive List items (Supp. No. 6 to Part 774) exported under these exceptions to destinations outside the Wassenaar Arrangement. January–June due August 1; July–December due February 1.",
+      "nonWassenaarOnly": true
+    }
+  ],
+  "lenses": [
+    {
+      "id": "destination",
+      "label": "By destination",
+      "view": "board",
+      "blurb": "The hex board. One tile per country, coloured by whether anything can ship today. Best for the weekly stand-up and for sales, who think in countries."
+    },
+    {
+      "id": "pathway",
+      "label": "By pathway",
+      "view": "list",
+      "groupBy": "pathway",
+      "blurb": "Licence, exception, NLR, ITAR. Each pathway has its own evidence file and its own failure mode, so grouping by it shows which discipline the team is actually exercising and which is being taken for granted."
+    },
+    {
+      "id": "eccn",
+      "label": "By classification",
+      "view": "list",
+      "groupBy": "eccn",
+      "blurb": "One binder per ECCN: the classification record, its chart columns, its STA and ENC status, and every line that rides on it. When BIS changes an ECCN, this is the group that has to be re-read."
+    },
+    {
+      "id": "matrix",
+      "label": "Coverage matrix",
+      "view": "matrix",
+      "blurb": "Product family against destination, one cell per lane. The chart says what each cell would need; the colour says what you hold. This is your own private Commerce Country Chart."
+    },
+    {
+      "id": "enduser",
+      "label": "By end-user",
+      "view": "list",
+      "groupBy": "endUser",
+      "blurb": "One file per counterparty: screening history, consignee statements, end-use statements, and every authorization naming them, BIS and DDTC together. Where cross-references get lost."
+    },
+    {
+      "id": "reason",
+      "label": "By reason for control",
+      "view": "list",
+      "groupBy": "reason",
+      "blurb": "NS, MT, RS, NP, EI. The reason predicts the review clock, the available exceptions and the licensing policy, so it is the natural way to forecast workload."
+    },
+    {
+      "id": "group",
+      "label": "By country group",
+      "view": "list",
+      "groupBy": "group",
+      "blurb": "A:5 partners, Group B, the D groups, the E groups. Countries move between groups; this is the view that shows what a move would cost."
+    },
+    {
+      "id": "clock",
+      "label": "By clock",
+      "view": "list",
+      "groupBy": "quarter",
+      "blurb": "Expiries, conditions and report deadlines in date order. The work queue, independent of geography."
+    }
+  ]
+}

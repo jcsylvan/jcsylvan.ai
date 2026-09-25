@@ -1,8 +1,8 @@
 {
-  "updated": "2026-09-10",
+  "updated": "2026-09-25",
   "asOf": "2026-09-10",
   "company": "Helios Dynamics (fictional demo company)",
-  "note": "Illustrative export-license portfolio for demonstration only. Every license number, end-user, date, dollar figure and condition below is invented. Tile placement on the board is schematic, not geographic.",
+  "note": "Illustrative export-license portfolio for demonstration only. Every license number, end-user, date, dollar figure and condition below is invented. Tile placement on the board is schematic, not geographic. Each line carries a 'pathway' (BIS license, License Exception, no license required, or an ITAR authorization) so the board can check it against the EAR reference layer in ear-controls.json.",
   "expiringWindowDays": 90,
   "statuses": {
     "active": {
@@ -99,6 +99,7 @@
           "ref": "DSP-5 / 26-0114883",
           "authority": "DDTC (State)",
           "type": "DSP-5 permanent export",
+          "pathway": "itar-license",
           "item": "HD-NAV-7A tactical-grade fiber-optic IMU",
           "eccn": "USML VIII(h)",
           "endUser": "Maple Aerospace Systems, Winnipeg",
@@ -135,18 +136,19 @@
           "ref": "BIS / D1948221",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-MILL-5X 5-axis precision machining center",
-          "eccn": "2B001.b",
+          "eccn": "2B001.b.2",
           "endUser": "Cortez Precision Manufacturing S.A., Querétaro",
           "issued": "2024-11-06",
           "expires": "2026-11-05",
           "valueAuthorized": 2750000,
           "valueShipped": 2410000,
           "status": "active",
-          "note": "Two-year term nearly run and 88% of value shipped. Renewal should be filed now, not in October.",
+          "note": "Two-year term nearly run and 88% of value shipped. The Country Chart marks neither NS:2 nor NP:1 for Mexico, so this license has been held voluntarily since a 2024 diversion inquiry; decide at renewal whether to renew or to document an NLR determination with the nuclear end-use screen attached.",
           "conditions": [
             {
-              "label": "File the renewal application",
+              "label": "Decide: file the renewal, or record an NLR determination",
               "due": "2026-09-20",
               "recurring": "once"
             }
@@ -166,8 +168,9 @@
           "ref": "BIS / D1902447",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-CAM-640 uncooled LWIR camera core",
-          "eccn": "6A003",
+          "eccn": "6A003.b.4.b",
           "endUser": "Instituto Aeronáutico Serra, São José dos Campos",
           "issued": "2025-07-22",
           "expires": "2029-07-21",
@@ -192,6 +195,7 @@
           "ref": "BIS / D1911308",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-LAS-100 100 W pulsed fiber laser source",
           "eccn": "6A005",
           "endUser": "Ferrova Industrial Ltda, Belo Horizonte",
@@ -214,9 +218,10 @@
       "risk": "STA-eligible partner. Most exposure is agreement paperwork rather than license risk.",
       "licenses": [
         {
-          "ref": "STA / self-documented",
-          "authority": "BIS (Commerce)",
-          "type": "License Exception STA",
+          "ref": "NLR / classification record 26-CLS-0288",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
           "item": "HD-RF-12 GaN microwave power amplifier",
           "eccn": "3A001.b.2",
           "endUser": "Pennine Microwave Ltd, Sheffield",
@@ -225,10 +230,10 @@
           "valueAuthorized": 1400000,
           "valueShipped": 610000,
           "status": "active",
-          "note": "Exception, not a license. Prior consignee statement on file; re-verify annually.",
+          "note": "No chart-based license requirement to the UK for 3A001.b.2 since the 2024 AUKUS rule left only CB:1 and the firearms ECCNs on the chart. The STA paperwork was retired; the classification record and the destination control statement on each invoice are what remain.",
           "conditions": [
             {
-              "label": "Re-verify the prior consignee statement",
+              "label": "Annual review of the NLR determination",
               "due": "2027-01-15",
               "recurring": "annual"
             }
@@ -238,6 +243,7 @@
           "ref": "DSP-5 / 26-0120774",
           "authority": "DDTC (State)",
           "type": "DSP-5 permanent export",
+          "pathway": "itar-license",
           "item": "HD-NAV-3G GNSS/INS integrated navigator",
           "eccn": "USML XII(d)",
           "endUser": "Albion Guidance Systems plc, Bristol",
@@ -253,6 +259,7 @@
           "ref": "TAA / 26-TA-4471",
           "authority": "DDTC (State)",
           "type": "Technical Assistance Agreement",
+          "pathway": "itar-agreement",
           "item": "Integration support, HD-NAV-3G",
           "eccn": "USML XII(f) technical data",
           "endUser": "Albion Guidance Systems plc, Bristol",
@@ -282,9 +289,10 @@
       "risk": "NATO member and STA-eligible. Low risk, well-documented end-users.",
       "licenses": [
         {
-          "ref": "BIS / D1936550",
-          "authority": "BIS (Commerce)",
-          "type": "Individual validated license",
+          "ref": "NLR / classification record 26-CLS-0311",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
           "item": "HD-SENS-MAG fluxgate magnetometer module",
           "eccn": "6A006",
           "endUser": "Nordkapp Marine Sensing AS, Trondheim",
@@ -293,7 +301,7 @@
           "valueAuthorized": 540000,
           "valueShipped": 85000,
           "status": "active",
-          "note": "Seabed survey end-use. Underwater integration reviewed against Category 8.",
+          "note": "6A006 is NS Column 2 and Norway is in Country Group A:1, so the chart imposes no license requirement. Seabed-survey end-use documented; underwater integration reviewed against Category 8 so the part stays in 6A006.",
           "conditions": [
             {
               "label": "Confirm seabed-survey end-use before each shipment",
@@ -310,26 +318,33 @@
       "region": "europe",
       "row": 0,
       "col": 4.5,
-      "risk": "STA-eligible. One lapsed line here is stale paperwork rather than live exposure.",
+      "risk": "A:5 partner. The camera line runs under STA, so the consignee statement and the per-shipment notice are the paperwork that matters; one lapsed line here is stale rather than live exposure.",
       "licenses": [
         {
-          "ref": "BIS / D1889120",
+          "ref": "STA / consignee statement 26-STA-0117",
           "authority": "BIS (Commerce)",
-          "type": "Individual validated license",
+          "type": "License Exception STA",
+          "pathway": "exception",
+          "exception": "STA",
           "item": "HD-CAM-640 uncooled LWIR camera core",
-          "eccn": "6A003",
+          "eccn": "6A003.b.4.b",
           "endUser": "Vasa Optronik AB, Linköping",
           "issued": "2026-05-28",
           "expires": "2030-05-27",
           "valueAuthorized": 2100000,
           "valueShipped": 260000,
           "status": "active",
-          "note": "Replaced the 2022 license on the same program.",
+          "note": "Exception, not a license: when the 2022 license ran out the programme moved to STA, which Sweden (A:5) allows for 6A003.b.4 cameras. Prior consignee statement signed, ECCN furnished, and every shipment carries the STA notice. Sweden is a Wassenaar member, so no § 743.1 report is owed.",
           "conditions": [
             {
-              "label": "Annual end-use report to BIS",
+              "label": "Re-verify the prior consignee statement",
               "due": "2027-05-28",
               "recurring": "annual"
+            },
+            {
+              "label": "STA notice on each shipment (§ 740.20(d)(3))",
+              "due": "",
+              "recurring": "per-shipment"
             }
           ]
         },
@@ -337,6 +352,7 @@
           "ref": "BIS / D1711904",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-LAS-100 100 W pulsed fiber laser source",
           "eccn": "6A005",
           "endUser": "Vasa Optronik AB, Linköping",
@@ -345,7 +361,7 @@
           "valueAuthorized": 700000,
           "valueShipped": 700000,
           "status": "expired",
-          "note": "Fully shipped and closed out. Keep for the five-year recordkeeping period.",
+          "note": "Fully shipped and closed out. Keep for the five-year retention period under § 762.6.",
           "conditions": []
         }
       ]
@@ -362,6 +378,7 @@
           "ref": "BIS / D1951067",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-RF-12 GaN microwave power amplifier",
           "eccn": "3A001.b.2",
           "endUser": "Wisła Radar Works Sp. z o.o., Gdańsk",
@@ -388,6 +405,7 @@
           "ref": "BIS / pending D1962118",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-NAV-7A tactical-grade fiber-optic IMU",
           "eccn": "7A003",
           "endUser": "Wisła Radar Works Sp. z o.o., Gdańsk",
@@ -420,30 +438,34 @@
       "risk": "STA-eligible. Main friction is agency timing on new applications, not approvability.",
       "licenses": [
         {
-          "ref": "BIS / D1925884",
-          "authority": "BIS (Commerce)",
-          "type": "Individual validated license",
+          "ref": "NLR / classification record 26-CLS-0287",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
           "item": "HD-MILL-5X 5-axis precision machining center",
-          "eccn": "2B001.b",
+          "eccn": "2B001.b.2",
           "endUser": "Atelier Brissac S.A.S., Toulouse",
           "issued": "2026-02-25",
           "expires": "2030-02-24",
           "valueAuthorized": 4100000,
           "valueShipped": 1620000,
           "status": "active",
-          "note": "Aerostructure machining. Nuclear end-use screened and cleared.",
+          "note": "Aerostructure machining. NS:2 and NP:1 are both blank for France, so the line runs NLR on the strength of the classification and the § 744.2 nuclear end-use screen, which is why the re-screen stays on the calendar.",
           "conditions": [
             {
-              "label": "Nuclear end-use re-screen",
+              "label": "Nuclear end-use re-screen (§ 744.2)",
               "due": "2027-02-25",
               "recurring": "annual"
             }
           ]
         },
         {
-          "ref": "ENC / self-classified 26-ENC-0442",
+          "ref": "ENC §740.17(b)(2) / CCATS G260442",
           "authority": "BIS (Commerce)",
           "type": "License Exception ENC",
+          "pathway": "exception",
+          "exception": "ENC",
+          "encParagraph": "b2",
           "item": "HD-SEC-256 Layer-2 Ethernet encryptor",
           "eccn": "5A002.a",
           "endUser": "Réseau Garonne S.A., Bordeaux",
@@ -452,12 +474,17 @@
           "valueAuthorized": 880000,
           "valueShipped": 340000,
           "status": "active",
-          "note": "Self-classification report filed. Annual ENC reporting obligation applies.",
+          "note": "Exception, not a license. A line-rate Ethernet encryptor is 'network infrastructure' under § 740.17(b)(2): classification request filed, CCATS issued, and every sale goes into the semi-annual ENC sales report. France is a favourable-treatment country (Supp. No. 3 to Part 740), so any end user here qualifies.",
           "conditions": [
             {
-              "label": "Annual ENC self-classification report to BIS",
-              "due": "2027-01-08",
-              "recurring": "annual"
+              "label": "Sales reported in the semi-annual ENC report (Aug 1 / Feb 1)",
+              "due": "",
+              "recurring": "standing"
+            },
+            {
+              "label": "New classification request if the cryptography changes",
+              "due": "",
+              "recurring": "standing"
             }
           ]
         },
@@ -465,6 +492,7 @@
           "ref": "BIS / pending D1964902",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-NAV-3G GNSS/INS integrated navigator",
           "eccn": "7A003",
           "endUser": "Occitane Aéro S.A.S., Blagnac",
@@ -487,9 +515,12 @@
       "risk": "Major transshipment hub. Rotterdam routing means freight-forwarder screening matters as much as the end-user.",
       "licenses": [
         {
-          "ref": "ENC / self-classified 26-ENC-0455",
+          "ref": "ENC §740.17(b)(2) / CCATS G260455",
           "authority": "BIS (Commerce)",
           "type": "License Exception ENC",
+          "pathway": "exception",
+          "exception": "ENC",
+          "encParagraph": "b2",
           "item": "HD-SEC-256 Layer-2 Ethernet encryptor",
           "eccn": "5A002.a",
           "endUser": "Delta Netwerk B.V., Rotterdam",
@@ -498,12 +529,17 @@
           "valueAuthorized": 1250000,
           "valueShipped": 705000,
           "status": "active",
-          "note": "Exception relied on, so there is no license number to point to in an audit. Keep the classification file current.",
+          "note": "Exception, not a license. A line-rate Ethernet encryptor is 'network infrastructure' under § 740.17(b)(2): classification request filed, CCATS issued, and every sale goes into the semi-annual ENC sales report. Because nothing is issued, the classification file is the only thing an auditor can be shown; keep it current.",
           "conditions": [
             {
-              "label": "Annual ENC self-classification report to BIS",
-              "due": "2027-03-02",
-              "recurring": "annual"
+              "label": "Sales reported in the semi-annual ENC report (Aug 1 / Feb 1)",
+              "due": "",
+              "recurring": "standing"
+            },
+            {
+              "label": "New classification request if the cryptography changes",
+              "due": "",
+              "recurring": "standing"
             },
             {
               "label": "Screen the freight forwarder on every shipment",
@@ -526,15 +562,16 @@
           "ref": "BIS / D1843377",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-CAM-640 uncooled LWIR camera core",
-          "eccn": "6A003",
+          "eccn": "6A003.b.4.b",
           "endUser": "Rheinoptik GmbH, Wetzlar",
           "issued": "2022-12-01",
           "expires": "2026-11-28",
           "valueAuthorized": 5200000,
           "valueShipped": 4980000,
           "status": "active",
-          "note": "Expires in under 90 days with 96% of value drawn down. Renew and re-baseline the quantity.",
+          "note": "Expires in under 90 days with 96% of value drawn down. Renew and re-baseline the quantity, or move the successor order to License Exception STA: Germany is A:5 and 6A003.b.4 cameras are STA-eligible there.",
           "conditions": [
             {
               "label": "Annual end-use report to BIS",
@@ -552,6 +589,7 @@
           "ref": "BIS / D1940015",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-RF-12 GaN microwave power amplifier",
           "eccn": "3A001.b.2",
           "endUser": "Bodensee Mikrowelle AG, Friedrichshafen",
@@ -560,13 +598,14 @@
           "valueAuthorized": 2600000,
           "valueShipped": 310000,
           "status": "active",
-          "note": "Commercial satcom end-use.",
+          "note": "Airborne weather-radar programme. Not a civil-telecommunications end-use, so the 3A001.b.2 carve-out does not apply and the amplifier stays NS:1 / RS:1 with no STA available.",
           "conditions": []
         },
         {
-          "ref": "STA / self-documented",
-          "authority": "BIS (Commerce)",
-          "type": "License Exception STA",
+          "ref": "NLR / classification record 26-CLS-0334",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
           "item": "HD-SENS-MAG fluxgate magnetometer module",
           "eccn": "6A006",
           "endUser": "Rheinoptik GmbH, Wetzlar",
@@ -575,10 +614,10 @@
           "valueAuthorized": 420000,
           "valueShipped": 95000,
           "status": "active",
-          "note": "Prior consignee statement on file.",
+          "note": "6A006 to an A:1 destination carries no chart-based requirement, so the STA consignee statement was never needed. Classification record on file; end-use noted as industrial NDT.",
           "conditions": [
             {
-              "label": "Re-verify the prior consignee statement",
+              "label": "Annual review of the NLR determination",
               "due": "2027-06-30",
               "recurring": "annual"
             }
@@ -592,21 +631,22 @@
       "region": "europe",
       "row": 2,
       "col": 2.5,
-      "risk": "Not an STA partner. Individual licenses are the norm, so lapses bite immediately.",
+      "risk": "A:5 partner, so STA covers most NS and RS items, but this line is a 7A003 navigator: missile-technology controls mean an individual license with no exception to fall back on, so a lapse bites immediately.",
       "licenses": [
         {
           "ref": "BIS / D1866291",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
-          "item": "HD-LAS-100 100 W pulsed fiber laser source",
-          "eccn": "6A005",
-          "endUser": "Jura Photonik AG, Neuchâtel",
+          "pathway": "license",
+          "item": "HD-NAV-3G GNSS/INS integrated navigator",
+          "eccn": "7A003",
+          "endUser": "Jura Avionik AG, Neuchâtel",
           "issued": "2022-12-10",
           "expires": "2026-10-31",
           "valueAuthorized": 1100000,
           "valueShipped": 840000,
           "status": "active",
-          "note": "Seven weeks to expiry. Renewal not yet filed, and there is no exception to fall back on.",
+          "note": "Seven weeks to expiry. Renewal not yet filed, and because 7A003 is MT-controlled there is no license exception to fall back on.",
           "conditions": [
             {
               "label": "File the renewal application",
@@ -626,23 +666,29 @@
       "risk": "STA-eligible. Straightforward destination with a stable end-user.",
       "licenses": [
         {
-          "ref": "BIS / D1933620",
-          "authority": "BIS (Commerce)",
-          "type": "Individual validated license",
+          "ref": "NLR / classification record 26-CLS-0302",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
           "item": "HD-MILL-5X 5-axis precision machining center",
-          "eccn": "2B001.b",
+          "eccn": "2B001.b.2",
           "endUser": "Officine Garda S.p.A., Brescia",
           "issued": "2026-03-30",
           "expires": "2030-03-29",
           "valueAuthorized": 1980000,
           "valueShipped": 520000,
           "status": "active",
-          "note": "Single machine plus tooling and installation support.",
+          "note": "Single machine plus tooling and installation support. NS:2 and NP:1 are blank for Italy, so the line is NLR; installation support must stay inside the documented civil end-use.",
           "conditions": [
             {
-              "label": "Installation support stays inside the licensed scope",
+              "label": "Installation support stays inside the documented civil end-use",
               "due": "",
               "recurring": "standing"
+            },
+            {
+              "label": "Nuclear end-use re-screen (§ 744.2)",
+              "due": "2027-03-30",
+              "recurring": "annual"
             }
           ]
         }
@@ -660,8 +706,9 @@
           "ref": "BIS / pending D1965774",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-CAM-640 uncooled LWIR camera core",
-          "eccn": "6A003",
+          "eccn": "6A003.b.4.b",
           "endUser": "Ibérica Sensores S.L., Zaragoza",
           "issued": "2026-09-01",
           "expires": "",
@@ -685,6 +732,7 @@
           "ref": "BIS / D1790442",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-RF-12 GaN microwave power amplifier",
           "eccn": "3A001.b.2",
           "endUser": "Anadolu Mikrodalga A.Ş., Ankara",
@@ -700,6 +748,7 @@
           "ref": "BIS / pending D1958830",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-RF-12 GaN microwave power amplifier",
           "eccn": "3A001.b.2",
           "endUser": "Anadolu Mikrodalga A.Ş., Ankara",
@@ -731,6 +780,7 @@
           "ref": "BIS / D1752018",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-SENS-MAG fluxgate magnetometer module",
           "eccn": "6A006",
           "endUser": "Nile Survey Authority, Cairo",
@@ -756,6 +806,7 @@
           "ref": "DSP-5 / 26-0118902",
           "authority": "DDTC (State)",
           "type": "DSP-5 permanent export",
+          "pathway": "itar-license",
           "item": "HD-NAV-7A tactical-grade fiber-optic IMU",
           "eccn": "USML VIII(h)",
           "endUser": "Carmel Guidance Ltd, Haifa",
@@ -782,8 +833,9 @@
           "ref": "BIS / D1929118",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-CAM-640 uncooled LWIR camera core",
-          "eccn": "6A003",
+          "eccn": "6A003.b.4.b",
           "endUser": "Carmel Guidance Ltd, Haifa",
           "issued": "2026-03-11",
           "expires": "2030-03-10",
@@ -807,8 +859,9 @@
           "ref": "BIS / D1944755",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-MILL-5X 5-axis precision machining center",
-          "eccn": "2B001.b",
+          "eccn": "2B001.b.2",
           "endUser": "Najd Advanced Manufacturing Co., Dammam",
           "issued": "2026-05-19",
           "expires": "2030-05-18",
@@ -828,6 +881,7 @@
           "ref": "DDTC / pending 26-0127440",
           "authority": "DDTC (State)",
           "type": "DSP-5 permanent export",
+          "pathway": "itar-license",
           "item": "HD-NAV-3G GNSS/INS integrated navigator",
           "eccn": "USML XII(d)",
           "endUser": "Royal Saudi Air Force sustainment office, Riyadh",
@@ -853,6 +907,7 @@
           "ref": "BIS / D1947003",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-LAS-100 100 W pulsed fiber laser source",
           "eccn": "6A005",
           "endUser": "Gulf Photonics FZE, Jebel Ali",
@@ -895,9 +950,11 @@
       "risk": "STA-eligible since 2018 and a growing program, but nuclear and missile end-use screening still governs.",
       "licenses": [
         {
-          "ref": "STA / self-documented",
-          "authority": "BIS (Commerce)",
-          "type": "License Exception STA",
+          "ref": "NLR / classification record 26-CLS-0296",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
+          "control": "3A001.b.2-civil",
           "item": "HD-RF-12 GaN microwave power amplifier",
           "eccn": "3A001.b.2",
           "endUser": "Deccan Microwave Pvt Ltd, Hyderabad",
@@ -906,10 +963,15 @@
           "valueAuthorized": 1900000,
           "valueShipped": 720000,
           "status": "active",
-          "note": "Prior consignee statement on file and re-verified in July.",
+          "note": "STA cannot carry 3A001.b.2 amplifiers, so the old consignee statement was doing nothing. For civil telecommunications the amplifier falls to NS Column 2, which India does not carry, so the line is NLR on the strength of an end-use statement per order. Sold for radar, the same part is NS:1 / RS:1 and needs a license.",
           "conditions": [
             {
-              "label": "Re-verify the prior consignee statement",
+              "label": "Confirm civil-telecommunications end-use on each order",
+              "due": "",
+              "recurring": "per-shipment"
+            },
+            {
+              "label": "Annual review of the NLR determination",
               "due": "2027-04-02",
               "recurring": "annual"
             }
@@ -919,8 +981,9 @@
           "ref": "BIS / D1938204",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-CAM-640 uncooled LWIR camera core",
-          "eccn": "6A003",
+          "eccn": "6A003.b.4.b",
           "endUser": "Bharat Optical Research Centre, Bengaluru",
           "issued": "2026-04-27",
           "expires": "2030-04-26",
@@ -950,6 +1013,7 @@
           "ref": "BIS / D1942661",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-RF-12 GaN microwave power amplifier",
           "eccn": "3A001.b.2",
           "endUser": "Formosa RF Components Inc., Hsinchu",
@@ -971,6 +1035,7 @@
           "ref": "BIS / D1852190",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-SEC-256 Layer-2 Ethernet encryptor",
           "eccn": "5A002.a",
           "endUser": "Formosa RF Components Inc., Hsinchu",
@@ -996,6 +1061,7 @@
           "ref": "DSP-5 / 26-0116551",
           "authority": "DDTC (State)",
           "type": "DSP-5 permanent export",
+          "pathway": "itar-license",
           "item": "HD-NAV-7A tactical-grade fiber-optic IMU",
           "eccn": "USML VIII(h)",
           "endUser": "Sakura Avionics K.K., Nagoya",
@@ -1014,9 +1080,10 @@
           ]
         },
         {
-          "ref": "STA / self-documented",
-          "authority": "BIS (Commerce)",
-          "type": "License Exception STA",
+          "ref": "NLR / classification record 26-CLS-0315",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
           "item": "HD-SENS-MAG fluxgate magnetometer module",
           "eccn": "6A006",
           "endUser": "Sakura Avionics K.K., Nagoya",
@@ -1025,29 +1092,36 @@
           "valueAuthorized": 610000,
           "valueShipped": 240000,
           "status": "active",
-          "note": "Exception-based; keep the consignee statement current.",
+          "note": "6A006 to an A:1 destination: no chart-based requirement. The consignee statement was surplus; the classification record is what matters.",
           "conditions": [
             {
-              "label": "Re-verify the prior consignee statement",
+              "label": "Annual review of the NLR determination",
               "due": "2027-03-05",
               "recurring": "annual"
             }
           ]
         },
         {
-          "ref": "BIS / D1937702",
-          "authority": "BIS (Commerce)",
-          "type": "Individual validated license",
+          "ref": "NLR / classification record 26-CLS-0318",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
           "item": "HD-MILL-5X 5-axis precision machining center",
-          "eccn": "2B001.b",
+          "eccn": "2B001.b.2",
           "endUser": "Kanto Seiki Co. Ltd, Kawasaki",
           "issued": "2026-04-21",
           "expires": "2030-04-20",
           "valueAuthorized": 2900000,
           "valueShipped": 870000,
           "status": "active",
-          "note": "Two machines, staged delivery through 2027.",
-          "conditions": []
+          "note": "Two machines, staged delivery through 2027. NS:2 and NP:1 are both blank for Japan, so the determination rests on the classification and the § 744.2 nuclear end-use screen.",
+          "conditions": [
+            {
+              "label": "Nuclear end-use re-screen before the second machine ships",
+              "due": "2027-03-01",
+              "recurring": "once"
+            }
+          ]
         }
       ]
     },
@@ -1063,8 +1137,9 @@
           "ref": "BIS / D1946118",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-CAM-640 uncooled LWIR camera core",
-          "eccn": "6A003",
+          "eccn": "6A003.b.4.b",
           "endUser": "Hanseo Optoelectronics Co. Ltd, Daejeon",
           "issued": "2026-05-26",
           "expires": "2030-05-25",
@@ -1089,6 +1164,7 @@
           "ref": "TAA / 26-TA-4618",
           "authority": "DDTC (State)",
           "type": "Technical Assistance Agreement",
+          "pathway": "itar-agreement",
           "item": "Integration support, HD-NAV-7A",
           "eccn": "USML VIII(i) technical data",
           "endUser": "Hanseo Optoelectronics Co. Ltd, Daejeon",
@@ -1117,9 +1193,12 @@
       "risk": "Transshipment hub with a strong domestic control regime. Freight-forwarder diligence is the control that matters.",
       "licenses": [
         {
-          "ref": "ENC / self-classified 26-ENC-0470",
+          "ref": "ENC §740.17(b)(2) / CCATS G260470",
           "authority": "BIS (Commerce)",
           "type": "License Exception ENC",
+          "pathway": "exception",
+          "exception": "ENC",
+          "encParagraph": "b2",
           "item": "HD-SEC-256 Layer-2 Ethernet encryptor",
           "eccn": "5A002.a",
           "endUser": "Straits Data Systems Pte Ltd, Singapore",
@@ -1128,12 +1207,17 @@
           "valueAuthorized": 1050000,
           "valueShipped": 480000,
           "status": "active",
-          "note": "Annual ENC reporting obligation. Verify the end-user is not acting as a re-exporter.",
+          "note": "Exception, not a license. A line-rate Ethernet encryptor is 'network infrastructure' under § 740.17(b)(2): classification request filed, CCATS issued, and every sale goes into the semi-annual ENC sales report. Singapore is not a favourable-treatment country, so (b)(2) reaches private-sector end users only; a government end user here would need a license.",
           "conditions": [
             {
-              "label": "Annual ENC self-classification report to BIS",
-              "due": "2027-02-20",
-              "recurring": "annual"
+              "label": "Sales reported in the semi-annual ENC report (Aug 1 / Feb 1)",
+              "due": "",
+              "recurring": "standing"
+            },
+            {
+              "label": "New classification request if the cryptography changes",
+              "due": "",
+              "recurring": "standing"
             },
             {
               "label": "Confirm the end-user is not acting as a re-exporter",
@@ -1146,6 +1230,7 @@
           "ref": "BIS / D1801664",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-LAS-100 100 W pulsed fiber laser source",
           "eccn": "6A005",
           "endUser": "Straits Data Systems Pte Ltd, Singapore",
@@ -1171,6 +1256,7 @@
           "ref": "BIS / pending D1963441",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-SENS-MAG fluxgate magnetometer module",
           "eccn": "6A006",
           "endUser": "Luzon Coastal Survey Inc., Manila",
@@ -1196,6 +1282,7 @@
           "ref": "AUKUS exemption / 26-AU-0093",
           "authority": "DDTC (State)",
           "type": "ITAR §126.7 AUKUS exemption",
+          "pathway": "itar-exemption",
           "item": "HD-NAV-7A tactical-grade fiber-optic IMU",
           "eccn": "USML VIII(h)",
           "endUser": "Southern Cross Defence Pty Ltd, Adelaide",
@@ -1219,9 +1306,10 @@
           ]
         },
         {
-          "ref": "BIS / D1931008",
-          "authority": "BIS (Commerce)",
-          "type": "Individual validated license",
+          "ref": "NLR / classification record 26-CLS-0270",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
           "item": "HD-RF-12 GaN microwave power amplifier",
           "eccn": "3A001.b.2",
           "endUser": "Southern Cross Defence Pty Ltd, Adelaide",
@@ -1230,33 +1318,34 @@
           "valueAuthorized": 2200000,
           "valueShipped": 580000,
           "status": "active",
-          "note": "Over-the-horizon radar program.",
+          "note": "Over-the-horizon radar programme. Since the 2024 AUKUS rule the chart carries no NS or RS requirement for Australia, so the individual license was allowed to lapse into an NLR record; Part 744 screening still applies.",
           "conditions": [
             {
-              "label": "Annual end-use report to BIS",
+              "label": "Annual review of the NLR determination",
               "due": "2027-03-24",
               "recurring": "annual"
             }
           ]
         },
         {
-          "ref": "STA / self-documented",
-          "authority": "BIS (Commerce)",
-          "type": "License Exception STA",
+          "ref": "NLR / classification record 26-CLS-0309",
+          "authority": "EAR · self-determined",
+          "type": "No license required (NLR)",
+          "pathway": "nlr",
           "item": "HD-CAM-640 uncooled LWIR camera core",
-          "eccn": "6A003",
+          "eccn": "6A003.b.4.b",
           "endUser": "Great Barrier Optics Pty Ltd, Cairns",
           "issued": "2026-05-02",
           "expires": "2027-05-01",
           "valueAuthorized": 780000,
           "valueShipped": 210000,
           "status": "active",
-          "note": "Prior consignee statement on file.",
+          "note": "6A003.b.4.b cameras are RS:1, but Australia is one of the three RS:1 exceptions, so the line is NLR. § 744.9 still requires a license if a camera is headed for a military end-user.",
           "conditions": [
             {
-              "label": "Re-verify the prior consignee statement",
-              "due": "2027-05-02",
-              "recurring": "annual"
+              "label": "Confirm the end-user is not a military end-user (§ 744.9)",
+              "due": "",
+              "recurring": "per-shipment"
             }
           ]
         }
@@ -1276,6 +1365,7 @@
           "ref": "BIS / D1874590",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-RF-12 GaN microwave power amplifier",
           "eccn": "3A001.b.2",
           "endUser": "Jiangnan Microelectronics Co. Ltd, Wuxi",
@@ -1302,6 +1392,7 @@
           "ref": "BIS / D1688273",
           "authority": "BIS (Commerce)",
           "type": "Individual validated license",
+          "pathway": "license",
           "item": "HD-SENS-MAG fluxgate magnetometer module",
           "eccn": "6A006",
           "endUser": "Vostok Precision Instruments LLC, Samara",

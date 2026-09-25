@@ -1,6 +1,6 @@
 {
   "company": "Helios Dynamics (fictional demo company)",
-  "updated": "2026-06-15",
+  "updated": "2026-09-25",
   "note": "Illustrative product catalog for demonstration only. Part numbers, products and ECCN assignments are invented and must not be relied on for real classification.",
   "products": [
     {
@@ -9,7 +9,11 @@
       "desc": "Six-axis fiber-optic gyro inertial measurement unit, 0.1 deg/hr bias.",
       "eccn": "7A003",
       "ccl": "Category 7 — Navigation & Avionics",
-      "reasons": ["NS", "MT", "AT"],
+      "reasons": [
+        "NS",
+        "MT",
+        "AT"
+      ],
       "license": "likely",
       "note": "Inertial equipment within 7A003 thresholds — license required for most destinations; Missile Technology controls apply."
     },
@@ -19,7 +23,11 @@
       "desc": "GNSS-aided inertial navigator rated for high dynamics / high altitude.",
       "eccn": "7A003",
       "ccl": "Category 7 — Navigation & Avionics",
-      "reasons": ["NS", "MT", "AT"],
+      "reasons": [
+        "NS",
+        "MT",
+        "AT"
+      ],
       "license": "likely",
       "note": "High-dynamic GNSS/INS — review against 7A003/7A005; MT-controlled, license generally required."
     },
@@ -27,11 +35,15 @@
       "pn": "HD-CAM-640",
       "name": "Uncooled LWIR thermal camera core, 640x512",
       "desc": "Long-wave infrared microbolometer camera core, 60 Hz.",
-      "eccn": "6A003",
+      "eccn": "6A003.b.4.b",
       "ccl": "Category 6 — Sensors & Lasers",
-      "reasons": ["NS", "RS", "AT"],
+      "reasons": [
+        "NS",
+        "RS",
+        "AT"
+      ],
       "license": "likely",
-      "note": "Imaging camera caught by 6A003 frame-rate/parameter thresholds — license required for many destinations."
+      "note": "Uncooled camera core with a 640×512 array: NS Column 2, RS Column 1 (more than 111,000 elements) and AT. License required to every destination except Australia, Canada and the UK; STA can carry it to A:5 partners; § 744.9 bars military end-users."
     },
     {
       "pn": "HD-SEC-256",
@@ -39,7 +51,11 @@
       "desc": "Line-rate Ethernet encryption appliance using AES-256.",
       "eccn": "5A002.a",
       "ccl": "Category 5 Part 2 — Information Security",
-      "reasons": ["NS", "AT", "EI"],
+      "reasons": [
+        "NS",
+        "AT",
+        "EI"
+      ],
       "license": "maybe",
       "note": "Encryption item classified under 5A002; mass-market/commercial use often ships under License Exception ENC after self-classification or CCATS."
     },
@@ -49,19 +65,27 @@
       "desc": "Wideband gallium-nitride microwave power amplifier MMIC.",
       "eccn": "3A001.b.2",
       "ccl": "Category 3 — Electronics",
-      "reasons": ["NS", "MT", "AT"],
+      "reasons": [
+        "NS",
+        "RS",
+        "AT"
+      ],
       "license": "maybe",
-      "note": "RF/microwave amplifier — control turns on frequency/power thresholds in 3A001.b; verify against the parameter limits."
+      "note": "MMIC power amplifier: NS Column 1 and RS Column 1 unless sold for civil telecommunications, in which case it drops to NS Column 2. STA is not available outside the civil-telecom carve-out."
     },
     {
       "pn": "HD-MILL-5X",
       "name": "5-axis precision machining center",
       "desc": "Five-axis CNC machining center, sub-micron positioning.",
-      "eccn": "2B001.b",
+      "eccn": "2B001.b.2",
       "ccl": "Category 2 — Materials Processing",
-      "reasons": ["NS", "NP", "MT"],
+      "reasons": [
+        "NS",
+        "NP",
+        "AT"
+      ],
       "license": "maybe",
-      "note": "Multi-axis machine tool — caught by 2B001 accuracy/axis thresholds; nuclear/missile reasons can apply."
+      "note": "Five-axis simultaneous contouring: NS Column 2 and NP Column 1. NLR to most Wassenaar / Nuclear Suppliers Group partners; license elsewhere; § 744.2 nuclear end-use screen on every shipment."
     },
     {
       "pn": "HD-LAS-100",
@@ -69,9 +93,12 @@
       "desc": "Industrial pulsed fiber laser, 100 W average power.",
       "eccn": "6A005",
       "ccl": "Category 6 — Sensors & Lasers",
-      "reasons": ["NS", "RS"],
+      "reasons": [
+        "NS",
+        "AT"
+      ],
       "license": "maybe",
-      "note": "Laser control under 6A005 depends on wavelength, power and pulse parameters — confirm against the threshold table."
+      "note": "Laser control under 6A005 depends on wavelength, power and pulse parameters. NS Column 2 only for this part (no NP), so NLR to Wassenaar partners and a license or STA elsewhere."
     },
     {
       "pn": "HD-SENS-MAG",
@@ -79,9 +106,12 @@
       "desc": "Three-axis fluxgate magnetometer sensor module.",
       "eccn": "6A006",
       "ccl": "Category 6 — Sensors & Lasers",
-      "reasons": ["NS", "MT", "AT"],
+      "reasons": [
+        "NS",
+        "AT"
+      ],
       "license": "maybe",
-      "note": "Magnetometers/sensors under 6A006 are sensitivity-dependent — verify the parameters."
+      "note": "Magnetometers under 6A006 are sensitivity-dependent: NS Column 2 only, so NLR to Wassenaar partners and a license or STA elsewhere. Underwater versions can slide into Category 8."
     },
     {
       "pn": "HD-PWR-48",

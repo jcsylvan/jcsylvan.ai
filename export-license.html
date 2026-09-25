@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Export License Board &mdash; jcsylvan.ai</title>
-  <meta name="description" content="A hex-tile board of export licenses by country, with a twelve-month renewal calendar, the conditions riding on each license, a sortable list view and CSV export (demo data).">
+  <meta name="description" content="A hex-tile board of export authorizations by country, checked against the EAR: each line's pathway (BIS license, License Exception, NLR or ITAR), the Commerce Country Chart columns behind it, a coverage matrix, a groupable list, a twelve-month calendar with BIS reporting clocks and CSV export (demo data).">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="icon" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
@@ -46,6 +46,7 @@
     .stat.warn { border-color: #5a4a18; } .stat.warn .n { color: #d9b348; }
     .stat.bad  { border-color: #5a2424; } .stat.bad .n  { color: #ff7a6f; }
     .stat.good { border-color: #285a28; } .stat.good .n { color: #79d479; }
+    .stat.info { border-color: #1f3f4f; } .stat.info .n { color: #8fd0ea; }
 
     /* toolbar */
     .toolbar { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.8rem; }
@@ -71,6 +72,11 @@
     .seg button + button { border-left: 1px solid #262626; }
     .seg button.on { background: #f0c040; color: #0a0a0a; font-weight: 600; }
     .seg button:not(.on):hover { color: #e0e0e0; background: #151515; }
+    .gb {
+      width: auto; background: #0d0d0d; border: 1px solid #262626; border-radius: 5px;
+      color: #999; font-family: inherit; font-size: 0.74rem; padding: 0.5rem 0.6rem;
+    }
+    .gb:focus { outline: none; border-color: #f0c040; }
 
     button.go, button.alt {
       border: none; border-radius: 5px; font-family: inherit; font-size: 0.74rem; font-weight: 600;
@@ -183,7 +189,7 @@
     .key.on .ct { color: #c9a94a; }
     .legend-note { font-size: 0.68rem; color: #555; line-height: 1.6; margin-top: 0.7rem; max-width: 780px; }
 
-    /* list view */
+    /* list + matrix views */
     .listwrap { border: 1px solid #1e1e1e; border-radius: 8px; background: #0e0e0e; overflow-x: auto; }
     table { border-collapse: collapse; width: 100%; font-size: 0.7rem; }
     thead th {
@@ -199,8 +205,32 @@
     tbody td.co:hover { color: #f0c040; }
     tbody td.num { text-align: right; white-space: nowrap; }
     tbody td.ref { color: #ccc; white-space: nowrap; }
+    tbody tr.grp td {
+      background: #131313; color: #d9b348; font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.06em;
+      font-weight: 600; padding: 0.5rem 0.55rem; border-bottom: 1px solid #242424;
+    }
+    tbody tr.grp:hover td { background: #131313; }
+    tbody tr.grp td span { color: #777; text-transform: none; letter-spacing: 0; font-weight: 400; margin-left: 0.5rem; }
     .pill { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
     .empty-row { padding: 1.5rem; color: #777; font-size: 0.78rem; }
+    td .chk { margin-top: 0; font-size: 0.64rem; min-width: 220px; }
+
+    .matrix table { font-size: 0.66rem; }
+    .matrix th.rh { text-align: left; white-space: normal; min-width: 190px; line-height: 1.4; text-transform: none; letter-spacing: 0; font-size: 0.66rem; color: #ccc; }
+    .matrix th.co { cursor: pointer; text-align: center; padding: 0.4rem 0.3rem; }
+    .matrix th.co:hover { color: #f0c040; }
+    .matrix th.reg { text-align: center; color: #666; font-weight: 500; border-bottom: none; padding-bottom: 0; font-size: 0.56rem; letter-spacing: 0.08em; cursor: default; }
+    .matrix td.cell { text-align: center; padding: 0.35rem 0.25rem; cursor: pointer; font-weight: 700; }
+    .matrix td.cell:hover { background: #151515; }
+    .matrix td.cell.req { color: #ff7a6f; } .matrix td.cell.sta, .matrix td.cell.enc { color: #6fb6d6; }
+    .matrix td.cell.nlr { color: #3e3e3e; } .matrix td.cell.emb { color: #a83b33; } .matrix td.cell.itar { color: #3e3e3e; }
+    .mchip {
+      display: inline-block; min-width: 1.9rem; border-radius: 3px; padding: 0.1rem 0.25rem;
+      font-size: 0.56rem; font-weight: 700; letter-spacing: 0.04em; color: #0a0a0a; margin: 1px;
+    }
+    .mchip.dead { opacity: 0.4; }
+    .mkey { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; font-size: 0.66rem; color: #777; padding: 0.6rem 0.75rem; border-top: 1px solid #1e1e1e; line-height: 1.6; }
+    .mkey span.i { display: inline-flex; align-items: center; gap: 0.3rem; }
 
     /* detail panel */
     .panel {
@@ -225,6 +255,39 @@
     }
 
     .sec-h { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin: 1.1rem 0 0.6rem; font-weight: 500; }
+
+    /* EAR position block + control basis */
+    .ear { margin: 0.6rem 0 0.9rem; border: 1px solid #1f2a33; border-radius: 6px; background: #0b1218; padding: 0.6rem 0.75rem; }
+    .ear .ch { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6fb6d6; margin-bottom: 0.4rem; }
+    .ear .kv { font-size: 0.7rem; color: #888; margin-top: 0.25rem; line-height: 1.7; }
+    .ear .kv b { color: #aaa; font-weight: 600; }
+    .earnote { font-size: 0.7rem; color: #8a8a8a; line-height: 1.55; margin-top: 0.4rem; }
+    .gchip, .colchip {
+      display: inline-block; border: 1px solid #333; border-radius: 3px; padding: 0.02rem 0.35rem;
+      font-size: 0.62rem; color: #bbb; margin: 0 0.2rem 0.15rem 0; background: #0b0b0b; cursor: help; line-height: 1.5;
+    }
+    .gchip { border-color: #2f6f8f; color: #8fd0ea; }
+    .colchip.none { color: #666; cursor: default; }
+    .pw {
+      display: inline-flex; align-items: center; gap: 0.3rem; border: 1px solid; border-radius: 999px;
+      padding: 0.12rem 0.5rem; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; cursor: help;
+    }
+    .ctl { margin-top: 0.55rem; border-top: 1px dashed #1f1f1f; padding-top: 0.5rem; }
+    .ctl .kv { font-size: 0.7rem; color: #888; margin-top: 0.3rem; line-height: 1.7; }
+    .ctl .kv b { color: #aaa; font-weight: 600; }
+    .ctlname { color: #8a8a8a; font-size: 0.66rem; margin-left: 0.4rem; }
+    .chk { display: flex; gap: 0.45rem; align-items: flex-start; font-size: 0.68rem; line-height: 1.5; margin-top: 0.4rem; color: #9a9a9a; }
+    .chk i { font-style: normal; font-weight: 700; flex: none; width: 1rem; text-align: center; }
+    .chk.ok i { color: #79d479; }
+    .chk.warn i { color: #d9b348; } .chk.warn { color: #b9a25a; }
+    .chk.bad i { color: #ff7a6f; } .chk.bad { color: #d98a80; }
+    .chk.na i { color: #666; } .chk.na { color: #6e6e6e; }
+    details.duties { margin-top: 0.4rem; font-size: 0.66rem; color: #888; }
+    details.duties summary { cursor: pointer; color: #8fd0ea; list-style: none; }
+    details.duties summary::-webkit-details-marker { display: none; }
+    details.duties summary::before { content: "\25B8 "; }
+    details.duties[open] summary::before { content: "\25BE "; }
+    details.duties ul { margin: 0.3rem 0 0 1rem; line-height: 1.5; }
 
     .lic {
       border: 1px solid #242424; border-left-width: 3px; border-radius: 5px;
@@ -277,6 +340,12 @@
     .watch button:hover { color: #f0c040; }
     .watch .sw { width: 0.6rem; height: 0.6rem; border-radius: 2px; flex: none; position: relative; top: 0.08rem; }
     .watch .why { color: #6e6e6e; font-size: 0.68rem; margin-left: auto; white-space: nowrap; }
+    .watch .why.bad { color: #ff7a6f; } .watch .why.warn { color: #d9b348; }
+
+    .rep { list-style: none; }
+    .rep li { display: flex; gap: 0.5rem; align-items: baseline; font-size: 0.7rem; color: #aaa; padding: 0.35rem 0; border-bottom: 1px solid #1b1b1b; line-height: 1.5; }
+    .rep .when { color: #6fb6d6; white-space: nowrap; }
+    .rep .cite { color: #555; font-size: 0.62rem; margin-left: auto; white-space: nowrap; }
 
     .hint { font-size: 0.74rem; color: #777; line-height: 1.6; }
 
@@ -284,6 +353,33 @@
       margin-top: 0.9rem; border-top: 1px solid #1c1c1c; padding-top: 0.7rem;
       display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; font-size: 0.66rem; color: #666;
     }
+
+    /* EAR reference section */
+    .ref { margin-top: 1.4rem; border: 1px solid #1e1e1e; border-radius: 8px; background: #0e0e0e; padding: 0.9rem 1rem; }
+    .ref h2 { font-size: 0.8rem; color: #f0c040; font-weight: 600; margin-bottom: 0.2rem; }
+    .ref .sub { font-size: 0.7rem; color: #666; line-height: 1.55; margin-bottom: 0.6rem; max-width: 820px; }
+    .ref details { border-top: 1px solid #1c1c1c; padding: 0.55rem 0; }
+    .ref summary { cursor: pointer; font-size: 0.72rem; color: #ccc; list-style: none; display: flex; justify-content: space-between; gap: 0.5rem; }
+    .ref summary::-webkit-details-marker { display: none; }
+    .ref summary::after { content: "+"; color: #f0c040; }
+    .ref details[open] summary::after { content: "\2212"; }
+    .ref summary:hover { color: #f0c040; }
+    .ref .body { font-size: 0.7rem; color: #8a8a8a; line-height: 1.6; margin-top: 0.5rem; }
+    .ref .body b { color: #bbb; }
+    .ref .body ul { margin: 0.3rem 0 0 1rem; }
+    .ref .row { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 0.5rem; padding: 0.35rem 0; border-bottom: 1px dashed #181818; }
+    .ref .row .k { color: #8fd0ea; }
+    .ref .row .k small { display: block; color: #555; font-size: 0.62rem; line-height: 1.4; }
+    .ref .lens { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.5rem; margin-top: 0.3rem; }
+    .ref .lens button {
+      text-align: left; background: #111; border: 1px solid #222; border-radius: 6px; padding: 0.6rem 0.7rem;
+      color: #999; font-family: inherit; cursor: pointer; font-size: 0.68rem; line-height: 1.5;
+    }
+    .ref .lens button b { display: block; color: #f0c040; font-size: 0.72rem; margin-bottom: 0.2rem; }
+    .ref .lens button:hover { border-color: #f0c040; color: #ddd; }
+    .ref .cc { display: inline-block; color: #f0c040; cursor: pointer; margin-right: 0.4rem; }
+    .ref .cc:hover { text-decoration: underline; }
+    @media (max-width: 600px) { .ref .row { grid-template-columns: 1fr; } }
 
     .disclaimer {
       margin-top: 2rem; border-top: 1px solid #1c1c1c; padding-top: 1rem;
@@ -306,18 +402,22 @@
       Every export authorization this business holds, laid out as a board of hex tiles &mdash; one
       tile per destination country. The colour of a tile is the state of that country's licenses, the
       chip in the middle counts the live authorizations, and clicking a tile opens the detail: what
-      each license covers, who the end-user is, how much of the authorized value is drawn down, when
-      it lapses, and which conditions ride on it. The calendar under the board turns all of that into
-      a work queue.
+      each line covers, who the end-user is, how much of the authorized value is drawn down, when it
+      lapses, and which conditions ride on it. Under that sits the EAR layer: each line's pathway
+      (BIS license, License Exception, no license required, or ITAR), the reasons for control and
+      Commerce Country Chart columns behind it, and a check of whether the pathway on file matches
+      what the regulations ask for. The calendar under the board turns all of that into a work queue.
     </p>
     <div class="demo-note">
       <b>Proof-of-concept demo.</b> The portfolio belongs to a <b>fictional</b> exporter
       (&ldquo;Helios Dynamics&rdquo;). Every license number, end-user, date, dollar figure and
-      condition is invented, and tile placement is schematic rather than geographic. Anything you add
-      or tick on the board is kept in this browser only.
+      condition is invented, and tile placement is schematic rather than geographic. The EAR
+      reference layer is a plain-language digest transcribed from the regulations, not the
+      regulations themselves. Anything you add or tick on the board is kept in this browser only.
     </div>
     <p class="updated">
       portfolio as of <span id="asof">&mdash;</span> &nbsp;&middot;&nbsp;
+      EAR reference as of <span id="earasof">&mdash;</span> &nbsp;&middot;&nbsp;
       <a href="export-screener.html">screen a new item &rarr;</a>
     </p>
 
@@ -325,13 +425,23 @@
 
     <div class="toolbar">
       <div class="search">
-        <input type="text" id="q" placeholder="country, license number, end-user, item or ECCN" aria-label="Search the portfolio">
+        <input type="text" id="q" placeholder="country, license number, end-user, item, ECCN, pathway or country group" aria-label="Search the portfolio">
         <span class="hits" id="hits"></span>
       </div>
       <div class="seg" role="group" aria-label="View">
         <button id="v-board" class="on">Board</button>
         <button id="v-list">List</button>
+        <button id="v-matrix">Matrix</button>
       </div>
+      <select id="groupby" class="gb" aria-label="Group the list by" hidden>
+        <option value="country">Group: country</option>
+        <option value="pathway">Group: pathway</option>
+        <option value="eccn">Group: classification</option>
+        <option value="endUser">Group: end-user</option>
+        <option value="reason">Group: reason for control</option>
+        <option value="group">Group: country group</option>
+        <option value="quarter">Group: expiry quarter</option>
+      </select>
       <button class="alt" id="csv">Download CSV</button>
     </div>
     <div class="active-filters" id="afilters"></div>
@@ -344,6 +454,7 @@
         </div>
 
         <div class="listwrap" id="listwrap" hidden></div>
+        <div class="listwrap" id="matrixwrap" hidden></div>
 
         <div class="cal">
           <div class="cal-h">
@@ -352,6 +463,7 @@
               <span><i style="background:#d9b348"></i> license lapses</span>
               <span><i style="background:#7d93a6"></i> condition due</span>
               <span><i style="background:#c0392b"></i> overdue</span>
+              <span><i style="background:#6fb6d6"></i> BIS report due</span>
             </span>
           </div>
           <div class="months" id="months"></div>
@@ -360,6 +472,8 @@
         <div class="legend">
           <p class="legend-h">tile state &mdash; click to filter</p>
           <div class="keys" id="keys-status"></div>
+          <p class="legend-h" style="margin-top:0.9rem">pathway &mdash; click to filter</p>
+          <div class="keys" id="keys-pathway"></div>
           <p class="legend-h" style="margin-top:0.9rem">region</p>
           <div class="keys" id="keys-region"></div>
           <p class="legend-note">
@@ -370,9 +484,13 @@
             nothing on file, and a cross for a restricted destination. An amber dot in the corner
             means a condition falls due soon, and a red one means a condition is already overdue.
             The three harbours mark the AUKUS partners, where much defence trade moves under the
-            §126.7 exemption rather than a license.
+            §126.7 exemption rather than a license. Pathway colours are used in the matrix and the
+            list: green for a BIS license, blue for a License Exception, sand for a no-license-required
+            record and gold for an ITAR authorization.
           </p>
         </div>
+
+        <section class="ref" id="earref" hidden></section>
       </div>
 
       <div class="panel" id="panel"></div>
@@ -383,11 +501,15 @@
       system of record. A real license portfolio lives in your export-management system, and the
       authoritative state of any authorization is what BIS (SNAP-R), DDTC (DECCS) or the issuing
       agency shows &mdash; including conditions, provisos, quantity limits and reporting obligations
-      beyond the few modelled here. Dates are measured against the portfolio date above rather than
-      today's date, so the demo stays readable over time. Screening an item for classification is a
-      separate step &mdash; see the <a href="export-screener.html">Export License Screener</a>, which
-      reads this same file to tell you whether what you are screening is already covered. Edit
-      <code>export-licenses.json</code> to change the board.
+      beyond the few modelled here. The EAR check compares each line's classification and destination
+      with the Commerce Country Chart and the country groups as transcribed in
+      <code>ear-controls.json</code>; it does not see end-user lists, end-use facts, 'is informed'
+      letters or the fine print of an ECCN, all of which can change the answer. Dates are measured
+      against the portfolio date above rather than today's date, so the demo stays readable over
+      time. Screening an item for classification is a separate step &mdash; see the
+      <a href="export-screener.html">Export License Screener</a>, which reads this same file to tell
+      you whether what you are screening is already covered. Edit <code>export-licenses.json</code>
+      to change the board and <code>ear-controls.json</code> to change the reference layer.
     </div>
   </div>
 
@@ -401,9 +523,15 @@
     const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const R = 46, W = Math.sqrt(3) * R, RH = 1.5 * R, LAND_K = 0.955;
 
-    let data = null, local = loadLocal(), selected = null, view = "board";
-    let filter = { status: null, region: null, month: null, aukus: false };
-    let query = "";
+    // the four pathway families the board colours by; the finer pathway ids live in ear-controls.json
+    const PW_GROUP = { license: "license", exception: "exception", nlr: "nlr", "itar-license": "itar", "itar-agreement": "itar", "itar-exemption": "itar" };
+    const PW_LABEL = { license: "BIS license", exception: "License exception", nlr: "NLR record", itar: "ITAR (DDTC)" };
+    const PW_COLOR = { license: "#79d479", exception: "#6fb6d6", nlr: "#cdbb92", itar: "#d9b348" };
+    const PW_SHORT = { license: "LIC", exception: "EXC", nlr: "NLR", itar: "ITAR" };
+
+    let data = null, ear = null, local = loadLocal(), selected = null, view = "board";
+    let filter = { status: null, region: null, month: null, aukus: false, pathway: null, exc: null };
+    let query = "", groupBy = "country";
     let sort = { key: "expires", dir: 1 };
 
     function esc(s) {
@@ -498,13 +626,143 @@
       return Math.min(1, (Number(l.valueShipped) || 0) / a);
     }
 
+    /* ---------- EAR layer ---------- */
+
+    // which road out of the building a line uses; older data without a pathway field is inferred
+    function pathwayOf(l) {
+      if (l.pathway) return l.pathway;
+      const t = String(l.type || ""), a = String(l.authority || "");
+      if (/DDTC/.test(a)) return /agreement/i.test(t) ? "itar-agreement" : /exemption/i.test(t) ? "itar-exemption" : "itar-license";
+      if (/exception/i.test(t)) return "exception";
+      if (/no license|nlr/i.test(t)) return "nlr";
+      return "license";
+    }
+    const pwGroup = l => PW_GROUP[pathwayOf(l)] || "license";
+    const isItar = l => pwGroup(l) === "itar";
+    function excOf(l) {
+      if (l.exception) return l.exception;
+      const m = String(l.type || "").match(/Exception\s+([A-Z]{2,4})/);
+      return m ? m[1] : "";
+    }
+    const earCountry = c => ear && ear.countries ? ear.countries[c.code] || null : null;
+
+    // the control profile (reasons, chart columns, exception eligibility) for a line's classification
+    function profileOf(l) {
+      if (!ear || !ear.eccns || isItar(l)) return null;
+      if (l.control && ear.eccns[l.control]) return { key: l.control, ...ear.eccns[l.control] };
+      const e = String(l.eccn || "").replace(/\s/g, "");
+      if (!e) return null;
+      if (ear.eccns[e]) return { key: e, ...ear.eccns[e] };
+      let best = "";
+      Object.keys(ear.eccns).forEach(k => { if (!k.includes("-") && e.startsWith(k) && k.length > best.length) best = k; });
+      if (!best) Object.keys(ear.eccns).forEach(k => { if (!k.includes("-") && k.startsWith(e) && (!best || k.length < best.length)) best = k; });
+      return best ? { key: best, ...ear.eccns[best] } : null;
+    }
+    function colDesc(col) {
+      const R_ = ear.reasons[col.split(":")[0]];
+      return R_ && R_.columns && R_.columns[col] ? R_.name + " — " + R_.columns[col] : col;
+    }
+    const isEmbargoed = ec => !!ec && ((ec.groups || []).some(g => g === "E:1" || g === "E:2") || (ec.sanctions || []).some(s => /746\.8/.test(s)));
+    function staAvailable(ec, p) {
+      const g = ec.groups || [];
+      if (ec.staRestricted) return false; // e.g. the UAE, where STA reaches approved entities only
+      return !!(p && p.sta && ((g.includes("A:5") && p.sta["A:5"]) || (g.includes("A:6") && p.sta["A:6"])));
+    }
+
+    // what the chart says a product family needs at a destination when nothing is held
+    function chartRequires(c, p) {
+      const ec = earCountry(c);
+      if (!ec) return "nlr";
+      if (c.restricted || isEmbargoed(ec)) return "emb";
+      const hit = (p.columns || []).some(col => (ec.chart || []).includes(col));
+      const ei = !!p.ei && c.code !== "CA";
+      if (!hit && !ei) return "nlr";
+      if (ei) return p.enc ? "enc" : "req";
+      return staAvailable(ec, p) ? "sta" : "req";
+    }
+
+    // compare the pathway on file with what the EAR asks for
+    function chartCheck(c, l) {
+      if (!ear) return null;
+      const pw = pathwayOf(l);
+      if (isItar(l)) return { level: "na", text: "Defense article under the ITAR: the Commerce Country Chart does not apply. Scope, provisos and DDTC reporting govern this line." };
+      const ec = earCountry(c);
+      if (!ec) return { level: "na", text: "No EAR reference row for this destination yet." };
+      const groups = ec.groups || [];
+      if (isEmbargoed(ec)) return { level: "bad", text: "Embargoed or sanctioned destination (" + (ec.sanctions || groups).join(", ") + "): a license is required for practically everything and the policy is denial. Chart columns are moot." };
+      const p = profileOf(l);
+      if (!p) return { level: "na", text: "No control profile for " + (l.eccn || "this classification") + "; add one to ear-controls.json to check it against the chart." };
+      const hit = (p.columns || []).filter(col => (ec.chart || []).includes(col));
+      const ei = !!p.ei && c.code !== "CA";
+      const required = hit.length > 0 || ei;
+      const why = required
+        ? (hit.length ? "the chart marks " + hit.join(" and ") + " for " + c.name : "") + (ei ? (hit.length ? " and " : "") + "EI (§ 742.15) applies" : "")
+        : "the chart marks none of " + (p.columns || []).join(", ") + " for " + c.name;
+      const staOk = !ei && staAvailable(ec, p);
+      const which = groups.includes("A:5") && p.sta && p.sta["A:5"] ? "A:5" : "A:6";
+      const staHint = required && staOk ? " License Exception STA could carry this line instead (" + which + ")." : "";
+      if (pw === "license") {
+        if (required) return { level: "ok", text: "Consistent: " + why + ", so a license is the right pathway." + staHint };
+        return { level: "warn", text: "Review: " + why + ". Unless a Part 744 concern or an 'is informed' letter drives it, this license is surplus and an NLR record could replace it at renewal." };
+      }
+      if (pw === "nlr") {
+        if (!required) return { level: "ok", text: "Consistent: " + why + ", so NLR is available. Part 744 end-user and end-use rules still apply." };
+        return { level: "bad", text: "Gap: " + why + ". NLR does not hold; a license" + (staOk ? " or License Exception STA" : "") + " is needed before anything ships." };
+      }
+      if (pw === "exception") {
+        const sym = excOf(l);
+        if (sym === "ENC") {
+          if (!p.ei) return { level: "warn", text: "Review: ENC only covers encryption items and this classification is not EI-controlled." };
+          return { level: "ok", text: "Consistent: § 742.15 requires a license everywhere but Canada, and ENC (" + (l.encParagraph === "b2" ? "§ 740.17(b)(2): CCATS plus semi-annual sales reports" : "§ 740.17(b)(1): annual self-classification report") + ") lifts it for this destination." };
+        }
+        if (sym === "STA") {
+          if (!required) return { level: "warn", text: "Review: " + why + ". STA paperwork is not needed; an NLR record would do." };
+          if (staOk) return { level: "ok", text: "Consistent: " + why + ", and STA is available to " + c.name + " for this ECCN (" + which + "). Keep the consignee statement, the ECCN notice and the per-shipment STA notice on file." };
+          return { level: "bad", text: "Gap: STA cannot carry this line. " + (p.sta && p.sta.why ? p.sta.why : "The ECCN or destination is excluded.") + " A license is needed." };
+        }
+        if (!required) return { level: "warn", text: "Review: " + why + "; exception " + sym + " is not needed here." };
+        return { level: "ok", text: "Exception " + sym + " relied on against " + why + ". Confirm the ECCN's License Exceptions paragraph allows it." };
+      }
+      return null;
+    }
+    const liveChecks = c => c.restricted ? [] : licensesFor(c).filter(isLive).map(l => chartCheck(c, l)).filter(Boolean);
+
+    // portfolio-level BIS reports that the pathways in use trigger
+    function standingReports() {
+      if (!ear || !ear.standingReports) return [];
+      const used = new Set(), usedNonWA = new Set();
+      dests().forEach(c => licensesFor(c).forEach(l => {
+        if (!isLive(l) || pwGroup(l) !== "exception") return;
+        const s = excOf(l);
+        used.add(s);
+        if (s === "ENC" && l.encParagraph !== "b2") used.add("ENC-b1");
+        const ec = earCountry(c);
+        if (!ec || !(ec.groups || []).includes("A:1")) usedNonWA.add(s);
+      }));
+      return ear.standingReports.filter(r => {
+        const t = (r.trigger && r.trigger.exception) || [];
+        const pool = r.nonWassenaarOnly ? usedNonWA : used;
+        return t.some(s => pool.has(s));
+      });
+    }
+    function reportDates(r) {
+      return monthList().filter(k => r.months.includes(Number(k.slice(5, 7)))).map(k => k + "-" + String(r.day).padStart(2, "0"));
+    }
+    function upcomingReports() {
+      const out = [];
+      standingReports().forEach(r => reportDates(r).forEach(when => out.push({ when, r })));
+      return out.sort((a, b) => a.when.localeCompare(b.when));
+    }
+
     /* ---------- filtering ---------- */
 
     function matchesQuery(c) {
       if (!query) return true;
       const q = query.toLowerCase();
       if (c.name.toLowerCase().includes(q) || c.code.toLowerCase() === q) return true;
-      return licensesFor(c).some(l => [l.ref, l.endUser, l.item, l.eccn, l.type, l.authority]
+      const ec = earCountry(c);
+      if (ec && (ec.groups || []).some(g => g.toLowerCase() === q)) return true;
+      return licensesFor(c).some(l => [l.ref, l.endUser, l.item, l.eccn, l.type, l.authority, PW_LABEL[pwGroup(l)], excOf(l)]
         .some(v => String(v || "").toLowerCase().includes(q)));
     }
     function inMonth(c) {
@@ -516,15 +774,20 @@
       const cs = openConds(c).some(x => monthKey(x.due) === filter.month || (x.days < 0 && filter.month === monthKey(data.asOf)));
       return ls || cs;
     }
+    function inPathway(c) {
+      if (!filter.pathway && !filter.exc) return true;
+      return licensesFor(c).some(l => (!filter.pathway || pwGroup(l) === filter.pathway) && (!filter.exc || excOf(l) === filter.exc));
+    }
     function isVisible(c) {
       if (filter.status && stateOf(c) !== filter.status) return false;
       if (filter.region && c.region !== filter.region) return false;
       if (filter.aukus && !c.aukus) return false;
+      if (!inPathway(c)) return false;
       if (!inMonth(c)) return false;
       if (!matchesQuery(c)) return false;
       return true;
     }
-    const anyFilter = () => !!(filter.status || filter.region || filter.month || filter.aukus || query);
+    const anyFilter = () => !!(filter.status || filter.region || filter.month || filter.aukus || filter.pathway || filter.exc || query);
 
     /* ---------- board ---------- */
 
@@ -639,14 +902,15 @@
         const label = SHORT[c.name] || c.name;
         const fs = label.length > 10 ? 8.6 : label.length > 8 ? 9.6 : 10.5;
         const ob = oblState(c);
-        const badge = ob
+        const gap = liveChecks(c).some(k => k.level === "bad");
+        const badge = ob || gap
           ? `<g transform="translate(${(x + 26).toFixed(1)},${(y - 2).toFixed(1)})">
-               <circle r="7.5" fill="${ob === "overdue" ? "#c0392b" : "#c9a227"}" stroke="#140f06" stroke-width="1.5"/>
+               <circle r="7.5" fill="${ob === "overdue" || gap ? "#c0392b" : "#c9a227"}" stroke="#140f06" stroke-width="1.5"/>
                <text class="obl-badge" y="3.2" fill="#140f06">!</text></g>`
           : "";
         const aria = c.origin
           ? `${c.name}. Point of export.`
-          : `${c.name}. ${S.label}. ${live.length} live authorization${live.length === 1 ? "" : "s"}, ${ls.length} on file.${ob ? " Condition " + (ob === "overdue" ? "overdue." : "due soon.") : ""}`;
+          : `${c.name}. ${S.label}. ${live.length} live authorization${live.length === 1 ? "" : "s"}, ${ls.length} on file.${ob ? " Condition " + (ob === "overdue" ? "overdue." : "due soon.") : ""}${gap ? " Pathway gap." : ""}`;
         g += `<g class="hex-land" data-code="${esc(c.code)}" tabindex="0" role="button" aria-label="${esc(aria)}">
           <polygon class="face" points="${hexPath(x, y, LAND_K)}" fill="${S.color}"/>
           <polygon class="ring" points="${hexPath(x, y, LAND_K)}" fill="none" stroke="${S.edge}" stroke-width="2"/>
@@ -691,6 +955,8 @@
       document.querySelectorAll(".port").forEach(el => el.classList.toggle("on", filter.aukus));
       document.querySelectorAll("#keys-status .key").forEach(b => b.classList.toggle("on", b.dataset.k === filter.status));
       document.querySelectorAll("#keys-region .key").forEach(b => b.classList.toggle("on", b.dataset.k === filter.region));
+      document.querySelectorAll("[data-pw]").forEach(b => b.classList.toggle("on", b.dataset.pw === filter.pathway));
+      document.querySelectorAll("[data-exc]").forEach(b => b.classList.toggle("on", b.dataset.exc === filter.exc));
       document.querySelectorAll(".mo").forEach(b => b.classList.toggle("on", b.dataset.m === filter.month));
       drawActiveFilters();
       const n = dests().filter(isVisible).length;
@@ -706,11 +972,16 @@
       const next = live.filter(l => l.expires).sort((a, b) => daysUntil(a.expires) - daysUntil(b.expires))[0];
       const open = openConds(c);
       const soonest = open.sort((a, b) => a.days - b.days)[0];
+      const ec = earCountry(c);
+      const ks = liveChecks(c);
+      const gaps = ks.filter(k => k.level === "bad").length, revs = ks.filter(k => k.level === "warn").length;
       return `<b>${esc(c.name)}</b>
         <div class="row" style="color:${S.edge}">${esc(S.label)}${c.aukus ? " &middot; AUKUS" : ""}</div>
+        ${ec ? `<div class="row">Groups: <i>${esc((ec.groups || []).join(" ") || "—")}</i></div>` : ""}
         <div class="row">Live: <i>${live.length}</i> of ${ls.length} on file</div>
         ${next ? `<div class="row">Next lapse: <i>${esc(next.expires)}</i> (${daysUntil(next.expires)} days)</div>` : ""}
         ${soonest ? `<div class="row">Next condition: <i>${soonest.days < 0 ? Math.abs(soonest.days) + " days overdue" : "in " + soonest.days + " days"}</i></div>` : ""}
+        ${gaps ? `<div class="row" style="color:#ff7a6f">Pathway gap on ${gaps} line${gaps === 1 ? "" : "s"}</div>` : revs ? `<div class="row" style="color:#d9b348">Pathway review on ${revs} line${revs === 1 ? "" : "s"}</div>` : ""}
         <div class="row" style="color:#5a5a5a;margin-top:0.2rem">click for detail</div>`;
     }
     function showTip(c, e, el) {
@@ -740,14 +1011,26 @@
       const auth = live.reduce((s, x) => s + (Number(x.l.valueAuthorized) || 0), 0);
       const shipped = live.reduce((s, x) => s + (Number(x.l.valueShipped) || 0), 0);
       const restricted = dests().filter(c => c.restricted).length;
+      const pwc = {};
+      live.forEach(x => { const g = pwGroup(x.l); pwc[g] = (pwc[g] || 0) + 1; });
+      const checks = live.filter(x => !x.c.restricted).map(x => chartCheck(x.c, x.l)).filter(Boolean);
+      const gaps = checks.filter(k => k.level === "bad").length;
+      const revs = checks.filter(k => k.level === "warn").length;
+      const staOpts = checks.filter(k => k.level === "ok" && /STA could carry/.test(k.text)).length;
+      const reps = upcomingReports();
       const tiles = [
-        ["good", live.length, "live authorizations",
+        ["good", live.length, "live pathways",
           `across ${dests().filter(c => licensesFor(c).some(isLive)).length} destinations &middot; ${money(auth)} authorized, ${money(shipped)} shipped`],
+        ["", pwc.license || 0, "BIS licenses live",
+          `${pwc.exception || 0} under exceptions &middot; ${pwc.nlr || 0} NLR records &middot; ${pwc.itar || 0} ITAR`],
         ["warn", soon.length, "lapse within " + data.expiringWindowDays + " days",
-          `${lapsed.length} already lapsed or refused`],
-        ["", pend.length, "applications out", `${restricted} restricted destinations`],
+          `${lapsed.length} already lapsed or refused &middot; ${pend.length} applications out`],
         [overdue.length ? "bad" : "warn", overdue.length + dueSoon.length, "conditions due",
-          `${overdue.length} overdue &middot; ${dueSoon.length} inside ${data.obligationWindowDays} days`]
+          `${overdue.length} overdue &middot; ${dueSoon.length} inside ${data.obligationWindowDays} days`],
+        [gaps ? "bad" : revs ? "warn" : "good", gaps + revs, "EAR pathway checks",
+          ear ? `${gaps} gap${gaps === 1 ? "" : "s"} &middot; ${revs} surplus &middot; ${staOpts} STA option${staOpts === 1 ? "" : "s"} &middot; ${restricted} restricted` : "reference layer not loaded"],
+        ["info", reps.length, "BIS reports next 12 months",
+          reps.length ? `next: ${esc(reps[0].when)} ${esc(reps[0].r.label)}` : "no exception-driven reports owed"]
       ];
       document.getElementById("stats").innerHTML = tiles.map(([cls, n, l, sub]) =>
         `<div class="stat ${cls}"><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div>
@@ -761,6 +1044,15 @@
         `<button class="key" data-k="${k}" title="${esc(s.desc)}">
            <span class="sw" style="background:${s.color}"></span>${esc(s.label)}
            <span class="ct">${counts[k] || 0}</span></button>`).join("");
+      const pc = {};
+      dests().forEach(c => licensesFor(c).forEach(l => { const g = pwGroup(l); pc[g] = (pc[g] || 0) + 1; }));
+      document.getElementById("keys-pathway").innerHTML = Object.keys(PW_LABEL).map(k => {
+        const ids = ear && ear.pathways ? Object.keys(ear.pathways).filter(x => PW_GROUP[x] === k) : [];
+        const title = ids.map(x => ear.pathways[x].label + ": " + ear.pathways[x].desc).join("\n");
+        return `<button class="key" data-pw="${k}" title="${esc(title)}">
+           <span class="sw" style="background:${PW_COLOR[k]}"></span>${esc(PW_LABEL[k])}
+           <span class="ct">${pc[k] || 0}</span></button>`;
+      }).join("");
       const rc = {};
       data.countries.forEach(c => { rc[c.region] = (rc[c.region] || 0) + 1; });
       document.getElementById("keys-region").innerHTML = Object.entries(data.regions).map(([k, r]) =>
@@ -768,6 +1060,9 @@
 
       document.querySelectorAll("#keys-status .key").forEach(b => b.addEventListener("click", () => {
         filter.status = filter.status === b.dataset.k ? null : b.dataset.k; refreshViews();
+      }));
+      document.querySelectorAll("#keys-pathway .key").forEach(b => b.addEventListener("click", () => {
+        filter.pathway = filter.pathway === b.dataset.pw ? null : b.dataset.pw; refreshViews();
       }));
       document.querySelectorAll("#keys-region .key").forEach(b => b.addEventListener("click", () => {
         filter.region = filter.region === b.dataset.k ? null : b.dataset.k; refreshViews();
@@ -802,7 +1097,11 @@
           if (buckets[k]) buckets[k].push({ kind: x.days < 0 ? "overdue" : "cond", c, when: x.due });
         });
       });
-      const COL = { expiry: "#d9b348", cond: "#7d93a6", overdue: "#c0392b" };
+      upcomingReports().forEach(x => {
+        const k = monthKey(x.when);
+        if (buckets[k]) buckets[k].push({ kind: "report", c: null, when: x.when });
+      });
+      const COL = { expiry: "#d9b348", cond: "#7d93a6", overdue: "#c0392b", report: "#6fb6d6" };
       let html = keys.map(k => {
         const items = buckets[k];
         const shown = items.slice(0, 8);
@@ -826,6 +1125,8 @@
     function drawActiveFilters() {
       const bits = [];
       if (filter.status) bits.push(["status", data.statuses[filter.status].label]);
+      if (filter.pathway) bits.push(["pathway", PW_LABEL[filter.pathway]]);
+      if (filter.exc) bits.push(["exc", "License Exception " + filter.exc]);
       if (filter.region) bits.push(["region", data.regions[filter.region].label]);
       if (filter.month) bits.push(["month", filter.month === "later" ? "beyond twelve months" : monthLabel(filter.month)]);
       if (filter.aukus) bits.push(["aukus", "AUKUS partners"]);
@@ -837,7 +1138,7 @@
         + `<button class="fchip" data-f="all" style="border-color:#333;color:#888;background:none">clear all</button>`;
       el.querySelectorAll(".fchip").forEach(b => b.addEventListener("click", () => {
         const f = b.dataset.f;
-        if (f === "all") { filter = { status: null, region: null, month: null, aukus: false }; query = ""; document.getElementById("q").value = ""; }
+        if (f === "all") { filter = { status: null, region: null, month: null, aukus: false, pathway: null, exc: null }; query = ""; document.getElementById("q").value = ""; }
         else if (f === "query") { query = ""; document.getElementById("q").value = ""; }
         else if (f === "aukus") filter.aukus = false;
         else filter[f] = null;
@@ -848,26 +1149,60 @@
     /* ---------- list view ---------- */
 
     const COLS = [
-      { k: "country", l: "Country" }, { k: "ref", l: "Reference" }, { k: "item", l: "Item" },
-      { k: "eccn", l: "Class" }, { k: "type", l: "Type" }, { k: "endUser", l: "End-user" },
+      { k: "country", l: "Country" }, { k: "ref", l: "Reference" }, { k: "pathway", l: "Pathway" }, { k: "item", l: "Item" },
+      { k: "eccn", l: "Class" }, { k: "reasons", l: "Columns" }, { k: "endUser", l: "End-user" },
       { k: "issued", l: "Issued" }, { k: "expires", l: "Expires" }, { k: "days", l: "Days", num: true },
       { k: "status", l: "Status" }, { k: "valueAuthorized", l: "Authorized", num: true },
       { k: "valueShipped", l: "Shipped", num: true }, { k: "drawn", l: "Drawn", num: true },
-      { k: "conditions", l: "Conditions" }
+      { k: "conditions", l: "Conditions" }, { k: "check", l: "EAR check" }
     ];
+
+    // the heading a line falls under for each group-by lens
+    function leadGroup(ec) {
+      if (!ec) return "—";
+      const g = ec.groups || [];
+      if (g.some(x => x.startsWith("E:"))) return "E — embargoed";
+      if ((ec.sanctions || []).some(s => /746\.8/.test(s))) return "D:5 — Russia / Belarus sanctions (§ 746.8)";
+      if (g.some(x => x.startsWith("D:"))) return "D — " + g.filter(x => x.startsWith("D:")).join(" ") + (g.includes("B") ? " (also Group B)" : "");
+      if (g.includes("A:5")) return "A:5 — STA partners";
+      if (g.includes("A:6")) return "A:6 — STA partners, NS-only";
+      if (g.includes("B")) return "B — GBS / LVS eligible";
+      return g.join(" ") || "—";
+    }
+    function groupKeysFor(c, l) {
+      const p = profileOf(l), ec = earCountry(c), g = pwGroup(l);
+      const cols = p ? (p.columns || []).concat(p.ei ? ["EI"] : []) : [];
+      return {
+        country: c.name,
+        pathway: PW_LABEL[g] + (excOf(l) ? " · " + excOf(l) : ""),
+        eccn: isItar(l) ? "ITAR · " + (l.eccn || "USML") : (p ? p.key + " — " + p.name : (l.eccn || "unclassified")),
+        endUser: l.endUser || "—",
+        reason: isItar(l) ? "ITAR (USML)" : (cols.length ? cols.join(" · ") : (l.eccn || "—")),
+        group: leadGroup(ec),
+        quarter: l.expires ? l.expires.slice(0, 4) + " Q" + (Math.floor((Number(l.expires.slice(5, 7)) - 1) / 3) + 1) : "no expiry"
+      };
+    }
 
     function rows() {
       const out = [];
       dests().filter(isVisible).forEach(c => licensesFor(c).forEach(l => {
+        if (filter.pathway && pwGroup(l) !== filter.pathway) return;
+        if (filter.exc && excOf(l) !== filter.exc) return;
         const open = (l.conditions || []).map((cond, i) => ({ ...cond, done: !!local.conds[l._key + "::c" + i] }));
         const dd = drawdown(l);
+        const p = profileOf(l), g = pwGroup(l), k = chartCheck(c, l);
         out.push({
           country: c.name, code: c.code, ref: l.ref, item: l.item, eccn: l.eccn || "",
           type: l.type || "", authority: l.authority || "", endUser: l.endUser || "",
+          pathway: PW_LABEL[g] + (excOf(l) ? " · " + excOf(l) : ""), pwGroup: g, exception: excOf(l),
+          reasons: isItar(l) ? "ITAR" : (p ? (p.columns || []).concat(p.ei ? ["EI"] : []).join(" ") : ""),
+          groups: earCountry(c) ? (earCountry(c).groups || []).join(" ") : "",
           issued: l.issued || "", expires: l.expires || "", days: l.expires ? daysUntil(l.expires) : null,
           status: effStatus(l), valueAuthorized: Number(l.valueAuthorized) || 0,
           valueShipped: Number(l.valueShipped) || 0, drawn: dd === null ? null : Math.round(dd * 100),
-          conditions: open.filter(x => !x.done).length + " of " + open.length + " open"
+          conditions: open.filter(x => !x.done).length + " of " + open.length + " open",
+          check: k ? k.level : "", checkText: k ? k.text : "",
+          g: groupKeysFor(c, l)
         });
       }));
       const dir = sort.dir;
@@ -880,16 +1215,15 @@
       return out;
     }
 
-    function drawList() {
-      const rs = rows();
-      const head = COLS.map(c =>
-        `<th data-k="${c.k}">${esc(c.l)}${sort.key === c.k ? ` <span class="ar">${sort.dir > 0 ? "↑" : "↓"}</span>` : ""}</th>`).join("");
-      const body = rs.map(r => `<tr>
+    const CHK_GLYPH = { ok: "✓", warn: "!", bad: "✕", na: "·" };
+    function rowHTML(r) {
+      return `<tr>
         <td class="co" data-code="${esc(r.code)}">${esc(r.country)}</td>
         <td class="ref">${esc(r.ref)}</td>
+        <td><span class="pw" style="border-color:${PW_COLOR[r.pwGroup]};color:${PW_COLOR[r.pwGroup]}">${esc(r.pathway)}</span></td>
         <td>${esc(r.item)}</td>
         <td>${esc(r.eccn)}</td>
-        <td>${esc(r.type)}</td>
+        <td style="white-space:nowrap;color:#888">${esc(r.reasons)}</td>
         <td>${esc(r.endUser)}</td>
         <td>${esc(r.issued)}</td>
         <td>${esc(r.expires || "—")}</td>
@@ -898,7 +1232,27 @@
         <td class="num">${r.valueAuthorized ? money(r.valueAuthorized) : "—"}</td>
         <td class="num">${r.valueShipped ? money(r.valueShipped) : "—"}</td>
         <td class="num">${r.drawn === null ? "—" : r.drawn + "%"}</td>
-        <td>${esc(r.conditions)}</td></tr>`).join("");
+        <td>${esc(r.conditions)}</td>
+        <td>${r.check ? `<div class="chk ${r.check}"><i>${CHK_GLYPH[r.check]}</i><span>${esc(r.checkText)}</span></div>` : "—"}</td></tr>`;
+    }
+
+    function drawList() {
+      const rs = rows();
+      const head = COLS.map(c =>
+        `<th data-k="${c.k}">${esc(c.l)}${sort.key === c.k ? ` <span class="ar">${sort.dir > 0 ? "↑" : "↓"}</span>` : ""}</th>`).join("");
+      let body;
+      if (groupBy === "country") {
+        body = rs.map(rowHTML).join("");
+      } else {
+        const groups = new Map();
+        rs.forEach(r => { const k = r.g[groupBy]; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); });
+        body = [...groups.keys()].sort((a, b) => a.localeCompare(b)).map(k => {
+          const g = groups.get(k);
+          const live = g.filter(r => r.status === "active" || r.status === "expiring").length;
+          const auth = g.reduce((s, r) => s + r.valueAuthorized, 0);
+          return `<tr class="grp"><td colspan="${COLS.length}">${esc(k)}<span>${g.length} line${g.length === 1 ? "" : "s"} &middot; ${live} live &middot; ${money(auth)} authorized</span></td></tr>` + g.map(rowHTML).join("");
+        }).join("");
+      }
       document.getElementById("listwrap").innerHTML = rs.length
         ? `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`
         : `<div class="empty-row">No authorizations match the current filters.</div>`;
@@ -912,19 +1266,80 @@
 
     function downloadCSV() {
       const rs = rows();
-      const head = ["Country", "Reference", "Authority", "Type", "Item", "Classification", "End-user",
-        "Issued", "Expires", "Days remaining", "Status", "Value authorized (USD)", "Value shipped (USD)",
-        "Drawn down (%)", "Conditions open"];
+      const head = ["Country", "Country groups", "Reference", "Pathway", "Exception", "Authority", "Type", "Item", "Classification",
+        "Reasons / chart columns", "End-user", "Issued", "Expires", "Days remaining", "Status", "Value authorized (USD)",
+        "Value shipped (USD)", "Drawn down (%)", "Conditions open", "EAR check", "EAR check detail"];
       const q = v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
-      const lines = [head.map(q).join(",")].concat(rs.map(r => [r.country, r.ref, r.authority, r.type,
-        r.item, r.eccn, r.endUser, r.issued, r.expires, r.days, LIC_LABEL[r.status] || r.status,
-        r.valueAuthorized, r.valueShipped, r.drawn, r.conditions].map(q).join(",")));
+      const lines = [head.map(q).join(",")].concat(rs.map(r => [r.country, r.groups, r.ref, r.pathway, r.exception, r.authority, r.type,
+        r.item, r.eccn, r.reasons, r.endUser, r.issued, r.expires, r.days, LIC_LABEL[r.status] || r.status,
+        r.valueAuthorized, r.valueShipped, r.drawn, r.conditions, r.check, r.checkText].map(q).join(",")));
       const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = "export-licenses-" + data.asOf + ".csv";
       document.body.appendChild(a); a.click();
       setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+    }
+
+    /* ---------- matrix view: product family × destination ---------- */
+
+    function drawMatrix() {
+      const el = document.getElementById("matrixwrap");
+      if (!ear) { el.innerHTML = '<div class="empty-row">The matrix needs <code>ear-controls.json</code>.</div>'; return; }
+      const cols = dests().filter(isVisible);
+      const regionOrder = Object.keys(data.regions);
+      cols.sort((a, b) => regionOrder.indexOf(a.region) - regionOrder.indexOf(b.region) || a.name.localeCompare(b.name));
+      if (!cols.length) { el.innerHTML = '<div class="empty-row">No destinations match the current filters.</div>'; return; }
+      const rowsDef = Object.keys(ear.eccns).map(k => ({ id: k, label: ear.eccns[k].name, p: { key: k, ...ear.eccns[k] } }))
+        .concat([{ id: "itar", label: "Defense articles (USML / ITAR)", p: null }]);
+      const regCells = [];
+      let i = 0;
+      while (i < cols.length) {
+        let j = i;
+        while (j < cols.length && cols[j].region === cols[i].region) j++;
+        regCells.push(`<th class="reg" colspan="${j - i}">${esc(data.regions[cols[i].region] ? data.regions[cols[i].region].label : cols[i].region)}</th>`);
+        i = j;
+      }
+      const head = `<tr><th class="rh" style="border-bottom:none;cursor:default"></th>${regCells.join("")}</tr>
+        <tr><th class="rh" style="cursor:default">product family &times; destination</th>${cols.map(c =>
+          `<th class="co" data-code="${esc(c.code)}" title="${esc(c.name)}">${esc(c.code)}</th>`).join("")}</tr>`;
+      const GLYPH = { emb: "✕", req: "L", sta: "S", enc: "E", nlr: "·", itar: "" };
+      const TITLE = {
+        emb: "embargoed or sanctioned: stop-ship", req: "a license would be required", sta: "license required, but STA is available",
+        enc: "license required under § 742.15, but License Exception ENC normally covers it", nlr: "no license required by the chart",
+        itar: "a DDTC authorization or exemption would be needed"
+      };
+      const body = rowsDef.map(rd => {
+        const cells = cols.map(c => {
+          const ls = licensesFor(c).filter(l => rd.p ? ((profileOf(l) || {}).key === rd.p.key) : isItar(l));
+          if (ls.length) {
+            const chips = ls.slice(0, 3).map(l => {
+              const g = pwGroup(l), live = isLive(l);
+              const txt = g === "exception" ? (excOf(l) || "EXC") : g === "itar" ? ((ear.pathways[pathwayOf(l)] || {}).short || "ITAR") : PW_SHORT[g];
+              return `<span class="mchip${live ? "" : " dead"}" style="background:${PW_COLOR[g]}" title="${esc(l.ref + " · " + (LIC_LABEL[effStatus(l)] || l.status))}">${esc(txt)}</span>`;
+            }).join("");
+            return `<td class="cell held" data-code="${esc(c.code)}">${chips}${ls.length > 3 ? `<span class="mchip" style="background:#333;color:#aaa">+${ls.length - 3}</span>` : ""}</td>`;
+          }
+          const need = rd.p ? chartRequires(c, rd.p) : (c.restricted ? "emb" : "itar");
+          return `<td class="cell ${need}" data-code="${esc(c.code)}" title="${esc(c.name + ": " + TITLE[need])}">${GLYPH[need]}</td>`;
+        }).join("");
+        const sub = rd.p ? `<br><span style="color:#666;font-weight:400;font-size:0.6rem">${esc((rd.p.columns || []).concat(rd.p.ei ? ["EI"] : []).join(" · "))}</span>` : "";
+        return `<tr><th class="rh">${esc(rd.label)}${sub}</th>${cells}</tr>`;
+      }).join("");
+      el.innerHTML = `<div class="matrix"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>
+        <div class="mkey">
+          <span class="i"><span class="mchip" style="background:#79d479">LIC</span> BIS license held</span>
+          <span class="i"><span class="mchip" style="background:#6fb6d6">STA</span> exception relied on</span>
+          <span class="i"><span class="mchip" style="background:#cdbb92">NLR</span> NLR record</span>
+          <span class="i"><span class="mchip" style="background:#d9b348">DSP</span> ITAR authorization</span>
+          <span class="i"><b style="color:#ff7a6f">L</b> license needed</span>
+          <span class="i"><b style="color:#6fb6d6">S</b> needed, STA available</span>
+          <span class="i"><b style="color:#6fb6d6">E</b> needed, ENC available</span>
+          <span class="i"><b style="color:#666">&middot;</b> NLR by the chart</span>
+          <span class="i"><b style="color:#a83b33">&#10005;</b> embargoed</span>
+          <span class="i" style="color:#555">faded chip = not live</span>
+        </div>`;
+      el.querySelectorAll("[data-code]").forEach(x => x.addEventListener("click", () => select(x.dataset.code)));
     }
 
     /* ---------- panel ---------- */
@@ -955,18 +1370,20 @@
     function watchlist() {
       const rows = [];
       dests().forEach(c => {
-        const st = stateOf(c), ob = oblState(c);
-        if (st === "active" && !ob) return;
-        if (st === "none" && !ob) return;
-        const ls = licensesFor(c);
-        let why = "", rank = 5;
-        if (ob === "overdue") { why = "condition overdue"; rank = 0; }
+        const st = stateOf(c), ob = oblState(c), ls = licensesFor(c);
+        const ks = liveChecks(c);
+        const gap = ks.some(k => k.level === "bad"), rev = ks.some(k => k.level === "warn");
+        let why = "", rank = 9, cls = "";
+        if (ob === "overdue") { why = "condition overdue"; rank = 0; cls = "bad"; }
+        else if (gap) { why = "pathway gap"; rank = 0.5; cls = "bad"; }
         else if (st === "expiring") { why = Math.min(...ls.filter(isExpiringSoon).map(l => daysUntil(l.expires))) + " days left"; rank = 1; }
         else if (st === "expired") { why = "nothing live"; rank = 2; }
         else if (ob === "soon") { why = "condition due"; rank = 3; }
         else if (st === "pending") { why = ls.filter(l => l.status === "pending").length + " filed"; rank = 4; }
+        else if (rev) { why = "pathway review"; rank = 4.5; cls = "warn"; }
         else if (st === "restricted") { why = "stop-ship"; rank = 6; }
-        rows.push({ c, st, why, rank });
+        if (!why) return;
+        rows.push({ c, st, why, rank, cls });
       });
       rows.sort((a, b) => a.rank - b.rank || a.c.name.localeCompare(b.c.name));
       return rows;
@@ -990,22 +1407,70 @@
       return cs ? `<div class="conds"><div class="ch">conditions</div>${cs}</div>` : "";
     }
 
+    // the destination's standing under the EAR: groups, chart columns, special controls
+    function earBlock(c) {
+      const ec = earCountry(c);
+      if (!ec) return "";
+      const chips = (ec.groups || []).map(g => {
+        const G = ear.countryGroups[g];
+        return `<span class="gchip" title="${esc(G ? G.label + ". " + G.effect + (G.note ? " " + G.note : "") : g)}">${esc(g)}</span>`;
+      }).join("");
+      const chart = ec.chart && ec.chart.length
+        ? ec.chart.map(col => `<span class="colchip" title="${esc(colDesc(col))}">${esc(col)}</span>`).join("")
+        : `<span class="colchip none">${c.origin ? "not a destination" : "see Part 746"}</span>`;
+      const sanctions = (ec.sanctions || []).length ? `<div class="kv"><b>Special controls:</b> ${ec.sanctions.map(esc).join(" &middot; ")}</div>` : "";
+      return `<div class="ear"><div class="ch">EAR position</div>
+        <div class="kv"><b>Country groups:</b> ${chips || "&mdash;"}</div>
+        <div class="kv"><b>Chart columns marked:</b> ${chart}</div>
+        ${sanctions}
+        <p class="earnote">${esc(ec.note || "")}</p></div>`;
+    }
+
+    function excDuties(sym) {
+      const E = (ear.exceptions || []).find(x => x.symbol === sym || x.symbol.split(" / ").includes(sym));
+      if (!E || !E.duties || !E.duties.length) return "";
+      return `<details class="duties"><summary>${esc(E.symbol)} duties (${esc(E.section)})</summary><ul>${E.duties.map(d => `<li>${esc(d)}</li>`).join("")}</ul></details>`;
+    }
+
+    // why this line is controlled, and whether its pathway matches the regulations
+    function controlBlock(c, l) {
+      if (!ear) return "";
+      const g = pwGroup(l), pw = pathwayOf(l), P = (ear.pathways || {})[pw] || {};
+      const p = profileOf(l);
+      const cols = p
+        ? (p.columns || []).map(col => `<span class="colchip" title="${esc(colDesc(col) + (p.columnNotes && p.columnNotes[col] ? " " + p.columnNotes[col] : ""))}">${esc(col)}</span>`).join("")
+          + (p.ei ? `<span class="colchip" title="${esc(colDesc("EI"))}">EI</span>` : "")
+        : "";
+      const k = chartCheck(c, l);
+      return `<div class="ctl">
+        <div class="kv"><span class="pw" style="border-color:${PW_COLOR[g]};color:${PW_COLOR[g]}" title="${esc(P.desc || "")}">${esc(P.label || pw)}${g === "exception" && excOf(l) ? " &middot; " + esc(excOf(l)) : ""}</span>${p ? `<span class="ctlname">${esc(p.name)}</span>` : ""}</div>
+        ${cols ? `<div class="kv"><b>Reasons / columns:</b> ${cols}</div>` : ""}
+        ${p && p.extra && p.extra.length ? `<div class="kv" style="color:#777">${p.extra.map(esc).join("<br>")}</div>` : ""}
+        ${k ? `<div class="chk ${k.level}"><i>${CHK_GLYPH[k.level]}</i><span>${esc(k.text)}</span></div>` : ""}
+        ${g === "exception" ? excDuties(excOf(l)) : ""}
+      </div>`;
+    }
+
     function drawPanel() {
       const el = document.getElementById("panel");
       const c = data.countries.find(x => x.code === selected);
 
       if (!c) {
         const rs = watchlist();
+        const reps = upcomingReports().filter(x => !filter.month || monthKey(x.when) === filter.month);
         el.innerHTML = `<h2>Needs attention</h2>
           <p class="meta">${rs.length} of ${dests().length} destinations</p>
-          <p class="hint">Click any tile, month or table row to open a country. The list below is
-            ordered the way the work falls due: overdue conditions first, then renewals, lapses,
-            conditions coming up, and applications still out.</p>
+          <p class="hint">Click any tile, month, matrix cell or table row to open a country. The list below is
+            ordered the way the work falls due: overdue conditions and pathway gaps first, then renewals,
+            lapses, conditions coming up, applications still out, and lines whose pathway deserves a second look.</p>
           <ul class="watch">${rs.map(r =>
             `<li><button data-code="${esc(r.c.code)}">
               <span class="sw" style="background:${data.statuses[r.st].color}"></span>
               <span>${esc(r.c.name)}</span>
-              <span class="why">${esc(r.why)}</span></button></li>`).join("")}</ul>
+              <span class="why ${r.cls}">${esc(r.why)}</span></button></li>`).join("")}</ul>
+          ${reps.length ? `<div class="sec-h">BIS reporting clocks</div>
+          <ul class="rep">${reps.map(x => `<li title="${esc(x.r.note)}"><span class="when">${esc(x.when)}</span><span>${esc(x.r.label)}</span><span class="cite">${esc(x.r.cite)}</span></li>`).join("")}</ul>
+          <p class="hint" style="margin-top:0.5rem">Owed because of the exceptions in use on the board; hover a line for what it covers.</p>` : ""}
           ${localBar()}`;
         el.querySelectorAll(".watch button").forEach(b =>
           b.addEventListener("click", () => select(b.dataset.code)));
@@ -1017,6 +1482,7 @@
         el.innerHTML = `<h2>${esc(c.name)}${c.aukus ? '<span class="aukus-tag">AUKUS partner</span>' : ""}</h2>
           <p class="meta">Point of export</p>
           <p class="risk">${esc(c.risk)}</p>
+          ${earBlock(c)}
           <p class="screenlink"><a href="export-screener.html">Screen an item before it ships &rarr;</a></p>
           ${localBar()}`;
         wireLocalBar();
@@ -1031,6 +1497,7 @@
         const es = effStatus(l), col = LIC_COLOR[es] || "#555";
         const dd = drawdown(l);
         const days = l.expires ? daysUntil(l.expires) : null;
+        const nlr = pathwayOf(l) === "nlr";
         const when = l.expires
           ? `${esc(l.expires)} <span style="color:${days < 0 ? "#c26a42" : days <= data.expiringWindowDays ? "#d9b348" : "#666"}">(${days < 0 ? Math.abs(days) + " days ago" : days + " days left"})</span>`
           : "&mdash;";
@@ -1043,10 +1510,11 @@
           <div class="kv"><b>Classification:</b> ${esc(l.eccn || "—")} &nbsp;&middot;&nbsp; <b>${esc(l.authority || "—")}</b></div>
           <div class="kv"><b>Type:</b> ${esc(l.type || "—")}</div>
           <div class="kv"><b>End-user:</b> ${esc(l.endUser || "—")}</div>
-          <div class="kv"><b>Issued:</b> ${esc(l.issued || "—")} &nbsp;&middot;&nbsp; <b>Expires:</b> ${when}</div>
+          <div class="kv"><b>${nlr ? "Recorded" : "Issued"}:</b> ${esc(l.issued || "—")} &nbsp;&middot;&nbsp; <b>${nlr ? "Review by" : "Expires"}:</b> ${when}</div>
           ${dd === null ? "" : `<div class="bar"><i style="width:${(dd * 100).toFixed(0)}%;background:${col}"></i></div>
-            <div class="barl">${money(Number(l.valueShipped) || 0)} shipped of ${money(Number(l.valueAuthorized) || 0)} authorized &middot; ${(dd * 100).toFixed(0)}% drawn down</div>`}
+            <div class="barl">${money(Number(l.valueShipped) || 0)} shipped of ${money(Number(l.valueAuthorized) || 0)} ${nlr ? "contracted" : "authorized"} &middot; ${(dd * 100).toFixed(0)}% ${nlr ? "delivered" : "drawn down"}</div>`}
           ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
+          ${controlBlock(c, l)}
           ${condHTML(l)}
           <div class="kv" style="margin-top:0.5rem">
             <b>Set status:</b>
@@ -1065,20 +1533,32 @@
           &nbsp;&middot;&nbsp; ${ls.filter(isLive).length} live of ${ls.length} on file</p>
         <p>${statusChip(st)}</p>
         <p class="risk" style="margin-top:0.7rem">${esc(c.risk || "")}</p>
+        ${earBlock(c)}
         <p class="screenlink"><a href="export-screener.html?dest=${encodeURIComponent(c.name)}">Screen an item for ${esc(c.name)} &rarr;</a></p>
         <div class="sec-h">authorizations (${ls.length})</div>
         ${ls.length ? cards : `<p class="hint">Nothing on file for this destination. Either no controlled
-          item moves here, or shipments are going under an exception that should be documented.</p>`}
+          item moves here, or shipments are going under an exception or an NLR determination that should be documented.</p>`}
         <div class="sec-h">my notes</div>
         <textarea id="note" rows="3" placeholder="What you are waiting on, who owns the renewal, where the file lives…">${esc(local.notes[c.code] || "")}</textarea>
         <details class="addform">
           <summary>Add an authorization</summary>
           <div class="form-grid" style="margin-top:0.7rem">
-            <div class="wide"><label class="fl" for="f-ref">Reference</label><input type="text" id="f-ref" placeholder="BIS / D19xxxxx"></div>
+            <div class="wide"><label class="fl" for="f-ref">Reference</label><input type="text" id="f-ref" placeholder="BIS / D19xxxxx, STA statement, NLR record…"></div>
             <div class="wide"><label class="fl" for="f-item">Item</label><input type="text" id="f-item" placeholder="part number and description"></div>
-            <div><label class="fl" for="f-eccn">ECCN / USML</label><input type="text" id="f-eccn" placeholder="6A003"></div>
+            <div><label class="fl" for="f-eccn">ECCN / USML</label><input type="text" id="f-eccn" placeholder="6A003.b.4.b"></div>
             <div><label class="fl" for="f-auth">Authority</label>
-              <select id="f-auth"><option>BIS (Commerce)</option><option>DDTC (State)</option><option>DOE / NRC</option><option>OFAC</option></select></div>
+              <select id="f-auth"><option>BIS (Commerce)</option><option>DDTC (State)</option><option>DOE / NRC</option><option>OFAC</option><option>EAR · self-determined</option></select></div>
+            <div class="wide"><label class="fl" for="f-pw">Pathway</label>
+              <select id="f-pw">
+                <option value="license">BIS license</option>
+                <option value="exception:STA">License Exception STA</option>
+                <option value="exception:ENC">License Exception ENC</option>
+                <option value="exception:">Other license exception</option>
+                <option value="nlr">No license required (NLR record)</option>
+                <option value="itar-license">ITAR license (DSP-5)</option>
+                <option value="itar-agreement">ITAR agreement (TAA / MLA)</option>
+                <option value="itar-exemption">ITAR exemption</option>
+              </select></div>
             <div class="wide"><label class="fl" for="f-user">End-user</label><input type="text" id="f-user" placeholder="company, city"></div>
             <div><label class="fl" for="f-exp">Expires</label><input type="text" id="f-exp" placeholder="YYYY-MM-DD"></div>
             <div><label class="fl" for="f-st">Status</label>
@@ -1104,12 +1584,16 @@
       el.querySelector("#f-add").addEventListener("click", () => {
         const v = id => (el.querySelector("#" + id).value || "").trim();
         const conds = v("f-cond") ? [{ label: v("f-cond"), due: v("f-cdue"), recurring: v("f-cdue") ? "once" : "standing" }] : [];
-        (local.added[c.code] = local.added[c.code] || []).push({
-          ref: v("f-ref") || "untitled authorization", authority: v("f-auth"), type: "Added on this device",
+        const [pw, exc] = v("f-pw").split(":");
+        const typeLabel = pw === "exception" ? "License Exception " + (exc || "") : pw === "nlr" ? "No license required (NLR)" : "Added on this device";
+        const entry = {
+          ref: v("f-ref") || "untitled authorization", authority: v("f-auth"), type: typeLabel.trim(), pathway: pw,
           item: v("f-item") || "—", eccn: v("f-eccn"), endUser: v("f-user"), issued: data.asOf,
           expires: v("f-exp"), valueAuthorized: Number(v("f-va")) || 0, valueShipped: Number(v("f-vs")) || 0,
           status: v("f-st") || "active", note: "", conditions: conds
-        });
+        };
+        if (pw === "exception" && exc) entry.exception = exc;
+        (local.added[c.code] = local.added[c.code] || []).push(entry);
         saveLocal(); refresh();
       });
       wireLocalBar();
@@ -1133,22 +1617,99 @@
       if (bar) { bar.outerHTML = localBar(); wireLocalBar(); }
     }
 
+    /* ---------- EAR reference section ---------- */
+
+    function drawRef() {
+      const el = document.getElementById("earref");
+      if (!ear) { el.hidden = true; return; }
+      el.hidden = false;
+      const pc = {}, ec = {};
+      dests().forEach(c => licensesFor(c).forEach(l => {
+        const g = pwGroup(l); pc[g] = (pc[g] || 0) + 1;
+        if (g === "exception") { const s = excOf(l); ec[s] = (ec[s] || 0) + 1; }
+      }));
+      const total = Object.values(pc).reduce((a, b) => a + b, 0);
+      const pwRows = Object.keys(PW_LABEL).map(g => {
+        const ids = Object.keys(ear.pathways || {}).filter(k => PW_GROUP[k] === g);
+        const desc = ids.map(k => `<b>${esc(ear.pathways[k].label)}</b> &mdash; ${esc(ear.pathways[k].desc)}`).join("<br>");
+        return `<div class="row"><span class="k"><button class="key" data-pw="${g}"><span class="sw" style="background:${PW_COLOR[g]}"></span>${esc(PW_LABEL[g])}<span class="ct">${pc[g] || 0}</span></button></span><span>${desc}</span></div>`;
+      }).join("");
+      const excRows = (ear.exceptions || []).map(x => {
+        const syms = x.symbol.split(" / ");
+        const used = Object.keys(ec).filter(s => syms.includes(s));
+        const n = used.reduce((a, s) => a + ec[s], 0);
+        const k = n ? `<button class="key" data-exc="${esc(used[0])}">${esc(x.symbol)}<span class="ct">${n}</span></button>` : esc(x.symbol);
+        const duties = n && x.duties && x.duties.length ? `<ul>${x.duties.map(d => `<li>${esc(d)}</li>`).join("")}</ul>` : "";
+        return `<div class="row"><span class="k">${k}<small>${esc(x.section)}</small></span><span><b>${esc(x.name)}.</b> ${esc(x.plain)}${duties}</span></div>`;
+      }).join("");
+      const restr = `<ul>${(ear.exceptionRestrictions || []).map(t => `<li>${esc(t)}</li>`).join("")}</ul>`;
+      const present = {};
+      dests().forEach(c => { const e = earCountry(c); (e ? e.groups || [] : []).forEach(g => (present[g] = present[g] || []).push(c)); });
+      const gRows = Object.keys(ear.countryGroups).filter(g => present[g]).map(g => {
+        const G = ear.countryGroups[g];
+        return `<div class="row"><span class="k"><span class="gchip" style="cursor:default">${esc(g)}</span><small>${esc(G.label)}</small></span>
+          <span>${esc(G.effect)}${G.note ? " " + esc(G.note) : ""}<br>${present[g].map(c => `<span class="cc" data-code="${esc(c.code)}" title="${esc(c.name)}">${esc(c.code)}</span>`).join("")}</span></div>`;
+      }).join("");
+      const colRows = Object.keys(ear.reasons).map(r => {
+        const R_ = ear.reasons[r];
+        return `<div class="row"><span class="k">${esc(r)} &mdash; ${esc(R_.name)}<small>${esc(R_.part)}</small></span><span>${Object.keys(R_.columns).map(col => `<b>${esc(col)}</b> ${esc(R_.columns[col])}`).join("<br>")}</span></div>`;
+      }).join("");
+      const euRows = (ear.endUserControls || []).map(x => `<div class="row"><span class="k">${esc(x.name)}<small>${esc(x.cite)}</small></span><span>${esc(x.what)} <b>Do:</b> ${esc(x.action)}</span></div>`).join("");
+      const embRows = (ear.embargoes || []).map(x => `<div class="row"><span class="k">${esc(x.where)}<small>${esc(x.cite)}</small></span><span>${esc(x.rule)}</span></div>`).join("");
+      const lifeRows = (ear.lifecycle || []).map(x => `<div class="row"><span class="k">${esc(x.stage)}<small>${esc(x.cite)} &middot; ${esc(x.clock)}</small></span><span>${esc(x.what)}</span></div>`).join("");
+      const repRows = (ear.standingReports || []).map(r => `<div class="row"><span class="k">${esc(r.label)}<small>${esc(r.cite)}</small></span><span>${esc(r.note)}</span></div>`).join("");
+      const lenses = `<div class="lens">${(ear.lenses || []).map(x => `<button data-lens="${esc(x.id)}"><b>${esc(x.label)}</b>${esc(x.blurb)}</button>`).join("")}</div>`;
+      const src = (ear.sources || []).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a>`).join(" &middot; ");
+      el.innerHTML = `<h2>EAR / BIS controls in play</h2>
+        <p class="sub">${esc(ear.note)} Regulations as of ${esc(ear.regsAsOf)}.</p>
+        <details open><summary>Ways to organize this portfolio</summary><div class="body">
+          <p style="margin-bottom:0.3rem">The board is one lens. Each button below re-sorts the same ${total} lines through a different one; the point is that each lens surfaces a different kind of mistake.</p>${lenses}</div></details>
+        <details><summary>Pathways and license exceptions <span style="color:#666">${total} lines</span></summary><div class="body">${pwRows}
+          <p style="margin:0.8rem 0 0.2rem"><b>Part 740 license exceptions</b> &mdash; the ones relied on here carry a count and their duties:</p>${excRows}
+          <p style="margin-top:0.7rem"><b>Restrictions on every exception</b></p>${restr}</div></details>
+        <details><summary>Country groups and chart columns on this board</summary><div class="body">${gRows}
+          <p style="margin:0.8rem 0 0.2rem"><b>What the chart columns mean</b></p>${colRows}</div></details>
+        <details><summary>End-user and end-use controls (Part 744)</summary><div class="body">${euRows}</div></details>
+        <details><summary>Embargoes and special controls (Part 746)</summary><div class="body">${embRows}</div></details>
+        <details><summary>License lifecycle and reporting clocks</summary><div class="body">${lifeRows}
+          <p style="margin:0.8rem 0 0.2rem"><b>Standing reports</b></p>${repRows}</div></details>
+        <p class="sub" style="margin-top:0.7rem">Sources: ${src}</p>`;
+      el.querySelectorAll("[data-pw]").forEach(b => b.addEventListener("click", () => { filter.pathway = filter.pathway === b.dataset.pw ? null : b.dataset.pw; refreshViews(); }));
+      el.querySelectorAll("[data-exc]").forEach(b => b.addEventListener("click", () => { filter.exc = filter.exc === b.dataset.exc ? null : b.dataset.exc; refreshViews(); }));
+      el.querySelectorAll(".cc").forEach(b => b.addEventListener("click", () => select(b.dataset.code)));
+      el.querySelectorAll("[data-lens]").forEach(b => b.addEventListener("click", () => applyLens((ear.lenses || []).find(x => x.id === b.dataset.lens))));
+      applyFilter();
+    }
+
+    function applyLens(x) {
+      if (!x) return;
+      if (x.groupBy) { groupBy = x.groupBy; document.getElementById("groupby").value = groupBy; }
+      setView(x.view || "list");
+      document.querySelector(".toolbar").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    /* ---------- views + wiring ---------- */
+
     function setView(v) {
       view = v;
-      document.getElementById("v-board").classList.toggle("on", v === "board");
-      document.getElementById("v-list").classList.toggle("on", v === "list");
+      ["board", "list", "matrix"].forEach(k => document.getElementById("v-" + k).classList.toggle("on", v === k));
       document.getElementById("boardwrap").hidden = v !== "board";
       document.getElementById("listwrap").hidden = v !== "list";
+      document.getElementById("matrixwrap").hidden = v !== "matrix";
+      document.getElementById("groupby").hidden = v !== "list";
       if (v === "list") drawList();
+      if (v === "matrix") drawMatrix();
     }
     // filters changed: everything that depends on them redraws, the data itself has not moved
     function refreshViews() {
       applyFilter();
       if (view === "list") drawList();
+      if (view === "matrix") drawMatrix();
     }
     function refresh() {
-      drawStats(); drawLegend(); drawCalendar(); drawBoard(); drawPanel();
+      drawStats(); drawLegend(); drawCalendar(); drawBoard(); drawRef(); drawPanel();
       if (view === "list") drawList();
+      if (view === "matrix") drawMatrix();
     }
 
     document.getElementById("q").addEventListener("input", e => { query = e.target.value.trim(); refreshViews(); });
@@ -1164,13 +1725,18 @@
     });
     document.getElementById("v-board").addEventListener("click", () => setView("board"));
     document.getElementById("v-list").addEventListener("click", () => setView("list"));
+    document.getElementById("v-matrix").addEventListener("click", () => setView("matrix"));
+    document.getElementById("groupby").addEventListener("change", e => { groupBy = e.target.value; if (view === "list") drawList(); });
     document.getElementById("csv").addEventListener("click", downloadCSV);
 
-    fetch("export-licenses.json", { cache: "no-store" })
-      .then(r => r.json())
-      .then(d => {
-        data = d;
+    Promise.all([
+      fetch("export-licenses.json", { cache: "no-store" }).then(r => r.json()),
+      fetch("ear-controls.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null)
+    ])
+      .then(([d, e]) => {
+        data = d; ear = e;
         document.getElementById("asof").textContent = d.asOf || "—";
+        document.getElementById("earasof").textContent = e && e.regsAsOf ? e.regsAsOf : "not loaded";
         const hash = (location.hash || "").replace("#", "").toUpperCase();
         if (hash && d.countries.some(c => c.code === hash)) selected = hash;
         refresh();
