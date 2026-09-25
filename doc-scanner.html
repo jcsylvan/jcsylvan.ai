@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Marking Scanner — jcsylvan.ai</title>
+  <meta name="description" content="Scan a folder of PDF, Word, PowerPoint, Excel and text files for export control warnings, CUI markings and contract numbers, and get a spreadsheet with every file linked. Runs entirely in your browser.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --rb-w: #f2f2f2; --rb-y: #ffd500; --rb-r: #c41e3a;
+      --rb-o: #ff5800; --rb-b: #0046ad; --rb-g: #009b48;
+      --gold: #f0c040;
+    }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background: #0a0a0a; color: #e0e0e0; min-height: 100vh; padding: 2rem;
+    }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #666; font-size: 0.85rem; }
+    .back-link:hover { color: #e0e0e0; }
+    h1 { font-size: 1.4rem; margin-bottom: 0.25rem; color: var(--gold); font-weight: 600; }
+    .subtitle { color: #666; font-size: 0.85rem; margin-bottom: 1rem; max-width: 720px; line-height: 1.5; }
+
+    /* ---------- hero: the cube ---------- */
+    .hero { display: flex; gap: 2.25rem; align-items: center; margin: 2.75rem 0 2rem; }
+    .hero .text { flex: 1 1 0; }
+    .tagline { color: #aaa; font-size: 0.9rem; line-height: 1.55; max-width: 620px; }
+    .tagline b { color: var(--gold); font-weight: 600; }
+
+    .scene { width: 150px; height: 150px; perspective: 720px; flex: 0 0 auto; margin: 0.75rem 1rem 0.75rem 0.75rem; }
+    .cube {
+      position: relative; width: 100%; height: 100%; transform-style: preserve-3d;
+      animation: tumble 22s linear infinite;
+    }
+    .cube.busy { animation-duration: 5s; }
+    .face {
+      position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 6px; padding: 6px; background: #151515; border-radius: 10px;
+      backface-visibility: hidden;
+    }
+    .face.front  { transform: translateZ(75px); }
+    .face.back   { transform: rotateY(180deg) translateZ(75px); }
+    .face.right  { transform: rotateY(90deg) translateZ(75px); }
+    .face.left   { transform: rotateY(-90deg) translateZ(75px); }
+    .face.top    { transform: rotateX(90deg) translateZ(75px); }
+    .face.bottom { transform: rotateX(-90deg) translateZ(75px); }
+    .st { border-radius: 4px; background: #333; transition: background 0.6s ease; }
+    @keyframes tumble {
+      0%   { transform: rotateX(-22deg) rotateY(0deg); }
+      50%  { transform: rotateX(-30deg) rotateY(180deg); }
+      100% { transform: rotateX(-22deg) rotateY(360deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cube, .cube.busy { animation: none; transform: rotateX(-26deg) rotateY(-38deg); }
+    }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin: 0.9rem 0 0; }
+    .legend span { display: inline-flex; align-items: center; gap: 0.4rem; color: #888; font-size: 0.72rem; }
+    .sw { width: 0.8rem; height: 0.8rem; border-radius: 2px; display: inline-block; flex: 0 0 auto; }
+    .sw.w { background: var(--rb-w); } .sw.y { background: var(--rb-y); } .sw.r { background: var(--rb-r); }
+    .sw.o { background: var(--rb-o); } .sw.b { background: var(--rb-b); } .sw.g { background: var(--rb-g); }
+
+    /* ---------- panels and form ---------- */
+    .panel { background: #111; border: 1px solid #222; border-radius: 6px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .panel h2 { font-size: 0.9rem; color: #999; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+    label { display: block; color: #888; font-size: 0.8rem; margin-bottom: 0.3rem; }
+    .hint { color: #555; font-size: 0.75rem; margin-top: 0.4rem; line-height: 1.5; }
+    input[type="text"], input[type="number"] {
+      width: 100%; background: #1a1a1a; border: 1px solid #333; border-radius: 4px; color: #e0e0e0;
+      font-family: inherit; font-size: 0.9rem; padding: 0.55rem 0.65rem; outline: none;
+    }
+    input[type="text"]:focus, input[type="number"]:focus { border-color: var(--gold); }
+    input::placeholder { color: #444; }
+    .opts { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; margin-top: 1rem; align-items: center; }
+    .opts label { display: inline-flex; align-items: center; gap: 0.45rem; margin: 0; color: #aaa; cursor: pointer; }
+    .opts input[type="checkbox"] { accent-color: var(--gold); width: 0.95rem; height: 0.95rem; }
+    .opts input[type="number"] { width: 4.2rem; padding: 0.3rem 0.4rem; font-size: 0.85rem; }
+    .pathrow { margin-top: 1rem; }
+
+    .drop {
+      border: 2px dashed #333; border-radius: 8px; padding: 1.25rem; display: flex; gap: 1.25rem;
+      align-items: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; outline: none;
+    }
+    .drop:hover, .drop:focus-visible, .drop.over { border-color: var(--gold); background: #15120a; }
+    .drop svg { flex: 0 0 auto; }
+    .drop .net-ico rect { fill: #1a1a1a; stroke: #555; stroke-width: 1.5; transition: stroke 0.15s, fill 0.15s; }
+    .drop.over .net-ico rect, .drop:hover .net-ico rect { stroke: var(--gold); }
+    .drop .dt { font-size: 0.95rem; color: #e0e0e0; }
+    .drop .ds { font-size: 0.78rem; color: #777; margin-top: 0.3rem; line-height: 1.5; }
+    .drop .ds b { color: var(--gold); font-weight: 600; }
+
+    .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.1rem; align-items: center; }
+    button.go, button.alt {
+      border: none; border-radius: 5px; font-family: inherit; font-size: 0.9rem; font-weight: 600;
+      padding: 0.8rem 1.4rem; cursor: pointer; letter-spacing: 0.03em; white-space: nowrap;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    button.go { background: var(--gold); color: #0a0a0a; }
+    button.go:hover { background: #ffd35a; }
+    button.go:disabled { background: #4a3a10; color: #8a7a40; cursor: default; }
+    button.alt { background: none; color: #999; border: 1px solid #333; }
+    button.alt:hover { color: #e0e0e0; border-color: #888; }
+
+    /* ---------- progress ---------- */
+    #progress { display: none; }
+    .bar { height: 8px; background: #1a1a1a; border-radius: 4px; overflow: hidden; margin: 0.5rem 0; }
+    .bar .fill { height: 100%; width: 0; background: var(--gold); transition: width 0.15s; }
+    .pl { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.8rem; color: #999; flex-wrap: wrap; }
+    .pl .cur { color: #ccc; word-break: break-all; }
+
+    /* ---------- results ---------- */
+    #results { display: none; }
+    .stats { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .stat { border: 1px solid #2a2a2a; border-radius: 999px; padding: 0.3rem 0.8rem; font-size: 0.75rem; color: #aaa; display: inline-flex; gap: 0.45rem; align-items: center; }
+    .stat b { color: #e0e0e0; font-weight: 600; }
+
+    .netwrap { display: flex; justify-content: center; margin: 0.5rem 0 1.5rem; }
+    .net {
+      --fs: 84px;
+      display: grid; gap: 10px;
+      grid-template-columns: repeat(4, var(--fs));
+      grid-template-areas: ". top . ." "left front right back" ". bottom . .";
+    }
+    .nf { width: var(--fs); }
+    .nf .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; background: #151515; border-radius: 7px; width: var(--fs); height: var(--fs); }
+    .nf .grid span { border-radius: 3px; background: #1c1c1c; border: 1px solid #222; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+    .nf .grid span.lit { border-color: transparent; }
+    .nf .lbl { text-align: center; color: #777; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.35rem; }
+    .nf.top { grid-area: top; } .nf.left { grid-area: left; } .nf.front { grid-area: front; }
+    .nf.right { grid-area: right; } .nf.back { grid-area: back; } .nf.bottom { grid-area: bottom; }
+
+    .filterrow { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .filterrow input[type="text"] { max-width: 320px; }
+    .filterrow .cnt { color: #666; font-size: 0.75rem; }
+    .tblwrap { overflow-x: auto; border: 1px solid #222; border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th { text-align: left; color: #777; font-weight: 500; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.6rem 0.7rem; border-bottom: 1px solid #222; background: #0d0d0d; white-space: nowrap; }
+    td { padding: 0.55rem 0.7rem; border-bottom: 1px solid #1a1a1a; vertical-align: top; }
+    tr.r { cursor: pointer; }
+    tr.r:hover td { background: #141414; }
+    td.fn { min-width: 220px; }
+    td.fn .nm { color: #e0e0e0; word-break: break-all; }
+    td.fn .sub { color: #555; font-size: 0.7rem; margin-top: 0.15rem; }
+    .chips { display: inline-flex; gap: 3px; margin-right: 0.5rem; vertical-align: middle; }
+    .chips i { width: 0.7rem; height: 0.7rem; border-radius: 2px; display: inline-block; background: #222; }
+    .chips i.r { background: var(--rb-r); } .chips i.y { background: var(--rb-y); } .chips i.b { background: var(--rb-b); }
+    .chips i.g { background: var(--rb-g); } .chips i.o { background: var(--rb-o); } .chips i.w { background: var(--rb-w); }
+    td.yes { color: #ff7a6f; font-weight: 600; }
+    td.yes.cui { color: var(--rb-y); }
+    td.no { color: #555; }
+    td.ct { white-space: nowrap; color: #9ec5ff; }
+    td.ct .more { color: #666; font-size: 0.7rem; white-space: normal; }
+    td.nt { color: #888; font-size: 0.74rem; min-width: 160px; }
+    tr.ev { display: none; }
+    tr.ev.open { display: table-row; }
+    tr.ev td { background: #0d0d0d; color: #aaa; font-size: 0.74rem; line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
+    tr.ev td .k { color: #666; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.64rem; }
+    .linknote { color: #8a7a40; background: #15120a; border: 1px solid #2e2913; border-radius: 5px; padding: 0.55rem 0.75rem; font-size: 0.74rem; line-height: 1.5; margin-top: 0.9rem; }
+    .linknote b { color: var(--gold); }
+    .error { color: #d17f7f; font-size: 0.85rem; margin-top: 0.75rem; }
+
+    .disclaimer { margin-top: 2rem; border-top: 1px solid #1c1c1c; padding-top: 1rem; color: #555; font-size: 0.72rem; line-height: 1.65; }
+    .disclaimer b { color: #777; }
+
+    @media (max-width: 640px) {
+      body { padding: 1rem; }
+      .hero { flex-direction: column; align-items: flex-start; gap: 1.5rem; margin-top: 2.5rem; }
+      .scene { width: 130px; height: 130px; align-self: center; margin: 1rem 0; }
+      .face.front  { transform: translateZ(65px); } .face.back { transform: rotateY(180deg) translateZ(65px); }
+      .face.right  { transform: rotateY(90deg) translateZ(65px); } .face.left { transform: rotateY(-90deg) translateZ(65px); }
+      .face.top    { transform: rotateX(90deg) translateZ(65px); } .face.bottom { transform: rotateX(-90deg) translateZ(65px); }
+      .net { --fs: 66px; gap: 7px; }
+      .actions { flex-direction: column; align-items: stretch; }
+      button.go, button.alt { width: 100%; }
+      .drop { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="tools.html" class="back-link">← tools</a>
+    <h1>Document Marking Scanner</h1>
+    <p class="subtitle">
+      Point it at a folder of PDF, Word, PowerPoint, Excel and text files. For each one it says whether the
+      document carries an <b>export control warning</b> (ITAR or EAR), whether it carries a <b>CUI marking</b>
+      (Controlled Unclassified Information), and which <b>US government contract number</b> it cites. Then it
+      hands you a spreadsheet with every file name linked to the file. Scanned pages are read with OCR.
+      Everything runs in this browser tab. Nothing is uploaded.
+    </p>
+
+    <div class="hero">
+      <div class="scene" aria-hidden="true"><div class="cube" id="cube"></div></div>
+      <div class="text">
+        <p class="tagline">
+          A folder of documents is a <b>scrambled cube</b>. Drop it here and it comes out <b>solved</b>:
+          one row per file, every marking in its place, every file name a click away.
+        </p>
+        <div class="legend" aria-label="Colour key">
+          <span><i class="sw r"></i>export control warning</span>
+          <span><i class="sw y"></i>CUI marking</span>
+          <span><i class="sw b"></i>contract number found</span>
+          <span><i class="sw g"></i>clean, no markings</span>
+          <span><i class="sw o"></i>read with OCR</span>
+          <span><i class="sw w"></i>unreadable or no text</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="setup">
+      <h2>Folder</h2>
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose a folder to scan">
+        <svg class="net-ico" width="64" height="48" viewBox="0 0 64 48" aria-hidden="true">
+          <rect x="17" y="1"  width="14" height="14" rx="2"/>
+          <rect x="1"  y="17" width="14" height="14" rx="2"/>
+          <rect x="17" y="17" width="14" height="14" rx="2"/>
+          <rect x="33" y="17" width="14" height="14" rx="2"/>
+          <rect x="49" y="17" width="14" height="14" rx="2"/>
+          <rect x="17" y="33" width="14" height="14" rx="2"/>
+        </svg>
+        <div>
+          <div class="dt">Drop a folder here, or click to choose one</div>
+          <div class="ds">
+            Reads <b>.pdf</b>, <b>.docx</b>, <b>.pptx</b>, <b>.xlsx</b>, <b>.txt</b> and <b>.md</b>, including headers,
+            footers, slide notes and spreadsheet headers. Files never leave this computer.
+            <a href="#" id="pickFiles">Choose individual files instead</a>.
+          </div>
+        </div>
+      </div>
+      <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+      <input type="file" id="filesInput" multiple hidden>
+
+      <div class="opts">
+        <label><input type="checkbox" id="optSub" checked> include subfolders</label>
+        <label><input type="checkbox" id="optOcr" checked> read scanned pages with OCR</label>
+        <label>max OCR pages per file <input type="number" id="optOcrPages" value="3" min="0" max="50"></label>
+      </div>
+
+      <div class="pathrow">
+        <label for="basePath">Full path of the folder on your computer (optional)</label>
+        <input type="text" id="basePath" placeholder="e.g. C:\Projects\Contracts  or  /Users/you/Contracts" autocomplete="off" spellcheck="false">
+        <p class="hint">
+          The browser keeps a folder's location to itself, so by default the spreadsheet links are relative
+          and work when the spreadsheet is saved next to the folder. Paste the folder's full path here and the
+          links will open the files from anywhere on this computer.
+        </p>
+      </div>
+      <div class="error" id="setupErr"></div>
+    </div>
+
+    <div class="panel" id="progress">
+      <h2>Scanning</h2>
+      <div class="pl"><span id="pCount">0 / 0</span><span class="cur" id="pCur"></span></div>
+      <div class="bar"><div class="fill" id="pFill"></div></div>
+      <div class="actions"><button class="alt" id="cancelBtn">Cancel</button></div>
+    </div>
+
+    <div class="panel" id="results">
+      <h2>Solved</h2>
+      <div class="stats" id="stats"></div>
+      <div class="netwrap"><div class="net" id="net" aria-label="Results by category"></div></div>
+      <div class="actions">
+        <button class="go" id="dlXlsx">Download spreadsheet (.xlsx)</button>
+        <button class="alt" id="dlCsv">Download CSV</button>
+        <button class="alt" id="againBtn">Scan another folder</button>
+      </div>
+      <div class="linknote" id="linknote"></div>
+      <div class="filterrow" style="margin-top:1.25rem">
+        <input type="text" id="filter" placeholder="filter by file name, contract or note" autocomplete="off">
+        <span class="cnt" id="filterCnt"></span>
+      </div>
+      <div class="tblwrap">
+        <table id="tbl">
+          <thead><tr><th>File</th><th>Type</th><th>Export</th><th>CUI</th><th>Contract</th><th>Notes</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <p class="hint">Click a row to see the text that triggered each flag.</p>
+    </div>
+
+    <div class="disclaimer">
+      <b>A keyword screen, not a compliance determination.</b> The scanner looks for the words and patterns
+      that markings normally use (ITAR, EAR, the DoD export warning, CUI banners and designation blocks,
+      federal contract number formats). A document that says "this is <i>not</i> CUI" will still be flagged,
+      and a marking hidden in an image on an otherwise text page may be missed. Open the row to read the
+      exact text that fired, and treat every Yes and every No as a prompt to look, not a verdict.
+      Legacy <b>.doc</b>, <b>.ppt</b> and <b>.xls</b> files cannot be read here: save them in the modern
+      format first. OCR is best-effort and slow; it runs only on pages with little or no selectable text.
+      Libraries and OCR language data load from public CDNs, but your documents stay in this tab.
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+  <script>
+    /* =========================================================================
+       Document Marking Scanner
+       Everything below runs in the browser. Files are read locally and never uploaded.
+       ========================================================================= */
+
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const extOf = name => { const m = /\.([A-Za-z0-9]+)$/.exec(name); return m ? m[1].toLowerCase() : ""; };
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    const TYPES = { pdf: "PDF", docx: "DOCX", docm: "DOCX", pptx: "PPTX", pptm: "PPTX", xlsx: "XLSX", xlsm: "XLSX", txt: "TXT", md: "MD", markdown: "MD" };
+    const LEGACY = { doc: "DOC", ppt: "PPT", xls: "XLS", rtf: "RTF" };
+    const COLORS = { w: "#f2f2f2", y: "#ffd500", r: "#c41e3a", o: "#ff5800", b: "#0046ad", g: "#009b48" };
+
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
+
+    /* ---------- text normalisation ---------- */
+    function normalizeText(s) {
+      s = String(s || "").normalize("NFKC");
+      s = s.replace(/[\u2010-\u2015\u2212\u2043]/g, "-");
+      s = s.replace(/\u00a0/g, " ");
+      s = s.replace(/[\u00ad\u200b\u200c\u200d\ufeff]/g, "");
+      s = s.replace(/-[ \t]*\r?\n[ \t]*/g, "-");
+      s = s.replace(/[ \t]+/g, " ");
+      s = s.replace(/ *\r?\n */g, "\n").replace(/\n{2,}/g, "\n");
+      return s.trim();
+    }
+
+    // OCR reads capital I as l or 1 and 0 as O. Repair the few shapes that matter here:
+    // the CUI banner, and the year / serial groups of a hyphenated federal contract number.
+    function fixOcrText(s) {
+      // A banner sits on a line of its own, or opens a "CUI//..." category string.
+      s = s.replace(/^\s*cu[il1|]\s*$/gim, "CUI").replace(/\bcu[il1|](?=\/\/)/gi, "CUI");
+      s = s.replace(/\bCU[l1|]\b/g, "CUI");
+      s = s.replace(/\b[Il1]TAR\b/g, "ITAR");
+      s = s.replace(/\b([A-Z][A-Z0-9]{5})-([0-9O]{2})-([A-Z0-9])-([0-9OIl]{4})\b/g, (m, a, b, c, d) =>
+        a + "-" + b.replace(/O/g, "0") + "-" + c + "-" + d.replace(/O/g, "0").replace(/[Il]/g, "1"));
+      return s;
+    }
+
+    /* ---------- detection patterns ---------- */
+    // Export control, tier A: any hit means Yes.
+    const EXPORT_A = [
+      ["ITAR", /\bITAR\b/g],
+      ["International Traffic in Arms Regulations", /\bInternational Traffic in Arms Regulations?\b/gi],
+      ["Arms Export Control Act", /\bArms Export Control Act\b/gi],
+      ["Export Administration Regulations", /\bExport Administration (?:Regulations?|Act)\b/gi],
+      ["Export Control Reform Act", /\bExport Control Reform Act\b/gi],
+      ["EAR99", /\bEAR99\b/g],
+      ["ECCN", /\bECCN\b/g],
+      ["export controlled", /\bexport[- ]controlled\b/gi],
+      ["export control", /\bexport controls?\b/gi],
+      ["export restricted", /\bexport[- ]restricted\b|\bwhose export is restricted\b|\bexport of which is restricted\b/gi],
+      ["subject to export laws", /\bsubject to (?:the )?(?:U\.?S\.? )?export (?:control )?(?:laws|regulations)\b/gi],
+      ["export license", /\bexport licen[cs]es?\b|\bdeemed export\b/gi],
+      ["22 CFR 120-130", /\b22 C\.?F\.?R\.? (?:parts? )?1[23]\d\b/gi],
+      ["15 CFR 730-774", /\b15 C\.?F\.?R\.? (?:parts? )?7[3-7]\d\b/gi],
+      ["22 USC 2751", /\b22,? U\.?S\.?C\.?,? (?:§ ?|Sec\.? ?)?2751\b/gi],
+      ["50 USC 2401 / 4801", /\b50,? U\.?S\.?C\.?,? (?:App\.?,? ?)?(?:§ ?|Sec\.? ?)?(?:2401|4801)\b/gi],
+      ["DoDD 5230.25", /\bDoDD? ?(?:Directive )?5230\.25\b/gi],
+      ["USML", /\bUSML\b/g],
+      ["Munitions List / CCL", /\bUnited States Munitions List\b|\bCommerce Control List\b/gi],
+      ["export laws", /\bviolations? of these export laws\b/gi],
+    ];
+    // Tier B: only counts when the surrounding text (80 characters either side) matches the context.
+    const EXPORT_B = [
+      ["EAR", /\bEAR\b/g, /export|controlled|15 CFR|ECCN|commerce|subject to|under the/i],
+      ["Wassenaar", /\bWassenaar\b/gi, /export|arrangement/i],
+    ];
+
+    // CUI, tier A: any hit means Yes.
+    const CUI_A = [
+      ["CUI", /\bCUI\b/g],
+      ["Controlled Unclassified Information", /\bControlled Unclassified Information\b/gi],
+      ["Controlled by:", /\bControlled by:/gi],
+      ["CUI Category", /\bCUI Categor(?:y|ies)\b/gi],
+      ["CUI Basic / Specified", /\bCUI (?:Basic|Specified)\b/gi],
+      ["SP- category", /\bSP-(?:CTI|EXPT|PROPIN|PRVCY|ISVI|OPSEC)\b/g],
+      ["Dissemination Control", /\b(?:Limited )?Dissemination Controls?\b|\bDistribution\/Dissemination Control\b/gi],
+      ["32 CFR 2002", /\b32 C\.?F\.?R\.? (?:part )?2002\b/gi],
+      ["DoDI 5200.48", /\bDoDI 5200\.48\b/gi],
+    ];
+    // Tier B: extra evidence only when a tier A hit sits in the same segment.
+    const CUI_B = [
+      ["CTI", /\bCTI\b/g],
+      ["dissemination marking", /\b(?:NOFORN|FEDCON|FED ONLY|NOCON|DL ONLY|REL TO|DISPLAY ONLY)\b/g],
+      ["Designating Agency", /\bDesignating Agency\b/gi],
+      ["POC:", /\bPOC:/g],
+    ];
+    const FOUO_RE = /\bFOUO\b|\bFor Official Use Only\b/gi;
+
+    // Contract numbers.
+    const CONTRACT_LABELED = /\b(?:prime\s+|sub)?contract\s*(?:no\.?|number|num\.?|#|:)\s*:?\s*\n?\s*([A-Za-z0-9][A-Za-z0-9./-]{4,29})/gi;
+    const AWARD_LABELED = /\baward\s*(?:no\.?|number|#)\s*:?\s*\n?\s*([A-Za-z0-9][A-Za-z0-9./-]{4,29})/gi;
+    const CONTRACT_STRUCTURED = [
+      ["PIID", /(^|[^A-Z0-9])([A-Z][A-Z0-9]{5}-\d{2}-[A-Z0-9]-[A-Z0-9]{4})(?![A-Z0-9])/g],
+      ["PIID (no hyphens)", /(^|[^A-Z0-9])([A-Z][A-Z0-9]{5}\d{2}[ABCDFGHKLMPRSTUV]\d{4})(?![A-Z0-9])/g],
+      ["NASA", /(^|[^A-Z0-9])(80[A-Z]{4}\d{2}[A-Z]\d{4}|NN[A-Z]\d{2}[A-Z]{2}\d{2,3}[A-Z])(?![A-Z0-9])/g],
+      ["DOE", /(^|[^A-Z0-9])(DE-[A-Z]{2}\d{2}-\d{2}[A-Z]{2}\d{5}|DE-[A-Z]{2}\d{7})(?![A-Z0-9])/g],
+    ];
+
+    function snippet(text, start, end, width) {
+      width = width || 40;
+      const a = Math.max(0, start - width), b = Math.min(text.length, end + width);
+      let s = text.slice(a, b).replace(/\s+/g, " ").trim();
+      if (a > 0) s = "…" + s;
+      if (b < text.length) s = s + "…";
+      return s;
+    }
+
+    function findHits(segments, patterns, kind, limit) {
+      const hits = [];
+      for (const seg of segments) {
+        const text = seg.norm;
+        for (const [name, re] of patterns) {
+          for (const m of text.matchAll(re)) {
+            hits.push({ kind, name, matched: m[0], location: seg.location, snippet: snippet(text, m.index, m.index + m[0].length) });
+            if (hits.length >= (limit || 40)) return hits;
+          }
+        }
+      }
+      return hits;
+    }
+
+    function findContextHits(segments, patterns, kind) {
+      const hits = [];
+      for (const seg of segments) {
+        const text = seg.norm;
+        for (const [name, re, ctx] of patterns) {
+          for (const m of text.matchAll(re)) {
+            const win = text.slice(Math.max(0, m.index - 80), m.index + m[0].length + 80);
+            if (ctx.test(win)) hits.push({ kind, name, matched: m[0], location: seg.location, snippet: snippet(text, m.index, m.index + m[0].length) });
+            if (hits.length >= 20) return hits;
+          }
+        }
+      }
+      return hits;
+    }
+
+    function detectExport(segments) {
+      return findHits(segments, EXPORT_A, "export").concat(findContextHits(segments, EXPORT_B, "export"));
+    }
+
+    function detectCui(segments) {
+      const a = findHits(segments, CUI_A, "cui");
+      const withA = new Set(a.map(h => h.location));
+      const b = findHits(segments.filter(s => withA.has(s.location)), CUI_B, "cui");
+      return a.concat(b);
+    }
+
+    function detectFouo(segments) {
+      return findHits(segments, [["FOUO", FOUO_RE]], "fouo", 5);
+    }
+
+    function cleanContract(v) {
+      v = String(v || "").toUpperCase().replace(/[.,;:)]+$/, "").replace(/\/[A-Z]\d+$/, "");
+      if (v.length < 5 || !/\d/.test(v)) return null;
+      if (/^(?:19|20)\d{2}$/.test(v)) return null;
+      if (/^\d{1,5}$/.test(v)) return null;
+      return v;
+    }
+
+    function detectContracts(segments) {
+      const labeled = [], structured = [];
+      for (const seg of segments) {
+        const text = seg.norm;
+        for (const re of [CONTRACT_LABELED, AWARD_LABELED]) {
+          for (const m of text.matchAll(re)) {
+            const v = cleanContract(m[1]);
+            if (v) labeled.push({ value: v, name: "labeled", location: seg.location, snippet: snippet(text, m.index, m.index + m[0].length) });
+          }
+        }
+        for (const [name, re] of CONTRACT_STRUCTURED) {
+          for (const m of text.matchAll(re)) {
+            const start = m.index + m[1].length;
+            structured.push({ value: m[2].toUpperCase(), name, location: seg.location, snippet: snippet(text, start, start + m[2].length) });
+          }
+        }
+      }
+      const primary = labeled[0] || structured[0] || null;
+      const seen = new Set(primary ? [primary.value] : []);
+      const others = [];
+      for (const h of labeled.concat(structured)) {
+        if (!seen.has(h.value)) { seen.add(h.value); others.push(h.value); }
+      }
+      return { primary, others: others.slice(0, 10), more: Math.max(0, others.length - 10) };
+    }
+
+    function formatEvidence(exportHits, cuiHits, contract) {
+      const parts = [];
+      const fmt = (label, hits) => {
+        if (!hits.length) return;
+        const seen = new Set();
+        const picked = [];
+        for (const h of hits) { if (!seen.has(h.name)) { seen.add(h.name); picked.push(h); } if (picked.length >= 2) break; }
+        parts.push(label + ": " + picked.map(h => "[" + h.location + "] \"" + h.snippet + "\"").join(" / "));
+      };
+      fmt("Export", exportHits);
+      fmt("CUI", cuiHits);
+      if (contract.primary) parts.push("Contract: [" + contract.primary.location + "] \"" + contract.primary.snippet + "\"");
+      let s = parts.join(" | ");
+      if (s.length > 600) s = s.slice(0, 597) + "…";
+      return s;
+    }
+
+    /* ---------- text extraction ---------- */
+    function parseXml(str) {
+      const doc = new DOMParser().parseFromString(str, "application/xml");
+      if (doc.getElementsByTagName("parsererror").length) throw new Error("malformed XML part");
+      return doc;
+    }
+
+    // One line per paragraph; works for Word (w:p / w:t), PowerPoint and drawings (a:p / a:t).
+    function paragraphLines(doc) {
+      const out = [];
+      let cur = [], lastP = null;
+      const ts = doc.getElementsByTagNameNS("*", "t");
+      for (let i = 0; i < ts.length; i++) {
+        const t = ts[i];
+        let p = t.parentNode;
+        while (p && p.nodeType === 1 && p.localName !== "p") p = p.parentNode;
+        if (p !== lastP) { if (cur.length) out.push(cur.join("")); cur = []; lastP = p; }
+        cur.push(t.textContent);
+      }
+      if (cur.length) out.push(cur.join(""));
+      // Word writes text boxes twice (new markup plus a fallback); drop consecutive duplicates.
+      return out.filter((l, i) => l.trim() && (i === 0 || l !== out[i - 1]));
+    }
+
+    const numOf = n => parseInt((/(\d+)\.xml$/.exec(n) || [0, 0])[1], 10) || 0;
+
+    async function extractDocx(file) {
+      const zip = await JSZip.loadAsync(await file.arrayBuffer());
+      const names = Object.keys(zip.files);
+      const pick = re => names.filter(n => re.test(n)).sort((a, b) => numOf(a) - numOf(b));
+      const parts = [
+        ...pick(/^word\/document\.xml$/).map(n => [n, "body"]),
+        ...pick(/^word\/header\d*\.xml$/).map(n => [n, "header"]),
+        ...pick(/^word\/footer\d*\.xml$/).map(n => [n, "footer"]),
+        ...pick(/^word\/footnotes\.xml$/).map(n => [n, "footnotes"]),
+        ...pick(/^word\/endnotes\.xml$/).map(n => [n, "endnotes"]),
+      ];
+      if (!parts.length) throw new Error("not a Word document");
+      const segments = [];
+      for (const [n, loc] of parts) {
+        const lines = paragraphLines(parseXml(await zip.file(n).async("string")));
+        if (lines.length) segments.push({ location: loc, text: lines.join("\n") });
+      }
+      return { segments, notes: [], ocrPages: 0 };
+    }
+
+    async function extractPptx(file) {
+      const zip = await JSZip.loadAsync(await file.arrayBuffer());
+      const names = Object.keys(zip.files);
+      const pick = re => names.filter(n => re.test(n)).sort((a, b) => numOf(a) - numOf(b));
+      const groups = [
+        [/^ppt\/slides\/slide\d+\.xml$/, n => "slide " + numOf(n)],
+        [/^ppt\/notesSlides\/notesSlide\d+\.xml$/, n => "slide " + numOf(n) + " notes"],
+        [/^ppt\/slideMasters\/slideMaster\d+\.xml$/, n => "master " + numOf(n)],
+        [/^ppt\/slideLayouts\/slideLayout\d+\.xml$/, n => "layout " + numOf(n)],
+      ];
+      const segments = [];
+      let any = false;
+      for (const [re, loc] of groups) {
+        for (const n of pick(re)) {
+          any = true;
+          const lines = paragraphLines(parseXml(await zip.file(n).async("string")));
+          if (lines.length) segments.push({ location: loc(n), text: lines.join("\n") });
+        }
+      }
+      if (!any) throw new Error("not a PowerPoint document");
+      return { segments, notes: [], ocrPages: 0 };
+    }
+
+    function stripHeaderFooterCodes(s) {
+      return String(s).replace(/&"[^"]*"/g, "").replace(/&K[0-9A-Fa-f]{6}/g, "").replace(/&\d+/g, "")
+        .replace(/&[A-Za-z]/g, "").replace(/&&/g, "&").replace(/\s+/g, " ").trim();
+    }
+
+    async function extractXlsx(file) {
+      const zip = await JSZip.loadAsync(await file.arrayBuffer());
+      const names = Object.keys(zip.files);
+      const segments = [];
+      const shared = [];
+      const ss = zip.file("xl/sharedStrings.xml");
+      if (ss) {
+        const sis = parseXml(await ss.async("string")).getElementsByTagNameNS("*", "si");
+        for (let i = 0; i < sis.length; i++) {
+          const ts = sis[i].getElementsByTagNameNS("*", "t");
+          shared.push(Array.from(ts).map(t => t.textContent).join(""));
+        }
+      }
+      // Sheet names from the workbook relationships; fall back to the part name.
+      const sheetNames = {};
+      try {
+        const wbDoc = parseXml(await zip.file("xl/workbook.xml").async("string"));
+        const rels = parseXml(await zip.file("xl/_rels/workbook.xml.rels").async("string"));
+        const relMap = {};
+        const rs = rels.getElementsByTagNameNS("*", "Relationship");
+        for (let i = 0; i < rs.length; i++) relMap[rs[i].getAttribute("Id")] = rs[i].getAttribute("Target");
+        const sheets = wbDoc.getElementsByTagNameNS("*", "sheet");
+        for (let i = 0; i < sheets.length; i++) {
+          const s = sheets[i];
+          const rid = s.getAttribute("r:id") || s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "id");
+          let target = relMap[rid] || "";
+          target = target.replace(/^\/?xl\//, "").replace(/^\//, "");
+          sheetNames["xl/" + target] = s.getAttribute("name");
+        }
+      } catch (e) { /* names are cosmetic */ }
+
+      const sheetParts = names.filter(n => /^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort((a, b) => numOf(a) - numOf(b));
+      if (!sheetParts.length) throw new Error("not an Excel workbook");
+      for (const n of sheetParts) {
+        const sname = sheetNames[n] || n.replace(/^xl\/worksheets\//, "").replace(/\.xml$/, "");
+        const doc = parseXml(await zip.file(n).async("string"));
+        const rows = doc.getElementsByTagNameNS("*", "row");
+        const limit = Math.min(rows.length, 20000);
+        for (let r = 0; r < limit; r++) {
+          const row = rows[r];
+          const cells = row.getElementsByTagNameNS("*", "c");
+          const vals = [];
+          for (let c = 0; c < cells.length; c++) {
+            const cell = cells[c], t = cell.getAttribute("t");
+            let v = "";
+            if (t === "s") {
+              const vEl = cell.getElementsByTagNameNS("*", "v")[0];
+              v = vEl ? (shared[parseInt(vEl.textContent, 10)] || "") : "";
+            } else if (t === "inlineStr") {
+              v = Array.from(cell.getElementsByTagNameNS("*", "t")).map(x => x.textContent).join("");
+            } else {
+              const vEl = cell.getElementsByTagNameNS("*", "v")[0];
+              v = vEl ? vEl.textContent : "";
+            }
+            if (v) vals.push(v);
+          }
+          if (vals.length) segments.push({ location: sname + " row " + (row.getAttribute("r") || (r + 1)), text: vals.join(" | ") });
+        }
+        if (rows.length > limit) segments.push({ location: sname, text: "" , note: "only the first 20,000 rows of " + sname + " were read" });
+        const hf = doc.getElementsByTagNameNS("*", "headerFooter")[0];
+        if (hf) {
+          const parts = [];
+          for (let i = 0; i < hf.children.length; i++) parts.push(stripHeaderFooterCodes(hf.children[i].textContent));
+          const txt = parts.filter(Boolean).join("\n");
+          if (txt) segments.push({ location: sname + " header/footer", text: txt });
+        }
+      }
+      for (const n of names.filter(n => /^xl\/drawings\/drawing\d+\.xml$/.test(n))) {
+        const lines = paragraphLines(parseXml(await zip.file(n).async("string")));
+        if (lines.length) segments.push({ location: "text box", text: lines.join("\n") });
+      }
+      const notes = segments.filter(s => s.note).map(s => s.note);
+      return { segments: segments.filter(s => s.text), notes, ocrPages: 0 };
+    }
+
+    async function extractPlain(file) {
+      const text = await file.text();
+      return { segments: text.trim() ? [{ location: "body", text }] : [], notes: [], ocrPages: 0 };
+    }
+
+    let ocrWorker = null, ocrWorkerPromise = null;
+    async function getOcrWorker() {
+      if (!window.Tesseract) throw new Error("OCR library did not load");
+      if (ocrWorker) return ocrWorker;
+      if (!ocrWorkerPromise) ocrWorkerPromise = Tesseract.createWorker("eng", 1).then(w => (ocrWorker = w));
+      return ocrWorkerPromise;
+    }
+
+    async function extractPdf(file, opts, onProgress) {
+      if (!window.pdfjsLib) throw new Error("PDF library did not load");
+      const data = new Uint8Array(await file.arrayBuffer());
+      let pdf;
+      try {
+        pdf = await pdfjsLib.getDocument({ data, password: "" }).promise;
+      } catch (e) {
+        if (e && e.name === "PasswordException") return { segments: [], notes: ["encrypted PDF (password required)"], ocrPages: 0 };
+        throw e;
+      }
+      const segments = [], notes = [];
+      let ocrPages = 0, ocrSkipped = 0, ocrFailed = false;
+      try {
+        for (let p = 1; p <= pdf.numPages; p++) {
+          let page, text = "";
+          try {
+            page = await pdf.getPage(p);
+            const tc = await page.getTextContent();
+            text = tc.items.map(it => (it.str || "") + (it.hasEOL ? "\n" : " ")).join("");
+          } catch (e) {
+            notes.push("page " + p + ": " + (e.message || "could not read"));
+            continue;
+          }
+          if (text.trim()) segments.push({ location: "p." + p, text });
+          if (text.trim().length < 50 && opts.ocr && !ocrFailed) {
+            if (ocrPages >= opts.maxOcrPages) { ocrSkipped++; continue; }
+            try {
+              if (onProgress) onProgress("OCR page " + p);
+              const worker = await getOcrWorker();
+              const vp = page.getViewport({ scale: 2.5 });
+              const canvas = document.createElement("canvas");
+              canvas.width = Math.ceil(vp.width); canvas.height = Math.ceil(vp.height);
+              await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+              const res = await worker.recognize(canvas);
+              const ocrText = (res && res.data && res.data.text) || "";
+              ocrPages++;
+              if (ocrText.trim()) segments.push({ location: "p." + p + " (OCR)", text: ocrText, ocr: true });
+            } catch (e) {
+              ocrFailed = true;
+              notes.push("OCR unavailable: " + (e.message || e));
+            }
+          }
+        }
+      } finally {
+        try { await pdf.destroy(); } catch (e) { /* ignore */ }
+      }
+      if (ocrPages) notes.push("OCR used (" + ocrPages + " page" + (ocrPages === 1 ? "" : "s") + ")");
+      if (ocrSkipped) notes.push("OCR limited to " + opts.maxOcrPages + " page" + (opts.maxOcrPages === 1 ? "" : "s") + "; " + ocrSkipped + " more had little text");
+      return { segments, notes, ocrPages };
+    }
+
+    const EXTRACTORS = {
+      pdf: extractPdf, docx: extractDocx, docm: extractDocx, pptx: extractPptx, pptm: extractPptx,
+      xlsx: extractXlsx, xlsm: extractXlsx, txt: extractPlain, md: extractPlain, markdown: extractPlain,
+    };
+
+    // Read one file and classify it. Never throws; problems land in notes.
+    async function scanFile(file, opts, onProgress) {
+      const ext = extOf(file.name);
+      const row = {
+        name: file.name, ext, type: TYPES[ext] || LEGACY[ext] || ext.toUpperCase(),
+        export: false, cui: false, contract: "", others: [], more: 0, evidence: "", notes: [], ocrPages: 0,
+        exportHits: [], cuiHits: [], readable: true,
+      };
+      if (LEGACY[ext]) { row.notes.push("legacy format; save as ." + ext + "x to scan"); row.readable = false; return row; }
+      if (file.size === 0) { row.notes.push("zero-byte file"); row.readable = false; return row; }
+      let ex;
+      try {
+        ex = await EXTRACTORS[ext](file, opts, onProgress);
+      } catch (e) {
+        row.notes.push("error: " + ((e && e.message) || e));
+        row.readable = false;
+        return row;
+      }
+      row.notes.push(...ex.notes);
+      row.ocrPages = ex.ocrPages;
+      const segments = ex.segments.map(s => ({ location: s.location, norm: s.ocr ? fixOcrText(normalizeText(s.text)) : normalizeText(s.text), ocr: !!s.ocr }))
+        .filter(s => s.norm);
+      if (!segments.length) {
+        if (!row.notes.length || row.notes.every(n => /^OCR/.test(n))) {
+          row.notes.push(ext === "pdf" && !opts.ocr ? "no text extracted (scanned? turn on OCR)" : "no text extracted");
+        }
+        row.readable = false;
+        return row;
+      }
+      row.exportHits = detectExport(segments);
+      row.cuiHits = detectCui(segments);
+      const fouo = detectFouo(segments);
+      const contract = detectContracts(segments);
+      row.export = row.exportHits.length > 0;
+      row.cui = row.cuiHits.length > 0;
+      row.contract = contract.primary ? contract.primary.value : "";
+      row.others = contract.others;
+      row.more = contract.more;
+      row.evidence = formatEvidence(row.exportHits, row.cuiHits, contract);
+      if (fouo.length && !row.cui) row.notes.push("legacy FOUO marking (not counted as CUI)");
+      return row;
+    }
+
+    /* ---------- link targets ---------- */
+    const encodeSegs = p => p.split("/").filter(Boolean).map(encodeURIComponent).join("/");
+
+    // relPath is the file's path from the chosen folder's parent, e.g. "Contracts/2024/q3.pdf".
+    // rootName is the chosen folder's name ("Contracts") or "" when files were chosen individually.
+    function buildLinkTarget(relPath, rootName, basePath) {
+      const base = String(basePath || "").trim();
+      if (!base) return encodeSegs(relPath);
+      let b = base.replace(/\\/g, "/").replace(/\/+$/, "");
+      const inside = rootName && relPath.startsWith(rootName + "/") ? relPath.slice(rootName.length + 1) : relPath;
+      let prefix;
+      if (/^[A-Za-z]:\//.test(b)) prefix = "file:///" + b.slice(0, 2) + encodeSegs(b.slice(2)).replace(/^(.)/, "/$1");
+      else if (/^\/\//.test(b)) prefix = "file://" + encodeSegs(b);
+      else if (b.startsWith("/")) prefix = "file://" + "/" + encodeSegs(b);
+      else prefix = "file:///" + encodeSegs(b);
+      return prefix + "/" + encodeSegs(inside);
+    }
+
+    /* ---------- spreadsheet and CSV ---------- */
+    const COLUMNS = ["File Name", "Folder", "File Type", "Export Control Warning", "CUI Label", "Contract Number", "Other Contract Numbers", "Evidence", "Notes", "Path"];
+
+    function rowValues(r, target) {
+      const others = r.others.join("; ") + (r.more ? " (+" + r.more + " more)" : "");
+      return [r.name, r.folder, r.type, r.export ? "Yes" : "No", r.cui ? "Yes" : "No", r.contract, others, r.evidence, r.notes.join("; "), target];
+    }
+
+    async function buildXlsx(rows, meta) {
+      const wb = new ExcelJS.Workbook();
+      wb.creator = "jcsylvan.ai Document Marking Scanner";
+      wb.created = new Date();
+      const ws = wb.addWorksheet("Scan", { views: [{ state: "frozen", ySplit: 1 }] });
+      ws.columns = [
+        { key: "name", width: 42 }, { key: "folder", width: 26 }, { key: "type", width: 10 },
+        { key: "export", width: 22 }, { key: "cui", width: 12 }, { key: "contract", width: 24 },
+        { key: "others", width: 30 }, { key: "evidence", width: 80 }, { key: "notes", width: 40 }, { key: "path", width: 60 },
+      ];
+      const header = ws.addRow(COLUMNS);
+      header.font = { bold: true };
+      header.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFEDEDED" } };
+      ws.autoFilter = { from: "A1", to: "J1" };
+      for (const r of rows) {
+        const target = buildLinkTarget(r.relPath, meta.rootName, meta.basePath);
+        const row = ws.addRow(rowValues(r, target));
+        const c = row.getCell(1);
+        c.value = { text: r.name, hyperlink: target, tooltip: target };
+        c.font = { color: { argb: "FF0563C1" }, underline: true };
+        row.getCell(8).alignment = { wrapText: true, vertical: "top" };
+        row.getCell(9).alignment = { wrapText: true, vertical: "top" };
+        row.getCell(4).alignment = { horizontal: "center" };
+        row.getCell(5).alignment = { horizontal: "center" };
+        if (r.export) row.getCell(4).font = { bold: true, color: { argb: "FFC41E3A" } };
+        if (r.cui) row.getCell(5).font = { bold: true, color: { argb: "FF8A6D00" } };
+      }
+      const sum = wb.addWorksheet("Summary");
+      sum.columns = [{ width: 34 }, { width: 70 }];
+      const lines = [
+        ["Scanned", meta.when.toLocaleString()],
+        ["Folder", meta.rootName || "(individual files)"],
+        ["Files listed", rows.length],
+        ["Export control warning: Yes", meta.stats.export],
+        ["CUI label: Yes", meta.stats.cui],
+        ["Contract number found", meta.stats.contract],
+        ["Clean (no markings, no contract)", meta.stats.clean],
+        ["Read with OCR", meta.stats.ocr],
+        ["Unreadable or no text", meta.stats.unreadable],
+        ["Skipped (other file types)", meta.stats.skipped],
+        ["OCR", meta.ocr ? "on, up to " + meta.maxOcrPages + " pages per file" : "off"],
+        ["Links", meta.basePath ? "absolute, under " + meta.basePath : "relative: save this spreadsheet in the folder that contains \"" + (meta.rootName || "the files") + "\""],
+        ["Generated by", "jcsylvan.ai Document Marking Scanner (runs in the browser; nothing uploaded)"],
+      ];
+      for (const l of lines) sum.addRow(l);
+      sum.getColumn(1).font = { bold: true };
+      return wb.xlsx.writeBuffer();
+    }
+
+    function buildCsv(rows, meta) {
+      const q = v => { const s = String(v == null ? "" : v); return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+      const out = [COLUMNS.map(q).join(",")];
+      for (const r of rows) out.push(rowValues(r, buildLinkTarget(r.relPath, meta.rootName, meta.basePath)).map(q).join(","));
+      return "\ufeff" + out.join("\r\n") + "\r\n";
+    }
+
+    function download(blob, name) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+    }
+
+    /* ---------- the cube ---------- */
+    const FACES = ["front", "back", "right", "left", "top", "bottom"];
+    const SOLVED = { front: "g", back: "b", right: "r", left: "o", top: "w", bottom: "y" };
+    const stickers = [];
+    (function buildCube() {
+      const cube = $("cube");
+      for (const f of FACES) {
+        const face = document.createElement("div");
+        face.className = "face " + f;
+        for (let i = 0; i < 9; i++) { const s = document.createElement("span"); s.className = "st"; face.appendChild(s); stickers.push(s); }
+        cube.appendChild(face);
+      }
+      scrambleCube();
+    })();
+    function scrambleCube() {
+      const keys = Object.keys(COLORS);
+      stickers.forEach(s => { s.style.background = COLORS[keys[Math.floor(Math.random() * keys.length)]]; });
+    }
+    function solveCube() {
+      stickers.forEach((s, i) => { s.style.background = COLORS[SOLVED[FACES[Math.floor(i / 9)]]]; });
+    }
+    let paintIndex = 0;
+    function paintSticker(colorKey) {
+      // Walk the stickers in a scattered order so the colour lands somewhere new each time.
+      const i = (paintIndex * 17) % stickers.length; paintIndex++;
+      stickers[i].style.background = COLORS[colorKey];
+    }
+    function rowColor(r) {
+      if (!r.readable) return "w";
+      if (r.export) return "r";
+      if (r.cui) return "y";
+      if (r.contract) return "b";
+      if (r.ocrPages) return "o";
+      return "g";
+    }
+
+    function buildNet(stats, total) {
+      const faces = [
+        ["top", "w", "unreadable", stats.unreadable, "#0a0a0a"],
+        ["left", "o", "OCR", stats.ocr, "#0a0a0a"],
+        ["front", "g", "clean", stats.clean, "#0a0a0a"],
+        ["right", "r", "export", stats.export, "#fff"],
+        ["back", "b", "contract", stats.contract, "#fff"],
+        ["bottom", "y", "CUI", stats.cui, "#0a0a0a"],
+      ];
+      const net = $("net");
+      net.innerHTML = "";
+      for (const [pos, ck, label, count, textColor] of faces) {
+        const lit = total ? Math.min(8, Math.max(count > 0 ? 1 : 0, Math.round(8 * count / total))) : 0;
+        const nf = document.createElement("div");
+        nf.className = "nf " + pos;
+        nf.title = count + " of " + total + " files: " + label;
+        const grid = document.createElement("div");
+        grid.className = "grid";
+        let litLeft = lit;
+        for (let i = 0; i < 9; i++) {
+          const s = document.createElement("span");
+          if (i === 4) { s.textContent = count; s.className = "lit"; s.style.background = COLORS[ck]; s.style.color = textColor; }
+          else if (litLeft > 0) { s.className = "lit"; s.style.background = COLORS[ck]; litLeft--; }
+          grid.appendChild(s);
+        }
+        const lbl = document.createElement("div");
+        lbl.className = "lbl"; lbl.textContent = label;
+        nf.appendChild(grid); nf.appendChild(lbl);
+        net.appendChild(nf);
+      }
+    }
+
+    /* ---------- folder handling ---------- */
+    const SKIP_NAMES = /^(?:~\$|\.~lock|\.)|^(?:thumbs\.db|desktop\.ini)$/i;
+
+    function readEntry(entry, path, out) {
+      return new Promise(resolve => {
+        if (entry.isFile) {
+          entry.file(f => { out.push({ file: f, rel: path + entry.name }); resolve(); }, () => resolve());
+        } else if (entry.isDirectory) {
+          const reader = entry.createReader();
+          const all = [];
+          const more = () => reader.readEntries(async entries => {
+            if (!entries.length) {
+              for (const e of all) await readEntry(e, path + entry.name + "/", out);
+              resolve();
+            } else { all.push(...entries); more(); }
+          }, () => resolve());
+          more();
+        } else resolve();
+      });
+    }
+
+    function listFromInput(input) {
+      const list = [];
+      for (const f of input.files) list.push({ file: f, rel: f.webkitRelativePath || f.name });
+      return list;
+    }
+
+    /* ---------- scan orchestration ---------- */
+    const state = { rows: [], meta: null, running: false, cancel: false };
+
+    function setupErr(msg) { $("setupErr").textContent = msg || ""; }
+
+    function currentOpts() {
+      const pages = parseInt($("optOcrPages").value, 10);
+      return {
+        includeSub: $("optSub").checked,
+        ocr: $("optOcr").checked && !(pages === 0),
+        maxOcrPages: isNaN(pages) ? 3 : Math.max(0, Math.min(50, pages)),
+        basePath: $("basePath").value.trim(),
+      };
+    }
+
+    async function startScan(list) {
+      if (state.running) return;
+      setupErr("");
+      if (!list.length) { setupErr("No files found in that selection."); return; }
+      const opts = currentOpts();
+      const missing = [];
+      if (!window.JSZip) missing.push("JSZip (Word, PowerPoint, Excel)");
+      if (!window.pdfjsLib) missing.push("pdf.js (PDF)");
+      if (!window.ExcelJS) missing.push("ExcelJS (spreadsheet download)");
+      if (opts.ocr && !window.Tesseract) missing.push("Tesseract.js (OCR)");
+      if (missing.length) setupErr("Some libraries did not load from the CDN, so parts of the scan may not work: " + missing.join(", ") + ". Check the connection and reload.");
+
+      // Work out the chosen folder's name (the shared first path segment, if any).
+      const firstSeg = p => (p.includes("/") ? p.split("/")[0] : "");
+      let rootName = firstSeg(list[0].rel);
+      if (!list.every(x => firstSeg(x.rel) === rootName)) rootName = "";
+
+      const queue = [];
+      let skipped = 0;
+      for (const item of list) {
+        const rel = item.rel, name = item.file.name, ext = extOf(name);
+        const segs = rel.split("/");
+        if (SKIP_NAMES.test(name)) continue;
+        if (!opts.includeSub && segs.length > (rootName ? 2 : 1)) continue;
+        if (!TYPES[ext] && !LEGACY[ext]) { skipped++; continue; }
+        const inner = rootName && segs[0] === rootName ? segs.slice(1) : segs;
+        queue.push({ file: item.file, relPath: rel, folder: inner.length > 1 ? inner.slice(0, -1).join("/") : "." });
+      }
+      queue.sort((a, b) => a.relPath.localeCompare(b.relPath, undefined, { numeric: true, sensitivity: "base" }));
+      if (!queue.length) { setupErr("Nothing to scan: no PDF, Word, PowerPoint, Excel or text files in that folder" + (skipped ? " (" + skipped + " other files skipped)" : "") + "."); return; }
+
+      state.running = true; state.cancel = false; state.rows = [];
+      state.meta = { rootName, basePath: opts.basePath, ocr: opts.ocr, maxOcrPages: opts.maxOcrPages, when: new Date(), stats: null };
+      $("results").style.display = "none";
+      $("progress").style.display = "block";
+      $("tbody").innerHTML = "";
+      $("filter").value = "";
+      paintIndex = 0;
+      scrambleCube();
+      $("cube").classList.add("busy");
+      $("pFill").style.width = "0%";
+
+      for (let i = 0; i < queue.length; i++) {
+        if (state.cancel) break;
+        const q = queue[i];
+        const label = "[" + (i + 1) + "/" + queue.length + "] " + q.relPath;
+        $("pCount").textContent = (i + 1) + " / " + queue.length;
+        $("pCur").textContent = label;
+        $("pFill").style.width = Math.round(100 * i / queue.length) + "%";
+        await sleep(0);
+        const row = await scanFile(q.file, opts, msg => { $("pCur").textContent = label + " (" + msg + ")"; });
+        row.relPath = q.relPath; row.folder = q.folder;
+        state.rows.push(row);
+        paintSticker(rowColor(row));
+        appendTableRow(row, state.rows.length - 1);
+      }
+      $("pFill").style.width = "100%";
+      await sleep(150);
+
+      const st = { export: 0, cui: 0, contract: 0, clean: 0, ocr: 0, unreadable: 0, skipped };
+      for (const r of state.rows) {
+        if (r.export) st.export++;
+        if (r.cui) st.cui++;
+        if (r.contract) st.contract++;
+        if (r.ocrPages) st.ocr++;
+        if (!r.readable) st.unreadable++;
+        else if (!r.export && !r.cui && !r.contract) st.clean++;
+      }
+      state.meta.stats = st;
+      state.running = false;
+      $("cube").classList.remove("busy");
+      solveCube();
+      renderSummary(st, state.rows.length, state.cancel ? queue.length - state.rows.length : 0);
+      buildNet(st, state.rows.length);
+      renderLinkNote();
+      $("progress").style.display = "none";
+      $("results").style.display = "block";
+      applyFilter();
+      $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function renderSummary(st, total, cancelled) {
+      const chips = [
+        ["files", total], ["export warning", st.export], ["CUI label", st.cui], ["contract found", st.contract],
+        ["clean", st.clean], ["OCR", st.ocr], ["unreadable", st.unreadable],
+      ];
+      if (st.skipped) chips.push(["other types skipped", st.skipped]);
+      if (cancelled) chips.push(["not scanned (cancelled)", cancelled]);
+      $("stats").innerHTML = chips.map(([k, v]) => '<span class="stat"><b>' + v + "</b>" + esc(k) + "</span>").join("");
+    }
+
+    function renderLinkNote() {
+      const m = state.meta;
+      if (m.basePath) {
+        $("linknote").innerHTML = "Links in the spreadsheet point to <b>" + esc(m.basePath) + "</b>. They will open the files on any computer that sees that path.";
+      } else if (m.rootName) {
+        $("linknote").innerHTML = "Links in the spreadsheet are <b>relative</b>. Save it in the folder that contains <b>" + esc(m.rootName) + "</b> (next to that folder, not inside it) and each file name will open the file. To make links work from anywhere, paste the folder's full path above and scan again.";
+      } else {
+        $("linknote").innerHTML = "Links in the spreadsheet are <b>relative</b>. Save it in the same folder as the files and each file name will open the file.";
+      }
+    }
+
+    function appendTableRow(r, i) {
+      const tb = $("tbody");
+      const chips = '<span class="chips">' +
+        '<i class="' + (r.export ? "r" : "") + '" title="export control warning"></i>' +
+        '<i class="' + (r.cui ? "y" : "") + '" title="CUI label"></i>' +
+        '<i class="' + (r.contract ? "b" : "") + '" title="contract number"></i>' +
+        (r.ocrPages ? '<i class="o" title="read with OCR"></i>' : "") +
+        (!r.readable ? '<i class="w" title="unreadable or no text"></i>' : "") + "</span>";
+      const tr = document.createElement("tr");
+      tr.className = "r"; tr.dataset.i = i;
+      tr.innerHTML =
+        '<td class="fn">' + chips + '<span class="nm">' + esc(r.name) + "</span>" + (r.folder !== "." ? '<div class="sub">' + esc(r.folder) + "/</div>" : "") + "</td>" +
+        "<td>" + esc(r.type) + "</td>" +
+        '<td class="' + (r.export ? "yes" : "no") + '">' + (r.export ? "Yes" : "No") + "</td>" +
+        '<td class="' + (r.cui ? "yes cui" : "no") + '">' + (r.cui ? "Yes" : "No") + "</td>" +
+        '<td class="ct">' + (r.contract ? esc(r.contract) : '<span class="no">—</span>') +
+          (r.others.length ? '<div class="more">also ' + esc(r.others.join(", ")) + (r.more ? " (+" + r.more + " more)" : "") + "</div>" : "") + "</td>" +
+        '<td class="nt">' + esc(r.notes.join("; ")) + "</td>";
+      const ev = document.createElement("tr");
+      ev.className = "ev"; ev.dataset.i = i;
+      const evText = r.evidence || (r.readable ? "No markings or contract numbers matched." : "Nothing could be read from this file.");
+      ev.innerHTML = '<td colspan="6"><span class="k">evidence</span>\n' + esc(evText) + "</td>";
+      tr.addEventListener("click", () => ev.classList.toggle("open"));
+      tb.appendChild(tr); tb.appendChild(ev);
+    }
+
+    function applyFilter() {
+      const q = $("filter").value.trim().toLowerCase();
+      let shown = 0;
+      const rows = $("tbody").querySelectorAll("tr.r");
+      rows.forEach(tr => {
+        const r = state.rows[parseInt(tr.dataset.i, 10)];
+        const hay = (r.relPath + " " + r.contract + " " + r.others.join(" ") + " " + r.notes.join(" ") + " " + r.type).toLowerCase();
+        const ok = !q || hay.includes(q);
+        tr.style.display = ok ? "" : "none";
+        const ev = tr.nextElementSibling;
+        if (ev) { if (!ok) ev.classList.remove("open"); ev.style.display = ok && ev.classList.contains("open") ? "table-row" : (ok ? "" : "none"); }
+        if (ok) shown++;
+      });
+      $("filterCnt").textContent = q ? shown + " of " + rows.length + " files" : rows.length + " files";
+    }
+
+    /* ---------- wiring ---------- */
+    const drop = $("drop");
+    drop.addEventListener("click", () => $("folderInput").click());
+    drop.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("folderInput").click(); } });
+    $("pickFiles").addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); $("filesInput").click(); });
+    $("folderInput").addEventListener("change", e => { startScan(listFromInput(e.target)); e.target.value = ""; });
+    $("filesInput").addEventListener("change", e => { startScan(listFromInput(e.target)); e.target.value = ""; });
+    ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+    ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+    drop.addEventListener("drop", async e => {
+      const items = Array.from(e.dataTransfer.items || []);
+      const entries = items.map(it => (it.webkitGetAsEntry ? it.webkitGetAsEntry() : null));
+      const list = [];
+      if (entries.some(Boolean)) {
+        for (const en of entries) if (en) await readEntry(en, "", list);
+      } else {
+        for (const f of e.dataTransfer.files) list.push({ file: f, rel: f.name });
+      }
+      startScan(list);
+    });
+    $("cancelBtn").addEventListener("click", () => { state.cancel = true; });
+    $("againBtn").addEventListener("click", () => { $("results").style.display = "none"; scrambleCube(); $("setup").scrollIntoView({ behavior: "smooth", block: "start" }); });
+    $("filter").addEventListener("input", applyFilter);
+    $("dlXlsx").addEventListener("click", async () => {
+      if (!state.rows.length) return;
+      const btn = $("dlXlsx"); btn.disabled = true;
+      try {
+        const buf = await buildXlsx(state.rows, state.meta);
+        download(new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), "document-scan.xlsx");
+      } catch (e) {
+        $("linknote").innerHTML = '<span style="color:#d17f7f">Could not build the spreadsheet: ' + esc(e.message || e) + "</span>";
+      } finally { btn.disabled = false; }
+    });
+    $("dlCsv").addEventListener("click", () => {
+      if (!state.rows.length) return;
+      download(new Blob([buildCsv(state.rows, state.meta)], { type: "text/csv;charset=utf-8" }), "document-scan.csv");
+    });
+
+    // Exposed for testing.
+    window.DocScan = { normalizeText, fixOcrText, detectExport, detectCui, detectContracts, detectFouo, scanFile, buildLinkTarget, buildXlsx, buildCsv, startScan, state };
+  </script>
+</body>
+</html>
