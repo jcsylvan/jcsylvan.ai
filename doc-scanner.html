@@ -170,6 +170,53 @@
     .disclaimer { margin-top: 2rem; border-top: 1px solid #1c1c1c; padding-top: 1rem; color: #555; font-size: 0.72rem; line-height: 1.65; }
     .disclaimer b { color: #777; }
 
+    /* ---------- do it yourself with Copilot ---------- */
+    .orrow { display: flex; align-items: center; gap: 1rem; margin-top: 1.4rem; }
+    .orrow::before, .orrow::after { content: ""; flex: 1 1 0; height: 1px; background: #222; }
+    .orrow button.alt { font-weight: 500; color: #aaa; white-space: normal; text-align: center; }
+    .orrow button.alt:hover { color: var(--gold); border-color: var(--gold); }
+
+    dialog.cp {
+      margin: auto; padding: 0; background: #111; color: #e0e0e0; border: 1px solid #2a2a2a; border-radius: 8px;
+      width: min(800px, calc(100vw - 32px)); max-height: calc(100vh - 32px); font-family: inherit;
+    }
+    dialog.cp[open] { display: flex; flex-direction: column; }
+    dialog.cp::backdrop { background: rgba(0, 0, 0, 0.74); }
+    .cp-head { display: flex; gap: 1rem; align-items: flex-start; padding: 1.25rem 1.25rem 1rem; border-bottom: 1px solid #222; flex: 0 0 auto; }
+    .cp-head h2 { font-size: 1.05rem; color: var(--gold); font-weight: 600; margin: 0 0 0.35rem; }
+    .cp-head p { color: #888; font-size: 0.8rem; line-height: 1.5; }
+    .cp-close {
+      margin-left: auto; background: none; border: 1px solid #333; color: #999; border-radius: 5px; width: 2rem; height: 2rem;
+      cursor: pointer; font-family: inherit; font-size: 1.1rem; line-height: 1; flex: 0 0 auto;
+    }
+    .cp-close:hover { color: #e0e0e0; border-color: #888; }
+    .mini { display: grid; grid-template-columns: repeat(3, 13px); gap: 3px; padding: 4px; background: #151515; border-radius: 6px; flex: 0 0 auto; margin-top: 0.1rem; }
+    .mini i { width: 13px; height: 13px; border-radius: 2px; background: #333; display: block; transition: background 0.5s ease; }
+    .cp-body { padding: 1.25rem; overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+    .moves { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+    .move { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid #2a2a2a; border-radius: 999px; padding: 0.3rem 0.85rem 0.3rem 0.35rem; font-size: 0.75rem; color: #aaa; }
+    .move b { width: 1.35rem; height: 1.35rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #0a0a0a; font-weight: 700; font-size: 0.7rem; flex: 0 0 auto; }
+    .move b.y { background: var(--rb-y); } .move b.g { background: var(--rb-g); color: #fff; } .move b.b { background: var(--rb-b); color: #fff; }
+    .prompt { border: 1px solid #2a2a2a; border-radius: 8px; background: #0d0d0d; margin-top: 1.1rem; overflow: hidden; }
+    .prompt .pt { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 0.6rem 0.9rem; background: #141414; border-bottom: 1px solid #222; font-size: 0.66rem; color: #777; text-transform: uppercase; letter-spacing: 0.08em; }
+    .prompt .pb { padding: 0.95rem 1rem 0.4rem; font-size: 0.8rem; line-height: 1.6; color: #cfcfcf; }
+    .prompt .sec { margin-bottom: 1rem; }
+    .prompt .sh { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; }
+    .prompt .sh i { width: 0.75rem; height: 0.75rem; border-radius: 2px; display: inline-block; flex: 0 0 auto; }
+    .prompt .sec p { margin: 0 0 0.35rem; }
+    .prompt .sec ul { margin: 0 0 0.35rem 1.1rem; padding: 0; }
+    .prompt .sec li { margin-bottom: 0.2rem; }
+    .prompt .ph { background: #2e2913; color: var(--gold); border: 1px dashed #6b5a1a; border-radius: 3px; padding: 0 0.3rem; font-weight: 600; word-break: break-all; }
+    .prompt .ph.set { background: #0f2a1a; color: #7fe3a5; border: 1px solid #1f6b3f; }
+    .prompt textarea {
+      display: none; width: 100%; min-height: 320px; background: #0d0d0d; color: #cfcfcf; border: none; padding: 0.95rem 1rem;
+      font-family: inherit; font-size: 0.78rem; line-height: 1.55; resize: vertical; outline: none;
+    }
+    .prompt.plain .pb { display: none; }
+    .prompt.plain textarea { display: block; }
+    .cp-foot { padding: 1rem 1.25rem; border-top: 1px solid #222; display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; flex: 0 0 auto; }
+    .cp-foot .hint { margin: 0; flex: 1 1 260px; }
+
     @media (max-width: 640px) {
       body { padding: 1rem; }
       .hero { flex-direction: column; align-items: flex-start; gap: 1.5rem; margin-top: 2.5rem; }
@@ -181,6 +228,12 @@
       .actions { flex-direction: column; align-items: stretch; }
       button.go, button.alt { width: 100%; }
       .drop { flex-direction: column; align-items: flex-start; }
+      .cp-head { gap: 0.75rem; padding: 1rem; }
+      .cp-head p { display: none; }
+      .cp-body { padding: 1rem; }
+      .cp-foot { padding: 1rem; flex-direction: column; align-items: stretch; }
+      .cp-foot .hint { flex: 0 0 auto; }
+      .cp-foot button.go, .cp-foot button.alt { white-space: normal; }
     }
   </style>
 </head>
@@ -253,6 +306,9 @@
         </p>
       </div>
       <div class="error" id="setupErr"></div>
+      <div class="orrow">
+        <button class="alt" id="copilotBtn" type="button">Or do this yourself with Copilot&hellip;</button>
+      </div>
     </div>
 
     <div class="panel" id="progress">
@@ -284,6 +340,46 @@
       </div>
       <p class="hint">Click a row to see the text that triggered each flag.</p>
     </div>
+
+    <dialog class="cp" id="copilotDlg" aria-labelledby="cpTitle">
+      <div class="cp-head">
+        <div class="mini" id="mini" aria-hidden="true"></div>
+        <div>
+          <h2 id="cpTitle">Solve it with Copilot instead</h2>
+          <p>
+            Same rules, no app. Paste your SharePoint folder link, copy the prompt, and paste it into
+            Microsoft 365 Copilot. Copilot reads the folder where it lives and hands back the same spreadsheet.
+          </p>
+        </div>
+        <button class="cp-close" id="cpClose" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="cp-body">
+        <div class="moves" aria-label="Three moves">
+          <span class="move"><b class="y">1</b>paste your folder link</span>
+          <span class="move"><b class="g">2</b>copy the prompt</span>
+          <span class="move"><b class="b">3</b>paste it into Copilot</span>
+        </div>
+        <label for="spLink">SharePoint folder link</label>
+        <input type="text" id="spLink" placeholder="https://yourcompany.sharepoint.com/sites/Programs/Shared Documents/Contracts" autocomplete="off" spellcheck="false">
+        <p class="hint">
+          In SharePoint, open the folder and use <b>Share &rarr; Copy link</b>, or copy the address bar. Leave this
+          empty and the prompt keeps a highlighted placeholder you can fill in inside Copilot.
+        </p>
+        <div class="prompt" id="promptBox">
+          <div class="pt"><span>the prompt</span><span id="pWords"></span></div>
+          <div class="pb" id="pBody"></div>
+          <textarea id="pRaw" readonly aria-label="The prompt as plain text"></textarea>
+        </div>
+      </div>
+      <div class="cp-foot">
+        <button class="go" id="cpCopy" type="button">Copy the prompt</button>
+        <button class="alt" id="cpPlain" type="button">Show as plain text</button>
+        <p class="hint" id="cpNote">
+          Works in Microsoft 365 Copilot (the Work tab) with an account that can see the folder. Copilot
+          cannot OCR image-only scans, so those come back marked unreadable rather than read.
+        </p>
+      </div>
+    </dialog>
 
     <div class="disclaimer">
       <b>A keyword screen, not a compliance determination.</b> The scanner looks for the words and patterns
@@ -1151,8 +1247,134 @@
       download(new Blob([buildCsv(state.rows, state.meta)], { type: "text/csv;charset=utf-8" }), "document-scan.csv");
     });
 
+    /* ---------- do it yourself with Copilot ----------
+       The same rules as the scanner above, written as a prompt for Microsoft 365 Copilot.
+       One source (CP_SECTIONS) renders both the colour-coded view and the plain text that is copied. */
+    const CP_PLACEHOLDER = "[PASTE YOUR SHAREPOINT FOLDER LINK HERE]";
+    const CP_SECTIONS = [
+      { lines: [
+        "Act as a document marking scanner. Scan every file in this SharePoint folder, including its subfolders:",
+        CP_PLACEHOLDER,
+        "Then build an Excel workbook named document-scan.xlsx with the results. Before you start, list the files you found and how many there are, so I can confirm you are looking at the right folder. Work through them one at a time and do not skip any. If there are more than you can read in one pass, tell me how far you got and continue when I say \"next batch\".",
+      ] },
+      { color: "w", title: "What to read", items: [
+        "Open .pdf, .docx, .pptx, .xlsx, .txt and .md files. Read the whole document: body, headers, footers, tables, text boxes, footnotes, slide notes, slide masters and layouts, spreadsheet headers and footers. Markings usually sit in the header, the footer or the first page.",
+        "Skip hidden files, Office lock files (names starting with ~$) and every other file type, but count them in the summary.",
+        "Legacy .doc, .ppt and .xls files get a row with the note \"legacy format; save as the modern format to scan\".",
+        "A password-protected, empty, corrupt or image-only file you cannot read still gets a row. Say so in Notes and do not guess at its contents.",
+      ] },
+      { color: "r", title: "Export control warning", lead: "Mark Yes when the text contains any of:", items: [
+        "ITAR; International Traffic in Arms Regulations; Arms Export Control Act; Export Administration Regulations; Export Control Reform Act",
+        "EAR99; ECCN; USML; United States Munitions List; Commerce Control List",
+        "\"export controlled\", \"export control\", \"export restricted\", \"whose export is restricted\", \"subject to US export laws\" or \"regulations\", \"export license\", \"deemed export\"",
+        "22 CFR 120 to 130; 15 CFR 730 to 774; 22 USC 2751; 50 USC 2401 or 4801; DoDD 5230.25",
+        "the DoD warning statement: \"technical data whose export is restricted by the Arms Export Control Act...\"",
+        "A bare \"EAR\" counts only when export wording sits in the same sentence. The word \"export\" on its own never counts.",
+      ] },
+      { color: "y", title: "CUI label", lead: "Mark Yes when the text contains any of:", items: [
+        "the token CUI in capitals (so \"cuisine\" and \"Cui\" do not match); Controlled Unclassified Information; \"Controlled by:\"",
+        "CUI Category, CUI Basic, CUI Specified; a category code such as SP-CTI, SP-EXPT, SP-PROPIN, SP-PRVCY, SP-ISVI or SP-OPSEC",
+        "Dissemination Control(s); 32 CFR 2002; DoDI 5200.48",
+        "NOFORN, FEDCON, FED ONLY, NOCON, DL ONLY, REL TO, DISPLAY ONLY, CTI, \"Designating Agency\" and \"POC:\" are supporting evidence only, never a Yes on their own.",
+        "FOUO or \"For Official Use Only\" is the old marking. Do not count it as CUI; mention it in Notes.",
+      ] },
+      { color: "b", title: "Contract number", items: [
+        "If a number follows \"Contract No.\", \"Contract Number\", \"Contract #\", \"Contract:\", \"Prime Contract\" or \"Award Number\", use that one.",
+        "Otherwise take the first identifier shaped like a federal award: a PIID such as FA8650-20-C-1234 or W911NF-19-2-0012 (also without hyphens, FA865020C1234); NASA such as 80NSSC20C0123; DOE such as DE-AC02-05CH11231.",
+        "Every other distinct contract number in the file goes in Other Contract Numbers.",
+      ] },
+      { color: "g", title: "The spreadsheet", items: [
+        "Sheet \"Scan\": one row per file, bold header row, frozen and filterable, with these columns in this order: File Name | Folder | File Type | Export Control Warning | CUI Label | Contract Number | Other Contract Numbers | Evidence | Notes | Path",
+        "File Name is a hyperlink to the file in SharePoint (in Excel, =HYPERLINK(\"url\",\"name\")). Path is the full SharePoint URL.",
+        "Folder is the subfolder relative to the folder I gave you, or \".\" for the top level. File Type is PDF, DOCX, PPTX, XLSX, TXT or MD.",
+        "Export Control Warning and CUI Label are exactly \"Yes\" or \"No\".",
+        "Evidence quotes the exact words that fired each flag and where they were found (header, page 3, slide notes), so a reviewer can judge. This is a keyword screen: \"this document contains no CUI\" still flags CUI, and Evidence shows why.",
+        "Notes carries anything unusual: legacy format, unreadable, password-protected, FOUO, image-only pages.",
+        "Sheet \"Summary\": scan date; folder; files listed; export control Yes count; CUI Yes count; files with a contract number; clean files (no markings, no contract); unreadable or no text; skipped by file type; and the line \"Generated with Microsoft 365 Copilot from the jcsylvan.ai Document Marking Scanner prompt\".",
+      ] },
+      { color: "o", title: "If you cannot make the file", items: [
+        "Give me the Scan and Summary sheets as two tables I can paste into Excel, with the raw URL in Path so I can build the links myself.",
+      ] },
+    ];
+
+    function cpLink() { return $("spLink").value.trim(); }
+
+    function cpText() {
+      const out = [];
+      for (const sec of CP_SECTIONS) {
+        if (sec.title) out.push(sec.title.toUpperCase());
+        if (sec.lead) out.push(sec.lead);
+        if (sec.lines) for (const l of sec.lines) out.push(l);
+        if (sec.items) for (const it of sec.items) out.push("- " + it);
+        out.push("");
+      }
+      return out.join("\n").replace(CP_PLACEHOLDER, cpLink() || CP_PLACEHOLDER).trim() + "\n";
+    }
+
+    function cpRender() {
+      const link = cpLink();
+      const ph = link ? '<span class="ph set">' + esc(link) + "</span>" : '<span class="ph">' + esc(CP_PLACEHOLDER) + "</span>";
+      let html = "";
+      for (const sec of CP_SECTIONS) {
+        html += '<div class="sec">';
+        if (sec.title) html += '<div class="sh"><i style="background:' + COLORS[sec.color] + '"></i>' + esc(sec.title) + "</div>";
+        if (sec.lead) html += "<p>" + esc(sec.lead) + "</p>";
+        if (sec.lines) for (const l of sec.lines) html += "<p>" + (l === CP_PLACEHOLDER ? ph : esc(l)) + "</p>";
+        if (sec.items) html += "<ul>" + sec.items.map(it => "<li>" + esc(it) + "</li>").join("") + "</ul>";
+        html += "</div>";
+      }
+      $("pBody").innerHTML = html;
+      const text = cpText();
+      $("pRaw").value = text;
+      $("pWords").textContent = "about " + text.split(/\s+/).filter(Boolean).length + " words";
+    }
+
+    const mini = $("mini");
+    mini.innerHTML = "<i></i>".repeat(9);
+    const miniCells = Array.from(mini.children);
+    function miniScramble() {
+      const keys = Object.keys(COLORS);
+      miniCells.forEach(c => { c.style.background = COLORS[keys[Math.floor(Math.random() * keys.length)]]; });
+    }
+    function miniSolve() { miniCells.forEach((c, i) => setTimeout(() => { c.style.background = COLORS.g; }, i * 45)); }
+
+    async function cpCopy() {
+      const text = cpText();
+      const btn = $("cpCopy");
+      let ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { /* fall through */ }
+      if (!ok) {
+        $("promptBox").classList.add("plain");
+        const ta = $("pRaw"); ta.focus(); ta.select();
+        try { ok = document.execCommand("copy"); } catch (e) { /* stays false */ }
+      }
+      if (ok) {
+        miniSolve();
+        btn.textContent = "Copied. Now paste it into Copilot.";
+        clearTimeout(cpCopy.timer);
+        cpCopy.timer = setTimeout(() => { btn.textContent = "Copy the prompt"; }, 3500);
+      } else {
+        $("cpNote").textContent = "This browser blocked the clipboard. The prompt is selected above: press Ctrl+C (or Cmd+C) to copy it.";
+      }
+    }
+
+    const cpDlg = $("copilotDlg");
+    $("copilotBtn").addEventListener("click", () => {
+      miniScramble(); cpRender(); $("promptBox").classList.remove("plain");
+      cpDlg.showModal(); $("spLink").focus();
+    });
+    $("cpClose").addEventListener("click", () => cpDlg.close());
+    cpDlg.addEventListener("click", e => { if (e.target === cpDlg) cpDlg.close(); });
+    $("spLink").addEventListener("input", cpRender);
+    $("cpCopy").addEventListener("click", cpCopy);
+    $("cpPlain").addEventListener("click", () => {
+      const plain = $("promptBox").classList.toggle("plain");
+      $("cpPlain").textContent = plain ? "Show with colours" : "Show as plain text";
+      if (plain) { const ta = $("pRaw"); ta.focus(); ta.select(); }
+    });
+
     // Exposed for testing.
-    window.DocScan = { normalizeText, fixOcrText, detectExport, detectCui, detectContracts, detectFouo, scanFile, buildLinkTarget, buildXlsx, buildCsv, startScan, state };
+    window.DocScan = { normalizeText, fixOcrText, detectExport, detectCui, detectContracts, detectFouo, scanFile, buildLinkTarget, buildXlsx, buildCsv, startScan, state, cpText };
   </script>
 </body>
 </html>
