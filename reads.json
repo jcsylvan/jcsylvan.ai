@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-09-23",
+  "updated": "2026-09-30",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -883,6 +883,69 @@
       "source": "arXiv · 2609.23957",
       "url": "https://arxiv.org/abs/2609.23957",
       "summary": "AI research agents are normally graded on whether they reproduce a known answer, which says little about open-ended work. Sixteen independent agent sessions were given the same 12,499-structure database of metal-organic frameworks and a week to maximize methane storage. Their strategies diverged widely, from screening 100 to 5,000 candidates, yet they converged on the same performance frontier and recovered the database's nine best structures."
+    },
+    {
+      "id": "2026-09-30-ai",
+      "date": "2026-09-30",
+      "category": "AI",
+      "title": "Capable yet Parsimonious: Extracting and Characterizing Hidden Chain-of-Thought in Frontier Models",
+      "source": "arXiv · 2609.26637",
+      "url": "https://arxiv.org/abs/2609.26637",
+      "summary": "Frontier models hide their raw reasoning traces, so claims that recent capability gains come from better reasoning cannot be checked. The authors induce closed-source models to externalize intermediate steps by registering a simple custom tool through a standard API feature, validating the approach against native chain-of-thought on open models. The extracted traces match native reasoning performance on competition math, science, and code, and expose systematic differences in how models compress and organize their reasoning."
+    },
+    {
+      "id": "2026-09-30-semiconductors",
+      "date": "2026-09-30",
+      "category": "Semiconductors",
+      "title": "Topological-Insulator Heterophase Gate Stacks for Transistor Electrostatics",
+      "source": "arXiv · 2609.30016",
+      "url": "https://arxiv.org/abs/2609.30016",
+      "summary": "Gate-stack scaling normally just thins the dielectric and raises its permittivity, treating the gate-side screening boundary as fixed. This work instead engineers that boundary by converting the surface of the topological insulator Bi2Se3 into insulating high-k BiF3. Despite a measured capacitance penalty from the buried interface, MoS2 transistors built on the stack show near-thermionic switching, negligible hysteresis, and roughly sevenfold lower drain-induced barrier lowering than BiF3-only controls."
+    },
+    {
+      "id": "2026-09-30-biotechnology",
+      "date": "2026-09-30",
+      "category": "Biotechnology",
+      "title": "AmbiModBench: Benchmarking Gene Perturbation Prediction Beyond Shared Responses",
+      "source": "arXiv · 2609.32527",
+      "url": "https://arxiv.org/abs/2609.32527",
+      "summary": "Models that predict how cells respond to genetic perturbations are graded in ways that flatter them: absolute metrics cannot separate a target-specific prediction from the shared background response, and common scores stay high even when gene labels are shuffled. AmbiModBench pairs every score with a training-mean reference fitted on the same split, screens each readout by permuting gene coordinates, and links embedding distance to how much response actually varies."
+    },
+    {
+      "id": "2026-09-30-sustainable-energy",
+      "date": "2026-09-30",
+      "category": "Sustainable Energy",
+      "title": "Resilience Enhancement of Distribution Grids Through a Three-Stage Framework for Scheduling Mobile Energy Storage Systems",
+      "source": "arXiv · 2609.30606",
+      "url": "https://arxiv.org/abs/2609.30606",
+      "summary": "Batteries mounted on trucks can be driven to wherever a storm knocks out power, but scheduling them means trading everyday earnings against disaster readiness. This framework splits the decision into three stages: arbitrage during normal operation, repositioning to staging points once an early warning arrives so expected travel time to critical loads is minimized, and supplying those loads during the event itself."
+    },
+    {
+      "id": "2026-09-30-defense-tech",
+      "date": "2026-09-30",
+      "category": "Defense Tech",
+      "title": "From Participation to Integration: Outsider Entry and Inventive Output in Defense Acquisition Program Networks",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7090443",
+      "summary": "Defense innovation policy assumes that pulling outsiders into the supplier base—SBIR/STTR small businesses and other nontraditional contractors—raises inventive output. Using whole-network data on U.S. defense acquisition programs and patents as the output measure, this study tests that assumption and distinguishes merely participating in a program network from becoming integrated into it, which matters for how entry programs are designed."
+    },
+    {
+      "id": "2026-09-30-quantum-computing",
+      "date": "2026-09-30",
+      "category": "Quantum Computing",
+      "title": "Purely-logarithmic-time- and constant-space-overhead fault-tolerant quantum computation",
+      "source": "arXiv · 2609.28461",
+      "url": "https://arxiv.org/abs/2609.28461",
+      "summary": "Fault tolerance costs overhead in both qubits and time, and earlier constructions reached constant space overhead only with extra subpolylogarithmic time factors. This paper proves constant space overhead is achievable with strictly logarithmic time overhead, using transversal logical CCZ gates on good quantum locally testable codes and moving batches of logical qubits between dense storage and an active workspace that gets reused."
+    },
+    {
+      "id": "2026-09-30-materials-science",
+      "date": "2026-09-30",
+      "category": "Materials Science",
+      "title": "Fractional-Quantum Ferroelectrics: A Route to High-Mobility Ferroelectric Semiconductors",
+      "source": "arXiv · 2609.16799",
+      "url": "https://arxiv.org/abs/2609.16799",
+      "summary": "Ferroelectric semiconductors are attractive for multifunctional electronics but carry current poorly. First-principles transport calculations on monolayer In2Se3 show the limit depends on where the ferroelectricity comes from: in the displacive phase, soft ferroelectric modes scatter electrons down to a few cm2/Vs, while the fractional-quantum ferroelectric phase lacks that mode and exceeds 70 cm2/Vs, rising past 300 with carrier doping."
     }
   ]
 }
