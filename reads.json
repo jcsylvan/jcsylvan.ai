@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-09-30",
+  "updated": "2026-10-07",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -946,6 +946,69 @@
       "source": "arXiv · 2609.16799",
       "url": "https://arxiv.org/abs/2609.16799",
       "summary": "Ferroelectric semiconductors are attractive for multifunctional electronics but carry current poorly. First-principles transport calculations on monolayer In2Se3 show the limit depends on where the ferroelectricity comes from: in the displacive phase, soft ferroelectric modes scatter electrons down to a few cm2/Vs, while the fractional-quantum ferroelectric phase lacks that mode and exceeds 70 cm2/Vs, rising past 300 with carrier doping."
+    },
+    {
+      "id": "2026-10-07-ai",
+      "date": "2026-10-07",
+      "category": "AI",
+      "title": "Understanding and Mitigating Hallucination Escape in Tool-Using LLM Agents",
+      "source": "arXiv · 2610.04409",
+      "url": "https://arxiv.org/abs/2610.04409",
+      "summary": "Agents that call external tools often pick the wrong one or emit invalid calls, and this paper names a failure mode in the fixes themselves: a method tuned on one tool configuration cuts hallucination there while making it worse elsewhere, cancelling the gain. Their EscapeGuard works at inference time with no retraining, gating on conflicting evidence and strengthening attention to the tool configuration. It cuts tool-selection hallucination by 9 points."
+    },
+    {
+      "id": "2026-10-07-semiconductors",
+      "date": "2026-10-07",
+      "category": "Semiconductors",
+      "title": "The future of 3D NAND flash technology",
+      "source": "arXiv · 2610.06363",
+      "url": "https://arxiv.org/abs/2610.06363",
+      "summary": "3D NAND is the storage layer underneath AI training, inference and archival data, and roadmaps now aim at thousand-layer stacks holding tens of trillions of devices per die. This review argues the binding constraint has shifted from lithography to the physics of storing charge itself, as lateral charge migration, cell-to-cell coupling and read disturb eat into margin. It expects no single roadmap, but charge-trap flash, ferroelectric storage and new channel materials each serving a different tier."
+    },
+    {
+      "id": "2026-10-07-biotechnology",
+      "date": "2026-10-07",
+      "category": "Biotechnology",
+      "title": "Generalizable single-cell perturbation response prediction using energy-guided flow matching",
+      "source": "arXiv · 2610.02232",
+      "url": "https://arxiv.org/abs/2610.02232",
+      "summary": "Predicting how single cells respond to a drug or genetic perturbation is hard to generalize to perturbations never seen in training. scEGFlow treats the problem as continuous transport, learning a flow from untreated cell populations to perturbed ones and then steering that flow with condition-specific energy gradients, so new conditions can be handled without retraining the flow itself. Across imaging and transcriptomic benchmarks it reconstructs response distributions better than existing methods while preserving population heterogeneity."
+    },
+    {
+      "id": "2026-10-07-sustainable-energy",
+      "date": "2026-10-07",
+      "category": "Sustainable Energy",
+      "title": "Modular Model Order Reduction for Inverter-Based Power Systems with Stability and Accuracy Guarantees",
+      "source": "arXiv · 2610.02477",
+      "url": "https://arxiv.org/abs/2610.02477",
+      "summary": "Grids dominated by inverter-connected wind, solar and storage are too large to simulate in full detail, so planners reduce the models and hope the simplification does not hide instability. This framework reduces each sub-area independently while keeping the interconnection structure intact, and translates one accuracy target for the whole grid into per-area targets. Meeting the local targets provably delivers the global accuracy and preserves stability of the reduced interconnected system."
+    },
+    {
+      "id": "2026-10-07-defense-tech",
+      "date": "2026-10-07",
+      "category": "Defense Tech",
+      "title": "European Defence Dependence on The U.S. and Its Geoeconomic Implications towards European Single Defence Market",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7546619",
+      "summary": "U.S. export controls reach beyond U.S. borders and constrain what European states can co-develop, buy and transfer among themselves. The paper argues that reach rests on technological and industrial dependence inside transatlantic production networks rather than on law alone, which is why legal challenges have changed little. It reads Europe's push for a single defence market as an attempt to reduce that dependence and reclaim technological sovereignty, not merely to modernize its defence industry."
+    },
+    {
+      "id": "2026-10-07-quantum-computing",
+      "date": "2026-10-07",
+      "category": "Quantum Computing",
+      "title": "Single-Shot Error Correction at Optimal Spacetime Cost",
+      "source": "arXiv · 2610.03684",
+      "url": "https://arxiv.org/abs/2610.03684",
+      "summary": "A known lower bound says storing K logical qubits for S time steps below error ε costs at least on the order of S(K + log(S/ε)) in qubits times time, and the construction matching it assumed error correction was itself perfect. This paper hits the same scaling with an explicit noisy circuit and an efficient decoder, counting every state preparation, gate, measurement and idle location. The result holds given long-range connectivity and fast, reliable classical processing."
+    },
+    {
+      "id": "2026-10-07-materials-science",
+      "date": "2026-10-07",
+      "category": "Materials Science",
+      "title": "New dimensions in magnetism and superconductivity via 3D nanoprinting with focused electron and ion beams",
+      "source": "arXiv · 2610.05443",
+      "url": "https://arxiv.org/abs/2610.05443",
+      "summary": "Taking nanoscale quantum materials into the third dimension lets geometry itself tune magnetic and superconducting behavior, and promises denser device integration. This review covers focused electron- and ion-beam induced deposition, which has matured enough to print functional superconducting and magnetic materials in genuinely 3D shapes rather than flat layers. The authors survey what has been built so far and which emergent phenomena and prototype devices the technique now puts within reach."
     }
   ]
 }
