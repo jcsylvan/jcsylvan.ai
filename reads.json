@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-10-07",
+  "updated": "2026-10-14",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -1009,6 +1009,69 @@
       "source": "arXiv · 2610.05443",
       "url": "https://arxiv.org/abs/2610.05443",
       "summary": "Taking nanoscale quantum materials into the third dimension lets geometry itself tune magnetic and superconducting behavior, and promises denser device integration. This review covers focused electron- and ion-beam induced deposition, which has matured enough to print functional superconducting and magnetic materials in genuinely 3D shapes rather than flat layers. The authors survey what has been built so far and which emergent phenomena and prototype devices the technique now puts within reach."
+    },
+    {
+      "id": "2026-10-14-ai",
+      "date": "2026-10-14",
+      "category": "AI",
+      "title": "LLM-IDEA: Identifiability-Driven Experimental Agent for Autonomous Discovery of Mechanistic World Models",
+      "source": "arXiv · 2610.11253",
+      "url": "https://arxiv.org/abs/2610.11253",
+      "summary": "Argues that LLM agents running autonomous experiments conflate two very different kinds of failure: not being clever enough, and asking a question the available data cannot answer. The authors pair an LLM proposer with a deterministic identifiability engine that inspects sensitivity-matrix rank and returns one of three verdicts when progress stalls—capability limit, resolvable within the current experiment design, or certifiably exhausted."
+    },
+    {
+      "id": "2026-10-14-semiconductors",
+      "date": "2026-10-14",
+      "category": "Semiconductors",
+      "title": "RFChipAgent: Multi-Agentic AI Flow for Analog/RF Chip Design",
+      "source": "arXiv · 2610.10858",
+      "url": "https://arxiv.org/abs/2610.10858",
+      "summary": "Builds a human-supervised multi-agent LLM flow for analog and RF circuit design, the step that stays stubbornly manual while Wi-Fi 7 and 6G raise the specifications. Retrieval-augmented agents mine existing engineering documentation to pick topologies and assemble schematics and testbenches, with a hybrid TPE/CMA-ES sizing loop evaluating each candidate in a simulator. It is validated on 60 GHz wideband low-noise amplifiers in GF22FDSOI."
+    },
+    {
+      "id": "2026-10-14-biotechnology",
+      "date": "2026-10-14",
+      "category": "Biotechnology",
+      "title": "De novo design of monoclonal and bispecific antibodies with OFAntibody",
+      "source": "arXiv · 2610.09548",
+      "url": "https://arxiv.org/abs/2610.09548",
+      "summary": "Most generative antibody designers model a single antigen-antibody interface, which breaks down for bispecific antibodies that must hold several recognition interfaces in one structure. OFAntibody adds multi-component structural supervision and arm-aware hotspot routing so each paratope is tied to its intended epitope, covering tandem VHH, diabody, and CODV formats. It reports a 41.5% top-5 enrichment rate on nanobody benchmarks, though energy pass rates on the harder bispecific formats remain low."
+    },
+    {
+      "id": "2026-10-14-sustainable-energy",
+      "date": "2026-10-14",
+      "category": "Sustainable Energy",
+      "title": "Battery Second Life: A Review of Experimental Studies",
+      "source": "arXiv · 2610.11632",
+      "url": "https://arxiv.org/abs/2610.11632",
+      "summary": "Earlier reviews of reusing retired EV batteries as cheap stationary storage surveyed opportunities and barriers but not the experimental record. This paper synthesizes 157 studies published from 2012 to 2026 covering more than 15,000 tested retired cells, proposing a clearer end-of-life vocabulary and reviewing state-of-health estimation, cell-to-cell dispersion, aging, and safety. Its conclusion is that retired batteries perform adequately and degrade slowly, but their variability has to be actively managed."
+    },
+    {
+      "id": "2026-10-14-defense-tech",
+      "date": "2026-10-14",
+      "category": "Defense Tech",
+      "title": "Weapons of Mass Production: A Strategy for Tapping America's Entire Industrial Base",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7222521",
+      "summary": "Argues that the binding constraint on U.S. munitions output is the contracting architecture rather than factory capacity, citing the strain of backfilling 155mm artillery shells and interceptor expenditure. Surveying more than 60 firms, the authors estimate publicly traded defense primes control only about 6% of the national manufacturing base, and propose bankable five- to ten-year federal purchase commitments—rather than equity stakes—to draw in the rest."
+    },
+    {
+      "id": "2026-10-14-quantum-computing",
+      "date": "2026-10-14",
+      "category": "Quantum Computing",
+      "title": "Error-Corrected Memory and Logic on a Heavy-Hex Superconducting-Qubit Processor",
+      "source": "arXiv · 2610.11658",
+      "url": "https://arxiv.org/abs/2610.11658",
+      "summary": "Runs a large dynamic compass code across all 156 qubits of a heavy-hexagonal superconducting processor, rewriting the measurement schedule to route around components that underperform. Combining a noise-informed decoder, exclusion of the worst qubits and couplers, and leakage-based post-selection cuts logical memory error by up to 35% and improves measurement-based logic by up to 56%, with lattice-surgery Bell fidelities above 97% under post-selection."
+    },
+    {
+      "id": "2026-10-14-materials-science",
+      "date": "2026-10-14",
+      "category": "Materials Science",
+      "title": "High-Throughput Discovery of Chiral Carbon-Boron Semimetals with Weyl Topology and Phonon-Mediated Superconductivity",
+      "source": "arXiv · 2610.12965",
+      "url": "https://arxiv.org/abs/2610.12965",
+      "summary": "Generates 972 candidate carbon-boron structures from Wyckoff positions and filters them by first-principles calculations of energetic and dynamical stability, metallicity, band topology, and thermal stability, leaving six survivors. The materials host charge-one, -two, and -three Weyl points alongside nodal rings and surfaces, and the lead compound is predicted to superconduct at 31.1 K at ambient pressure—combining topology and superconductivity, though none has yet been synthesized."
     }
   ]
 }
