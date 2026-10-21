@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-10-14",
+  "updated": "2026-10-21",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -1072,6 +1072,69 @@
       "source": "arXiv · 2610.12965",
       "url": "https://arxiv.org/abs/2610.12965",
       "summary": "Generates 972 candidate carbon-boron structures from Wyckoff positions and filters them by first-principles calculations of energetic and dynamical stability, metallicity, band topology, and thermal stability, leaving six survivors. The materials host charge-one, -two, and -three Weyl points alongside nodal rings and surfaces, and the lead compound is predicted to superconduct at 31.1 K at ambient pressure—combining topology and superconductivity, though none has yet been synthesized."
+    },
+    {
+      "id": "2026-10-21-ai",
+      "date": "2026-10-21",
+      "category": "AI",
+      "title": "Learning to Steer LLM Agents and Multi-Agent Systems",
+      "source": "arXiv · 2610.22316",
+      "url": "https://arxiv.org/abs/2610.22316",
+      "summary": "Long-running LLM agents tend to drift away from the task they were given, burning tokens on work that no longer serves the goal. The authors train a separate steering agent that watches an executor's trajectory and intervenes to correct course, splitting the decision into whether to step in and how. Trained with reinforcement learning, it improves accuracy and efficiency on search tasks and transfers to unseen executors and domains."
+    },
+    {
+      "id": "2026-10-21-semiconductors",
+      "date": "2026-10-21",
+      "category": "Semiconductors",
+      "title": "Gate-defined quantum dot and charge noise analysis in a Forksheet transistor",
+      "source": "arXiv · 2610.24136",
+      "url": "https://arxiv.org/abs/2610.24136",
+      "summary": "A 14-nm nMOS Forksheet transistor from a 300 mm industrial line is measured down to 10 mK, where it both operates as a classical device with improved characteristics and confines a gate-defined quantum dot in the single-electron regime. Low-frequency charge noise in that regime averages about 10 μeV/√Hz at 1 Hz, with a best case of 3.3 μeV/√Hz. The result matters because it suggests a single foundry process could host qubits and their control electronics on one chip."
+    },
+    {
+      "id": "2026-10-21-biotechnology",
+      "date": "2026-10-21",
+      "category": "Biotechnology",
+      "title": "Designing Protein Structures from Natural Language",
+      "source": "arXiv · 2610.13917",
+      "url": "https://arxiv.org/abs/2610.13917",
+      "summary": "De novo protein design normally needs a bespoke input format for each property a designer wants to specify. Prompteina instead generates all-atom structures from plain-language descriptions, trained on a new dataset of 1.8 million structures paired with over 50 million captions. It beats baselines on 15 of 18 structural properties and on binder design, and produced nine experimentally confirmed binders to GM2A, a target with no previously reported de novo binders."
+    },
+    {
+      "id": "2026-10-21-sustainable-energy",
+      "date": "2026-10-21",
+      "category": "Sustainable Energy",
+      "title": "AI Data Centers Meet Electrical Grids: A Review of Power Challenges and Coordinated Solutions",
+      "source": "arXiv · 2610.09060",
+      "url": "https://arxiv.org/abs/2610.09060",
+      "summary": "A review tracing the power chain of an AI data center from accelerators and workloads through rack converters, UPS systems, storage, and microgrids out to the transmission interconnection. Its central argument is that annual electricity totals hide what actually strains the grid: where the load sits, how fast it swings, and whether it can be controlled. Falling energy per token, the authors note, does not necessarily mean lower peak demand, fewer disturbances, or lower emissions."
+    },
+    {
+      "id": "2026-10-21-defense-tech",
+      "date": "2026-10-21",
+      "category": "Defense Tech",
+      "title": "The Footprint of Defence Production: Economic Implications",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7536894",
+      "summary": "Rather than estimating fiscal multipliers from defence budgets, this paper builds a measure of where defence plants and their supply chains actually sit across regions of 15 European countries, then asks whether those places differ economically. It finds a positive, significant association between defence-industrial presence and higher regional income, stronger in more innovative regions, and traces local output paths after the 2014 annexation of Crimea."
+    },
+    {
+      "id": "2026-10-21-quantum-computing",
+      "date": "2026-10-21",
+      "category": "Quantum Computing",
+      "title": "Magic-Free Certification of Logical Error Rates in Universal Fault-Tolerant Circuits",
+      "source": "arXiv · 2610.16401",
+      "url": "https://arxiv.org/abs/2610.16401",
+      "summary": "As algorithms start running on encoded qubits, there is still no cheap way to confirm a machine is executing them below a target logical error rate. This protocol builds trap circuits by swapping each magic state for a stabilizer state, yielding deterministic tests that fail at the same rate as the real circuit under Pauli noise. It is code- and decoder-agnostic, runs on the same device interleaved with the target circuit, and scales linearly in logical qubits and non-Clifford gates."
+    },
+    {
+      "id": "2026-10-21-materials-science",
+      "date": "2026-10-21",
+      "category": "Materials Science",
+      "title": "Time-Reversal Symmetry Breaking in the Centrosymmetric Nonsymmorphic Superconductor RuB2",
+      "source": "arXiv · 2610.26264",
+      "url": "https://arxiv.org/abs/2610.26264",
+      "summary": "Muon spin relaxation measurements find spontaneous internal magnetic fields appearing below the 1.6 K transition in RuB2, the signature of a superconducting state that breaks time-reversal symmetry. Transverse-field data nonetheless show a fully gapped state near the conventional BCS value, and first-principles work classifies the material as a multiband topological metal. Symmetry analysis points to a nonunitary spin-triplet order parameter as the leading explanation."
     }
   ]
 }
