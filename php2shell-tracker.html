@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHP2Shell Patch Tracker &mdash; jcsylvan.ai</title>
+  <meta name="description" content="OpenAI's PHP2Shell version checker, ported to run in the browser, with a running tracker of the PHP systems you are responsible for.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    a { color: #f0c040; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 920px; margin: 0 auto; }
+
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #666; font-size: 0.85rem; }
+    .back-link:hover { color: #e0e0e0; }
+
+    h1 { font-size: 1.4rem; margin-bottom: 0.25rem; color: #f0c040; font-weight: 600; }
+    .subtitle { color: #888; font-size: 0.85rem; margin-bottom: 1.25rem; max-width: 760px; line-height: 1.55; }
+    .subtitle b { color: #ccc; font-weight: 600; }
+
+    .note {
+      background: #15120a; border: 1px solid #3a3320; border-radius: 6px;
+      padding: 0.9rem 1.1rem; font-size: 0.8rem; line-height: 1.55; color: #c9b979;
+      margin-bottom: 1.5rem;
+    }
+    .note b { color: #f0c040; }
+    .note code { color: #e0e0e0; }
+
+    .card {
+      background: #111; border: 1px solid #222; border-radius: 6px;
+      padding: 1.25rem; margin-bottom: 1.5rem;
+    }
+    .card h2 {
+      font-size: 0.8rem; color: #999; margin-bottom: 1rem;
+      text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500;
+    }
+    .card-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1rem; }
+    .card-head h2 { margin-bottom: 0.75rem; }
+    .card-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    label { display: block; color: #888; font-size: 0.8rem; margin-bottom: 0.4rem; line-height: 1.5; }
+    code, .mono { font-family: inherit; }
+    label code { color: #ccc; }
+
+    textarea, input[type="text"] {
+      width: 100%; background: #1a1a1a; border: 1px solid #333; border-radius: 4px;
+      color: #e0e0e0; font-family: inherit; font-size: 0.9rem; padding: 0.6rem 0.7rem; outline: none;
+      resize: vertical; line-height: 1.5;
+    }
+    textarea:focus, input[type="text"]:focus { border-color: #f0c040; }
+    textarea::placeholder, input::placeholder { color: #444; }
+
+    .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem 1rem; margin-top: 0.9rem; }
+
+    .btn {
+      background: none; border: 1px solid #4a3a10; border-radius: 4px; color: #f0c040;
+      font-family: inherit; font-size: 0.85rem; padding: 0.55rem 1.4rem; cursor: pointer;
+      letter-spacing: 0.05em; transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover { border-color: #f0c040; background: #1a1505; }
+    .btn:disabled { opacity: 0.5; cursor: wait; }
+    .btn.small { font-size: 0.75rem; padding: 0.35rem 0.8rem; letter-spacing: 0.03em; }
+    .btn.quiet { color: #999; border-color: #333; }
+    .btn.quiet:hover { color: #e0e0e0; border-color: #666; background: #161616; }
+    .btn.danger:hover { color: #d17f7f; border-color: #5e2a2a; background: #1a0f0f; }
+
+    .examples { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
+    .examples .lbl { color: #555; font-size: 0.75rem; }
+    .chip {
+      background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: #aaa;
+      font-family: inherit; font-size: 0.72rem; padding: 0.25rem 0.7rem; cursor: pointer;
+    }
+    .chip:hover { border-color: #f0c040; color: #f0c040; }
+
+    .hint { color: #555; font-size: 0.75rem; margin-top: 0.6rem; line-height: 1.5; }
+    .error { color: #d17f7f; font-size: 0.85rem; margin-top: 0.75rem; }
+
+    /* verdicts */
+    .verdict {
+      border: 1px solid #222; border-left: 4px solid #555; border-radius: 6px;
+      background: #0d0d0d; padding: 1rem 1.1rem; margin-top: 1.1rem;
+    }
+    .verdict.ok { border-left-color: #6fd17f; }
+    .verdict.potentially_vulnerable { border-left-color: #d17f7f; }
+    .verdict.unknown { border-left-color: #d1bf7f; }
+
+    .v-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.4rem 0.9rem; margin-bottom: 0.6rem; }
+    .v-head .input { color: #777; font-size: 0.78rem; word-break: break-all; }
+    .v-head .exit { color: #555; font-size: 0.72rem; }
+
+    .badge {
+      display: inline-block; font-size: 0.72rem; padding: 0.22rem 0.65rem; border-radius: 10px;
+      letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+    }
+    .badge.ok { background: #14331a; color: #6fd17f; border: 1px solid #2a5e36; }
+    .badge.potentially_vulnerable { background: #331414; color: #d17f7f; border: 1px solid #5e2a2a; }
+    .badge.unknown { background: #332a14; color: #d1bf7f; border: 1px solid #5e4f2a; }
+    .badge.mode { background: #1a1a1a; color: #888; border: 1px solid #333; text-transform: none; letter-spacing: 0.02em; }
+
+    .reason {
+      background: #141414; border: 1px solid #222; border-radius: 4px; padding: 0.55rem 0.7rem;
+      color: #ddd; font-size: 0.8rem; line-height: 1.5; word-break: break-word; white-space: pre-wrap;
+    }
+    .meaning { color: #aaa; font-size: 0.82rem; line-height: 1.55; margin-top: 0.75rem; }
+    .meaning b { color: #ccc; }
+    ol.steps { margin: 0.5rem 0 0 1.2rem; color: #aaa; font-size: 0.8rem; line-height: 1.55; }
+    ol.steps li { margin-bottom: 0.3rem; }
+    ol.steps code { color: #e0e0e0; }
+
+    .vendor-note { margin-top: 0.75rem; font-size: 0.78rem; color: #999; line-height: 1.5; }
+    .vendor-note b { color: #ccc; }
+
+    .add-row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-top: 0.9rem; }
+    .add-row input[type="text"] { flex: 1 1 220px; font-size: 0.82rem; padding: 0.45rem 0.6rem; }
+    .added { color: #6fd17f; font-size: 0.78rem; }
+
+    .cmd {
+      position: relative; background: #141414; border: 1px solid #222; border-radius: 4px;
+      padding: 0.6rem 5rem 0.6rem 0.7rem; margin-top: 0.5rem; font-size: 0.78rem; color: #ddd;
+      white-space: pre-wrap; word-break: break-all; line-height: 1.5;
+    }
+    .cmd .copy {
+      position: absolute; top: 0.4rem; right: 0.4rem; background: none; border: 1px solid #333;
+      border-radius: 3px; color: #888; font-family: inherit; font-size: 0.68rem; padding: 0.15rem 0.5rem; cursor: pointer;
+    }
+    .cmd .copy:hover { color: #f0c040; border-color: #f0c040; }
+    .cmd-label { color: #666; font-size: 0.72rem; margin-top: 0.75rem; }
+
+    /* tracker */
+    .summary { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .summary .pill {
+      font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: 12px;
+      border: 1px solid #333; color: #999; background: #151515;
+    }
+    .summary .pill b { color: #e0e0e0; font-weight: 600; }
+    .summary .pill.ok b { color: #6fd17f; }
+    .summary .pill.potentially_vulnerable b { color: #d17f7f; }
+    .summary .pill.unknown b { color: #d1bf7f; }
+
+    .tbl-wrap { overflow-x: auto; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    table.tbl th {
+      text-align: left; color: #666; font-weight: 500; font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.06em; padding: 0.4rem 0.6rem; border-bottom: 1px solid #222; white-space: nowrap;
+    }
+    table.tbl td { padding: 0.55rem 0.6rem; border-bottom: 1px solid #1a1a1a; vertical-align: top; line-height: 1.45; }
+    table.tbl tr:last-child td { border-bottom: none; }
+    table.tbl td.ver { color: #e0e0e0; white-space: nowrap; }
+    table.tbl td.when { color: #777; white-space: nowrap; font-size: 0.75rem; }
+    table.tbl td.note { color: #999; min-width: 140px; }
+    table.tbl td.sys { color: #e0e0e0; min-width: 140px; word-break: break-word; }
+    table.tbl td.sys .src { color: #555; font-size: 0.7rem; display: block; word-break: break-all; }
+    table.tbl .editable { cursor: text; border-bottom: 1px dashed #333; }
+    table.tbl .editable:hover { border-bottom-color: #f0c040; }
+    table.tbl .row-actions { display: flex; gap: 0.3rem; flex-wrap: wrap; justify-content: flex-end; }
+    table.tbl .row-actions button {
+      background: none; border: 1px solid #2a2a2a; border-radius: 3px; color: #888; font-family: inherit;
+      font-size: 0.68rem; padding: 0.15rem 0.5rem; cursor: pointer; white-space: nowrap;
+    }
+    table.tbl .row-actions button:hover { color: #f0c040; border-color: #f0c040; }
+    table.tbl .row-actions button.rm:hover { color: #d17f7f; border-color: #5e2a2a; }
+    .empty { color: #555; font-size: 0.82rem; line-height: 1.5; padding: 0.5rem 0; }
+
+    /* reference tables */
+    table.ref { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    table.ref th {
+      text-align: left; color: #666; font-weight: 500; font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.06em; padding: 0.4rem 0.6rem; border-bottom: 1px solid #222; white-space: nowrap;
+    }
+    table.ref td { padding: 0.5rem 0.6rem; border-bottom: 1px solid #1a1a1a; vertical-align: top; line-height: 1.45; color: #bbb; }
+    table.ref tr:last-child td { border-bottom: none; }
+    table.ref td.v { color: #e0e0e0; white-space: nowrap; }
+    table.ref td.k { color: #e0e0e0; white-space: nowrap; }
+    .sub { color: #666; font-size: 0.75rem; margin-top: 0.75rem; line-height: 1.5; }
+    .sub b { color: #999; }
+
+    .timeline { list-style: none; margin: 0.25rem 0 0; border-left: 1px solid #2a2a2a; padding-left: 1.1rem; }
+    .timeline li { position: relative; padding: 0.3rem 0 0.55rem; }
+    .timeline li:before {
+      content: ""; position: absolute; left: -1.4rem; top: 0.72rem;
+      width: 0.55rem; height: 0.55rem; background: #f0c040; border-radius: 50%;
+    }
+    .timeline .t { color: #f0c040; font-size: 0.78rem; font-weight: 600; }
+    .timeline .d { color: #bbb; font-size: 0.82rem; line-height: 1.45; }
+
+    ul.links { list-style: none; margin: 0; }
+    ul.links li { padding: 0.25rem 0; font-size: 0.82rem; line-height: 1.45; }
+    ul.links li span { color: #777; }
+
+    .disclaimer {
+      color: #666; font-size: 0.72rem; line-height: 1.55;
+      border-top: 1px solid #222; padding-top: 1rem; margin-top: 0.5rem;
+    }
+    .disclaimer b { color: #999; }
+
+    @media (max-width: 640px) {
+      body { padding: 1.25rem 1rem 3rem; }
+      .card { padding: 1rem; }
+      .btn { width: 100%; }
+      .btn.small { width: auto; }
+      .cmd { padding-right: 0.7rem; padding-top: 2rem; }
+      table.ref td.k, table.ref td.v { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="tools.html" class="back-link">&larr; tools</a>
+    <h1>PHP2Shell Patch Tracker</h1>
+    <p class="subtitle">
+      <b>OpenAI's PHP version checker, running in your browser.</b> Paste a PHP version, a response header,
+      <code>php -v</code> output, or a site address and get the same verdict OpenAI's
+      <code>php2shell-checker</code> gives &mdash; <b>OK</b>, <b>potentially vulnerable</b> or <b>unknown</b> &mdash;
+      with the same version table and the same caution about vendor backports. Then keep a running tracker of the
+      PHP systems you are responsible for and where each one stands.
+    </p>
+    <div class="note">
+      <b>What this is about.</b> On 21 October 2026 PHP shipped emergency releases for two critical flaws in the
+      PHP engine itself, <b>CVE-2026-109618</b> and <b>CVE-2026-109619</b>, together known as <b>php2shell</b>. They
+      allow unauthenticated remote code execution and memory disclosure on any affected PHP version back to 5.4,
+      regardless of the application on top. The fixed releases are <code>8.2.35</code>, <code>8.3.36</code>,
+      <code>8.4.27</code> and <code>8.5.12</code>; older branches depend on vendor backports or an upgrade.
+      Verdicts here are <b>version-based only</b>: no exploit probes are ever sent.
+    </div>
+
+    <!-- check -->
+    <div class="card">
+      <h2>Check a version, a header, or a site</h2>
+      <label for="q">
+        A PHP version (<code>8.4.26</code>), a response header (<code>X-Powered-By: PHP/8.3.36</code>),
+        <code>php -v</code> output, or a URL. One per line to check several at once.
+      </label>
+      <textarea id="q" rows="3" spellcheck="false" placeholder="8.4.26&#10;X-Powered-By: PHP/8.3.36&#10;https://example.com"></textarea>
+      <div class="actions">
+        <button class="btn" id="go">Check</button>
+        <div class="examples">
+          <span class="lbl">try:</span>
+          <button class="chip" data-q="8.4.26">8.4.26</button>
+          <button class="chip" data-q="X-Powered-By: PHP/8.3.36">X-Powered-By: PHP/8.3.36</button>
+          <button class="chip" data-q="PHP 8.1.2-1ubuntu2.28 (fpm-fcgi)">PHP 8.1.2-1ubuntu2.28</button>
+          <button class="chip" data-q="8.6.0RC3">8.6.0RC3</button>
+          <button class="chip" data-q="https://www.php.net">https://www.php.net</button>
+        </div>
+      </div>
+      <div class="error" id="err"></div>
+      <p class="hint">
+        Checking a URL from a browser is a long shot: most sites do not let a page read their
+        <code>Server</code> and <code>X-Powered-By</code> headers, so the result is usually <b>unknown</b>. When that
+        happens the tool hands you the exact terminal command for OpenAI's checker instead.
+      </p>
+      <div id="results"></div>
+    </div>
+
+    <!-- tracker -->
+    <div class="card" id="tracker">
+      <div class="card-head">
+        <h2>Tracker <span id="count" style="color:#555;text-transform:none;letter-spacing:0"></span></h2>
+        <div class="card-actions">
+          <button class="btn small quiet" id="recheck-all">re-check all</button>
+          <button class="btn small quiet" id="export-csv">download CSV</button>
+          <button class="btn small quiet" id="copy-json">copy as JSON</button>
+          <button class="btn small quiet danger" id="clear">clear</button>
+        </div>
+      </div>
+      <div class="summary" id="summary"></div>
+      <div class="tbl-wrap" id="rows"></div>
+      <p class="sub">
+        One row per system. Checking something with the same name again updates its row instead of adding a new
+        one. Click a name, version or note to edit it. Everything is stored only in this browser
+        (<code>localStorage</code>) on this device.
+      </p>
+    </div>
+
+    <!-- fixed releases -->
+    <div class="card">
+      <h2>Fixed releases, by branch</h2>
+      <div class="tbl-wrap">
+      <table class="ref">
+        <thead><tr><th>PHP branch</th><th>Fixed release</th><th>What the checker says</th></tr></thead>
+        <tbody>
+          <tr><td class="k">8.5</td><td class="v">8.5.12</td><td>OK from 8.5.12 up. Anything lower is potentially vulnerable.</td></tr>
+          <tr><td class="k">8.4</td><td class="v">8.4.27</td><td>OK from 8.4.27 up.</td></tr>
+          <tr><td class="k">8.3</td><td class="v">8.3.36</td><td>OK from 8.3.36 up.</td></tr>
+          <tr><td class="k">8.2</td><td class="v">8.2.35</td><td>OK from 8.2.35 up. PHP 8.2 reaches end of life on 31 December 2026, so plan the upgrade too.</td></tr>
+          <tr><td class="k">8.1, 8.0, 7.4</td><td class="v">source patch only</td><td>Always potentially vulnerable by version, whatever the patch number (8.1.35 included). PHP published source patches but no official binaries; rely on your vendor's backport, listed below.</td></tr>
+          <tr><td class="k">7.3 and older, back to 5.4</td><td class="v">no upstream fix</td><td>Always potentially vulnerable by version. Vendor backport (for example Ubuntu Pro or Red Hat) or upgrade.</td></tr>
+          <tr><td class="k">8.6 and later, prereleases</td><td class="v">&mdash;</td><td>Unknown: the checker has no fixed release to compare against, and <code>RC</code>, <code>beta</code>, <code>alpha</code> and <code>dev</code> builds are not judged.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="sub">
+        Source: the <a href="https://www.php.net/archive/2026.php#2026-10-21-5" target="_blank" rel="noopener">PHP advisory of 21 October 2026</a>
+        and the version table in <a href="https://github.com/openai/php2shell-checker" target="_blank" rel="noopener">openai/php2shell-checker</a>.
+      </p>
+    </div>
+
+    <!-- vendor backports -->
+    <div class="card">
+      <h2>Vendor packages that carry the fix</h2>
+      <p class="sub" style="margin:0 0 0.9rem">
+        Distributions backport the fix into their own package numbers, so a version that looks too low can
+        still be patched. These are the fixed package versions listed in OpenAI's server-side skill, verified
+        on 22 October 2026. Compare the <b>full package revision</b> of the package that actually serves the
+        site (<code>php8.3-fpm</code> or <code>libapache2-mod-php8.3</code>, not the <code>php</code> metapackage)
+        with <code>dpkg --compare-versions</code> or RPM ordering, and use the listed version or later from
+        the same release and stream.
+      </p>
+      <div class="tbl-wrap">
+        <table class="ref" id="vendor-table">
+          <thead><tr><th>Release and package</th><th>Fixed package version</th><th>Advisory</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="sub">
+        Other providers have their own advisories. Do not apply these thresholds to another vendor's packages
+        or to a custom build. A fixed package also does not prove the web workers use it: confirm which
+        installation serves the site and that PHP-FPM or the web server restarted after the update.
+      </p>
+    </div>
+
+    <!-- run the real thing -->
+    <div class="card">
+      <h2>Run OpenAI's checker itself</h2>
+      <p class="sub" style="margin:0 0 0.5rem">
+        The real checker is a small Node script, Apache-2.0 licensed, with two Codex skills: one for when you
+        only have a URL and one for when you have server access. From a terminal it reads the site's real
+        response headers, which a browser page usually cannot.
+      </p>
+      <div class="cmd-label">Install both skills in Codex</div>
+      <div class="cmd" data-cmd="$skill-installer install both skills from https://github.com/openai/php2shell-checker">$skill-installer install both skills from https://github.com/openai/php2shell-checker<button class="copy">copy</button></div>
+      <div class="cmd-label">Or clone and run it directly</div>
+      <div class="cmd" data-cmd="git clone https://github.com/openai/php2shell-checker && node php2shell-checker/phpcheck.js &quot;https://example.com&quot; --json">git clone https://github.com/openai/php2shell-checker &amp;&amp; node php2shell-checker/phpcheck.js "https://example.com" --json<button class="copy">copy</button></div>
+      <div class="cmd-label">Just look at the headers yourself</div>
+      <div class="cmd" data-cmd="curl -sI &quot;https://example.com&quot; | grep -iE '^(server|x-powered-by):'">curl -sI "https://example.com" | grep -iE '^(server|x-powered-by):'<button class="copy">copy</button></div>
+      <div class="cmd-label">On the server, find the package that actually serves the site</div>
+      <div class="cmd" data-cmd="php-fpm -v 2>/dev/null || php -v; dpkg-query -W -f='${binary:Package} ${Version}\n' 'php*-fpm' 'libapache2-mod-php*' 2>/dev/null; rpm -qa 'php*' 2>/dev/null">php-fpm -v 2&gt;/dev/null || php -v; dpkg-query -W -f='${binary:Package} ${Version}\n' 'php*-fpm' 'libapache2-mod-php*' 2&gt;/dev/null; rpm -qa 'php*' 2&gt;/dev/null<button class="copy">copy</button></div>
+      <p class="sub">
+        Exit codes: <b>0</b> OK, <b>1</b> potentially vulnerable, <b>3</b> unknown, <b>2</b> bad arguments.
+        Add <code>--json</code> for machine-readable output.
+      </p>
+    </div>
+
+    <!-- timeline and links -->
+    <div class="card">
+      <h2>How it unfolded</h2>
+      <ul class="timeline">
+        <li><div class="t">August 2026</div><div class="d">Ryan Austin at Calif finds the flaw with GPT-5.6 Sol during an audit of PHP's source under OpenAI's Patch the Planet initiative. On 19 August, Wiz Research independently finds the first bug with Wiz Atlas, Gemini 4 Argon and GPT-5.6 Sol, and confirms unauthenticated remote code execution on Drupal and WordPress within two days.</div></li>
+        <li><div class="t">24 August</div><div class="d">Wiz reports the vulnerabilities to the PHP security team.</div></li>
+        <li><div class="t">21 September</div><div class="d">PHP acknowledges the reports and begins a coordinated fix, with OpenAI, Wiz, Cloudflare and others preparing protections ahead of disclosure.</div></li>
+        <li><div class="t">20 October</div><div class="d">Details leak online. PHP gives advance notice of the security release; CERT-EU, the UK's NCSC and others advise organisations that cannot patch immediately to take sites offline, and many government sites go dark.</div></li>
+        <li><div class="t">21 October</div><div class="d">PHP 8.2.35, 8.3.36, 8.4.27 and 8.5.12 ship. Public disclosure by PHP, Wiz, Calif and OpenAI, which publishes the version checker this page is built on.</div></li>
+        <li><div class="t">22 October</div><div class="d">OpenAI's server-side skill lists the Debian, Ubuntu and Red Hat package versions that carry the backported fix.</div></li>
+      </ul>
+      <h2 style="margin-top:1.25rem">Sources</h2>
+      <ul class="links">
+        <li><a href="https://github.com/openai/php2shell-checker" target="_blank" rel="noopener">openai/php2shell-checker</a> <span>&mdash; the checker and skills this page ports (Apache-2.0)</span></li>
+        <li><a href="https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/" target="_blank" rel="noopener">Patch the Planet: global response coordination</a> <span>&mdash; OpenAI, 21 October 2026</span></li>
+        <li><a href="https://www.php.net/archive/2026.php#2026-10-21-5" target="_blank" rel="noopener">PHP security advisory and releases</a> <span>&mdash; php.net</span></li>
+        <li><a href="https://thephp.foundation/blog/2026/10/21/todays-php-security-release-and-how-were-strengthening-php-security/" target="_blank" rel="noopener">Today's PHP security release</a> <span>&mdash; The PHP Foundation</span></li>
+        <li><a href="https://www.wiz.io/blog/php2shell-php-rce" target="_blank" rel="noopener">PHP2Shell: AI uncovers critical RCE vulnerabilities</a> <span>&mdash; Wiz Research, with indicators of compromise</span></li>
+        <li><a href="https://calif.io/php2shell/" target="_blank" rel="noopener">Calif's write-up</a> <span>&mdash; the other discoverer</span></li>
+        <li><a href="https://blog.cloudflare.com/php-vulnerabilities-waf-protection/" target="_blank" rel="noopener">Cloudflare's WAF protections</a> <span>&mdash; interim mitigation, not a fix</span></li>
+        <li><a href="https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk" target="_blank" rel="noopener">CISA BOD 26-04</a> <span>&mdash; how to prioritise remediation</span></li>
+        <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109618" target="_blank" rel="noopener">CVE-2026-109618</a> <span>and</span> <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109619" target="_blank" rel="noopener">CVE-2026-109619</a> <span>&mdash; NVD</span></li>
+        <li><a href="https://patchtheplanet.org/" target="_blank" rel="noopener">patchtheplanet.org</a> <span>&mdash; public disclosures and operator guidance</span></li>
+      </ul>
+    </div>
+
+    <div class="disclaimer">
+      <b>A version check is a hint, not a verdict.</b> This page reproduces the classification logic of OpenAI's
+      <code>php2shell-checker</code> (Apache License 2.0, &copy; OpenAI) and is not affiliated with OpenAI or the PHP
+      project. <b>OK</b> means only that the advertised version meets an upstream fixed release; the installed build is
+      not verified. <b>Potentially vulnerable</b> is a version-based warning, never confirmed vulnerability; a vendor
+      backport may already contain the fix. Headers can be changed or hidden, and a server-side check of the package
+      serving the site is stronger evidence. Nothing here sends exploit probes. The tracker lives only in this
+      browser's local storage. Always confirm against the PHP advisory and your vendor's guidance before deciding.
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* ---------- OpenAI's classifier, ported from phpcheck.js ---------- */
+    // Official PHP releases fixing both CVEs, published 2026-10-21.
+    const FIXED_IN = { '8.2': 35, '8.3': 36, '8.4': 27, '8.5': 12 };
+    const OLDER_BRANCHES = new Set(['5.4', '5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1']);
+    const EXIT_CODE = { ok: 0, potentially_vulnerable: 1, unknown: 3 };
+    const HEADER_RE = /\bPHP[ /]([^\s,;)]+)/gi;
+
+    function versionStatus(version) {
+      const match = /^(\d+)\.(\d+)\.(\d+)([-+~].*)?$/.exec(version || '');
+      if (!match) return 'unknown';
+      if (/(?:^|[-+~.])(?:dev|alpha|beta|rc)/i.test(match[4] || '')) return 'unknown';
+      const branch = `${Number(match[1])}.${Number(match[2])}`;
+      if (OLDER_BRANCHES.has(branch)) return 'potentially_vulnerable';
+      const fixed = FIXED_IN[branch];
+      if (fixed === undefined) return 'unknown';
+      if (Number(match[3]) < fixed) return 'potentially_vulnerable';
+      return 'ok';
+    }
+
+    // Same scan and the same "prefer warnings over a reassuring banner" rule as the CLI.
+    function pickVersion(text) {
+      let version = null, status = 'unknown';
+      for (const match of text.matchAll(HEADER_RE)) {
+        const candidate = versionStatus(match[1]);
+        if (version === null || candidate === 'potentially_vulnerable' || status === 'ok') {
+          version = match[1];
+          status = candidate;
+        }
+        if (status === 'potentially_vulnerable') break;
+      }
+      return { version, status };
+    }
+
+    function buildReport(version, status, error, viaHeaders) {
+      const cannotTell = viaHeaders
+        ? 'HTTP headers cannot tell whether this version contains a backported fix.'
+        : 'A version number alone cannot tell whether this build contains a backported fix.';
+      let result = { patch_status: 'unknown', reason: error || 'PHP version not found' };
+      if (version && !error) {
+        result = {
+          patch_status: status,
+          reason: status === 'ok'
+            ? `PHP ${version}: advertised version meets an upstream fixed release. Installed build not verified.`
+            : `PHP ${version}: ${status === 'potentially_vulnerable' ? 'Potentially vulnerable. ' : ''}` + cannotTell,
+        };
+      }
+      return { ...result, php_version: version, exit_code: EXIT_CODE[result.patch_status] };
+    }
+    /* ---------- end of the ported classifier ---------- */
+
+    function checkText(text) {
+      let { version, status } = pickVersion(text);
+      if (version === null) {
+        const bare = /^v?(\d\S*)$/i.exec(text.trim());
+        if (bare) { version = bare[1]; status = versionStatus(version); }
+      }
+      const viaHeaders = /^\s*[\w-]+\s*:/.test(text) || /PHP\//i.test(text);
+      return buildReport(version, status, null, viaHeaders);
+    }
+
+    const URL_RE = /^(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z][a-z0-9-]*(?::\d+)?(?:\/\S*)?$/i;
+    function looksLikeUrl(s) { return /^https?:\/\//i.test(s) || URL_RE.test(s); }
+    function normalizeUrl(s) { return /^https?:\/\//i.test(s) ? s : 'https://' + s; }
+    function hostOf(s) { try { return new URL(normalizeUrl(s)).host; } catch { return s; } }
+
+    async function checkUrl(address) {
+      let version = null, status = 'unknown', error = null, sawHeaders = false;
+      try {
+        if (/[\x00-\x20\x7f]/.test(address)) throw new Error('URL contains spaces or control characters');
+        const url = new URL(normalizeUrl(address));
+        if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Use an http:// or https:// URL');
+        if (url.username || url.password || url.hash) throw new Error('URL credentials and fragments are not supported');
+        const headers = [];
+        for (const method of ['HEAD', 'GET']) {
+          const response = await fetch(url, { method, signal: AbortSignal.timeout(10000) });
+          headers.push(response.headers.get('server') || '', response.headers.get('x-powered-by') || '');
+          if (![405, 501].includes(response.status)) break;
+        }
+        sawHeaders = headers.some(Boolean);
+        ({ version, status } = pickVersion(headers.join('\n')));
+      } catch (exc) {
+        error = describeFetchError(exc, hostOf(address));
+      }
+      const report = buildReport(version, status, error, true);
+      if (!error && version === null) {
+        report.browser_note = sawHeaders
+          ? 'The headers this browser was allowed to read name no PHP version.'
+          : `A page can only read ${hostOf(address)}'s Server and X-Powered-By headers if the site exposes them with Access-Control-Expose-Headers, which almost none do. From a terminal, OpenAI's checker sees them directly.`;
+      }
+      return report;
+    }
+
+    function describeFetchError(exc, host) {
+      if (exc && (exc.name === 'TimeoutError' || exc.name === 'AbortError')) return `Timed out after 10 seconds waiting for ${host}.`;
+      if (exc instanceof TypeError) return `This browser was not allowed to read ${host}'s response (cross-origin request blocked), or the site is unreachable. Run the checker from a terminal instead.`;
+      return exc && exc.message ? exc.message : 'Check failed';
+    }
+
+    /* ---------- vendor backports (OpenAI's phpcheck-server skill, verified 2026-10-22) ---------- */
+    const VENDORS = [
+      { vendor: 'Debian', release: '12 (bookworm), php8.2', fixed: '8.2.35-1~deb12u1', adv: 'DLA-4848-1', url: 'https://security-tracker.debian.org/tracker/DLA-4848-1' },
+      { vendor: 'Debian', release: '13 (trixie), php8.4', fixed: '8.4.27-1~deb13u1', adv: 'DSA-6574-1', url: 'https://security-tracker.debian.org/tracker/DSA-6574-1' },
+      { vendor: 'Ubuntu', release: '26.10, php8.5', fixed: '8.5.9-0ubuntu2.1', adv: 'USN-8948-1', url: 'https://ubuntu.com/security/notices/USN-8948-1' },
+      { vendor: 'Ubuntu', release: '26.04 LTS, php8.5', fixed: '8.5.4-0ubuntu1.5', adv: 'USN-8948-1', url: 'https://ubuntu.com/security/notices/USN-8948-1' },
+      { vendor: 'Ubuntu', release: '24.04 LTS, php8.3', fixed: '8.3.6-0ubuntu0.24.04.13', adv: 'USN-8948-1', url: 'https://ubuntu.com/security/notices/USN-8948-1' },
+      { vendor: 'Ubuntu', release: '22.04 LTS, php8.1', fixed: '8.1.2-1ubuntu2.28', adv: 'USN-8948-1', url: 'https://ubuntu.com/security/notices/USN-8948-1' },
+      { vendor: 'Ubuntu', release: '20.04 LTS, php7.4 (Ubuntu Pro)', fixed: '7.4.3-4ubuntu2.29+esm5', adv: 'USN-8948-2', url: 'https://ubuntu.com/security/notices/USN-8948-2' },
+      { vendor: 'Ubuntu', release: '18.04 LTS, php7.2 (Ubuntu Pro)', fixed: '7.2.24-0ubuntu0.18.04.17+esm14', adv: 'USN-8948-2', url: 'https://ubuntu.com/security/notices/USN-8948-2' },
+      { vendor: 'Ubuntu', release: '16.04 LTS, php7.0 (Ubuntu Pro + Legacy Support)', fixed: '7.0.33-0ubuntu0.16.04.16+esm22', adv: 'USN-8948-2', url: 'https://ubuntu.com/security/notices/USN-8948-2' },
+      { vendor: 'Ubuntu', release: '14.04 LTS, php5 (Ubuntu Pro + Legacy Support)', fixed: '5.5.9+dfsg-1ubuntu4.29+esm18', adv: 'USN-8948-2', url: 'https://ubuntu.com/security/notices/USN-8948-2' },
+      { vendor: 'RHEL', release: '8.10, PHP 7.4 module stream', fixed: '7.4.33-8.module+el8.10.0+25117+30337cca', adv: 'RHSA-2026:87080', url: 'https://access.redhat.com/errata/RHSA-2026:87080' },
+      { vendor: 'RHEL', release: '9.8, PHP 8.0', fixed: '8.0.30-8.el9_8.1', adv: 'RHSA-2026:87151', url: 'https://access.redhat.com/errata/RHSA-2026:87151' },
+    ];
+    function branchOf(version) {
+      const m = /^(\d+)\.(\d+)/.exec(version || '');
+      return m ? `${Number(m[1])}.${Number(m[2])}` : null;
+    }
+    function vendorsFor(version) {
+      const b = branchOf(version);
+      return b ? VENDORS.filter(v => branchOf(v.fixed) === b) : [];
+    }
+
+    /* ---------- helpers ---------- */
+    const $ = id => document.getElementById(id);
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function label(status) {
+      return { ok: 'OK', potentially_vulnerable: 'potentially vulnerable', unknown: 'unknown' }[status] || status;
+    }
+    function fmtWhen(iso) {
+      const d = new Date(iso);
+      if (isNaN(d)) return '';
+      const p = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    }
+    function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+    async function copyText(text) {
+      try { await navigator.clipboard.writeText(text); return true; }
+      catch { prompt('Copy:', text); return false; }
+    }
+    function flash(btn, text) {
+      const old = btn.textContent;
+      btn.textContent = text;
+      setTimeout(() => { btn.textContent = old; }, 1400);
+    }
+
+    /* ---------- check flow ---------- */
+    let lastItems = [];
+
+    async function runCheck() {
+      const raw = $('q').value;
+      const lines = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+      $('err').textContent = '';
+      if (!lines.length) { $('err').textContent = 'Enter a PHP version, a header line, or a URL.'; return; }
+      const go = $('go');
+      go.disabled = true;
+      go.textContent = 'Checking…';
+      const items = [];
+      for (const line of lines) {
+        const mode = looksLikeUrl(line) ? 'url' : 'text';
+        const report = mode === 'url' ? await checkUrl(line) : checkText(line);
+        items.push({ input: line, mode, label: mode === 'url' ? hostOf(line) : '', report });
+      }
+      lastItems = items;
+      renderResults(items);
+      go.disabled = false;
+      go.textContent = 'Check';
+    }
+
+    function meaningFor(report, mode) {
+      const s = report.patch_status;
+      if (s === 'ok') return `<b>What it means.</b> The advertised version is at or above the release where PHP fixed both CVEs. That is reassuring but not proof: confirm the installation that actually serves the site (PHP-FPM or Apache's module, not just the command-line PHP) is the updated package, and that workers restarted after the update.`;
+      if (s === 'potentially_vulnerable') return `<b>What it means.</b> This version is below the fixed release for its branch, or sits on a branch (5.4 through 8.1) that got no official updated binaries. Treat the system as unpatched until you confirm the vendor package carries the backport.`;
+      if (report.php_version) return `<b>What it means.</b> The checker will not judge this version: it is a prerelease, or a branch (8.6 and later) with no fixed release to compare against. Check the package on the server itself.`;
+      return mode === 'url'
+        ? `<b>What it means.</b> No PHP version could be read from this browser. ${esc(report.browser_note || '')}`
+        : `<b>What it means.</b> No PHP version was found in what you pasted. Try the bare version, a header line such as <code>X-Powered-By: PHP/8.4.26</code>, or the first line of <code>php -v</code>.`;
+    }
+
+    function stepsFor(report) {
+      const s = report.patch_status;
+      if (s === 'potentially_vulnerable') return `
+        <ol class="steps">
+          <li>Update to <code>8.2.35</code>, <code>8.3.36</code>, <code>8.4.27</code> or <code>8.5.12</code>, or to the vendor package listed below, then restart PHP-FPM or the web server.</li>
+          <li>If you cannot update right away, prioritise per CISA BOD 26-04: apply your provider's interim protections (for example WAF rules), or take the site offline, as the NSA and NCSC advised.</li>
+          <li>Look for signs of compromise: unusual multipart requests followed by memory-limit errors or repeated HTTP 500s, unexpectedly large or malformed <code>PHPSESSID</code> cookies, and unexplained PHP worker churn.</li>
+        </ol>`;
+      if (s === 'ok') return `
+        <ol class="steps">
+          <li>Verify on the server: <code>php-fpm -v</code> (or the Apache module's package), not only <code>php -v</code>.</li>
+          <li>Confirm workers restarted after the update, then record it in the tracker below.</li>
+        </ol>`;
+      return '';
+    }
+
+    function vendorNote(report) {
+      const rows = vendorsFor(report.php_version);
+      if (!rows.length) return '';
+      return `<div class="vendor-note"><b>Vendor packages on this branch that already carry the fix</b> (compare the full package revision, not the upstream number):
+        <ul style="margin:0.35rem 0 0 1.1rem">${rows.map(v => `<li>${esc(v.vendor)} ${esc(v.release)} &mdash; <code>${esc(v.fixed)}</code> or later (<a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.adv)}</a>)</li>`).join('')}</ul></div>`;
+    }
+
+    function terminalBlock(input) {
+      const url = normalizeUrl(input);
+      const node = `node phpcheck.js "${url}" --json`;
+      const curl = `curl -sI "${url}" | grep -iE '^(server|x-powered-by):'`;
+      return `
+        <div class="cmd-label">From a terminal, OpenAI's checker reads the real headers</div>
+        <div class="cmd" data-cmd="${esc(node)}">${esc(node)}<button class="copy">copy</button></div>
+        <div class="cmd" data-cmd="${esc(curl)}">${esc(curl)}<button class="copy">copy</button></div>`;
+    }
+
+    function resultCard(item, i) {
+      const r = item.report;
+      return `
+        <div class="verdict ${esc(r.patch_status)}" data-i="${i}">
+          <div class="v-head">
+            <span class="badge ${esc(r.patch_status)}">${esc(label(r.patch_status))}</span>
+            <span class="badge mode">${item.mode === 'url' ? 'URL · headers read by this browser' : 'version text'}</span>
+            <span class="input">${esc(item.input)}</span>
+            <span class="exit">exit code ${r.exit_code}</span>
+          </div>
+          <div class="reason">${esc(label(r.patch_status).toUpperCase())}: ${esc(r.reason)}</div>
+          <div class="meaning">${meaningFor(r, item.mode)}</div>
+          ${stepsFor(r)}
+          ${vendorNote(r)}
+          ${item.mode === 'url' ? terminalBlock(item.input) : ''}
+          <div class="add-row">
+            <input type="text" class="add-label" placeholder="name this system (host, app, server…)" value="${esc(item.label)}" />
+            <button class="btn small add-one">add to tracker</button>
+            <span class="added"></span>
+          </div>
+        </div>`;
+    }
+
+    function renderResults(items) {
+      const box = $('results');
+      box.innerHTML = items.map(resultCard).join('') +
+        (items.length > 1 ? `<div class="actions"><button class="btn small" id="add-all">add all ${items.length} to tracker</button><span class="added" id="added-all"></span></div>` : '');
+    }
+
+    $('results').addEventListener('click', e => {
+      const copy = e.target.closest('.copy');
+      if (copy) { copyText(copy.parentElement.dataset.cmd).then(() => flash(copy, 'copied')); return; }
+      const one = e.target.closest('.add-one');
+      if (one) {
+        const card = one.closest('.verdict');
+        const item = lastItems[Number(card.dataset.i)];
+        const name = card.querySelector('.add-label').value.trim() || item.input;
+        upsertRow(item, name);
+        card.querySelector('.added').textContent = 'added';
+        return;
+      }
+      if (e.target.id === 'add-all') {
+        document.querySelectorAll('#results .verdict').forEach(card => {
+          const item = lastItems[Number(card.dataset.i)];
+          const name = card.querySelector('.add-label').value.trim() || item.input;
+          upsertRow(item, name);
+          card.querySelector('.added').textContent = 'added';
+        });
+        $('added-all').textContent = 'added';
+      }
+    });
+
+    $('go').addEventListener('click', runCheck);
+    $('q').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); runCheck(); }
+    });
+    document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+      $('q').value = c.dataset.q;
+      runCheck();
+    }));
+    document.querySelectorAll('.card .cmd .copy').forEach(b => b.addEventListener('click', () => {
+      if (b.closest('#results')) return;
+      copyText(b.parentElement.dataset.cmd).then(() => flash(b, 'copied'));
+    }));
+
+    /* ---------- tracker ---------- */
+    const LS_KEY = 'php2shell_tracker_v1';
+    let rows = loadRows();
+
+    function loadRows() {
+      try { const r = JSON.parse(localStorage.getItem(LS_KEY)); return Array.isArray(r) ? r : []; }
+      catch { return []; }
+    }
+    function saveRows() { try { localStorage.setItem(LS_KEY, JSON.stringify(rows)); } catch {} }
+
+    function upsertRow(item, name) {
+      const r = item.report;
+      const existing = rows.find(x => x.label.toLowerCase() === name.toLowerCase());
+      const fields = {
+        label: name, source: item.mode, input: item.input,
+        php_version: r.php_version, patch_status: r.patch_status, exit_code: r.exit_code, reason: r.reason,
+        checked_at: new Date().toISOString(),
+      };
+      if (existing) Object.assign(existing, fields);
+      else rows.unshift({ id: uid(), note: '', ...fields });
+      saveRows();
+      renderTracker();
+    }
+
+    async function recheckRow(row) {
+      const report = row.source === 'url' ? await checkUrl(row.input) : checkText(row.input);
+      Object.assign(row, {
+        php_version: report.php_version, patch_status: report.patch_status,
+        exit_code: report.exit_code, reason: report.reason, checked_at: new Date().toISOString(),
+      });
+      saveRows();
+      renderTracker();
+    }
+
+    function renderTracker() {
+      const counts = { ok: 0, potentially_vulnerable: 0, unknown: 0 };
+      rows.forEach(r => { counts[r.patch_status] = (counts[r.patch_status] || 0) + 1; });
+      $('count').textContent = rows.length ? `· ${rows.length} system${rows.length === 1 ? '' : 's'}` : '';
+      $('summary').innerHTML = rows.length ? `
+        <span class="pill potentially_vulnerable"><b>${counts.potentially_vulnerable}</b> potentially vulnerable</span>
+        <span class="pill ok"><b>${counts.ok}</b> ok</span>
+        <span class="pill unknown"><b>${counts.unknown}</b> unknown</span>` : '';
+      if (!rows.length) {
+        $('rows').innerHTML = '<div class="empty">Nothing tracked yet. Check a version or a site above and add it here, one row per system you are responsible for.</div>';
+        return;
+      }
+      const order = { potentially_vulnerable: 0, unknown: 1, ok: 2 };
+      const sorted = rows.slice().sort((a, b) => (order[a.patch_status] ?? 3) - (order[b.patch_status] ?? 3) || a.label.localeCompare(b.label));
+      $('rows').innerHTML = `
+        <table class="tbl">
+          <thead><tr><th>status</th><th>system</th><th>PHP</th><th>checked</th><th>note</th><th></th></tr></thead>
+          <tbody>${sorted.map(r => `
+            <tr data-id="${esc(r.id)}">
+              <td><span class="badge ${esc(r.patch_status)}" title="${esc(r.reason)}">${esc(label(r.patch_status))}</span></td>
+              <td class="sys"><span class="editable" data-edit="label">${esc(r.label)}</span>${r.source === 'url' ? `<span class="src">${esc(r.input)}</span>` : ''}</td>
+              <td class="ver"><span class="editable" data-edit="version">${esc(r.php_version || '—')}</span></td>
+              <td class="when">${esc(fmtWhen(r.checked_at))}</td>
+              <td class="note"><span class="editable" data-edit="note">${r.note ? esc(r.note) : '<span style="color:#444">add a note</span>'}</span></td>
+              <td><div class="row-actions"><button data-act="recheck">re-check</button><button data-act="rm" class="rm">remove</button></div></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    $('rows').addEventListener('click', async e => {
+      const tr = e.target.closest('tr[data-id]');
+      if (!tr) return;
+      const row = rows.find(r => r.id === tr.dataset.id);
+      if (!row) return;
+      const act = e.target.closest('[data-act]');
+      if (act) {
+        if (act.dataset.act === 'rm') {
+          rows = rows.filter(r => r !== row);
+          saveRows(); renderTracker();
+        } else if (act.dataset.act === 'recheck') {
+          act.textContent = '…';
+          await recheckRow(row);
+        }
+        return;
+      }
+      const ed = e.target.closest('[data-edit]');
+      if (!ed) return;
+      if (ed.dataset.edit === 'label') {
+        const v = prompt('Name for this system:', row.label);
+        if (v !== null && v.trim()) { row.label = v.trim(); saveRows(); renderTracker(); }
+      } else if (ed.dataset.edit === 'note') {
+        const v = prompt('Note (owner, ticket, what was done…):', row.note || '');
+        if (v !== null) { row.note = v.trim(); saveRows(); renderTracker(); }
+      } else if (ed.dataset.edit === 'version') {
+        const v = prompt('New PHP version or header line for this system (re-classified on save):', row.input || row.php_version || '');
+        if (v !== null && v.trim()) {
+          row.source = 'text';
+          row.input = v.trim();
+          await recheckRow(row);
+        }
+      }
+    });
+
+    $('recheck-all').addEventListener('click', async e => {
+      if (!rows.length) return;
+      e.target.disabled = true;
+      for (const row of rows) await recheckRow(row);
+      e.target.disabled = false;
+    });
+
+    $('copy-json').addEventListener('click', async e => {
+      const ok = await copyText(JSON.stringify(rows, null, 2));
+      if (ok) flash(e.target, 'copied');
+    });
+
+    $('export-csv').addEventListener('click', () => {
+      const cols = ['label', 'php_version', 'patch_status', 'exit_code', 'source', 'input', 'checked_at', 'note', 'reason'];
+      const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+      const csv = [cols.join(',')].concat(rows.map(r => cols.map(c => q(r[c])).join(','))).join('\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+      a.download = `php2shell-tracker-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    });
+
+    $('clear').addEventListener('click', () => {
+      if (!rows.length) return;
+      if (!confirm(`Remove all ${rows.length} tracked systems from this browser?`)) return;
+      rows = []; saveRows(); renderTracker();
+    });
+
+    /* ---------- vendor table ---------- */
+    document.querySelector('#vendor-table tbody').innerHTML = VENDORS.map(v => `
+      <tr><td class="k">${esc(v.vendor)} ${esc(v.release)}</td><td class="v">${esc(v.fixed)}</td>
+      <td><a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.adv)}</a></td></tr>`).join('');
+
+    renderTracker();
+  })();
+  </script>
+</body>
+</html>
