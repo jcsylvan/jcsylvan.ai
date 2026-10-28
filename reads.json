@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-10-21",
+  "updated": "2026-10-28",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -1135,6 +1135,69 @@
       "source": "arXiv · 2610.26264",
       "url": "https://arxiv.org/abs/2610.26264",
       "summary": "Muon spin relaxation measurements find spontaneous internal magnetic fields appearing below the 1.6 K transition in RuB2, the signature of a superconducting state that breaks time-reversal symmetry. Transverse-field data nonetheless show a fully gapped state near the conventional BCS value, and first-principles work classifies the material as a multiband topological metal. Symmetry analysis points to a nonunitary spin-triplet order parameter as the leading explanation."
+    },
+    {
+      "id": "2026-10-28-ai",
+      "date": "2026-10-28",
+      "category": "AI",
+      "title": "Steering Black-Box Large Language Model Agents with Pitfall Anticipation World Model",
+      "source": "arXiv · 2610.29139",
+      "url": "https://arxiv.org/abs/2610.29139",
+      "summary": "Most world models for LLM agents predict the next observation at every step, which is expensive and often tells the agent nothing it needed. This work proposes a model that stays quiet until a failure looms, then predicts that specific pitfall to steer the agent clear of it. It is trained in two stages, starting with supervised fine-tuning on synthetic pitfall-labelled data, and works on black-box agents without touching their weights."
+    },
+    {
+      "id": "2026-10-28-semiconductors",
+      "date": "2026-10-28",
+      "category": "Semiconductors",
+      "title": "A FeFET Voltage-to-Time Converter with Offset Trim by Programmed Multilevel State in 28-nm CMOS",
+      "source": "arXiv · 2610.05016",
+      "url": "https://arxiv.org/abs/2610.05016",
+      "summary": "Uses a ferroelectric FET's programmable multilevel state as a non-volatile trim for the input-referred offset of a 6.07-square-micron voltage-to-time converter built in 28-nm CMOS. Measured at 10 MS/s, centring the ferroelectric state cuts second-harmonic distortion from about -12.5 dB to -32.2 dB and 5-bit integral nonlinearity from 2.42 to 0.92 LSB, showing emerging memory used for analog calibration rather than storage."
+    },
+    {
+      "id": "2026-10-28-biotechnology",
+      "date": "2026-10-28",
+      "category": "Biotechnology",
+      "title": "Ensemble-Aware Structural Encoding (EASE): Conditioning Protein Encoders on Peptide Conformational Ensembles",
+      "source": "arXiv · 2610.27638",
+      "url": "https://arxiv.org/abs/2610.27638",
+      "summary": "Standard protein encoders represent a peptide as a single sequence or a single structure, discarding the fact that real peptides flex between many shapes. EASE instead samples many conformers, clusters them, encodes a handful of representative structures, and fuses the results with a permutation-invariant operator. It reports roughly a 3% mean gain over matched single-structure baselines across six tasks and two encoders, with gains still rising at twenty conformers."
+    },
+    {
+      "id": "2026-10-28-sustainable-energy",
+      "date": "2026-10-28",
+      "category": "Sustainable Energy",
+      "title": "AutoEnergyDesign: An LLM-Driven Agent for Automatic Energy System Design Optimization",
+      "source": "arXiv · 2610.35160",
+      "url": "https://arxiv.org/abs/2610.35160",
+      "summary": "Designing a building energy system is a mixed-integer search where every candidate needs a year-long simulation, so conventional optimizers burn hundreds of expensive evaluations. This agent reads prior simulation results, proposes configuration changes, and uses a git-based keep-or-revert signal grounded in the simulator. Across eight technologies and a 25-year net present cost, it matched or slightly beat Bayesian optimization and an evolution strategy on a case study with measured load profiles."
+    },
+    {
+      "id": "2026-10-28-defense-tech",
+      "date": "2026-10-28",
+      "category": "Defense Tech",
+      "title": "Military Procurement and Spatial Development: The Long-Run Effects of the US Civil War",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7559118",
+      "summary": "Uses Union Army Quartermaster sites—stood up for wartime logistics and dismantled afterwards—as a natural experiment in what a temporary procurement shock does to a region. Host counties had about 66% more manufacturing employment and 19% more people by 1890, and the advantage persisted into the 1960s because those places kept adopting new industries. A spatial model puts the welfare gain at 5.9% higher Union real income per worker by 1940."
+    },
+    {
+      "id": "2026-10-28-quantum-computing",
+      "date": "2026-10-28",
+      "category": "Quantum Computing",
+      "title": "The limits of magic-state distillation",
+      "source": "arXiv · 2610.31115",
+      "url": "https://arxiv.org/abs/2610.31115",
+      "summary": "Magic-state distillation is the dominant cost in most fault-tolerant architectures, so how efficient it can possibly get is a load-bearing question. The authors show that for protocols tolerating faulty inputs, no stabilizer scheme does better than projecting onto a single stabilizer code. Their searches then find the eight-input CCZ factory optimal and establish that quadratic distillation of one T state requires nine inputs."
+    },
+    {
+      "id": "2026-10-28-materials-science",
+      "date": "2026-10-28",
+      "category": "Materials Science",
+      "title": "Strain-tunable van Hove singularity and superconducting dome in monolayer kagome metal CsTi3Bi5",
+      "source": "arXiv · 2610.32359",
+      "url": "https://arxiv.org/abs/2610.32359",
+      "summary": "First-principles calculations examine what happens to superconductivity in a kagome metal pushed to the two-dimensional limit, where the bulk compound superconducts without a competing charge density wave. Tensile strain moves the van Hove singularity at the M point steadily toward the Fermi level, and the predicted critical temperature traces a dome peaking at 3.6 K near 2% strain. Strain emerges as a continuous knob on kagome superconductivity."
     }
   ]
 }
