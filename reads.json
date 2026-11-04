@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-10-28",
+  "updated": "2026-11-04",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -1198,6 +1198,69 @@
       "source": "arXiv · 2610.32359",
       "url": "https://arxiv.org/abs/2610.32359",
       "summary": "First-principles calculations examine what happens to superconductivity in a kagome metal pushed to the two-dimensional limit, where the bulk compound superconducts without a competing charge density wave. Tensile strain moves the van Hove singularity at the M point steadily toward the Fermi level, and the predicted critical temperature traces a dome peaking at 3.6 K near 2% strain. Strain emerges as a continuous knob on kagome superconductivity."
+    },
+    {
+      "id": "2026-11-04-ai",
+      "date": "2026-11-04",
+      "category": "AI",
+      "title": "Can Large Language Model Agents Learn by Watching Tutorial Videos?",
+      "source": "arXiv · 2611.01460",
+      "url": "https://arxiv.org/abs/2611.01460",
+      "summary": "Asks whether frozen LLM agents can pick up new skills from instructional videos without any parameter updates, since retraining at scale is prohibitively expensive. The proposed Tutorial Agentic Learning method stores what it watches and retrieves it by navigating a table-of-contents tree rather than embedding similarity, and the agent's performance scales steadily with the number of tutorial videos consumed."
+    },
+    {
+      "id": "2026-11-04-semiconductors",
+      "date": "2026-11-04",
+      "category": "Semiconductors",
+      "title": "Electrically tunable moiré hybridization in scalable twist-with-a-spacer structures",
+      "source": "arXiv · 2611.02471",
+      "url": "https://arxiv.org/abs/2611.02471",
+      "summary": "Shows that inserting an atomically thin spacer between twisted graphene layers suppresses atomic relaxation, yielding uniform, rigid moiré superlattices at twist angles down to about 0.1 degree whose interlayer hybridization can be tuned with a small electric displacement field. Crucially, devices made from CVD-grown stacks show the same moiré physics as hand-assembled ones, pointing to a manufacturable route to twistronic electronics."
+    },
+    {
+      "id": "2026-11-04-biotechnology",
+      "date": "2026-11-04",
+      "category": "Biotechnology",
+      "title": "Attribution-based diagnostics for single-cell foundation models",
+      "source": "arXiv · 2611.02335",
+      "url": "https://arxiv.org/abs/2611.02335",
+      "summary": "Argues that predictive accuracy alone cannot tell whether single-cell RNA foundation models rely on biologically meaningful signals or on model-specific shortcuts. The authors apply post-hoc attribution methods to pretrained models including Cell2Sentence and scGPT on cell-type annotation and perturbation prediction, offering a controlled way to diagnose what these increasingly used models actually learn."
+    },
+    {
+      "id": "2026-11-04-sustainable-energy",
+      "date": "2026-11-04",
+      "category": "Sustainable Energy",
+      "title": "Protection challenges and solutions on power systems towards 100% inverter-based resources and energy storage systems",
+      "source": "arXiv · 2611.02696",
+      "url": "https://arxiv.org/abs/2611.02696",
+      "summary": "Reviews a decade of research on how grid protection breaks down as power systems approach 100% inverter-based renewables and storage. Inverters supply far less fault current than synchronous generators and may produce too little negative- and zero-sequence current for directional relays to operate correctly, and the paper surveys the relay, control, and device-level solutions proposed to keep a converter-dominated grid protectable."
+    },
+    {
+      "id": "2026-11-04-defense-tech",
+      "date": "2026-11-04",
+      "category": "Defense Tech",
+      "title": "Means, Methods, and Machine Learning: Toward a “Compliance Review” Framework for AI-Enabled Decision-Support Systems",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7109858",
+      "summary": "Argues that AI-enabled decision-support systems and some autonomous weapons do not fit the conventional Article 36 legal weapons review, which examines a system once before fielding. Dorsey and Copeland propose situating that review inside a broader lifecycle-based 'compliance review' framework that extends through procurement, deployment, and use, better aligning military AI development with international humanitarian law's accountability and civilian-protection aims."
+    },
+    {
+      "id": "2026-11-04-quantum-computing",
+      "date": "2026-11-04",
+      "category": "Quantum Computing",
+      "title": "Entangled logical qubits on a superconducting quantum processor",
+      "source": "arXiv · 2610.32347",
+      "url": "https://arxiv.org/abs/2610.32347",
+      "summary": "Demonstrates entanglement between error-corrected logical qubits on IBM's 120-qubit Heron processor, reporting logical Bell-state fidelities above 93% via lattice surgery and logical teleportation across three logical qubits at 78-93% fidelity. Distance-3 and distance-5 surface codes ran routinely with logical error per round below 1%, moving fault-tolerant hardware from single-logical-qubit memories toward multi-qubit logical operations."
+    },
+    {
+      "id": "2026-11-04-materials-science",
+      "date": "2026-11-04",
+      "category": "Materials Science",
+      "title": "Large superconducting diode effect indicates nonuniform triplet pairing in UTe2",
+      "source": "arXiv · 2610.36332",
+      "url": "https://arxiv.org/abs/2610.36332",
+      "summary": "Reports a large superconducting diode effect in the heavy-fermion superconductor UTe2, where supercurrent flows more easily in one direction than the other, and ties it to spontaneous inversion-symmetry breaking and finite-momentum Cooper pairing. Ginzburg-Landau modeling suggests coupled magnetic and spin-triplet orders can stabilize an odd-parity FFLO state, making UTe2 a rare candidate for this long-sought exotic pairing."
     }
   ]
 }
