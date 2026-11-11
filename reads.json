@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-04",
+  "updated": "2026-11-11",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -1261,6 +1261,69 @@
       "source": "arXiv · 2610.36332",
       "url": "https://arxiv.org/abs/2610.36332",
       "summary": "Reports a large superconducting diode effect in the heavy-fermion superconductor UTe2, where supercurrent flows more easily in one direction than the other, and ties it to spontaneous inversion-symmetry breaking and finite-momentum Cooper pairing. Ginzburg-Landau modeling suggests coupled magnetic and spin-triplet orders can stabilize an odd-parity FFLO state, making UTe2 a rare candidate for this long-sought exotic pairing."
+    },
+    {
+      "id": "2026-11-11-ai",
+      "date": "2026-11-11",
+      "category": "AI",
+      "title": "Represented but Not Used: Value-Policy Dissociation in LLM Agents",
+      "source": "arXiv · 2611.10457",
+      "url": "https://arxiv.org/abs/2611.10457",
+      "summary": "When an LLM agent makes a bad multi-step decision, it is unclear whether the model failed to foresee the consequences or failed to act on what it knew. This paper shows action-value information is often linearly decodable from a model's hidden states even while the policy picks worse actions, and that steering along those value directions can causally improve agent behavior."
+    },
+    {
+      "id": "2026-11-11-semiconductors",
+      "date": "2026-11-11",
+      "category": "Semiconductors",
+      "title": ">3 W/mm Output Power Al0.61Ga0.39N Channel HEMT with 24.4% Associated PAE at 10 GHz",
+      "source": "arXiv · 2611.11042",
+      "url": "https://arxiv.org/abs/2611.11042",
+      "summary": "Reports an ultra-wide-bandgap transistor with a 61%-aluminum AlGaN channel that delivers over 3 W/mm of output power with 24.4% power-added efficiency at 10 GHz, and a peak efficiency of 33.9%. These large-signal results strengthen the case for AlGaN-channel devices in X-band RF power amplifiers, pushing beyond what conventional GaN offers."
+    },
+    {
+      "id": "2026-11-11-biotechnology",
+      "date": "2026-11-11",
+      "category": "Biotechnology",
+      "title": "CytoWave: Perturbation-Centric Pretraining for Single-Cell Response Prediction",
+      "source": "arXiv · 2611.02311",
+      "url": "https://arxiv.org/abs/2611.02311",
+      "summary": "CytoWave is a pretraining framework for predicting how single cells change gene expression in response to genetic perturbations, unifying large cross-species perturbation datasets through gene orthology. Its two-stage scheme first learns unperturbed reference cell states, then models perturbation responses, showing consistent gains across benchmarks under strict held-out evaluation. Accepted to NeurIPS 2026."
+    },
+    {
+      "id": "2026-11-11-sustainable-energy",
+      "date": "2026-11-11",
+      "category": "Sustainable Energy",
+      "title": "Enhancing Grid Stability with Synchronverter-Based Control for Grid-Side Converters in Wind Power Systems",
+      "source": "arXiv · 2611.02976",
+      "url": "https://arxiv.org/abs/2611.02976",
+      "summary": "Proposes synchronverter control for the grid-side converter of wind turbines so they provide inertial frequency support like a synchronous generator, using energy already stored in the DC-link capacitor rather than added batteries. Simulations of a three-turbine plant with virtual-friction damping show improved grid stability over conventional grid-following control."
+    },
+    {
+      "id": "2026-11-11-defense-tech",
+      "date": "2026-11-11",
+      "category": "Defense Tech",
+      "title": "Meaningful Human Control or Meaningful Impunity? Lethal Autonomous Weapons Systems, International Humanitarian Law, and the Imperative for a Binding Treaty at the 2026 CCW Review Conference",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7434218",
+      "summary": "Argues that existing international humanitarian law cannot ensure accountability for lethal autonomous weapons, and that this month's CCW Review Conference should produce a binding treaty. The author proposes a two-tier approach: prohibit autonomous targeting of human beings outright, while regulating — not banning — autonomy directed at non-human military targets."
+    },
+    {
+      "id": "2026-11-11-quantum-computing",
+      "date": "2026-11-11",
+      "category": "Quantum Computing",
+      "title": "Discovering formally verified quantum programs with AI",
+      "source": "arXiv · 2611.09822",
+      "url": "https://arxiv.org/abs/2611.09822",
+      "summary": "Uses AI-driven program search combined with formal verification to automatically discover new quantum programs, reporting large resource savings on scientific workloads — including a 290x improvement in quantum arithmetic and speedups in parallel search. Every discovered program is machine-checked for correctness, pointing toward AI designing trusted subroutines for future fault-tolerant machines."
+    },
+    {
+      "id": "2026-11-11-materials-science",
+      "date": "2026-11-11",
+      "category": "Materials Science",
+      "title": "Ab initio exploration of hydrogen-intercalated transition metal dichalcogenides: From identifying stable structures to emergent superconductivity",
+      "source": "arXiv · 2611.00271",
+      "url": "https://arxiv.org/abs/2611.00271",
+      "summary": "A first-principles survey of hydrogen intercalated into layered transition-metal dichalcogenides, mapping which configurations are stable and how they reshape the electronic structure. Double intercalation suppresses charge-density-wave instabilities and usually makes the material semiconducting, while NbSe2 retains a residual metallic state — practical guidance for experiments chasing superconductivity through gate-driven hydrogenation."
     }
   ]
 }
