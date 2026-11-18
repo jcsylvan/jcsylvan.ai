@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-11",
+  "updated": "2026-11-18",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -1324,6 +1324,69 @@
       "source": "arXiv · 2611.00271",
       "url": "https://arxiv.org/abs/2611.00271",
       "summary": "A first-principles survey of hydrogen intercalated into layered transition-metal dichalcogenides, mapping which configurations are stable and how they reshape the electronic structure. Double intercalation suppresses charge-density-wave instabilities and usually makes the material semiconducting, while NbSe2 retains a residual metallic state — practical guidance for experiments chasing superconductivity through gate-driven hydrogenation."
+    },
+    {
+      "id": "2026-11-18-ai",
+      "date": "2026-11-18",
+      "category": "AI",
+      "title": "Dependable Long-Horizon LLM Agents: A Trajectory-Centered Empirical Study of Where Errors Enter and Which Controls Reach Them",
+      "source": "arXiv · 2611.13254",
+      "url": "https://arxiv.org/abs/2611.13254",
+      "summary": "Analyzes 1,794 annotated coding-agent trajectories to pinpoint where errors actually enter long agent runs, finding the first mistake typically occurs early while symptoms surface much later. In 72% of failed runs the trajectory already contained evidence contradicting the error, yet in 88% of those cases no agent acted on it. The authors propose a dependability framework matching specific controls to the error types they can actually catch."
+    },
+    {
+      "id": "2026-11-18-semiconductors",
+      "date": "2026-11-18",
+      "category": "Semiconductors",
+      "title": "Field-Effect Magnon Transistor",
+      "source": "arXiv · 2611.19582",
+      "url": "https://arxiv.org/abs/2611.19582",
+      "summary": "Proposes a transistor that switches magnons — spin waves — instead of electrons, built on the ferroelectric antiferromagnet BiFeO3. A gate electric field reshapes magnetic domain boundaries to modulate magnon transport through the channel, and because the domain configuration persists without power, the device acts as an electrically programmable, non-volatile switch. A potential building block for low-power spin-wave logic that avoids moving charge."
+    },
+    {
+      "id": "2026-11-18-biotechnology",
+      "date": "2026-11-18",
+      "category": "Biotechnology",
+      "title": "Learning Biological Hierarchies in Single-Cell Foundation Models",
+      "source": "arXiv · 2611.10838",
+      "url": "https://arxiv.org/abs/2611.10838",
+      "summary": "Introduces scOntoFM, a single-cell foundation model that bakes the cell-ontology hierarchy — the taxonomic tree relating cell types and lineages — directly into representation learning using ancestor distances on the ontology graph. The resulting embeddings stay accurate for cell annotation as label noise grows, and when the model errs, its mistakes remain structurally coherent with the ontology. Accepted to NeurIPS 2026."
+    },
+    {
+      "id": "2026-11-18-sustainable-energy",
+      "date": "2026-11-18",
+      "category": "Sustainable Energy",
+      "title": "Impact of Grid-Forming Inverter Placement and Penetration on Local and Aggregate Frequency",
+      "source": "arXiv · 2611.18534",
+      "url": "https://arxiv.org/abs/2611.18534",
+      "summary": "Asks whether it matters where in the network grid-forming inverters replace synchronous generators, not just how many. Exhaustive placement searches show location alone shifts worst-case local frequency nadir by up to 104 mHz, yet the aggregate frequency metrics planners usually rely on compress that spread by nearly 90%, hiding both favorable and harmful siting choices. A caution for grids planning high inverter penetration."
+    },
+    {
+      "id": "2026-11-18-defense-tech",
+      "date": "2026-11-18",
+      "category": "Defense Tech",
+      "title": "Drone Warfare: Lessons from Ukraine and the Limits of their Application",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7650738",
+      "summary": "Argues that NATO cannot simply copy Ukrainian drone-war lessons: doctrine built for wars of imperfect information fits poorly in a battlespace made nearly transparent by pervasive surveillance. Three obstacles stand out — no systematic employment doctrine exists, drone production depends overwhelmingly on Chinese components, and battlefield effectiveness data are structurally distorted. Resolving these, the author suggests, could itself strengthen deterrence."
+    },
+    {
+      "id": "2026-11-18-quantum-computing",
+      "date": "2026-11-18",
+      "category": "Quantum Computing",
+      "title": "Resolving and Suppressing Temporally Correlated Noise in Quantum Error Correction",
+      "source": "arXiv · 2611.21578",
+      "url": "https://arxiv.org/abs/2611.21578",
+      "summary": "Runs surface-code stability experiments on Google's 105-qubit Willow processor, scaling patches from 3x3 to 7x7 to measure how well error correction suppresses noise that is correlated in time rather than independent each cycle. A new 'walking' stability circuit reaches a logical error floor near 3x10^-8 over 60 cycles, with the residual limit traced to bursts of errors from ionizing radiation."
+    },
+    {
+      "id": "2026-11-18-materials-science",
+      "date": "2026-11-18",
+      "category": "Materials Science",
+      "title": "Machine-accelerated extraction of experimental superconducting parameters for physical insight and prediction across thousands of materials",
+      "source": "arXiv · 2611.15627",
+      "url": "https://arxiv.org/abs/2611.15627",
+      "summary": "Presents AutoSuperCon, a machine-built database of eight experimentally measured superconducting parameters covering 20,354 entries across 6,793 materials, extracted automatically from the literature. The authors use it to train models that predict critical temperatures from composition and to surface physical trends spanning material families. A step toward data-driven superconductor discovery grounded in measured, rather than computed, properties."
     }
   ]
 }
