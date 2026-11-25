@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-18",
+  "updated": "2026-11-25",
   "articles": [
     {
       "id": "2026-05-30-ai",
@@ -1387,6 +1387,69 @@
       "source": "arXiv · 2611.15627",
       "url": "https://arxiv.org/abs/2611.15627",
       "summary": "Presents AutoSuperCon, a machine-built database of eight experimentally measured superconducting parameters covering 20,354 entries across 6,793 materials, extracted automatically from the literature. The authors use it to train models that predict critical temperatures from composition and to surface physical trends spanning material families. A step toward data-driven superconductor discovery grounded in measured, rather than computed, properties."
+    },
+    {
+      "id": "2026-11-25-ai",
+      "date": "2026-11-25",
+      "category": "AI",
+      "title": "Bounded Autonomy: A Trust-Anchored Defense Against Resource-Exhaustion Attacks on Tool-Augmented LLM Agents",
+      "source": "arXiv · 2611.30383",
+      "url": "https://arxiv.org/abs/2611.30383",
+      "summary": "Shows that tool-using LLM agents can be driven into runaway token consumption through context amplification, oversized tool outputs, and error-induced loops, and proposes BA-Agent, a four-phase defense combining certificate-guided orchestration, calibrated per-node budgets, gateway runtime enforcement, and a bounded recovery pool. The design separates agent autonomy from system-level resource governance so costs stay controlled without crippling normal agent work."
+    },
+    {
+      "id": "2026-11-25-semiconductors",
+      "date": "2026-11-25",
+      "category": "Semiconductors",
+      "title": "Two-dimensional Thyristor",
+      "source": "arXiv · 2611.30748",
+      "url": "https://arxiv.org/abs/2611.30748",
+      "summary": "Demonstrates an atomically thin electro-optical thyristor built from a lateral WSe2-MoSe2-WSe2-MoSe2 PNPN heterostructure grown by sequential edge epitaxy. The device shows classic thyristor behavior—forward blocking, abrupt snapback, bistability, and electrical latching—with a 183 V blocking voltage at a 1 MV/cm critical field, extending power-electronics functionality into two-dimensional semiconductors."
+    },
+    {
+      "id": "2026-11-25-biotechnology",
+      "date": "2026-11-25",
+      "category": "Biotechnology",
+      "title": "GABIF: An Adaptive Guided Graph Denoising Framework for Antibody Conditional Inverse Folding",
+      "source": "arXiv · 2611.29935",
+      "url": "https://arxiv.org/abs/2611.29935",
+      "summary": "Proposes a guided discrete-diffusion model for antibody inverse folding that uses a binding-affinity predictor to steer sequence generation toward stronger antigen binding, rather than merely imitating natural antibody repertoires. Built on a graph-denoising diffusion backbone, it matches state-of-the-art inverse-folding methods in silico while producing candidates with improved predicted affinity."
+    },
+    {
+      "id": "2026-11-25-sustainable-energy",
+      "date": "2026-11-25",
+      "category": "Sustainable Energy",
+      "title": "Planning-Stage Assessment of Battery-Supported Regional Islanding: A South Australian Case Study",
+      "source": "arXiv · 2611.15364",
+      "url": "https://arxiv.org/abs/2611.15364",
+      "summary": "Asks whether a renewable-heavy region's planned mix of generation, transmission, and batteries remains adequate if a major interconnector fails and the region must run as an island. Using a synthetic model of Australia's National Electricity Market, the authors stress-test South Australia over a 24-hour separation, probing how battery storage underpins resilience as grids lose inter-regional support."
+    },
+    {
+      "id": "2026-11-25-defense-tech",
+      "date": "2026-11-25",
+      "category": "Defense Tech",
+      "title": "Lethal Autonomous Weapon Systems Under Accountable Control: Second-Order Cybernetics, Responsibility and Civilian Protection in International Law",
+      "source": "SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7703880",
+      "summary": "Proposes an international duty to keep a reviewable record of the supervisory conditions under which an autonomous weapon operates, updated whenever autonomous functions are allowed to continue, so responsibility stays traceable as technology and organizations change. Grounded in second-order cybernetics, it treats an institution's capacity to assess and correct its own actions as the real test of accountable control."
+    },
+    {
+      "id": "2026-11-25-quantum-computing",
+      "date": "2026-11-25",
+      "category": "Quantum Computing",
+      "title": "Teleportation of Logical Qubits using Lattice Surgery with Superconducting Circuits",
+      "source": "arXiv · 2611.23165",
+      "url": "https://arxiv.org/abs/2611.23165",
+      "summary": "Experimentally teleports logical states between two distance-three surface-code logical qubits on a superconducting circuit of 41 physical qubits, using fault-tolerant lattice surgery. Lattice surgery is the core operation for running gates between surface-code logical qubits, so demonstrating logical teleportation with it is a step toward composing the larger logical circuits fault-tolerant machines will need."
+    },
+    {
+      "id": "2026-11-25-materials-science",
+      "date": "2026-11-25",
+      "category": "Materials Science",
+      "title": "Gallium at germanium surfaces: links to superconducting films and correlated adatom lattices",
+      "source": "arXiv · 2611.30809",
+      "url": "https://arxiv.org/abs/2611.30809",
+      "summary": "Reviews how gallium behaves at germanium surfaces, where epitaxial hyperdoping with substitutional Ga makes germanium superconducting—earlier ion-implanted films were clouded by Ga-rich precipitates. Comparing Ga on Ge(001) and Ge(111) with other dopants, it also proposes that subsurface Ga could supply holes to correlated tin adatom lattices, echoing boron's role in superconducting Sn layers on silicon."
     }
   ]
 }
