@@ -273,7 +273,13 @@ local storage, so they are never written back to `reads.json`.
    python3 tools/build_site.py check
    ```
 
-   Then commit and push again. Try three times at most.
+   Then commit and push again. Try five times at most.
+
+   If the push is refused with a permission error (a 403, or a message that
+   the repository is not authorized for this session), do not retry and do not
+   look for another way in. The publisher task has no write access to this
+   repository, and only the owner can grant it, in the task's own settings.
+   Report exactly that, and say that the brief arrived and passed its checks.
 
 7. Finish with one short message: the date and topic of each brief, its page
    address (`https://jcsylvan.ai/export-control/<page>`), whether the
